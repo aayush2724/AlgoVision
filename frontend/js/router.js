@@ -3,12 +3,26 @@ import { pageTransition, revealView, magnetize, tiltCards } from './animations.j
 
 export function initRouter({ scene }) {
   const app = document.getElementById('app');
-  const navLinks = document.getElementById('nav-links');
 
   async function handleRoute(isInitial = false) {
-    const hash = window.location.hash || '#/';
-    const route = PAGES[hash] ? hash : '/404';
-    const page = PAGES[route];
+    let raw = window.location.hash;
+
+    // On first load, if no hash, default to #/
+    if (isInitial && (!raw || raw === "" || raw === "#")) {
+      window.location.hash = "#/";
+      raw = "#/";
+    }
+
+    // Strip query strings
+    let normalized = raw.split('?')[0];
+
+    // Normalize home/empty hash
+    if (normalized === "" || normalized === "#" || normalized === "#/") {
+      normalized = "#/";
+    }
+
+    const route = normalized;
+    const page = PAGES[route] || PAGES["#/404"];
 
     const render = () => {
       document.title = page.title;
@@ -16,7 +30,8 @@ export function initRouter({ scene }) {
       
       // Update Active Nav
       document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === hash);
+        const href = link.getAttribute('href');
+        link.classList.toggle('active', href === route);
       });
 
       // Update Scene Theme

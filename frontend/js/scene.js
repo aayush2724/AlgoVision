@@ -1,134 +1,115 @@
-import * as THREE from 'three';
-
-const VERTEX_SHADER = `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = vec4(position, 1.0);
-  }
-`;
-
-const FRAGMENT_SHADER = `
-  uniform float uTime;
-  uniform vec2 uResolution;
-  uniform vec2 uMouse;
-  uniform vec3 uColor1;
-  uniform vec3 uColor2;
-  varying vec2 vUv;
-
-  // Classic Perlin Noise
-  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-  vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-  float snoise(vec2 v) {
-    const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-    vec2 i  = floor(v + dot(v, C.yy) );
-    vec2 x0 = v -   i + dot(i, C.xx);
-    vec2 i1;
-    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-    vec4 x12 = x0.xyxy + C.xxzz;
-    x12.xy -= i1;
-    i = mod289(i);
-    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
-    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-    m = m*m ;
-    m = m*m ;
-    vec3 x = 2.0 * fract(p * C.www) - 1.0;
-    vec3 h = abs(x) - 0.5;
-    vec3 ox = floor(x + 0.5);
-    vec3 a0 = x - ox;
-    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-    vec3 g;
-    g.x  = a0.x  * x0.x  + h.x  * x0.y;
-    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-    return 130.0 * dot(m, g);
-  }
-
-  void main() {
-    vec2 uv = vUv;
-    float time = uTime * 0.1;
-    
-    // Domain warping
-    float n1 = snoise(uv * 3.0 + time);
-    float n2 = snoise(uv * 6.0 + n1 + time * 0.5);
-    float finalNoise = snoise(uv * 2.0 + n2);
-    
-    // Mouse halo
-    float dist = distance(uv, uMouse);
-    float halo = smoothstep(0.4, 0.0, dist) * 0.15;
-    
-    vec3 color = mix(uColor1, uColor2, finalNoise * 0.5 + 0.5);
-    color += halo;
-    
-    // Vignette
-    float vignette = smoothstep(1.5, 0.5, length(uv - 0.5));
-    color *= vignette;
-    
-    // Faint grain
-    float grain = (fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.05;
-    color += grain;
-    
-    gl_FragColor = vec4(color, 1.0);
-  }
-`;
-
+// Scroll-driven 3D "morphing node network" background for AlgoVision.
+// Glowing nodes reshape between graph -> tree -> sorted array -> path, scrubbed by page scroll.
+// Same public API as before: initScene(canvas) -> { setTheme(name) }.
+import * as THREE from "three";
+const COL = { blue: 0x4d7bff, blueB: 0x6f9bff, violet: 0x8b5cff, purple: 0xa855f7, cyan: 0x38bdf8 };
+// Per-route light tints (kept in the blue/purple family).
 const THEMES = {
-  default: { c1: new THREE.Color(0x060713), c2: new THREE.Color(0x4d7bff) },
-  purple: { c1: new THREE.Color(0x0d1020), c2: new THREE.Color(0x8b5cff) },
-  cyan: { c1: new THREE.Color(0x060713), c2: new THREE.Color(0x38bdf8) },
-  deep: { c1: new THREE.Color(0x050505), c2: new THREE.Color(0xa855f7) }
+  default:     { a: 0x4d7bff, b: 0x8b5cff },
+  explore:     { a: 0x38bdf8, b: 0x4d7bff },
+  experience:  { a: 0x4d7bff, b: 0xa855f7 },
+  a2z:         { a: 0x4d7bff, b: 0x6f9bff },
+  today:       { a: 0x8b5cff, b: 0xa855f7 },
+  practice:    { a: 0x4d7bff, b: 0x8b5cff },
+  journey:     { a: 0x38bdf8, b: 0x8b5cff },
+  realworld:   { a: 0x4d7bff, b: 0x38bdf8 },
 };
-
+function lerp(a, b, t) { return a + (b - a) * t; }
 export function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x060713, 1);
   const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-  const uniforms = {
-    uTime: { value: 0 },
-    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-    uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-    uColor1: { value: THEMES.default.c1 },
-    uColor2: { value: THEMES.default.c2 }
-  };
-
-  const geometry = new THREE.PlaneGeometry(2, 2);
-  const material = new THREE.ShaderMaterial({
-    uniforms,
-    vertexShader: VERTEX_SHADER,
-    fragmentShader: FRAGMENT_SHADER
-  });
-
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-
-  function resize() {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+  scene.fog = new THREE.FogExp2(0x060713, 0.022);
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
+  camera.position.set(0, 0, 18);
+  scene.add(new THREE.AmbientLight(0x556088, 1.1));
+  const l1 = new THREE.PointLight(0x4d7bff, 2.4, 200); l1.position.set(14, 12, 14); scene.add(l1);
+  const l2 = new THREE.PointLight(0x8b5cff, 2.2, 200); l2.position.set(-14, -8, 10); scene.add(l2);
+  const l3 = new THREE.PointLight(0x38bdf8, 1.4, 200); l3.position.set(0, 14, -10); scene.add(l3);
+  const l1Target = new THREE.Color(0x4d7bff), l2Target = new THREE.Color(0x8b5cff);
+  const group = new THREE.Group();
+  scene.add(group);
+  // Build 31 nodes and 4 target layouts: graph, tree, array, path.
+  const N = 31;
+  const layouts = [[], [], [], []];
+  for (let i = 0; i < N; i++) {
+    const u = Math.random(), v = Math.random(), th = u * Math.PI * 2, ph = Math.acos(2 * v - 1), r = 6 * Math.cbrt(Math.random());
+    layouts[0].push(new THREE.Vector3(r * Math.sin(ph) * Math.cos(th), r * Math.sin(ph) * Math.sin(th), r * Math.cos(ph)));
+    const level = Math.floor(Math.log2(i + 1));
+    const start = Math.pow(2, level) - 1, idx = i - start, count = Math.pow(2, level);
+    layouts[1].push(new THREE.Vector3(((idx + 0.5) / count - 0.5) * 16, 7 - level * 3.4, 0));
+    layouts[2].push(new THREE.Vector3((i - (N - 1) / 2) * 0.62, Math.sin(i * 0.3) * 0.2, 0));
+    layouts[3].push(new THREE.Vector3((i - (N - 1) / 2) * 0.62, Math.sin(i * 0.55) * 3.2, Math.cos(i * 0.4) * 1.2));
   }
-
-  window.addEventListener('resize', resize);
-  window.addEventListener('mousemove', (e) => {
-    uniforms.uMouse.value.set(e.clientX / window.innerWidth, 1.0 - (e.clientY / window.innerHeight));
-  });
-
-  function animate(time) {
-    uniforms.uTime.value = time * 0.001;
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+  const cur = layouts[0].map(p => p.clone());
+  const nodeGeo = new THREE.SphereGeometry(0.22, 16, 16);
+  const meshes = [];
+  for (let i = 0; i < N; i++) {
+    const c = i % 3 === 0 ? COL.cyan : (i % 3 === 1 ? COL.blue : COL.violet);
+    const mat = new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.25 });
+    const m = new THREE.Mesh(nodeGeo, mat); m.position.copy(cur[i]); group.add(m); meshes.push(m);
   }
-
-  requestAnimationFrame(animate);
-
-  return {
+  const pairs = [];
+  for (let i = 1; i < N; i++) pairs.push([i, Math.floor((i - 1) / 2)]);
+  const linePos = new Float32Array(pairs.length * 2 * 3);
+  const lgeo = new THREE.BufferGeometry();
+  lgeo.setAttribute("position", new THREE.BufferAttribute(linePos, 3));
+  const lines = new THREE.LineSegments(lgeo, new THREE.LineBasicMaterial({ color: COL.blueB, transparent: true, opacity: 0.28 }));
+  group.add(lines);
+  const mouse = new THREE.Vector2(0, 0), mTarget = new THREE.Vector2(0, 0);
+  window.addEventListener("pointermove", (e) => {
+    mTarget.set(e.clientX / window.innerWidth - 0.5, e.clientY / window.innerHeight - 0.5);
+  });
+  function scrollProgress() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 40 ? Math.min(Math.max(window.scrollY / max, 0), 1) : -1;
+  }
+  const api = {
     setTheme(name) {
-      const theme = THEMES[name] || THEMES.default;
-      gsap.to(uniforms.uColor1.value, { r: theme.c1.r, g: theme.c1.g, b: theme.c1.b, duration: 2 });
-      gsap.to(uniforms.uColor2.value, { r: theme.c2.r, g: theme.c2.g, b: theme.c2.b, duration: 2 });
-    }
+      const th = THEMES[name] || THEMES.default;
+      l1Target.setHex(th.a); l2Target.setHex(th.b);
+    },
   };
+  let autoTimer = 0, autoIdx = 0;
+  const target = layouts[0].map(p => p.clone());
+  function computeTarget(dt) {
+    const p = scrollProgress();
+    if (p < 0) {
+      autoTimer += dt;
+      if (autoTimer > 3.4) { autoTimer = 0; autoIdx = (autoIdx + 1) % layouts.length; }
+      for (let i = 0; i < N; i++) target[i].copy(layouts[autoIdx][i]);
+    } else {
+      const f = p * (layouts.length - 1);
+      const i0 = Math.floor(f), i1 = Math.min(i0 + 1, layouts.length - 1), frac = f - i0;
+      for (let i = 0; i < N; i++) target[i].copy(layouts[i0][i]).lerp(layouts[i1][i], frac);
+    }
+  }
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    computeTarget(dt);
+    for (let i = 0; i < N; i++) { cur[i].lerp(target[i], 0.12); meshes[i].position.copy(cur[i]); }
+    let k = 0;
+    for (const [a, b] of pairs) {
+      linePos[k++] = cur[a].x; linePos[k++] = cur[a].y; linePos[k++] = cur[a].z;
+      linePos[k++] = cur[b].x; linePos[k++] = cur[b].y; linePos[k++] = cur[b].z;
+    }
+    lgeo.attributes.position.needsUpdate = true;
+    group.rotation.y += dt * 0.12;
+    l1.color.lerp(l1Target, 0.04); l2.color.lerp(l2Target, 0.04);
+    mouse.lerp(mTarget, 0.05);
+    camera.position.x = lerp(camera.position.x, mouse.x * 6, 0.06);
+    camera.position.y = lerp(camera.position.y, -mouse.y * 4, 0.06);
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  function resize() {
+    const w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize); resize();
+  requestAnimationFrame(loop);
+  return api;
 }

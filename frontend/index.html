@@ -7,7 +7,7 @@
   <meta name="description" content="AlgoVision reveals the real-world meaning of algorithms first — cinematic visuals, then the code." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/main.css" />
   <script type="importmap">
   { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
@@ -20,16 +20,17 @@
 
   <div id="loader" class="loader">
     <div class="loader-progress">
+      <div id="loader-phases" class="loader-phases">CALIBRATING GRID</div>
       <span id="loader-count" class="loader-count">000</span>
       <div class="loader-bar-bg"><div id="loader-bar" class="loader-bar"></div></div>
     </div>
-    <div class="loader-brand">AlgoVision</div>
+    <div class="loader-brand">Algo<span>Vision</span></div>
   </div>
 
   <div id="cursor" class="cursor"><div class="cursor-ring"></div></div>
 
   <header class="nav">
-    <div class="brand">Algo<span>Vision</span></div>
+    <a href="#/" class="brand">Algo<span>Vision</span></a>
     <nav id="nav-links"></nav>
     <button id="nav-toggle" class="nav-toggle" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -39,7 +40,7 @@
   <main id="app"></main>
 
   <footer class="footer">
-    <div class="brand">Algo<span>Vision</span></div>
+    <a href="#/" class="brand">Algo<span>Vision</span></a>
     <p>Built with FastAPI, Three.js and GSAP. Inspired by takeuforward's A2Z sheet (not affiliated).</p>
   </footer>
 

@@ -2,34 +2,46 @@ import * as DATA from './data.js';
 
 export const ROUTE_THEME = {
   "#/": "default",
-  "#/explore": "purple",
-  "#/experience": "cyan",
-  "#/a2z": "deep",
-  "#/today": "purple",
+  "#/explore": "default",
+  "#/experience": "default",
+  "#/a2z": "default",
+  "#/today": "default",
   "#/practice": "default",
-  "#/journey": "cyan",
-  "#/realworld": "deep"
+  "#/journey": "default",
+  "#/realworld": "default"
+};
+
+const TOPIC_NAMES = {
+  "Sorting": "The Leaderboard",
+  "Binary Search": "The Hunt",
+  "Recursion": "The Fractal Mirror",
+  "Trees": "The Family Tree",
+  "Graphs": "Six Degrees",
+  "Heaps": "The Priority Line",
+  "DP": "The Memo Vault",
+  "Greedy": "The Local Hero",
+  "Backtracking": "The Maze Runner"
 };
 
 export const PAGES = {
   "#/": {
     title: "AlgoVision &middot; Home",
     html: () => `
-      <section class="hero">
-        <h1 data-reveal>${DATA.HERO.title}</h1>
-        <p data-reveal>${DATA.HERO.lead}</p>
-        <div class="hero-cta" data-reveal>
-          <a href="#/explore" class="btn btn-primary" data-magnet>${DATA.HERO.primaryCTA}</a>
-          <a href="#/a2z" class="btn btn-ghost" data-magnet>${DATA.HERO.ghostCTA}</a>
+      <section class="hero" style="text-align: center; padding-top: 10vh;">
+        <span class="eyebrow">BLUEPRINT v2.0.6</span>
+        <h1>See the Algorithm.<br/>Master the Story.</h1>
+        <p style="margin: 0 auto 2rem;">We turn complex data structures into cinematic visual journeys. No more dry slides — just pure intuition.</p>
+        <div class="hero-cta">
+          <a href="#/explore" class="btn btn-primary">Start Exploring</a>
+          <a href="#/a2z" class="btn btn-ghost" style="margin-left: 1rem;">View Roadmap</a>
         </div>
       </section>
       
       <section>
-        <h2 data-scroll>The 3-Act Method</h2>
-        <div class="grid">
+        <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
           ${DATA.ACTS.map(act => `
-            <div class="glass card tilt" data-scroll>
-              <div style="font-size: 3rem; margin-bottom: 1rem;">${act.icon}</div>
+            <div class="panel panel-glow">
+              <span class="eyebrow">${act.icon} PHASE</span>
               <h3>${act.title}</h3>
               <p>${act.desc}</p>
             </div>
@@ -37,15 +49,15 @@ export const PAGES = {
         </div>
       </section>
 
-      <section style="overflow: hidden; padding: 2rem 0;">
+      <section style="overflow: hidden; padding: 4rem 0;">
         <div class="marquee" style="display: flex; gap: 4rem; white-space: nowrap;">
-          ${[...DATA.MARQUEE, ...DATA.MARQUEE].map(m => `<span style="font-family: var(--font-heading); font-size: 2rem; font-weight: 700; opacity: 0.2;">${m}</span>`).join('')}
+          ${[...DATA.MARQUEE, ...DATA.MARQUEE].map(m => `<span style="font-family: var(--font-display); font-size: 4rem; font-weight: 700; opacity: 0.1; color: var(--c);">${m}</span>`).join('')}
         </div>
       </section>
     `,
     mount: (view) => {
       const marquee = view.querySelector('.marquee');
-      gsap.to(marquee, { xPercent: -50, duration: 20, ease: "none", repeat: -1 });
+      gsap.to(marquee, { xPercent: -50, duration: 30, ease: "none", repeat: -1 });
     }
   },
 
@@ -53,11 +65,12 @@ export const PAGES = {
     title: "Explore Worlds",
     html: () => `
       <section>
-        <h1 data-reveal>Algorithm Worlds</h1>
-        <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 3rem;" data-reveal>
+        <span class="eyebrow">WORLD SELECTION</span>
+        <h1>Algorithm Worlds</h1>
+        <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 3rem;">
           ${DATA.CATEGORIES.map(cat => `<button class="btn btn-ghost filter-btn" data-cat="${cat}">${cat}</button>`).join('')}
         </div>
-        <div class="grid" id="worlds-grid">
+        <div class="grid" id="worlds-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
           ${DATA.WORLDS.map(world => renderWorldCard(world)).join('')}
         </div>
       </section>
@@ -70,10 +83,7 @@ export const PAGES = {
           const cat = btn.dataset.cat;
           const filtered = cat === "All" ? DATA.WORLDS : DATA.WORLDS.filter(w => w.category === cat);
           grid.innerHTML = filtered.map(world => renderWorldCard(world)).join('');
-          import('./animations.js').then(m => {
-            m.tiltCards();
-            m.revealView(grid);
-          });
+          import('./animations.js').then(m => m.revealView(grid));
         });
       });
     }
@@ -83,24 +93,27 @@ export const PAGES = {
     title: "The Live Engine",
     html: () => `
       <section>
-        <h1 data-reveal>Experience Dijkstra</h1>
-        <div class="engine-header" style="display: flex; justify-content: space-between; align-items: center;" data-reveal>
-          <div id="engine-status"></div>
-          <div class="engine-controls" style="display: flex; gap: 1rem;">
-            <button id="run-btn" class="btn btn-primary btn-sm">Run Dijkstra</button>
-            <button id="step-btn" class="btn btn-ghost btn-sm" disabled>Step</button>
-            <button id="reset-btn" class="btn btn-ghost btn-sm">Reset</button>
+        <span class="eyebrow">LIVE EXECUTION</span>
+        <h1>Six Degrees (Dijkstra)</h1>
+        <div class="panel panel-glow" style="margin-bottom: 2rem;">
+          <div class="engine-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div id="engine-status" class="eyebrow" style="margin: 0;">STATUS: IDLE</div>
+            <div class="engine-controls" style="display: flex; gap: 1rem;">
+              <button id="run-btn" class="btn btn-primary">RUN DIJKSTRA</button>
+              <button id="step-btn" class="btn btn-ghost" disabled>STEP</button>
+              <button id="reset-btn" class="btn btn-ghost">RESET</button>
+            </div>
+          </div>
+          
+          <div id="engine-view" style="background: var(--bg1); border: 1px solid var(--cDeep); min-height: 400px; position: relative;">
+            <svg id="engine-svg" viewBox="0 0 800 300" style="width: 100%; height: 100%;"></svg>
+            <div id="engine-note" class="panel" style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 1rem; pointer-events: none; opacity: 0; transition: 0.3s; font-family: var(--font-mono); font-size: 1.1rem;"></div>
           </div>
         </div>
-        
-        <div id="engine-view" class="glass" data-scroll style="border-radius: 12px;">
-          <svg id="engine-svg" viewBox="0 0 800 300"></svg>
-          <div id="engine-note" class="glass" style="position: absolute; bottom: 2rem; left: 2rem; right: 2rem; padding: 1rem; border-radius: 8px; pointer-events: none; opacity: 0; transition: 0.3s;"></div>
-        </div>
 
-        <div style="margin-top: 2rem; display: flex; gap: 1rem;" data-scroll>
-          <button id="explain-btn" class="btn btn-ghost">✦ Explain this step</button>
-          <div id="explanation-box" class="glass" style="flex: 1; padding: 1.5rem; border-radius: 8px; display: none;"></div>
+        <div style="display: flex; gap: 2rem;">
+          <button id="explain-btn" class="btn btn-ghost" style="flex-shrink: 0; height: fit-content;">✦ EXPLAIN STEP</button>
+          <div id="explanation-box" class="panel" style="flex: 1; display: none; font-family: var(--font-mono); font-size: 1.1rem; color: var(--c);"></div>
         </div>
       </section>
     `,
@@ -112,81 +125,62 @@ export const PAGES = {
   "#/a2z": {
     title: "A2Z Journey",
     html: () => `
-      <div class="journey-progress-bar"><div class="journey-progress-fill"></div></div>
-      <div class="journey-stats"><span id="active-station-num">01</span> / 18 STATIONS</div>
+      <div class="scroll-progress">
+        ${DATA.A2Z_STEPS.map(() => `<div class="scroll-segment"></div>`).join('')}
+      </div>
       
       <div class="journey-container">
         <div class="journey-track-wrapper">
           <div class="journey-track">
             <div class="rail-bg"><div class="rail-fill"></div></div>
-            ${DATA.A2Z_STEPS.map((step, idx) => `
+            ${DATA.A2Z_STEPS.map((step, idx) => {
+              const diffs = ['E', 'M', 'H'];
+              const diff = diffs[idx % 3];
+              const diffColor = diff === 'E' ? 'var(--cDim)' : (diff === 'M' ? 'var(--c)' : 'var(--cBright)');
+              return `
               <div class="station" data-index="${idx + 1}">
                 <div class="station-dot"></div>
-                <div class="glass card station-card">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span style="color: var(--blue-bright); font-weight: 700; font-family: var(--font-heading);">${step.step}</span>
-                    <span style="color: var(--muted);">${step.problems} problems</span>
+                <div class="station-card">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="eyebrow" style="margin: 0;">${step.step}</span>
+                    <span style="font-family: var(--font-pixel); font-size: 8px; color: ${diffColor}; border: 1px solid ${diffColor}; padding: 2px 4px;">${diff}</span>
                   </div>
-                  <h3>${step.title}</h3>
-                  <div style="height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 1rem;">
-                    <div style="width: ${step.progress}%; height: 100%; background: var(--blue);"></div>
+                  <h3 style="margin-bottom: 1rem;">${step.title}</h3>
+                  <span class="eyebrow" style="font-size: 8px; color: var(--cDim);">${step.problems} PROBLEMS</span>
+                  <div style="height: 6px; background: var(--cDeep); overflow: hidden; margin-top: 0.5rem;">
+                    <div style="width: ${step.progress}%; height: 100%; background: var(--c); box-shadow: 0 0 10px var(--c);"></div>
                   </div>
                 </div>
               </div>
-            `).join('')}
+            `;}).join('')}
           </div>
         </div>
       </div>
     `,
     mount: (view) => {
       const track = view.querySelector('.journey-track');
-      const wrapper = view.querySelector('.journey-track-wrapper');
       const stations = view.querySelectorAll('.station');
       const railFill = view.querySelector('.rail-fill');
-      const progressFill = view.querySelector('.journey-progress-fill');
-      const stationNum = view.querySelector('#active-station-num');
+      const segments = view.querySelectorAll('.scroll-segment');
 
-      if (window.innerWidth <= 860 || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        ScrollTrigger.refresh();
-        return;
-      }
+      if (window.innerWidth <= 860) return;
 
-      const totalWidth = track.offsetWidth - window.innerWidth;
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".journey-container",
-          start: "top top",
-          end: () => `+=${track.offsetWidth}`,
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const p = self.progress;
-            gsap.set(progressFill, { width: `${p * 100}%` });
-            gsap.set(railFill, { width: `${p * 100}%` });
-            
-            // Find active station
-            let activeIdx = 0;
-            stations.forEach((s, i) => {
-              const rect = s.getBoundingClientRect();
-              const center = window.innerWidth / 2;
-              if (Math.abs(rect.left + rect.width/2 - center) < 200) {
-                activeIdx = i;
-              }
-            });
-            stations.forEach((s, i) => s.classList.toggle('active', i === activeIdx));
-            stationNum.textContent = (activeIdx + 1).toString().padStart(2, '0');
-          }
+      ScrollTrigger.create({
+        trigger: ".journey-container",
+        start: "top top",
+        end: () => `+=${track.offsetWidth}`,
+        pin: true,
+        scrub: 1,
+        onUpdate: (self) => {
+          const p = self.progress;
+          gsap.set(track, { x: -p * (track.offsetWidth - window.innerWidth) });
+          gsap.set(railFill, { width: `${p * 100}%` });
+          
+          const activeIdx = Math.floor(p * stations.length);
+          segments.forEach((s, i) => s.classList.toggle('active', i <= activeIdx));
+          stations.forEach((s, i) => s.classList.toggle('active', i === activeIdx));
         }
       });
-
-      tl.to(track, {
-        x: () => -(track.offsetWidth - window.innerWidth),
-        ease: "none"
-      });
-
-      ScrollTrigger.refresh();
     }
   },
 
@@ -194,13 +188,14 @@ export const PAGES = {
     title: "Insights Today",
     html: () => `
       <section>
-        <h1 data-reveal>60-Second Insights</h1>
-        <div class="grid">
+        <span class="eyebrow">DAILY BROADCAST</span>
+        <h1>60-Second Insights</h1>
+        <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
           ${DATA.CLIPS.map(clip => `
-            <div class="glass card tilt" data-scroll style="border-left: 4px solid ${clip.accent};">
-              <span class="badge" style="background: ${clip.accent}33; color: ${clip.accent}; margin-bottom: 1rem; display: inline-block;">${clip.tag}</span>
+            <div class="panel panel-glow">
+              <span class="eyebrow" style="color: var(--cBright)">${clip.tag} &middot; ${clip.topic}</span>
               <h3>${clip.title}</h3>
-              <p style="font-size: 0.8rem;">Topic: ${clip.topic}</p>
+              <p style="font-size: 0.9rem; color: var(--cDim)">BLUEPRINT PROTOCOL: ${clip.topic.toUpperCase()}</p>
             </div>
           `).join('')}
         </div>
@@ -212,29 +207,30 @@ export const PAGES = {
     title: "AI Bug Finder",
     html: () => `
       <section>
-        <h1 data-reveal>Practice & Debug</h1>
-        <div class="grid" style="grid-template-columns: 2fr 1fr;">
-          <div class="glass card" data-reveal>
-            <h3>🐞 AI Bug Finder</h3>
-            <div style="margin: 1.5rem 0;">
-              <label style="display: block; margin-bottom: 0.5rem; color: var(--muted);">Language</label>
-              <select id="lang-select" style="width: 100%; padding: 0.8rem; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 4px;">
-                <option>Python</option>
+        <span class="eyebrow">DEBUGGER v1.0</span>
+        <h1>Practice & Debug</h1>
+        <div class="grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+          <div class="panel panel-glow">
+            <span class="eyebrow">🐞 AI BUG FINDER</span>
+            <div style="margin: 1.5rem 0; display: flex; gap: 1rem; align-items: center;">
+              <span class="eyebrow" style="margin: 0;">LANGUAGE:</span>
+              <select id="lang-select" style="background: var(--bg1); border: 1px solid var(--cDim); color: var(--c); font-family: var(--font-pixel); font-size: 10px; padding: 0.4rem;">
+                <option>PYTHON</option>
                 <option>C++</option>
-                <option>Java</option>
+                <option>JAVA</option>
               </select>
             </div>
-            <textarea id="code-area" style="width: 100%; height: 300px; background: #000; color: #0f0; font-family: monospace; padding: 1rem; border: 1px solid var(--border); border-radius: 4px; resize: none;"></textarea>
-            <button id="find-bug-btn" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Find the bug</button>
-            <div id="bug-result" class="glass" style="margin-top: 1.5rem; padding: 1rem; border-color: var(--gold); border-radius: 4px; display: none;"></div>
+            <textarea id="code-area" style="width: 100%; height: 350px; background: #041014; color: var(--c); font-family: var(--font-mono); font-size: 1.2rem; padding: 1.5rem; border: 1px solid var(--cDeep); outline: none;"></textarea>
+            <button id="find-bug-btn" class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;">SCAN FOR BUGS</button>
+            <div id="bug-result" class="panel" style="margin-top: 2rem; border-color: var(--cBright); display: none; color: var(--cBright); font-family: var(--font-mono);"></div>
           </div>
-          <div class="glass card" data-scroll>
-            <h3>Pro Tips</h3>
-            <ul style="color: var(--muted); padding-left: 1.5rem; line-height: 2;">
-              <li>Trace your code by hand first.</li>
-              <li>Edge cases are your enemies.</li>
-              <li>Think in metaphors.</li>
-              <li>Complexity matters.</li>
+          <div class="panel">
+            <span class="eyebrow">PRO TIPS</span>
+            <ul style="color: var(--ink); font-family: var(--font-mono); font-size: 1.2rem; line-height: 2; list-style: none;">
+              <li>> TRACE BY HAND FIRST.</li>
+              <li>> EDGE CASES ARE LURKING.</li>
+              <li>> THINK IN METAPHORS.</li>
+              <li>> COMPLEXITY MATTERS.</li>
             </ul>
           </div>
         </div>
@@ -249,14 +245,15 @@ export const PAGES = {
     title: "My Journey",
     html: () => `
       <section>
-        <h1 data-reveal>Dashboard</h1>
-        <div class="grid">
+        <span class="eyebrow">OPERATOR DASHBOARD</span>
+        <h1>Performance Metrics</h1>
+        <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
           ${DATA.STATS.map(stat => `
-            <div class="glass card" data-scroll>
-              <h4 style="color: var(--muted);">${stat.label}</h4>
-              <div style="font-size: 3rem; font-weight: 700; font-family: var(--font-heading); margin: 0.5rem 0;">${stat.value}</div>
-              <div style="height: 4px; background: var(--border); border-radius: 2px;">
-                <div style="width: ${(stat.value.split(' ')[0] / stat.target) * 100}%; height: 100%; background: var(--cyan);"></div>
+            <div class="panel panel-glow">
+              <span class="eyebrow">${stat.label.toUpperCase()}</span>
+              <div style="font-size: 4rem; font-weight: 700; font-family: var(--font-display); margin: 0.5rem 0;">${stat.value}</div>
+              <div style="height: 6px; background: var(--cDeep);">
+                <div style="width: ${(stat.value.split(' ')[0] / stat.target) * 100}%; height: 100%; background: var(--c); box-shadow: 0 0 10px var(--c);"></div>
               </div>
             </div>
           `).join('')}
@@ -269,14 +266,15 @@ export const PAGES = {
     title: "Real World Mapping",
     html: () => `
       <section>
-        <h1 data-reveal>Real-World Mapping</h1>
-        <div class="grid">
+        <span class="eyebrow">SYSTEM MAPPINGS</span>
+        <h1>The Global Blueprint</h1>
+        <div class="grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
           ${DATA.REALWORLD.map(item => `
-            <div class="glass card tilt" data-scroll style="min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-              <div style="font-size: 3rem; margin-bottom: 1rem;">${item.icon}</div>
+            <div class="panel panel-glow" style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1.5rem;">${item.icon}</div>
+              <span class="eyebrow" style="color: var(--cBright)">${item.metaphor.toUpperCase()}</span>
               <h3>${item.title}</h3>
-              <p style="color: var(--blue-bright); font-weight: 700;">Uses: ${item.metaphor}</p>
-              <p style="font-size: 0.8rem; margin-top: 0.5rem;">${item.desc}</p>
+              <p style="font-size: 0.9rem; margin-top: 1rem;">${item.desc}</p>
             </div>
           `).join('')}
         </div>
@@ -287,11 +285,12 @@ export const PAGES = {
   "#/404": {
     title: "404 - Lost",
     html: () => `
-      <section style="text-align: center; height: 60vh; display: flex; flex-direction: column; justify-content: center;">
-        <h1 data-reveal>404</h1>
-        <p data-reveal>You've wandered off the graph.</p>
-        <div data-reveal style="margin-top: 2rem;">
-          <a href="#/" class="btn btn-primary">Back to Root</a>
+      <section style="text-align: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <span class="eyebrow" style="color: #ff5f5f">ERROR: 404</span>
+        <h1>NODE NOT FOUND</h1>
+        <p>You've wandered off the graph into untraced territory.</p>
+        <div style="margin-top: 2rem;">
+          <a href="#/" class="btn btn-primary">RETURN TO ROOT</a>
         </div>
       </section>
     `
@@ -299,15 +298,16 @@ export const PAGES = {
 };
 
 function renderWorldCard(world) {
+  const blueprintName = TOPIC_NAMES[world.metaphor] || world.name;
   return `
-    <div class="glass card tilt" data-scroll data-cat="${world.category}">
-      <div style="font-size: 2rem; margin-bottom: 1rem;">${world.emoji}</div>
-      <div style="color: var(--blue-bright); font-weight: 700; font-size: 0.8rem;">${world.metaphor}</div>
-      <h3>${world.name}</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 1rem;">${world.hook}</p>
+    <div class="panel panel-glow" data-cat="${world.category}">
+      <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">${world.emoji}</div>
+      <span class="eyebrow" style="color: var(--cBright)">${world.metaphor.toUpperCase()}</span>
+      <h3 style="margin-bottom: 0.5rem;">${blueprintName}</h3>
+      <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--cDim)">${world.hook}</p>
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span class="badge badge-live" style="font-size: 0.6rem;">${world.category}</span>
-        <span style="font-family: monospace; font-size: 0.7rem; color: var(--muted);">${world.complexity}</span>
+        <span class="btn btn-ghost" style="padding: 0.2rem 0.5rem; font-size: 8px;">${world.category.toUpperCase()}</span>
+        <span style="font-family: var(--font-mono); font-size: 14px; color: var(--cBright);">${world.complexity}</span>
       </div>
     </div>
   `;

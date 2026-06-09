@@ -6,51 +6,106 @@ import { initRouter } from './router.js';
 function buildNav() {
   const navLinks = document.getElementById('nav-links');
   navLinks.innerHTML = NAV.map(link => `
-    <a href="${link.hash}" class="nav-link" data-magnet>${link.label}</a>
-  `).join('');
+    <a href="${link.hash}" class="nav-link">${link.label}</a>
+  `).join('') + `
+    <a href="#/experience" class="btn btn-primary" style="margin-left: 1rem;">PLAY ▶</a>
+  `;
+}
+
+function initVizzy() {
+  const container = document.createElement('div');
+  container.className = 'vizzy-container';
+  container.innerHTML = `
+    <div id="vizzy-bubble" class="vizzy-bubble"></div>
+    <canvas id="vizzy-canvas" width="140" height="140"></canvas>
+  `;
+  document.body.appendChild(container);
+
+  const bubble = document.getElementById('vizzy-bubble');
+  
+  // Simple Vizzy logic: show tips based on route
+  window.addEventListener('hashchange', () => {
+    const route = window.location.hash;
+    let tip = "SYSTEM READY.";
+    if (route.includes('explore')) tip = "EXPLORE: Select a world to begin tracing.";
+    if (route.includes('experience')) tip = "EXPERIENCE: Dijkstra's pathfinding in action.";
+    if (route.includes('a2z')) tip = "A2Z: Your roadmap to mastery.";
+    
+    bubble.textContent = tip;
+    bubble.classList.add('show');
+    setTimeout(() => bubble.classList.remove('show'), 4000);
+  });
 }
 
 function initMobileMenu() {
-  const toggle = document.getElementById('nav-toggle');
-  const nav = document.querySelector('.nav');
+  const navLinks = document.getElementById('nav-links');
+  const brand = document.querySelector('.brand');
   
-  toggle.addEventListener('click', () => {
-    nav.classList.toggle('open');
-  });
+  if (brand) {
+    brand.addEventListener('click', (e) => {
+      if (window.innerWidth <= 860) {
+        // Toggle menu on brand click
+        const isOpen = navLinks.style.display === 'flex';
+        navLinks.style.display = isOpen ? 'none' : 'flex';
+        if (!isOpen) {
+          navLinks.style.flexDirection = 'column';
+          navLinks.style.position = 'absolute';
+          navLinks.style.top = '100%';
+          navLinks.style.left = '0';
+          navLinks.style.width = '100%';
+          navLinks.style.background = 'rgba(6, 18, 26, 0.95)';
+          navLinks.style.padding = '1rem';
+          navLinks.style.border = '1px solid var(--cDim)';
+        }
+      }
+    });
+  }
 
-  // Close menu on link click
+  // Close menu when any link is clicked
   document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('nav-link')) {
-      nav.classList.remove('open');
+    if (e.target.closest('.nav-link') || e.target.closest('.btn')) {
+      if (window.innerWidth <= 860) {
+        navLinks.style.display = 'none';
+      }
     }
   });
 }
 
 async function start() {
   try {
+    console.log("AlgoVision Booting...");
+    
     // 1. Build Static UI Parts
     buildNav();
     initMobileMenu();
     initCursor();
+    initVizzy();
 
     // 2. Init Three.js Scene
     const canvas = document.getElementById('bg-canvas');
     let scene = null;
     try {
-      scene = initScene(canvas);
+      if (canvas) {
+        scene = initScene(canvas);
+      }
     } catch (e) {
-      console.warn("WebGL not supported or scene init failed. Proceeding without aurora.");
+      console.warn("Scene init failed:", e);
     }
 
     // 3. Play Intro Loader
     playLoader(() => {
-      // 4. Init Router (starts rendering first page)
+      console.log("Loader Complete. Initializing Router...");
+      // 4. Init Router
       initRouter({ scene });
     });
 
   } catch (err) {
     console.error("Critical Boot Error:", err);
-    document.body.innerHTML = `<div style="padding: 2rem; color: white;"><h1>Something went wrong.</h1><p>${err.message}</p></div>`;
+    const loaderPhases = document.getElementById('loader-phases');
+    if (loaderPhases) {
+      loaderPhases.textContent = "BOOT ERROR: CHECK CONSOLE";
+      loaderPhases.style.color = "#ff5f5f";
+    }
   }
 }
 

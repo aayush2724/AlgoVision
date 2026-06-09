@@ -26,7 +26,7 @@ const TOPIC_NAMES = {
 export const PAGES = {
   "#/": {
     title: "AlgoVision &middot; Home",
-    html: () => `
+    html: (params) => `
       <section class="hero" style="text-align: center; padding-top: 10vh;">
         <span class="eyebrow">BLUEPRINT v2.0.6</span>
         <h1>See the Algorithm.<br/>Master the Story.</h1>
@@ -63,7 +63,7 @@ export const PAGES = {
 
   "#/explore": {
     title: "Explore Worlds",
-    html: () => `
+    html: (params) => `
       <section>
         <span class="eyebrow">WORLD SELECTION</span>
         <h1>Algorithm Worlds</h1>
@@ -91,15 +91,18 @@ export const PAGES = {
 
   "#/experience": {
     title: "The Live Engine",
-    html: () => `
+    html: (params) => {
+      const algo = params.get('algo') || 'dijkstra';
+      const name = TOPIC_NAMES[algo.charAt(0).toUpperCase() + algo.slice(1)] || algo.toUpperCase();
+      return `
       <section>
         <span class="eyebrow">LIVE EXECUTION</span>
-        <h1>Six Degrees (Dijkstra)</h1>
+        <h1>${name}</h1>
         <div class="panel panel-glow" style="margin-bottom: 2rem;">
           <div class="engine-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <div id="engine-status" class="eyebrow" style="margin: 0;">STATUS: IDLE</div>
             <div class="engine-controls" style="display: flex; gap: 1rem;">
-              <button id="run-btn" class="btn btn-primary">RUN DIJKSTRA</button>
+              <button id="run-btn" class="btn btn-primary">RUN ${algo.toUpperCase()}</button>
               <button id="step-btn" class="btn btn-ghost" disabled>STEP</button>
               <button id="reset-btn" class="btn btn-ghost">RESET</button>
             </div>
@@ -116,15 +119,15 @@ export const PAGES = {
           <div id="explanation-box" class="panel" style="flex: 1; display: none; font-family: var(--font-mono); font-size: 1.1rem; color: var(--c);"></div>
         </div>
       </section>
-    `,
-    mount: (view) => {
-      import('./engine.js').then(m => m.mountEngine(view));
+    `},
+    mount: (view, params) => {
+      import('./engine.js').then(m => m.mountEngine(view, params.get('algo') || 'dijkstra'));
     }
   },
 
   "#/a2z": {
     title: "A2Z Journey",
-    html: () => `
+    html: (params) => `
       <div class="scroll-progress">
         ${DATA.A2Z_STEPS.map(() => `<div class="scroll-segment"></div>`).join('')}
       </div>
@@ -186,7 +189,7 @@ export const PAGES = {
 
   "#/today": {
     title: "Insights Today",
-    html: () => `
+    html: (params) => `
       <section>
         <span class="eyebrow">DAILY BROADCAST</span>
         <h1>60-Second Insights</h1>
@@ -205,7 +208,7 @@ export const PAGES = {
 
   "#/practice": {
     title: "AI Bug Finder",
-    html: () => `
+    html: (params) => `
       <section>
         <span class="eyebrow">DEBUGGER v1.0</span>
         <h1>Practice & Debug</h1>
@@ -243,7 +246,7 @@ export const PAGES = {
 
   "#/journey": {
     title: "My Journey",
-    html: () => `
+    html: (params) => `
       <section>
         <span class="eyebrow">OPERATOR DASHBOARD</span>
         <h1>Performance Metrics</h1>
@@ -264,7 +267,7 @@ export const PAGES = {
 
   "#/realworld": {
     title: "Real World Mapping",
-    html: () => `
+    html: (params) => `
       <section>
         <span class="eyebrow">SYSTEM MAPPINGS</span>
         <h1>The Global Blueprint</h1>
@@ -284,7 +287,7 @@ export const PAGES = {
 
   "#/404": {
     title: "404 - Lost",
-    html: () => `
+    html: (params) => `
       <section style="text-align: center; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <span class="eyebrow" style="color: #ff5f5f">ERROR: 404</span>
         <h1>NODE NOT FOUND</h1>
@@ -299,16 +302,19 @@ export const PAGES = {
 
 function renderWorldCard(world) {
   const blueprintName = TOPIC_NAMES[world.metaphor] || world.name;
+  const algo = world.metaphor.toLowerCase().replace(' ', '-');
   return `
-    <div class="panel panel-glow" data-cat="${world.category}">
-      <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">${world.emoji}</div>
-      <span class="eyebrow" style="color: var(--cBright)">${world.metaphor.toUpperCase()}</span>
-      <h3 style="margin-bottom: 0.5rem;">${blueprintName}</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--cDim)">${world.hook}</p>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span class="btn btn-ghost" style="padding: 0.2rem 0.5rem; font-size: 8px;">${world.category.toUpperCase()}</span>
-        <span style="font-family: var(--font-mono); font-size: 14px; color: var(--cBright);">${world.complexity}</span>
+    <a href="#/experience?algo=${algo}" style="text-decoration: none; color: inherit; display: block;">
+      <div class="panel panel-glow" data-cat="${world.category}">
+        <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">${world.emoji}</div>
+        <span class="eyebrow" style="color: var(--cBright)">${world.metaphor.toUpperCase()}</span>
+        <h3 style="margin-bottom: 0.5rem;">${blueprintName}</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--cDim)">${world.hook}</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="btn btn-ghost" style="padding: 0.2rem 0.5rem; font-size: 8px;">${world.category.toUpperCase()}</span>
+          <span style="font-family: var(--font-mono); font-size: 14px; color: var(--cBright);">${world.complexity}</span>
+        </div>
       </div>
-    </div>
+    </a>
   `;
 }

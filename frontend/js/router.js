@@ -13,20 +13,17 @@ export function initRouter({ scene }) {
       raw = "#/";
     }
 
-    // Strip query strings
-    let normalized = raw.split('?')[0];
-
-    // Normalize home/empty hash
-    if (normalized === "" || normalized === "#" || normalized === "#/") {
-      normalized = "#/";
-    }
+    // Strip query strings and extract params
+    const [path, query] = raw.split('?');
+    const params = new URLSearchParams(query || "");
+    const normalized = (!path || path === "" || path === "#" || path === "#/") ? "#/" : path;
 
     const route = normalized;
     const page = PAGES[route] || PAGES["#/404"];
 
     const render = () => {
       document.title = page.title;
-      app.innerHTML = page.html();
+      app.innerHTML = page.html(params);
       
       // Update Active Nav
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -38,7 +35,7 @@ export function initRouter({ scene }) {
       if (scene) scene.setTheme(ROUTE_THEME[route] || 'default');
 
       // Mount Page Logic
-      if (page.mount) page.mount(app);
+      if (page.mount) page.mount(app, params);
 
       // Re-init animations
       revealView(app);

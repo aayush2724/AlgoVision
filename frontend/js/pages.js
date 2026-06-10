@@ -445,8 +445,14 @@ export const PAGES = {
             probHook.textContent    = `"${prob.hook}"`;
 
             vizInner.innerHTML = '';
-            const scene = VIZ_SCENES[prob.viz] || VIZ_SCENES.default;
-            scene.draw(vizInner, prob);
+            try {
+              const scene = VIZ_SCENES[prob.viz] || VIZ_SCENES.default;
+              scene.draw(vizInner, prob);
+            } catch (e) {
+              if (!vizInner.firstChild) {
+                vizInner.innerHTML = '<div style="height:240px;display:flex;align-items:center;justify-content:center;color:#2a7f8c;font-family:monospace;font-size:11px;opacity:0.5;">[ 3D VISUALIZATION — OPEN IN BROWSER ]</div>';
+              }
+            }
 
             history.replaceState(null, '', `#/a2z-problem?step=${si+1}&prob=${prob.id}`);
             const activeItem = view.querySelector(`.prob-item[data-pi="${pi}"]`);

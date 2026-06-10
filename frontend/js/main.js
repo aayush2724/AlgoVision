@@ -15,23 +15,24 @@ function buildNav() {
 function initVizzy() {
   const container = document.createElement('div');
   container.className = 'vizzy-container';
-  container.innerHTML = `
-    <div id="vizzy-bubble" class="vizzy-bubble"></div>
-    <canvas id="vizzy-canvas" width="140" height="140"></canvas>
-  `;
+  container.innerHTML = `<div id="vizzy-bubble" class="vizzy-bubble"></div>`;
   document.body.appendChild(container);
 
   const bubble = document.getElementById('vizzy-bubble');
-  
-  // Simple Vizzy logic: show tips based on route
+
   window.addEventListener('hashchange', () => {
     const route = window.location.hash;
-    let tip = "SYSTEM READY.";
-    if (route.includes('explore')) tip = "EXPLORE: Select a world to begin tracing.";
-    if (route.includes('experience')) tip = "EXPERIENCE: Dijkstra's pathfinding in action.";
-    if (route.includes('a2z')) tip = "A2Z: Your roadmap to mastery.";
-    
-    bubble.textContent = tip;
+    const tips = {
+      explore:    'EXPLORE: Select an algorithm world.',
+      experience: 'EXPERIENCE: Watch the algorithm run live.',
+      a2z:        'A2Z: Your mastery roadmap.',
+      practice:   'PRACTICE: Paste code — find bugs.',
+      today:      'TODAY: 60-second insights.',
+      journey:    'JOURNEY: Track your progress.',
+      realworld:  'REALWORLD: Algorithms in the wild.'
+    };
+    const key = Object.keys(tips).find(k => route.includes(k));
+    bubble.textContent = key ? tips[key] : 'SYSTEM READY.';
     bubble.classList.add('show');
     setTimeout(() => bubble.classList.remove('show'), 4000);
   });

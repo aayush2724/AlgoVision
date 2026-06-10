@@ -1,6 +1,8 @@
 import os
 from functools import lru_cache
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Settings:
     PROJECT_NAME: str = "AlgoVision API"
@@ -10,15 +12,13 @@ class Settings:
         o.strip()
         for o in os.getenv(
             "BACKEND_CORS_ORIGINS",
-            "http://localhost:5500,http://localhost:8080",
+            "http://localhost:5500,http://localhost:8080,http://127.0.0.1:5500,http://localhost:3000",
         ).split(",")
         if o.strip()
     ]
 
-
 @lru_cache
-def get_settings() -> "Settings":
+def get_settings():
     return Settings()
-
 
 settings = get_settings()

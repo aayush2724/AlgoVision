@@ -10,6 +10,7 @@ class ExplainBody(BaseModel):
     algorithm: str = "dijkstra"
     step: dict = {}
     level: str = "beginner"
+    realworld_meta: dict = {}
 
 
 class BugBody(BaseModel):

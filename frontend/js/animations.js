@@ -57,7 +57,8 @@ export async function pageTransition(render) {
   const veil = document.createElement('div');
   veil.style.position = 'fixed';
   veil.style.inset = '0';
-  veil.style.background = '#5fd6e6';
+  veil.style.background = 'var(--bg1)';
+  veil.style.borderBottom = '2px solid var(--c)';
   veil.style.zIndex = '12000';
   veil.style.transform = 'translateY(100%)';
   document.body.appendChild(veil);

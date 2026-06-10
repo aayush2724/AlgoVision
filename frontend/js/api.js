@@ -1,9 +1,11 @@
-const BASE_URL = window.ALGOVISION_API || "http://localhost:8000";
+const BASE_URL = (typeof window !== "undefined" && window.ALGOVISION_API != null)
+  ? window.ALGOVISION_API
+  : "";
 
 async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  const timer = setTimeout(() => controller.abort(), 10000);
   try {
     const response = await fetch(url, {
       ...options,

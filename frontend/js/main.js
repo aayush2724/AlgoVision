@@ -8,7 +8,7 @@ function buildNav() {
   navLinks.innerHTML = NAV.map(link => `
     <a href="${link.hash}" class="nav-link">${link.label}</a>
   `).join('') + `
-    <a href="#/experience" class="btn btn-primary" style="margin-left: 1rem;">PLAY ▶</a>
+    <a href="#/experience" class="btn btn-primary nav-play">▶ Play</a>
   `;
 }
 
@@ -19,29 +19,30 @@ function initVizzy() {
   document.body.appendChild(container);
 
   const bubble = document.getElementById('vizzy-bubble');
+  const tips = {
+    explore:    'Select an algorithm world to explore.',
+    experience: 'Watch the algorithm run live, step by step.',
+    a2z:        'Your structured mastery roadmap.',
+    practice:   'Paste code — the AI finds your bugs.',
+    today:      '60-second algorithm insights.',
+    family:     'See how algorithms relate to each other.',
+  };
 
   window.addEventListener('hashchange', () => {
     const route = window.location.hash;
-    const tips = {
-      explore:    'EXPLORE: Select an algorithm world.',
-      experience: 'EXPERIENCE: Watch the algorithm run live.',
-      a2z:        'A2Z: Your mastery roadmap.',
-      practice:   'PRACTICE: Paste code — find bugs.',
-      today:      'TODAY: 60-second insights.',
-      journey:    'JOURNEY: Track your progress.',
-      realworld:  'REALWORLD: Algorithms in the wild.'
-    };
     const key = Object.keys(tips).find(k => route.includes(k));
-    bubble.textContent = key ? tips[key] : 'SYSTEM READY.';
-    bubble.classList.add('show');
-    setTimeout(() => bubble.classList.remove('show'), 4000);
+    bubble.textContent = key ? tips[key] : '';
+    if (key) {
+      bubble.classList.add('show');
+      setTimeout(() => bubble.classList.remove('show'), 3500);
+    }
   });
 }
 
 function initMobileMenu() {
   const navLinks = document.getElementById('nav-links');
   const navToggle = document.getElementById('nav-toggle');
-  
+
   if (navToggle) {
     navToggle.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -52,10 +53,9 @@ function initMobileMenu() {
     });
   }
 
-  // Close menu when any link is clicked
   document.addEventListener('click', (e) => {
     if (e.target.closest('.nav-link') || e.target.closest('.btn')) {
-      if (window.innerWidth <= 860) {
+      if (window.innerWidth <= 860 && navToggle) {
         navToggle.classList.remove('open');
         navLinks.classList.remove('open');
       }
@@ -65,43 +65,30 @@ function initMobileMenu() {
 
 async function start() {
   try {
-    console.log("AlgoVision Booting...");
-    
-    // 1. Build Static UI Parts
     buildNav();
     initMobileMenu();
     initCursor();
     initVizzy();
 
-    // 2. Init Three.js Scene
     const canvas = document.getElementById('bg-canvas');
     let scene = null;
     try {
-      if (canvas) {
-        scene = initScene(canvas);
-      }
+      if (canvas) scene = initScene(canvas);
     } catch (e) {
       console.warn("Scene init failed:", e);
     }
 
-    // 3. Play Intro Loader
     playLoader(() => {
-      console.log("Loader Complete. Initializing Router...");
-      // 4. Init Router
       initRouter({ scene });
     });
 
   } catch (err) {
-    console.error("Critical Boot Error:", err);
-    const loaderPhases = document.getElementById('loader-phases');
-    if (loaderPhases) {
-      loaderPhases.textContent = "BOOT ERROR: CHECK CONSOLE";
-      loaderPhases.style.color = "#ff5f5f";
-    }
+    console.error("Boot Error:", err);
+    const phases = document.getElementById('loader-phases');
+    if (phases) { phases.textContent = "BOOT ERROR"; phases.style.color = "#ff5f5f"; }
   }
 }
 
-// Start when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', start);
 } else {

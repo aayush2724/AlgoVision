@@ -1,0 +1,1 @@
+- [AlgoVision Setup](algovision-setup.md) — FastAPI serves frontend+API on port 5000; ML service on port 8000; no separate static server needed.

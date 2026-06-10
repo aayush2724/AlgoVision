@@ -102,7 +102,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (dist[node] + edge.w < dist[edge.to]) {
           dist[edge.to] = dist[node] + edge.w;
           pq.push({ node: edge.to, d: dist[edge.to] });
-          steps.push({ edge: { source: node, target: edge.to }, note: `FOUND SHORTER PATH TO ${edge.to} VIA ${node} (NEW DIST: ${dist[edge.to]})` });
+          steps.push({ node: edge.to, edge: { source: node, target: edge.to }, note: `FOUND SHORTER PATH TO ${edge.to} VIA ${node} (NEW DIST: ${dist[edge.to]})` });
         }
       }
     }
@@ -123,7 +123,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         res = localTrace(normalizedAlgo, 'A');
       } else {
         const graph = {
-          nodes: DATA.SAMPLE_GRAPH.nodes.map(n => n.id),
+          nodes: DATA.SAMPLE_GRAPH.nodes,
           edges: DATA.SAMPLE_GRAPH.links.map(l => [l.source, l.target, l.weight])
         };
         res = await api.postTrace(normalizedAlgo, 'A', graph);

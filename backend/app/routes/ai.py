@@ -24,4 +24,5 @@ async def explain(body: ExplainBody):
 
 @router.post("/bugfind")
 async def bugfind(body: BugBody):
+    body.language = body.language.lower()
     return await ml_client.bugfind(body.model_dump())

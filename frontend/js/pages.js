@@ -93,7 +93,10 @@ export const PAGES = {
     title: "The Live Engine",
     html: (params) => {
       const algo = params.get('algo') || 'dijkstra';
-      const name = TOPIC_NAMES[algo.charAt(0).toUpperCase() + algo.slice(1)] || algo.toUpperCase();
+      const keys = Object.keys(TOPIC_NAMES);
+      const normalizedAlgo = algo.toLowerCase().replace(/[\s-]/g, '');
+      const matchedKey = keys.find(k => k.toLowerCase().replace(/[\s-]/g, '') === normalizedAlgo) || algo;
+      const name = TOPIC_NAMES[matchedKey] || algo.toUpperCase().replace('-', ' ');
       return `
       <section>
         <span class="eyebrow">LIVE EXECUTION</span>

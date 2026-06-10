@@ -25,7 +25,7 @@ def find_bug(language: str, code: str) -> dict:
     lowered = code.lower()
     if "while" in lowered and "visited" not in lowered:
         hints.append("Your traversal may loop forever \u2014 track visited nodes.")
-    if language == "python" and "\t" in code and "    " in code:
+    if language.lower() == "python" and "\t" in code and "    " in code:
         hints.append("Mixed tabs and spaces can break Python indentation.")
     if not hints:
         hints.append("No obvious issue found. Check boundary conditions and base cases.")

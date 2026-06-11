@@ -44,12 +44,16 @@ export function playLoader(callback) {
 }
 
 export function revealView(el) {
-  gsap.from(el.querySelectorAll('h1, h2, p, .panel, .btn, .eyebrow'), {
-    y: 30,
+  if (!el) return;
+  const targets = Array.from(el.querySelectorAll('h1, h2, p, .panel, .world-card, .a2z-card, .act-card, .btn, .eyebrow'));
+  if (!targets.length) return;
+  gsap.from(targets, {
+    y: 24,
     opacity: 0,
-    duration: 0.6,
-    stagger: 0.1,
-    ease: "power3.out"
+    duration: 0.5,
+    stagger: 0.06,
+    ease: "power3.out",
+    clearProps: "all"
   });
 }
 

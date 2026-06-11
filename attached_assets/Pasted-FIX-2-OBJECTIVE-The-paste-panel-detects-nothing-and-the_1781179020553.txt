@@ -1,0 +1,209 @@
+FIX 2 OBJECTIVE: The paste panel detects nothing and the "DETECT &
+VISUALIZE" button does nothing. Root cause is almost always one of:
+  (a) api.detect() doesn't exist on the api object
+  (b) The backend /api/detect endpoint isn't registered
+  (c) The mount() for "#/" doesn't wire up the buttons
+
+This is a 3-step fix.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 1 — Verify /api/detect exists on the backend
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In your browser or curl:
+  GET http://localhost:8000/api/detect
+
+If you get 404 → the router wasn't registered. In backend/app/main.py,
+confirm this line exists:
+
+  from app.routes import detect
+  app.include_router(detect.router, prefix=settings.API_PREFIX)
+
+If detect.py doesn't exist yet, create backend/app/routes/detect.py
+with the full implementation from Phase 2 Step 1 of the earlier prompt.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2 — Patch api.js to add detect() and fix BASE_URL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Open frontend/js/api.js. Make these two changes:
+
+CHANGE A — Fix BASE_URL so localhost actually works:
+
+  const BASE_URL =
+    window.ALGOVISION_API ||
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8000'
+      : '');
+
+CHANGE B — Add detect() to the exported api object if missing:
+
+  export const api = {
+
+    // ... existing methods ...
+
+    async detect(code = '', problem = '') {
+      return request('/api/detect', {
+        method: 'POST',
+        body: JSON.stringify({ code, problem }),
+      });
+    },
+
+    async explainStep(algorithm, step, level = 'beginner', realtWorldMeta = {}) {
+      return request('/api/ai/explain', {
+        method: 'POST',
+        body: JSON.stringify({
+          algorithm, step, level,
+          realworld_meta: realtWorldMeta
+        }),
+      });
+    },
+
+    async bugFind(language, code) {
+      return request('/api/ai/bug', {
+        method: 'POST',
+        body: JSON.stringify({ language, code }),
+      });
+    },
+
+  };
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3 — Rewrite the "#/" mount() in pages.js
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Replace the entire mount() function of the "#/" page with:
+
+  mount: (view) => {
+    // Marquee animation
+    const marquee = view.querySelector('.marquee');
+    if (marquee && typeof gsap !== 'undefined') {
+      gsap.to(marquee, {
+        xPercent: -50, duration: 25, ease: 'none', repeat: -1
+      });
+    }
+
+    // ── Paste panel wiring ──────────────────────────────────────
+    const pasteArea    = view.querySelector('#hero-paste-area');
+    const statusEl     = view.querySelector('#paste-detect-status');
+    const visualizeBtn = view.querySelector('#hero-visualize-btn');
+    const clearBtn     = view.querySelector('#hero-clear-btn');
+
+    if (!pasteArea || !visualizeBtn) {
+      console.error('AlgoVision: paste panel elements not found in DOM');
+      return;
+    }
+
+    let detectedAlgo = null;
+    let detectTimer  = null;
+
+    // Live detection while typing
+    pasteArea.addEventListener('input', () => {
+      clearTimeout(detectTimer);
+      const text = pasteArea.value.trim();
+
+      if (text.length < 20) {
+        statusEl.style.display = 'none';
+        detectedAlgo = null;
+        return;
+      }
+
+      detectTimer = setTimeout(async () => {
+        try {
+          const res = await api.detect(text);
+          detectedAlgo = res.algorithm;
+          const conf  = Math.round((res.confidence || 0) * 100);
+          const title = res.realworld?.title || '';
+          statusEl.style.display = 'block';
+          statusEl.innerHTML =
+            `DETECTED: <strong style="color:var(--cBright)">
+              ${res.algorithm.toUpperCase().replace(/_/g, ' ')}
+            </strong>
+            <span style="color:var(--cDim); margin:0 0.5rem;">—</span>
+            <em style="color:var(--cDim)">${title}</em>
+            <span style="color:var(--cDim);margin-left:0.75rem;">
+              (${conf}% confidence)
+            </span>`;
+        } catch (err) {
+          // Backend down — do client-side keyword detect as fallback
+          detectedAlgo = clientDetect(pasteArea.value);
+          statusEl.style.display = 'block';
+          statusEl.innerHTML =
+            `DETECTED (OFFLINE): <strong style="color:var(--cBright)">
+              ${detectedAlgo.toUpperCase().replace(/_/g, ' ')}
+            </strong>`;
+        }
+      }, 600);
+    });
+
+    // Detect & Visualize button
+    visualizeBtn.addEventListener('click', async () => {
+      const text = pasteArea.value.trim();
+      if (!text) return;
+
+      visualizeBtn.disabled = true;
+      visualizeBtn.querySelector('span').textContent = 'DETECTING...';
+
+      try {
+        if (detectedAlgo) {
+          window.location.hash = `#/experience?algo=${detectedAlgo}`;
+          return;
+        }
+        const res = await api.detect(text);
+        window.location.hash = `#/experience?algo=${res.algorithm}`;
+      } catch {
+        const fallback = clientDetect(text);
+        window.location.hash = `#/experience?algo=${fallback}`;
+      } finally {
+        visualizeBtn.disabled = false;
+        visualizeBtn.querySelector('span').textContent = 'DETECT & VISUALIZE →';
+      }
+    });
+
+    // Clear button
+    clearBtn?.addEventListener('click', () => {
+      pasteArea.value   = '';
+      statusEl.style.display = 'none';
+      detectedAlgo = null;
+    });
+  },
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4 — Add clientDetect() as a module-level helper in pages.js
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Add this function near the top of pages.js, outside any page definition,
+so the home mount() can call it when the backend is down:
+
+function clientDetect(text) {
+  const t = text.toLowerCase();
+  if (t.includes('heappush') || t.includes('heappop') ||
+      t.includes('dijkstra') || t.includes('shortest'))  return 'dijkstra';
+  if (t.includes('deque') || t.includes('bfs') ||
+      t.includes('breadth'))                             return 'bfs';
+  if (t.includes('dfs') || t.includes('depth first') ||
+      t.includes('backtrack'))                           return 'dfs';
+  if (t.includes('binary search') || t.includes('bisect') ||
+      t.includes('low') && t.includes('high') && t.includes('mid')) {
+                                                         return 'binary_search';
+  }
+  if (t.includes('dp[') || t.includes('memo') ||
+      t.includes('lru_cache'))                           return 'dynamic_programming';
+  if (t.includes('merge') || t.includes('pivot') ||
+      t.includes('sort'))                                return 'sorting';
+  return 'dijkstra'; // safe default
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERIFICATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ ] Paste "def dijkstra(graph, start): import heapq..." into the panel
+    → "DETECTED: DIJKSTRA — GPS Navigation System (100% confidence)"
+    appears within 1 second
+[ ] Paste BFS code → detects BFS, clicking button goes to
+    #/experience?algo=bfs
+[ ] With backend DOWN → clientDetect() fires, still navigates
+[ ] "CLEAR" button wipes textarea and hides status line
+[ ] Button shows "DETECTING..." while the request is in flight
+[ ] No console errors about "api.detect is not a function"

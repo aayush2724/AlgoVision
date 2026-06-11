@@ -1,5 +1,23 @@
 import * as DATA from './data.js';
 
+function clientDetect(text) {
+  const t = text.toLowerCase();
+  if (t.includes('heappush') || t.includes('heappop') ||
+      t.includes('dijkstra') || t.includes('shortest'))     return 'dijkstra';
+  if (t.includes('deque') || t.includes('bfs') ||
+      t.includes('breadth'))                                 return 'bfs';
+  if (t.includes('dfs') || t.includes('depth first') ||
+      t.includes('backtrack'))                               return 'dfs';
+  if (t.includes('binary search') || t.includes('bisect') ||
+      (t.includes('low') && t.includes('high') && t.includes('mid')))
+                                                             return 'binary_search';
+  if (t.includes('dp[') || t.includes('memo') ||
+      t.includes('lru_cache'))                               return 'dynamic_programming';
+  if (t.includes('merge') || t.includes('pivot') ||
+      t.includes('sort'))                                    return 'sorting';
+  return 'dijkstra';
+}
+
 export const ROUTE_THEME = {
   "#/": "default",
   "#/explore": "default",
@@ -99,7 +117,7 @@ export const PAGES = {
               border-radius:2px; transition:border-color 0.3s;"
               placeholder="def dijkstra(graph, start): ..."></textarea>
             <div style="display:flex; gap:0.75rem; margin-top:0.75rem;">
-              <button id="hero-visualize-btn" class="btn btn-primary" style="flex:1; font-size:0.8rem;">Detect & Visualize →</button>
+              <button id="hero-visualize-btn" class="btn btn-primary" style="flex:1; font-size:0.8rem;"><span>DETECT & VISUALIZE →</span></button>
               <button id="hero-clear-btn" class="btn btn-ghost" style="font-size:0.8rem;">Clear</button>
             </div>
           </div>
@@ -108,59 +126,82 @@ export const PAGES = {
     `,
     mount: (view) => {
       const marquee = view.querySelector('#marquee-inner');
-      if (marquee) gsap.to(marquee, { xPercent: -50, duration: 32, ease: "none", repeat: -1 });
+      if (marquee && typeof gsap !== 'undefined') {
+        gsap.to(marquee, { xPercent: -50, duration: 32, ease: 'none', repeat: -1 });
+      }
 
-      const pasteArea = view.querySelector('#hero-paste-area');
-      const status = view.querySelector('#paste-detect-status');
+      const pasteArea    = view.querySelector('#hero-paste-area');
+      const statusEl     = view.querySelector('#paste-detect-status');
       const visualizeBtn = view.querySelector('#hero-visualize-btn');
-      const clearBtn = view.querySelector('#hero-clear-btn');
+      const clearBtn     = view.querySelector('#hero-clear-btn');
+
+      if (!pasteArea || !visualizeBtn) {
+        console.error('AlgoVision: paste panel elements not found in DOM');
+        return;
+      }
 
       let detectedAlgo = null;
-      let detectTimer = null;
+      let detectTimer  = null;
 
-      if (pasteArea) {
-        pasteArea.addEventListener('input', () => {
-          clearTimeout(detectTimer);
-          if (pasteArea.value.length < 15) { status.style.display='none'; detectedAlgo=null; return; }
-          detectTimer = setTimeout(async () => {
-            try {
-              const { api } = await import('./api.js');
-              const res = await api.detect(pasteArea.value);
-              detectedAlgo = res.algorithm;
-              const conf = Math.round(res.confidence * 100);
-              status.style.display = 'block';
-              status.innerHTML = `Detected: <strong style="color:var(--cBright)">${res.algorithm.replace(/_/g,' ').toUpperCase()}</strong>
-                &nbsp;<span style="color:var(--inkDim)">${res.realworld?.title || ''}</span>
-                &nbsp;<span style="color:var(--cDim);">${conf}% confidence</span>`;
-            } catch { }
-          }, 700);
-        });
-      }
+      pasteArea.addEventListener('input', () => {
+        clearTimeout(detectTimer);
+        const text = pasteArea.value.trim();
+        if (text.length < 20) {
+          statusEl.style.display = 'none';
+          detectedAlgo = null;
+          return;
+        }
+        detectTimer = setTimeout(async () => {
+          try {
+            const { api } = await import('./api.js');
+            const res  = await api.detect(text);
+            detectedAlgo = res.algorithm;
+            const conf  = Math.round((res.confidence || 0) * 100);
+            const title = res.realworld?.title || '';
+            statusEl.style.display = 'block';
+            statusEl.innerHTML =
+              `DETECTED: <strong style="color:var(--cBright)">${res.algorithm.toUpperCase().replace(/_/g,' ')}</strong>` +
+              (title ? `<span style="color:var(--cDim);margin:0 0.5rem;">—</span><em style="color:var(--cDim)">${title}</em>` : '') +
+              `<span style="color:var(--cDim);margin-left:0.75rem;">(${conf}% confidence)</span>`;
+          } catch {
+            detectedAlgo = clientDetect(text);
+            statusEl.style.display = 'block';
+            statusEl.innerHTML =
+              `DETECTED (OFFLINE): <strong style="color:var(--cBright)">${detectedAlgo.toUpperCase().replace(/_/g,' ')}</strong>`;
+          }
+        }, 600);
+      });
 
-      if (visualizeBtn) {
-        visualizeBtn.addEventListener('click', async () => {
-          if (!pasteArea?.value.trim()) return;
+      visualizeBtn.addEventListener('click', async () => {
+        const text = pasteArea.value.trim();
+        if (!text) return;
+
+        const btnLabel = visualizeBtn.querySelector('span');
+        visualizeBtn.disabled = true;
+        if (btnLabel) btnLabel.textContent = 'DETECTING...';
+
+        try {
           if (detectedAlgo) {
             window.location.hash = `#/experience?algo=${detectedAlgo}`;
-          } else {
-            const { api } = await import('./api.js');
-            try {
-              const res = await api.detect(pasteArea.value);
-              window.location.hash = `#/experience?algo=${res.algorithm}`;
-            } catch {
-              window.location.hash = '#/experience?algo=dijkstra';
-            }
+            return;
           }
-        });
-      }
+          const { api } = await import('./api.js');
+          const res = await api.detect(text);
+          window.location.hash = `#/experience?algo=${res.algorithm}`;
+        } catch {
+          const fallback = clientDetect(text);
+          window.location.hash = `#/experience?algo=${fallback}`;
+        } finally {
+          visualizeBtn.disabled = false;
+          if (btnLabel) btnLabel.textContent = 'DETECT & VISUALIZE →';
+        }
+      });
 
-      if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-          if (pasteArea) pasteArea.value = '';
-          if (status) status.style.display = 'none';
-          detectedAlgo = null;
-        });
-      }
+      clearBtn?.addEventListener('click', () => {
+        pasteArea.value = '';
+        statusEl.style.display = 'none';
+        detectedAlgo = null;
+      });
     }
   },
 

@@ -652,7 +652,10 @@ footer.footer p {
   background: var(--bg1);
   border-color: var(--cDeep);
   min-height: 260px;
+  overflow: hidden;
 }
+#viz-inner { display: block; width: 100%; }
+#viz-inner canvas { display: block; width: 100% !important; height: auto; }
 @media (max-width: 768px) {
   #prob-layout { grid-template-columns: 1fr !important; }
   #prob-list { max-height: 200px !important; overflow-y: auto; }

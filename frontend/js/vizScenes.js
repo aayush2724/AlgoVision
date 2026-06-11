@@ -8,8 +8,9 @@ import * as THREE from 'three';
 // ── SHARED 3D SETUP ──────────────────────────────────────────────────────────
 
 function setup3D(container, camPos = [0, 4, 12]) {
-  const w = container.clientWidth || 520;
-  const h = 240;
+  const rect = container.getBoundingClientRect();
+  const w = (rect.width > 0 ? rect.width : container.clientWidth) || 520;
+  const h = 260;
 
   let renderer;
   try {

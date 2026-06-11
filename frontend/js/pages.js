@@ -387,9 +387,8 @@ export const PAGES = {
             <div id="prob-list" style="overflow-y:auto; max-height:70vh;"></div>
           </div>
           <div>
-            <div id="viz-container" class="panel" style="min-height:240px; margin-bottom:1.5rem;
-              display:flex; align-items:center; justify-content:center; padding:1.5rem;">
-              <div id="viz-inner" style="width:100%;"></div>
+            <div id="viz-container" class="panel" style="margin-bottom:1.5rem; padding:0; overflow:hidden;">
+              <div id="viz-inner" style="width:100%; display:block;"></div>
             </div>
             <div class="panel panel-glow" style="border-color:rgba(95,214,230,0.25);">
               <div style="display:flex; justify-content:space-between; align-items:flex-start;

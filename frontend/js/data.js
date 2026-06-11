@@ -123,7 +123,7 @@ export const A2Z_STEPS = [
       { id:"4-5",  title:"Floor & Ceil of a Number",        difficulty:"E", viz:"elevator",   world:"Elevator Floor",          hook:"Which floor do you land on? And which is just above?" },
       { id:"4-6",  title:"First & Last Occurrence",         difficulty:"M", viz:"library",    world:"Archive Search",          hook:"When did this event first and last appear?" },
       { id:"4-7",  title:"Count Occurrences",               difficulty:"E", viz:"votes",      world:"Vote Counter",            hook:"How many ballots carry this name?" },
-      { id:"4-8",  title:"Search in Rotated Array",         difficulty:"M", viz:"carousel",   world:"Rotated Carousel",        hook:"The ride spun. Find your seat anyway." },
+      { id:"4-8",  title:"Search in Rotated Array",         difficulty:"M", viz:"array",      world:"Rotated Carousel",        hook:"The ride spun. Find your seat anyway." },
       { id:"4-9",  title:"Find Minimum in Rotated Array",   difficulty:"M", viz:"mountain",   world:"Valley in Rotated Terrain",hook:"The lowest point after the mountain spun." },
       { id:"4-10", title:"Single Element in Sorted Array",  difficulty:"M", viz:"mirror",     world:"Odd Locker Out",          hook:"Every locker has a twin. Except one." },
       { id:"4-11", title:"Find Peak Element",               difficulty:"M", viz:"mountain",   world:"Mountain Peak Hike",      hook:"Climb until you can't go higher." },

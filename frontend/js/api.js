@@ -1,6 +1,10 @@
-const BASE_URL = (typeof window !== "undefined" && window.ALGOVISION_API != null)
-  ? window.ALGOVISION_API
-  : "";
+const BASE_URL = (() => {
+  if (typeof window === 'undefined') return '';
+  if (window.ALGOVISION_API !== undefined && window.ALGOVISION_API !== null) {
+    return window.ALGOVISION_API; // set in index.html — empty string = same-origin
+  }
+  return '';
+})();
 
 async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;

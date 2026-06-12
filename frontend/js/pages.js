@@ -389,39 +389,82 @@ export const PAGES = {
               font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></div>
             <div id="prob-list" style="overflow-y:auto; max-height:70vh;"></div>
           </div>
-          <div>
-            <div id="viz-container" class="panel" style="margin-bottom:1.5rem; padding:0; overflow:hidden;">
-              <div id="viz-inner" style="width:100%; display:block;"></div>
+
+          <div id="viz-panel" style="min-width:0; display:flex; flex-direction:column; gap:1.25rem;">
+            <div id="viz-inner" style="width:100%; min-height:320px;
+              background:#02060a; border:1px solid var(--panel-border);
+              position:relative; overflow:hidden;">
             </div>
-            <div class="panel panel-glow" style="border-color:rgba(0,212,255,0.2); border-top:3px solid var(--cAccent);">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start;
-                flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+
+            <div class="panel" style="padding:1rem 1.25rem; border-top:2px solid var(--cAccent);">
+              <div style="display:flex; align-items:center; gap:0.75rem;
+                margin-bottom:0.75rem; flex-wrap:wrap;">
+                <button id="scene-step-back" class="btn btn-ghost"
+                  style="font-size:0.85rem; padding:0.4rem 0.8rem;" disabled>
+                  ← PREV STEP
+                </button>
+                <span id="scene-step-counter"
+                  style="font-family:var(--font-pixel); font-size:8px;
+                  color:var(--cDim); min-width:60px; text-align:center;">
+                  1 / ?
+                </span>
+                <button id="scene-step-fwd" class="btn btn-primary"
+                  style="font-size:0.85rem; padding:0.4rem 0.8rem;">
+                  NEXT STEP →
+                </button>
+              </div>
+              <p id="scene-narration"
+                style="font-family:var(--font-mono); font-size:1.05rem;
+                color:var(--c); margin:0; line-height:1.6; min-height:2.5rem;">
+              </p>
+            </div>
+
+            <div class="panel">
+              <div style="display:flex; justify-content:space-between;
+                align-items:flex-start; margin-bottom:0.75rem; gap:1rem; flex-wrap:wrap;">
                 <div>
                   <span class="eyebrow" id="prob-id-label" style="margin-bottom:0.25rem;"></span>
                   <h2 id="prob-title" style="margin:0; font-size:1.3rem;"></h2>
                 </div>
-                <span id="prob-difficulty" style="font-family:var(--font-display2); font-size:1.1rem;
-                  padding:4px 12px; border:1px solid currentColor; align-self:flex-start; letter-spacing:0.08em;"></span>
+                <span id="prob-difficulty"
+                  style="font-family:var(--font-display2); font-size:1.1rem;
+                  padding:4px 12px; border:1px solid currentColor;
+                  align-self:flex-start; letter-spacing:0.08em;">
+                </span>
               </div>
-              <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap;">
-                <span style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">REAL WORLD:</span>
-                <span id="prob-world" style="font-family:var(--font-mono); font-size:1.1rem; color:var(--c);"></span>
+              <div style="display:flex; gap:0.75rem; align-items:center;
+                margin-bottom:1rem; flex-wrap:wrap;">
+                <span style="font-family:var(--font-pixel); font-size:7px;
+                  color:var(--cDim);">REAL WORLD:</span>
+                <span id="prob-world"
+                  style="font-family:var(--font-mono); font-size:1.1rem; color:var(--c);">
+                </span>
               </div>
-              <p id="prob-hook" style="font-family:var(--font-mono); font-size:1rem;
-                color:var(--inkDim); border-left:3px solid var(--cAccent); padding-left:1rem;
-                margin-bottom:1.5rem; max-width:none;"></p>
+              <p id="prob-hook"
+                style="font-family:var(--font-mono); font-size:1rem;
+                color:var(--inkDim); border-left:3px solid var(--cAccent);
+                padding-left:1rem; margin-bottom:1.5rem; max-width:none;">
+              </p>
               <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-                <button id="prev-prob" class="btn btn-ghost" style="font-size:0.85rem;">← PREV</button>
-                <button id="next-prob" class="btn btn-primary" style="font-size:0.85rem;">NEXT →</button>
-                <a id="practice-link" href="#/practice" class="btn" style="margin-left:auto; font-size:0.85rem;">🐞 PRACTICE</a>
+                <button id="prev-prob" class="btn btn-ghost" style="font-size:0.85rem;">
+                  ← PREV PROBLEM
+                </button>
+                <button id="next-prob" class="btn btn-primary" style="font-size:0.85rem;">
+                  NEXT PROBLEM →
+                </button>
+                <a id="practice-link" href="#/practice"
+                  class="btn" style="margin-left:auto; font-size:0.85rem;">
+                  🐞 PRACTICE
+                </a>
               </div>
             </div>
+
           </div>
         </div>
       </section>
     `,
     mount: (view, params) => {
-      import('./vizScenes.js').then(({ VIZ_SCENES }) => {
+      import('./vizScenes.js').then(({ mountScene }) => {
         import('./data.js').then((DATA) => {
           let currentStepIdx = 0;
           let currentProbIdx = 0;
@@ -435,12 +478,6 @@ export const PAGES = {
 
           const stepTitleEl = view.querySelector('#step-title');
           const probListEl  = view.querySelector('#prob-list');
-          const vizInner    = view.querySelector('#viz-inner');
-          const probIdLabel = view.querySelector('#prob-id-label');
-          const probTitle   = view.querySelector('#prob-title');
-          const probDiff    = view.querySelector('#prob-difficulty');
-          const probWorld   = view.querySelector('#prob-world');
-          const probHook    = view.querySelector('#prob-hook');
           const prevBtn     = view.querySelector('#prev-prob');
           const nextBtn     = view.querySelector('#next-prob');
 
@@ -478,26 +515,87 @@ export const PAGES = {
               el.style.borderLeft = i===pi ? '2px solid var(--cAccent)' : '2px solid transparent';
             });
 
-            probIdLabel.textContent = `PROBLEM ${prob.id}`;
-            probTitle.textContent   = prob.title;
-            const diffMap = { E:'EASY', M:'MEDIUM', H:'HARD' };
-            const colMap  = { E:'var(--cDim)', M:'var(--c)', H:'var(--cAccent)' };
-            probDiff.textContent  = diffMap[prob.difficulty];
-            probDiff.style.color  = colMap[prob.difficulty];
-            probWorld.textContent = prob.world;
-            probHook.textContent  = `"${prob.hook}"`;
+            const probIdLabel = view.querySelector('#prob-id-label');
+            const probTitle   = view.querySelector('#prob-title');
+            const probDiff    = view.querySelector('#prob-difficulty');
+            const probWorld   = view.querySelector('#prob-world');
+            const probHook    = view.querySelector('#prob-hook');
 
-            vizInner.innerHTML = '';
-            try {
-              const scene = VIZ_SCENES[prob.viz] || VIZ_SCENES.default;
-              scene.draw(vizInner, prob);
-            } catch (e) {
-              if (!vizInner.firstChild) {
-                vizInner.innerHTML = '<div style="height:240px;display:flex;align-items:center;justify-content:center;color:#0098b8;font-family:monospace;font-size:11px;opacity:0.5;">[ 3D VISUALIZATION — OPEN IN BROWSER ]</div>';
-              }
+            if (probIdLabel) probIdLabel.textContent = `PROBLEM ${prob.id}`;
+            if (probTitle)   probTitle.textContent   = prob.title;
+            if (probDiff) {
+              const diffMap = { E:'EASY', M:'MEDIUM', H:'HARD' };
+              const colMap  = { E:'var(--cDim)', M:'var(--c)', H:'var(--cAccent)' };
+              probDiff.textContent = diffMap[prob.difficulty] || prob.difficulty;
+              probDiff.style.color = colMap[prob.difficulty] || 'var(--c)';
+            }
+            if (probWorld) probWorld.textContent = prob.world;
+            if (probHook)  probHook.textContent  = `"${prob.hook}"`;
+
+            history.replaceState(null,'',`#/a2z-problem?step=${si+1}&prob=${prob.id}`);
+
+            const vizInner = view.querySelector('#viz-inner');
+            if (!vizInner) return;
+
+            if (vizInner._vizAutoInterval) {
+              clearInterval(vizInner._vizAutoInterval);
+              vizInner._vizAutoInterval = null;
+            }
+            if (vizInner._vizDispose) {
+              vizInner._vizDispose();
+              vizInner._vizDispose = null;
             }
 
-            history.replaceState(null, '', `#/a2z-problem?step=${si+1}&prob=${prob.id}`);
+            let controller = null;
+            let currentSceneStep = 0;
+
+            try {
+              controller = mountScene(vizInner, prob.viz || 'default', prob);
+            } catch (e) {
+              console.error('Scene mount failed:', e);
+              vizInner.innerHTML = '<div style="height:300px;display:flex;align-items:center;' +
+                'justify-content:center;color:#2a7f8c;font-family:monospace;font-size:12px;">' +
+                'Scene loading...</div>';
+            }
+
+            const stepBackBtn   = view.querySelector('#scene-step-back');
+            const stepFwdBtn    = view.querySelector('#scene-step-fwd');
+            const stepCounter   = view.querySelector('#scene-step-counter');
+            const stepNarration = view.querySelector('#scene-narration');
+
+            function updateStepUI() {
+              if (!controller) return;
+              const total = controller.totalSteps();
+              if (stepCounter)   stepCounter.textContent  = `${currentSceneStep + 1} / ${total}`;
+              if (stepNarration) stepNarration.textContent = controller.narration(currentSceneStep);
+              if (stepBackBtn)   stepBackBtn.disabled = currentSceneStep === 0;
+              if (stepFwdBtn)    stepFwdBtn.disabled  = currentSceneStep >= total - 1;
+            }
+
+            if (stepBackBtn) {
+              const newBack = stepBackBtn.cloneNode(true);
+              stepBackBtn.parentNode.replaceChild(newBack, stepBackBtn);
+              newBack.addEventListener('click', () => {
+                if (!controller || currentSceneStep <= 0) return;
+                currentSceneStep--;
+                controller.step(currentSceneStep);
+                updateStepUI();
+              });
+            }
+
+            if (stepFwdBtn) {
+              const newFwd = stepFwdBtn.cloneNode(true);
+              stepFwdBtn.parentNode.replaceChild(newFwd, stepFwdBtn);
+              newFwd.addEventListener('click', () => {
+                if (!controller || currentSceneStep >= controller.totalSteps()-1) return;
+                currentSceneStep++;
+                controller.step(currentSceneStep);
+                updateStepUI();
+              });
+            }
+
+            updateStepUI();
+
             const activeItem = view.querySelector(`.prob-item[data-pi="${pi}"]`);
             if (activeItem) activeItem.scrollIntoView({ block:'nearest', behavior:'smooth' });
           }

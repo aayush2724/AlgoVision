@@ -764,11 +764,7 @@ footer.footer p { font-size: 0.8rem; color: var(--inkDim); max-width: none; }
 
 /* ── PROBLEM VIEWER ── */
 #prob-list .prob-item:first-child { border-top: none; }
-#viz-container { background: var(--bg1); border-color: var(--cDeep); min-height: 260px; overflow: hidden; }
-#viz-inner { display: block; width: 100%; }
-#viz-inner canvas { display: block; width: 100% !important; height: auto; }
 @media (max-width: 768px) {
-  #prob-layout { grid-template-columns: 1fr !important; }
   #prob-list { max-height: 200px !important; overflow-y: auto; }
 }
 
@@ -861,3 +857,41 @@ footer.footer p { font-size: 0.8rem; color: var(--inkDim); max-width: none; }
   letter-spacing: 0.2em;
 }
 @media (max-width:768px) { .journey-stats { flex-direction: column; } }
+
+/* ── VIZ 3D CONTAINER ── */
+#viz-inner {
+  width: 100%;
+  overflow: hidden;
+  display: block;
+  background: #02060a;
+  border: 1px solid var(--panel-border);
+  position: relative;
+}
+#viz-inner canvas {
+  width: 100% !important;
+  display: block !important;
+  max-width: 100% !important;
+}
+
+/* ── SCENE STEP CONTROLS ── */
+#scene-narration {
+  transition: opacity 0.2s ease;
+}
+#scene-step-back:disabled,
+#scene-step-fwd:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── VIZ PANEL GRID ── */
+#viz-panel { min-width: 0; }
+
+@media (max-width: 860px) {
+  #prob-layout {
+    grid-template-columns: 1fr !important;
+  }
+  #viz-inner {
+    min-height: 240px !important;
+  }
+}

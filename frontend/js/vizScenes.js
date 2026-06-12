@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 
 /* ── DESIGN TOKENS ───────────────────────────────────────────── */
-const C       = 0x5fd6e6;
-const CBRIGHT = 0xa9f0fa;
-const CDIM    = 0x2a7f8c;
-const CDEEP   = 0x0c2a31;
-const CACC    = 0xff6b00;
-const BG      = 0x03080f;
+const C       = 0x5fd6e6;   // cyan
+const CBRIGHT = 0xa9f0fa;   // bright cyan
+const CDIM    = 0x2a7f8c;   // muted cyan
+const CDEEP   = 0x0c2a31;   // deep cyan
+const CACC    = 0xff6b00;   // orange accent
+const BG      = 0x03080f;   // near-black
 const GREEN   = 0x4ade80;
 const YELLOW  = 0xfbbf24;
 const RED     = 0xf87171;
@@ -14,13 +14,14 @@ const WHITE   = 0xdffafe;
 
 /* ── SHARED RENDERER SETUP ───────────────────────────────────── */
 function createRenderer(container) {
+  // Dispose any existing Three.js scene on this container
   if (container._vizDispose) {
     container._vizDispose();
     container._vizDispose = null;
   }
   container.innerHTML = '';
 
-  const w = container.offsetWidth ||
+  const w = container.offsetWidth  ||
             container.parentElement?.offsetWidth || 640;
   const h = Math.max(320, Math.round(w * 0.52));
 
@@ -37,6 +38,7 @@ function createRenderer(container) {
   });
   container.appendChild(renderer.domElement);
 
+  // Resize observer
   let resizeTimer;
   const ro = new ResizeObserver(() => {
     clearTimeout(resizeTimer);
@@ -168,10 +170,13 @@ function lerpColor(mesh, targetHex, duration = 0.4) {
     const to   = new THREE.Color(targetHex);
     gsap.to(from, {
       r: to.r, g: to.g, b: to.b, duration,
-      onUpdate: () => {
-        mesh.material.color.copy(from);
+      onUpdate: () => mesh.material.color.copy(from),
+    });
+    gsap.to({}, {
+      duration,
+      onUpdate: function() {
         mesh.material.emissive.copy(from);
-      },
+      }
     });
   } else {
     mesh.material.color.set(targetHex);
@@ -195,6 +200,7 @@ function moveTo(obj, x, y, z, duration = 0.6) {
 /* ──────────────────────────────────────────────────────────────
    SCENE: dijkstra / gps
    World: 3D city — car drives the shortest path through streets
+   Steps: Initialize → Visit each node → Relax edges → Arrive
 ────────────────────────────────────────────────────────────── */
 function sceneDijkstra(container, prob) {
   const { renderer, w, h, ro } = createRenderer(container);
@@ -204,6 +210,7 @@ function sceneDijkstra(container, prob) {
   addLights(scene);
   addGrid(scene, 40);
 
+  // City layout — intersections + roads
   const CITY = [
     { id:'A', x:-8,  z:-6,  name:'Home'       },
     { id:'B', x:-2,  z:-8,  name:'School'      },
@@ -222,31 +229,40 @@ function sceneDijkstra(container, prob) {
   const nodeMap = {};
   const edgeMeshes = {};
 
-  EDGES.forEach(([s, t, wt]) => {
+  // Draw road segments
+  EDGES.forEach(([s, t, w]) => {
     const a = CITY.find(n => n.id === s);
     const b = CITY.find(n => n.id === t);
     const road = tube(scene, [a.x, 0, a.z], [b.x, 0, b.z], 0.18, CDEEP);
     edgeMeshes[`${s}-${t}`] = road;
-    const mid = label3D(`${wt}m`, CDIM, 0.7);
+    // Weight label
+    const mid = label3D(`${w}m`, CDIM, 0.7);
     mid.position.set((a.x+b.x)/2, 0.5, (a.z+b.z)/2);
     scene.add(mid);
   });
 
+  // Draw buildings at intersections
   CITY.forEach(n => {
-    const bh = 1.5 + Math.random() * 3;
-    const building = box(scene, 1.4, bh, 1.4, mat(CDEEP, CDEEP, 0.15), n.x, 0, n.z);
-    const roofLight = box(scene, 0.4, 0.3, 0.4, mat(CDIM, CDIM, 0.3), n.x, bh, n.z);
+    const h = 1.5 + Math.random() * 3;
+    const building = box(scene, 1.4, h, 1.4, mat(CDEEP, CDEEP, 0.15), n.x, 0, n.z);
+    // Rooftop glow cube
+    const roofLight = box(scene, 0.4, 0.3, 0.4, mat(CDIM, CDIM, 0.3), n.x, h, n.z);
+    // Name label above building
     const lbl = label3D(n.name, CDIM, 0.75);
-    lbl.position.set(n.x, bh + 1.2, n.z);
+    lbl.position.set(n.x, h + 1.2, n.z);
     scene.add(lbl);
-    nodeMap[n.id] = { building, roofLight, h: bh, ...n };
+    nodeMap[n.id] = { building, roofLight, h, ...n };
   });
 
+  // Car — a small orange box that drives the path
   const carBody  = box(scene, 0.8, 0.4, 1.4, mat(CACC, CACC, 0.8), -8, 0.3, -6);
   const carTop   = box(scene, 0.6, 0.3, 0.8, mat(CACC, CACC, 0.6), -8, 0.7, -6);
   const headlightL = sphere(scene, 0.1, mat(YELLOW, YELLOW, 1.5), -8.3, 0.35, -6.7);
   const headlightR = sphere(scene, 0.1, mat(YELLOW, YELLOW, 1.5), -7.7, 0.35, -6.7);
 
+  // Dijkstra step sequence
+  const PATH    = ['A','B','D','F','G'];   // shortest path A→G
+  const VISITED = ['A','C','B','E','D','F','G'];
   const STEPS = [
     { narration: 'GPS initialised at Home (A). Distance = 0, all others = ∞.',
       highlight: null, active: 'A', car: 'A', visitRoad: null },
@@ -272,24 +288,30 @@ function sceneDijkstra(container, prob) {
       highlight: ['A-C','C-E','E-F','F-G'], active: 'G', car: 'G', visitRoad: 'PATH' },
   ];
 
+  // Track visited buildings
   const visitedSet = new Set();
 
   function applyStep(idx) {
     const s = STEPS[Math.min(idx, STEPS.length - 1)];
 
+    // Reset all road colours
     Object.values(edgeMeshes).forEach(m => lerpColor(m, CDEEP, 0.3));
+    // Reset all buildings
     Object.values(nodeMap).forEach(n => {
       lerpColor(n.building, visitedSet.has(n.id) ? CDIM : CDEEP, 0.3);
       lerpColor(n.roofLight, visitedSet.has(n.id) ? C : CDIM, 0.3);
     });
 
+    // Mark visited
     if (s.active) visitedSet.add(s.active);
 
+    // Highlight active node — glow cyan
     if (s.active && nodeMap[s.active]) {
       lerpColor(nodeMap[s.active].building, C, 0.35);
       lerpColor(nodeMap[s.active].roofLight, CBRIGHT, 0.2);
     }
 
+    // Highlight edges
     if (s.highlight === 'PATH') {
       ['A-C','C-E','E-F','F-G'].forEach(k => {
         const m = edgeMeshes[k] || edgeMeshes[k.split('-').reverse().join('-')];
@@ -302,6 +324,7 @@ function sceneDijkstra(container, prob) {
       });
     }
 
+    // Move car to node
     if (s.car && nodeMap[s.car]) {
       const dest = nodeMap[s.car];
       moveTo(carBody, dest.x, 0.3, dest.z, 0.8);
@@ -310,18 +333,22 @@ function sceneDijkstra(container, prob) {
       moveTo(headlightR, dest.x + 0.3, 0.35, dest.z - 0.7, 0.8);
     }
 
-    if (s.active && nodeMap[s.active] && typeof gsap !== 'undefined') {
+    // Pan camera toward active node
+    if (s.active && nodeMap[s.active]) {
       const t = nodeMap[s.active];
-      gsap.to(camera.position, {
-        x: t.x + 4, y: 18, z: t.z + 18,
-        duration: 0.9, ease: 'power2.inOut'
-      });
+      if (typeof gsap !== 'undefined') {
+        gsap.to(camera.position, {
+          x: t.x + 4, y: 18, z: t.z + 18,
+          duration: 0.9, ease: 'power2.inOut'
+        });
+      }
     }
   }
 
   let t = 0;
   const stopLoop = animLoop(renderer, scene, camera, () => {
     t += 0.008;
+    // Gentle camera sway when idle
     camera.position.x += Math.sin(t * 0.3) * 0.005;
   });
 
@@ -376,14 +403,18 @@ function sceneBFS(container, prob) {
 
   const nodeMap = {};
   PEOPLE.forEach(p => {
+    // Person body
     const body = sphere(scene, 0.7, mat(CDEEP, CDEEP, 0.2), p.x, 0.7, p.z);
+    // Head
     const head = sphere(scene, 0.4, mat(CDIM, CDIM, 0.3), p.x, 1.9, p.z);
+    // Name label
     const lbl = label3D(p.name, CDIM, 0.8);
     lbl.position.set(p.x, 3.1, p.z);
     scene.add(lbl);
     nodeMap[p.id] = { body, head, lbl, ...p };
   });
 
+  // Friendship lines
   const connectionMeshes = {};
   CONNECTIONS.forEach(([a, b]) => {
     const pa = PEOPLE.find(p => p.id === a);
@@ -426,6 +457,7 @@ function sceneBFS(container, prob) {
     const s = STEPS[Math.min(idx, STEPS.length-1)];
     s.discovered?.forEach(id => discoveredSet.add(id));
 
+    // Colour everyone
     PEOPLE.forEach(p => {
       const isActive     = p.id === s.active;
       const isDiscovered = discoveredSet.has(p.id);
@@ -440,12 +472,14 @@ function sceneBFS(container, prob) {
       }
     });
 
+    // Light up connections
     Object.values(connectionMeshes).forEach(m => lerpColor(m, CDEEP, 0.3));
     s.connections?.forEach(k => {
       const m = connectionMeshes[k] || connectionMeshes[k.split('-').reverse().join('-')];
       if (m) lerpColor(m, C, 0.3);
     });
 
+    // Pan camera
     if (nodeMap[s.active] && typeof gsap !== 'undefined') {
       gsap.to(camera.position, {
         x: nodeMap[s.active].x + 2,
@@ -512,6 +546,7 @@ function sceneSorting(container, prob) {
     labels.push(lbl);
   });
 
+  // Merge sort step-by-step state
   const STEPS = [
     { compare:[], sorted:[], swap:null,
       narration:'Leaderboard unsorted. Merge Sort divides it in half.' },
@@ -599,11 +634,12 @@ function sceneArray(container, prob) {
   addLights(scene);
   addGrid(scene, 26);
 
-  const VALUES = prob?.demo || [7, 2, 9, 4, 1, 6, 3, 8, 5];
+  const VALUES = prob.demo || [7, 2, 9, 4, 1, 6, 3, 8, 5];
   const N = VALUES.length;
   const SPACE = 2.2;
   const START = -(N-1)*SPACE/2;
 
+  // Train track
   const track = new THREE.Mesh(
     new THREE.BoxGeometry(N*SPACE+1, 0.12, 0.5),
     mat(CDIM, CDIM, 0.2)
@@ -611,21 +647,28 @@ function sceneArray(container, prob) {
   track.position.set(0, 0.06, 0);
   scene.add(track);
 
+  // Carriages
   const carriages = [];
+  const valLabels = [];
+  const idxLabels = [];
   VALUES.forEach((v, i) => {
     const c = box(scene, 1.8, 1.4, 1.6, mat(CDEEP, CDEEP, 0.2),
                   START + i*SPACE, 0.12, 0);
-    box(scene, 1.2, 0.6, 0.2,
+    // Carriage window (lighter panel)
+    const win = box(scene, 1.2, 0.6, 0.2,
       mat(CDIM, CDIM, 0.4), START+i*SPACE, 0.82, 0.75);
     carriages.push(c);
     const vl = label3D(String(v), CBRIGHT, 0.9);
     vl.position.set(START+i*SPACE, 2.2, 0);
     scene.add(vl);
+    valLabels.push(vl);
     const il = label3D(`[${i}]`, CDIM, 0.65);
     il.position.set(START+i*SPACE, -0.5, 0);
     scene.add(il);
+    idxLabels.push(il);
   });
 
+  // Pointer arrow
   const pointer = new THREE.Mesh(
     new THREE.ConeGeometry(0.25, 0.8, 8),
     mat(CACC, CACC, 1.0)
@@ -634,6 +677,7 @@ function sceneArray(container, prob) {
   pointer.position.set(START, 3.2, 0);
   scene.add(pointer);
 
+  // Steps: linear search for a target
   const TARGET = 6;
   const STEPS = VALUES.map((v, i) => ({
     pointer: i,
@@ -701,11 +745,13 @@ function sceneBinarySearch(container, prob) {
   const SPACE = 1.5;
   const START = -(N-1)*SPACE/2;
 
-  box(scene, N*SPACE+1, 0.2, 1.2, mat(0x3d1a00, 0x3d1a00, 0.1), 0, 0, 0);
+  // Bookshelf base
+  const shelf = box(scene, N*SPACE+1, 0.2, 1.2, mat(0x3d1a00, 0x3d1a00, 0.1), 0, 0, 0);
   box(scene, N*SPACE+1, 0.2, 1.2, mat(0x3d1a00, 0x3d1a00, 0.1), 0, 2.8, 0);
   box(scene, 0.15, 3.2, 1.2, mat(0x3d1a00, 0x3d1a00, 0.1), START-0.8, 1.6, 0);
   box(scene, 0.15, 3.2, 1.2, mat(0x3d1a00, 0x3d1a00, 0.1), -START+0.8, 1.6, 0);
 
+  // Books as colored boxes
   const books = [];
   BOOKS.forEach((v, i) => {
     const isTarget = v === TARGET;
@@ -718,9 +764,12 @@ function sceneBinarySearch(container, prob) {
     scene.add(lbl);
   });
 
+  // Robot arm (pointer)
   const arm = cylinder(scene, 0.08, 0.08, 2.5, mat(CACC, CACC, 1.0), 0, 4.5, 0);
   const armHead = sphere(scene, 0.22, mat(CBRIGHT, CBRIGHT, 1.2), 0, 3.2, 0);
 
+  // Binary search steps
+  let lo = 0, hi = N-1;
   const STEPS = [];
   let loCur = 0, hiCur = N-1;
   while (loCur <= hiCur) {
@@ -822,6 +871,7 @@ function sceneTree(container, prob) {
     }
   });
 
+  // Inorder traversal steps
   const INORDER = [8,4,9,2,5,1,6,3,7];
   const STEPS = INORDER.map((id, i) => ({
     active: id,
@@ -842,8 +892,9 @@ function sceneTree(container, prob) {
         isActive ? CBRIGHT : isVisited ? C : CDEEP, 0.3);
       orbs[n.id].material.emissiveIntensity = isActive ? 1.4 : isVisited ? 0.5 : 0.15;
     });
+    // Light up edge to active
     Object.entries(edges).forEach(([k, m]) => {
-      const cid = Number(k.split('-')[1]);
+      const [pid, cid] = k.split('-').map(Number);
       lerpColor(m, visitedSet.has(cid) ? C : CDEEP, 0.3);
     });
     const active = lookup[s.active];
@@ -890,12 +941,14 @@ function sceneDP(container, prob) {
   const camera = createCamera(w, h, [0, 16, 18], [0, 0, 0]);
   addLights(scene);
 
+  // Fibonacci DP table as glowing floor tiles
   const FIBS = [0,1,1,2,3,5,8,13,21,34];
   const N = FIBS.length;
   const SPACE = 2.2;
   const START = -(N-1)*SPACE/2;
 
   const cells  = [];
+  const valLbl = [];
   FIBS.forEach((v, i) => {
     const c = box(scene, 1.8, 0.3, 1.8, mat(CDEEP, CDEEP, 0.1),
                   START + i*SPACE, 0, 0);
@@ -903,11 +956,14 @@ function sceneDP(container, prob) {
     const lbl = label3D(String(v), CDIM, 0.85);
     lbl.position.set(START+i*SPACE, 1.0, 0);
     scene.add(lbl);
+    valLbl.push(lbl);
+
     const il = label3D(`F(${i})`, CDIM, 0.6);
     il.position.set(START+i*SPACE, -0.5, 0);
     scene.add(il);
   });
 
+  // Arrow showing dependency
   const arrow = new THREE.Mesh(
     new THREE.ConeGeometry(0.2, 0.7, 8),
     mat(CACC, CACC, 1.0)
@@ -987,17 +1043,20 @@ function sceneStack(container, prob) {
     { op:'PUSH', val:5 }, { op:'POP',  val:null },
   ];
 
-  const plates = [];
+  const plates   = [];
+  let   stackArr = [];
 
+  // Table base
   box(scene, 3.5, 0.3, 3.5, mat(0x1a0d00, 0x1a0d00, 0.1), 0, 0, 0);
 
+  // TOP label
   const topLabel = label3D('TOP ↑', CACC, 0.9);
   topLabel.position.set(2.8, 1, 0);
   scene.add(topLabel);
 
   const STEPS = [];
   const tempStack = [];
-  OPERATIONS.forEach((op) => {
+  OPERATIONS.forEach((op, i) => {
     if (op.op === 'PUSH') {
       tempStack.push(op.val);
       STEPS.push({
@@ -1019,6 +1078,7 @@ function sceneStack(container, prob) {
 
   function applyStep(idx) {
     const s = STEPS[Math.min(idx, STEPS.length-1)];
+    // Remove old plates
     plates.forEach(p => scene.remove(p));
     plates.length = 0;
 
@@ -1036,7 +1096,7 @@ function sceneStack(container, prob) {
       const lbl = label3D(String(v), isTop ? CBRIGHT : CDIM, 0.75);
       lbl.position.set(0, 0.3 + i*0.6 + 0.55, 0);
       scene.add(lbl);
-      plates.push(lbl);
+      plates.push(lbl); // so it gets cleaned too
     });
 
     topLabel.position.y = Math.max(1, 0.3 + s.stack.length * 0.6 + 0.4);
@@ -1093,6 +1153,7 @@ function sceneLinkedList(container, prob) {
   const arrows = [];
 
   VALS.forEach((v, i) => {
+    // Node box
     const nd = box(scene, 1.8, 1.2, 1.2,
       mat(CDEEP, CDEEP, 0.2), START+i*SPACE, 0.7, 0);
     nodes.push(nd);
@@ -1100,12 +1161,14 @@ function sceneLinkedList(container, prob) {
     vl.position.set(START+i*SPACE, 2.3, 0);
     scene.add(vl);
 
+    // Arrow to next
     if (i < N-1) {
       const ar = tube(scene,
         [START+i*SPACE+1.0, 1.3, 0],
         [START+(i+1)*SPACE-1.0, 1.3, 0],
         0.07, CDEEP);
       arrows.push(ar);
+      // Arrowhead
       const ah = new THREE.Mesh(
         new THREE.ConeGeometry(0.15, 0.4, 8),
         mat(CDIM, CDIM, 0.4)
@@ -1117,10 +1180,12 @@ function sceneLinkedList(container, prob) {
     }
   });
 
+  // NULL terminator
   const nullLbl = label3D('NULL', RED, 0.8);
   nullLbl.position.set(-START+SPACE*0.5, 2.3, 0);
   scene.add(nullLbl);
 
+  // Traversal steps
   const STEPS = VALS.map((v, i) => ({
     current: i,
     narration: i === N-1
@@ -1128,6 +1193,7 @@ function sceneLinkedList(container, prob) {
       : `Current node: ${v}. Following pointer → node ${VALS[i+1]}.`,
   }));
 
+  // Bonus: reverse step
   STEPS.push({
     current: -1,
     reversed: true,
@@ -1143,6 +1209,7 @@ function sceneLinkedList(container, prob) {
         isActive ? C : isPast ? CDIM : CDEEP, 0.3);
     });
     if (s.reversed) {
+      // Flash all nodes orange to show reversal
       nodes.forEach((nd, i) => {
         if (typeof gsap !== 'undefined') {
           gsap.to({}, { duration: 0.1*i, onComplete: () => lerpColor(nd, CACC, 0.2) });
@@ -1200,11 +1267,12 @@ function sceneWindow(container, prob) {
   addGrid(scene, 24);
 
   const VALUES = [2, 1, 5, 1, 3, 2, 6, 4];
-  const K      = 3;
+  const K      = 3;  // window size
   const N      = VALUES.length;
   const SPACE  = 2.1;
   const START  = -(N-1)*SPACE/2;
 
+  // Conveyor belt base
   box(scene, N*SPACE+1, 0.15, 1.6, mat(0x1a1000, 0x1a1000, 0.1), 0, 0, 0);
 
   const packages = [];
@@ -1217,16 +1285,19 @@ function sceneWindow(container, prob) {
     scene.add(vl);
   });
 
+  // Window frame — 3 glowing bars forming a bracket
   const winMat = mat(CACC, CACC, 0.9);
   const winTop  = new THREE.Mesh(new THREE.BoxGeometry(K*SPACE-0.1,0.12,0.12), winMat.clone());
   const winBotL = new THREE.Mesh(new THREE.BoxGeometry(0.12,1.8,0.12), winMat.clone());
   const winBotR = new THREE.Mesh(new THREE.BoxGeometry(0.12,1.8,0.12), winMat.clone());
   [winTop, winBotL, winBotR].forEach(m => { m.castShadow=false; scene.add(m); });
 
+  // Max sum label
   const maxLabel = label3D('MAX: 0', CBRIGHT, 1.0);
   maxLabel.position.set(0, 4.5, 0);
   scene.add(maxLabel);
 
+  // Sliding window steps
   const STEPS = [];
   let maxSum = 0;
   for (let i = 0; i <= N-K; i++) {
@@ -1251,6 +1322,7 @@ function sceneWindow(container, prob) {
     winBotL.position.set(START+s.left*SPACE - SPACE*0.45, 1.1, 0.8);
     winBotR.position.set(START+s.right*SPACE + SPACE*0.45, 1.1, 0.8);
 
+    // Update max label texture
     maxLabel.material.map.dispose();
     const c2 = document.createElement('canvas');
     c2.width=256; c2.height=64;
@@ -1300,6 +1372,7 @@ function sceneDFS(container, prob) {
   const camera = createCamera(w, h, [0, 20, 16], [0, 0, 0]);
   addLights(scene);
 
+  // 6x6 maze grid — 0=path, 1=wall
   const MAZE = [
     [0,0,1,0,0,0],
     [1,0,1,0,1,0],
@@ -1316,7 +1389,7 @@ function sceneDFS(container, prob) {
   MAZE.forEach((row, r) => {
     row.forEach((v, c) => {
       if (v === 1) {
-        box(scene, CS*0.9, 1.8, CS*0.9,
+        const wall = box(scene, CS*0.9, 1.8, CS*0.9,
           mat(0x0d1a20, 0x0d1a20, 0.1),
           OX+c*CS, 0, OZ+r*CS);
       } else {
@@ -1331,9 +1404,11 @@ function sceneDFS(container, prob) {
     });
   });
 
+  // Robot
   const robot = box(scene, 0.7, 1.1, 0.7, mat(CACC, CACC, 0.9), OX, 0.55, OZ);
   const robotHead = sphere(scene, 0.3, mat(CBRIGHT, CBRIGHT, 1.0), OX, 1.55, OZ);
 
+  // DFS path through maze from (0,0) to (5,5)
   const DFS_PATH = [
     [0,0],[0,1],[1,1],[2,1],[2,2],[2,3],[3,3],[3,4],[3,5],[4,4],[4,5],[5,2],[5,3],[5,4],[5,5]
   ];
@@ -1341,6 +1416,9 @@ function sceneDFS(container, prob) {
   const STEPS = DFS_PATH.map(([r,c], i) => ({
     pos: [r,c],
     visited: DFS_PATH.slice(0,i+1),
+    isBacktrack: i > 0 && !(
+      Math.abs(r-DFS_PATH[i-1][0])+Math.abs(c-DFS_PATH[i-1][1]) === 1
+    ),
     narration: r===5&&c===5
       ? 'Exit found! DFS explored every reachable path. Total steps: '+DFS_PATH.length
       : `Entering room (${r},${c}). ` +
@@ -1460,6 +1538,7 @@ function sceneDefault(container, prob) {
    Maps every viz type from data.js to a scene builder
 ═══════════════════════════════════════════════════════════════ */
 const BUILDERS = {
+  // Graph algorithms
   dijkstra:    sceneDijkstra,
   gps:         sceneDijkstra,
   graphs:      sceneBFS,
@@ -1469,6 +1548,7 @@ const BUILDERS = {
   maze:        sceneDFS,
   backtrack:   sceneDFS,
 
+  // Sorting
   mergesort:   sceneSorting,
   quicksort:   sceneSorting,
   bubbles:     sceneSorting,
@@ -1478,8 +1558,8 @@ const BUILDERS = {
   votes:       sceneSorting,
   postal:      sceneSorting,
   podium:      sceneSorting,
-  shuffle:     sceneSorting,
 
+  // Arrays
   array:       sceneArray,
   train:       sceneArray,
   terminal:    sceneArray,
@@ -1497,18 +1577,12 @@ const BUILDERS = {
   stockchart:  sceneArray,
   traffic:     sceneArray,
   watchman:    sceneArray,
-  market:      sceneArray,
-  flag:        sceneArray,
-  election:    sceneArray,
-  teams:       sceneArray,
-  shipping:    sceneArray,
-  clock:       sceneArray,
 
+  // Binary Search
   binarysearch: sceneBinarySearch,
   mountain:    sceneBinarySearch,
-  library:     sceneBinarySearch,
-  elevator:    sceneBinarySearch,
 
+  // Trees
   tree:        sceneTree,
   bst:         sceneTree,
   treeviz:     sceneTree,
@@ -1518,19 +1592,23 @@ const BUILDERS = {
   heapviz:     sceneTree,
   trie:        sceneTree,
 
+  // Linked List
   linkedlist:  sceneLinkedList,
   dna:         sceneLinkedList,
   courier:     sceneLinkedList,
   circuit:     sceneLinkedList,
 
+  // Stack / Queue
   stackviz:    sceneStack,
   stack:       sceneStack,
 
+  // Sliding Window / Two Pointers
   windowslide: sceneWindow,
   twopointers: sceneWindow,
   twoptr:      sceneWindow,
   window:      sceneWindow,
 
+  // Dynamic Programming
   dp:          sceneDP,
   vault:       sceneDP,
   dpgrid:      sceneDP,
@@ -1539,6 +1617,7 @@ const BUILDERS = {
   canyon:      sceneDP,
   timeline:    sceneDP,
 
+  // Fallback
   default:     sceneDefault,
 };
 
@@ -1553,11 +1632,13 @@ export function mountScene(container, vizType, prob) {
   }
 }
 
+// Keep backward-compatible VIZ_SCENES export so any old code doesn't break
 export const VIZ_SCENES = new Proxy({}, {
   get(_, vizType) {
     return {
       draw(container, prob) {
         const ctrl = mountScene(container, vizType, prob);
+        // Auto-advance through all steps for passive viewing
         let n = 0;
         const iv = setInterval(() => {
           n++;

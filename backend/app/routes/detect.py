@@ -1,12 +1,15 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi import APIRouter, Request
+from pydantic import BaseModel, Field
 import re
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
+limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/detect", tags=["detect"])
 
 class DetectRequest(BaseModel):
-    code: str = ""
-    problem: str = ""
+    code:    str = Field(default="", max_length=8_000)
+    problem: str = Field(default="", max_length=500)
 
 SIGNATURES = {
     "dijkstra": ["heapq", "heappush", "heappop", "dist[", "shortest", "dijkstra", "priority queue", "pq"],
@@ -107,8 +110,10 @@ REALWORLD_META = {
     }
 }
 
+# 60 detections per minute — fast, lightweight endpoint
 @router.post("")
-def detect(req: DetectRequest):
+@limiter.limit("60/minute")
+def detect(request: Request, req: DetectRequest):
     text = (req.code + " " + req.problem).lower()
     scores = {}
     for algo, keywords in SIGNATURES.items():
@@ -119,7 +124,7 @@ def detect(req: DetectRequest):
     meta = REALWORLD_META.get(best, REALWORLD_META["dijkstra"])
     return {
         "algorithm": best,
-        "confidence": min(scores[best] / 3, 1.0),
+        "confidence": round(min(scores[best] / 3, 1.0), 2),
         "realworld": meta,
-        "all_scores": scores
+        # all_scores intentionally omitted
     }

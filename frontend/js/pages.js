@@ -390,12 +390,16 @@ export const PAGES = {
             <div id="prob-list" style="overflow-y:auto; max-height:70vh;"></div>
           </div>
 
+          <!-- RIGHT PANEL: Visualization + Details -->
           <div id="viz-panel" style="min-width:0; display:flex; flex-direction:column; gap:1.25rem;">
+
+            <!-- 3D Scene Canvas -->
             <div id="viz-inner" style="width:100%; min-height:320px;
               background:#02060a; border:1px solid var(--panel-border);
               position:relative; overflow:hidden;">
             </div>
 
+            <!-- Step Controls -->
             <div class="panel" style="padding:1rem 1.25rem; border-top:2px solid var(--cAccent);">
               <div style="display:flex; align-items:center; gap:0.75rem;
                 margin-bottom:0.75rem; flex-wrap:wrap;">
@@ -419,6 +423,7 @@ export const PAGES = {
               </p>
             </div>
 
+            <!-- Problem Details -->
             <div class="panel">
               <div style="display:flex; justify-content:space-between;
                 align-items:flex-start; margin-bottom:0.75rem; gap:1rem; flex-wrap:wrap;">
@@ -507,14 +512,16 @@ export const PAGES = {
 
           function renderProblem(si, pi) {
             const step = DATA.A2Z_STEPS[si];
-            const prob = (step.problems||[])[pi];
+            const prob = (step.problems || [])[pi];
             if (!prob) return;
 
+            // Highlight active problem in sidebar
             view.querySelectorAll('.prob-item').forEach((el, i) => {
-              el.style.background = i===pi ? 'rgba(255,107,0,0.06)' : '';
-              el.style.borderLeft = i===pi ? '2px solid var(--cAccent)' : '2px solid transparent';
+              el.style.background    = i === pi ? 'rgba(255,107,0,0.06)' : '';
+              el.style.borderLeft    = i === pi ? '2px solid var(--cAccent)' : '2px solid transparent';
             });
 
+            // Update metadata
             const probIdLabel = view.querySelector('#prob-id-label');
             const probTitle   = view.querySelector('#prob-title');
             const probDiff    = view.querySelector('#prob-difficulty');
@@ -534,13 +541,16 @@ export const PAGES = {
 
             history.replaceState(null,'',`#/a2z-problem?step=${si+1}&prob=${prob.id}`);
 
+            // ── Mount 3D Scene ──────────────────────────────────────
             const vizInner = view.querySelector('#viz-inner');
             if (!vizInner) return;
 
+            // Clear any auto-advance interval from VIZ_SCENES compat shim
             if (vizInner._vizAutoInterval) {
               clearInterval(vizInner._vizAutoInterval);
               vizInner._vizAutoInterval = null;
             }
+            // Dispose previous scene
             if (vizInner._vizDispose) {
               vizInner._vizDispose();
               vizInner._vizDispose = null;
@@ -558,9 +568,10 @@ export const PAGES = {
                 'Scene loading...</div>';
             }
 
-            const stepBackBtn   = view.querySelector('#scene-step-back');
-            const stepFwdBtn    = view.querySelector('#scene-step-fwd');
-            const stepCounter   = view.querySelector('#scene-step-counter');
+            // ── Step Controls ────────────────────────────────────────
+            const stepBackBtn  = view.querySelector('#scene-step-back');
+            const stepFwdBtn   = view.querySelector('#scene-step-fwd');
+            const stepCounter  = view.querySelector('#scene-step-counter');
             const stepNarration = view.querySelector('#scene-narration');
 
             function updateStepUI() {
@@ -573,6 +584,7 @@ export const PAGES = {
             }
 
             if (stepBackBtn) {
+              // Remove old listener by cloning the button
               const newBack = stepBackBtn.cloneNode(true);
               stepBackBtn.parentNode.replaceChild(newBack, stepBackBtn);
               newBack.addEventListener('click', () => {
@@ -596,6 +608,7 @@ export const PAGES = {
 
             updateStepUI();
 
+            // Scroll active item into view
             const activeItem = view.querySelector(`.prob-item[data-pi="${pi}"]`);
             if (activeItem) activeItem.scrollIntoView({ block:'nearest', behavior:'smooth' });
           }

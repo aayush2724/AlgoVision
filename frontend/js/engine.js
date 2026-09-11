@@ -54,8 +54,11 @@ const SCENES = {
     nodeLabel: (id) => `📚 ${id}`,
     edgeLabel: (w) => `section`,
     stepNarrate(step, meta) {
-      const m = meta.metaphors;
-      return `${m.visit} ${step.node || step.highlight?.node}. ${step.note || "Searching catalog..."}`;
+      const m = meta.metaphors || {};
+      const idx = step.highlight?.index;
+      const prefix = (idx === null || idx === undefined)
+        ? '' : `${m.visit || 'Checking'} ${idx}. `;
+      return `${prefix}${step.note || "Searching catalog..."}`;
     }
   },
   maze: {
@@ -106,6 +109,31 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
+// ── Algorithm resolution ─────────────────────────────────────────────────────
+// Maps any world/route name to a traceable algorithm id and its view type.
+
+const VIEW_FOR = {
+  dijkstra: 'graph', bfs: 'graph',
+  binary_search: 'array', merge_sort: 'array',
+};
+
+function resolveAlgoId(raw) {
+  const key = String(raw || '').toLowerCase().replace(/[\s-]/g, '');
+  const MAP = [
+    ['binary_search', 'binary_search'], ['binarysearch', 'binary_search'],
+    ['thehunt', 'binary_search'], ['library', 'binary_search'],
+    ['merge_sort', 'merge_sort'], ['mergesort', 'merge_sort'],
+    ['quick_sort', 'merge_sort'], ['sorting', 'merge_sort'], ['leaderboard', 'merge_sort'],
+    ['sixdegrees', 'bfs'], ['social', 'bfs'], ['graphs', 'bfs'], ['graph', 'bfs'],
+    ['bfs', 'bfs'], ['dfs', 'bfs'],
+    ['gps', 'dijkstra'], ['dijkstra', 'dijkstra'],
+  ];
+  for (const [k, v] of MAP) if (key.includes(k)) return v;
+  return 'dijkstra';
+}
+
+const fmt = (v) => String(Number(v));
+
 // ── MAIN ENGINE MOUNT ────────────────────────────────────────────────────────
 
 export function mountEngine(view, algo = 'dijkstra') {
@@ -117,12 +145,21 @@ export function mountEngine(view, algo = 'dijkstra') {
   const resetBtn = view.querySelector('#reset-btn');
   const explainBtn = view.querySelector('#explain-btn');
   const explanationBox = view.querySelector('#explanation-box');
+  const arrayControls = view.querySelector('#array-controls');
+  const arrayInput    = view.querySelector('#array-input');
+  const targetWrap    = view.querySelector('#target-wrap');
+  const targetInput   = view.querySelector('#target-input');
+  const arrayHint     = view.querySelector('#array-hint');
+
+  const algoId = resolveAlgoId(algo);
+  const traceView = VIEW_FOR[algoId] || 'graph';
 
   let currentSteps = [];
   let currentStepIdx = -1;
   let isOffline = false;
   let currentMeta = null;  // stores realworld_meta for current algo
   let currentScene = null; // stores scene renderer
+  let currentArrayValues = [];
 
   // ── Set scene based on algo name ──
   function resolveScene(algoName) {
@@ -221,6 +258,236 @@ export function mountEngine(view, algo = 'dijkstra') {
     svg.appendChild(sceneLabel);
   }
 
+  // ── Array view (binary search / merge sort) ──
+  function renderArrayView(values) {
+    svg.innerHTML = '';
+    currentArrayValues = values.slice();
+    const scene = SCENES[currentMeta?.scene] || SCENES[resolveScene(algoId)] || SCENES.library;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const n = values.length;
+    if (!n) return;
+    const w = Math.min(56, 700 / n);
+    const x0 = (760 - w * n) / 2;
+    const y = 110, h = 52;
+
+    values.forEach((v, idx) => {
+      const g = makeSVG("g");
+      g.setAttribute("id", `cellg-${idx}`);
+
+      const rect = makeSVG("rect");
+      rect.setAttribute("x", x0 + idx * w + 2);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", Math.max(w - 4, 6));
+      rect.setAttribute("height", h);
+      rect.setAttribute("id", `cell-${idx}`);
+      rect.setAttribute("fill", "rgba(0,212,255,0.05)");
+      rect.setAttribute("stroke", "var(--cDim)");
+      rect.setAttribute("stroke-width", "1");
+      g.appendChild(rect);
+
+      const val = makeSVG("text");
+      val.setAttribute("x", x0 + idx * w + w / 2);
+      val.setAttribute("y", y + h / 2 + 5);
+      val.setAttribute("text-anchor", "middle");
+      val.setAttribute("fill", "var(--cBright)");
+      val.setAttribute("font-family", "var(--font-mono)");
+      val.setAttribute("font-size", w < 34 ? "11" : "14");
+      val.setAttribute("id", `cellval-${idx}`);
+      val.textContent = fmt(v);
+      g.appendChild(val);
+
+      const pos = makeSVG("text");
+      pos.setAttribute("x", x0 + idx * w + w / 2);
+      pos.setAttribute("y", y + h + 16);
+      pos.setAttribute("text-anchor", "middle");
+      pos.setAttribute("fill", "var(--cDim)");
+      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-size", "6");
+      pos.textContent = idx;
+      g.appendChild(pos);
+
+      svg.appendChild(g);
+    });
+  }
+
+  // Fully re-renders cell states from one step — idempotent, works for any index.
+  function renderArrayStep(step) {
+    const s = step.structures || {};
+    if (Array.isArray(s.array)) {
+      s.array.forEach((v, idx) => {
+        const el = svg.querySelector(`#cellval-${idx}`);
+        if (el) el.textContent = fmt(v);
+      });
+    }
+    for (let idx = 0; idx < currentArrayValues.length; idx++) {
+      const cell = svg.querySelector(`#cell-${idx}`);
+      const g = svg.querySelector(`#cellg-${idx}`);
+      if (!cell) continue;
+      cell.setAttribute("fill", "rgba(0,212,255,0.05)");
+      cell.setAttribute("stroke", "var(--cDim)");
+      cell.setAttribute("stroke-width", "1");
+      if (g) g.setAttribute("opacity", "1");
+
+      if (algoId === 'binary_search') {
+        const inRange = s.low != null && idx >= s.low && idx <= s.high;
+        if (!inRange && g) g.setAttribute("opacity", "0.22");
+        if (inRange) cell.setAttribute("stroke", "var(--c)");
+        if (idx === s.mid) {
+          cell.setAttribute("fill", "rgba(255,107,0,0.18)");
+          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
+          cell.setAttribute("stroke-width", "2");
+        }
+      } else {
+        const inSorted = (s.sorted_ranges || []).some(r => idx >= r[0] && idx <= r[1]);
+        if (inSorted) cell.setAttribute("stroke", "#4ade80");
+        if (s.merging && idx >= s.merging[0] && idx <= s.merging[1] && !inSorted) {
+          cell.setAttribute("stroke", "var(--c)");
+        }
+        if (idx === s.placed) {
+          cell.setAttribute("fill", "rgba(255,107,0,0.18)");
+          cell.setAttribute("stroke", "var(--cAccent)");
+          cell.setAttribute("stroke-width", "2");
+        }
+      }
+    }
+  }
+
+  const ARRAY_DEFAULTS = {
+    binary_search: {
+      array: '1, 3, 5, 7, 9, 12, 15', target: '9',
+      hint: 'Up to 20 numbers. Unsorted input is sorted for you — binary search needs sorted data.',
+    },
+    merge_sort: {
+      array: '7, 3, 9, 1, 12, 5',
+      hint: 'Up to 16 numbers — watch them merge into order.',
+    },
+  };
+
+  function parseArrayInput() {
+    const raw = (arrayInput?.value || '').trim();
+    const parts = raw.split(/[\s,;]+/).filter(Boolean);
+    if (!parts.length) return { error: 'Enter some numbers first — e.g. 7, 3, 9, 1' };
+    const values = parts.map(Number);
+    if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
+    if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
+    const maxLen = algoId === 'merge_sort' ? 16 : 20;
+    if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
+
+    if (algoId === 'binary_search') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t)) return { error: 'Enter a numeric target to search for.' };
+      const sorted = values.slice().sort((a, b) => a - b);
+      const sortedForYou = sorted.some((v, i) => v !== values[i]);
+      return { array: sorted, target: t, sortedForYou };
+    }
+    return { array: values };
+  }
+
+  // Offline emulator for the array algorithms — mirrors the backend step shapes.
+  function localArrayTrace(parsed) {
+    if (algoId === 'binary_search') {
+      const arr = parsed.array, target = parsed.target;
+      const steps = [];
+      let low = 0, high = arr.length - 1, found = false;
+      steps.push({ i: 0, structures: { low, high, mid: null, found: null },
+        highlight: { index: null },
+        note: arr.length
+          ? `Search ${arr.length} sorted values for target ${fmt(target)}.`
+          : 'The array is empty — nothing to search.' });
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        steps.push({ i: steps.length, structures: { low, high, mid, found: null },
+          highlight: { index: mid },
+          note: `Check the middle: position ${mid} holds ${fmt(arr[mid])}.` });
+        if (arr[mid] === target) {
+          found = true;
+          steps.push({ i: steps.length, structures: { low, high, mid, found: true },
+            highlight: { index: mid },
+            note: `Found it — ${fmt(target)} is at position ${mid}.` });
+          break;
+        } else if (arr[mid] < target) {
+          low = mid + 1;
+          steps.push({ i: steps.length, structures: { low, high, mid, found: null },
+            highlight: { index: mid },
+            note: `${fmt(arr[mid])} is smaller — search the right half.` });
+        } else {
+          high = mid - 1;
+          steps.push({ i: steps.length, structures: { low, high, mid, found: null },
+            highlight: { index: mid },
+            note: `${fmt(arr[mid])} is larger — search the left half.` });
+        }
+      }
+      if (!found) {
+        steps.push({ i: steps.length, structures: { low, high, mid: null, found: false },
+          highlight: { index: null },
+          note: `The range is empty — ${fmt(target)} is not in the array.` });
+      }
+      return { steps };
+    }
+
+    // merge_sort
+    const arr = parsed.array.slice();
+    const steps = [];
+    const sortedRanges = [];
+    const snap = (note, extra = {}) => steps.push({
+      i: steps.length,
+      structures: { array: arr.slice(), merging: null, comparing: null, placed: null,
+        sorted_ranges: sortedRanges.map(r => r.slice()), ...extra },
+      highlight: { index: extra.placed ?? null },
+      note,
+    });
+    if (arr.length <= 1) {
+      if (arr.length) sortedRanges.push([0, 0]);
+      snap('Nothing to sort — already in order.');
+      return { steps };
+    }
+    snap(`Start with ${arr.length} unsorted values.`);
+    const msort = (lo, hi) => {
+      if (hi - lo <= 1) return;
+      const mid = Math.floor((lo + hi) / 2);
+      snap(`Split positions ${lo}..${hi - 1} into halves.`, { merging: [lo, hi - 1] });
+      msort(lo, mid); msort(mid, hi);
+      const left = arr.slice(lo, mid), right = arr.slice(mid, hi);
+      let i = 0, j = 0;
+      const merged = [];
+      const commit = () => arr.splice(lo, hi - lo, ...merged, ...left.slice(i), ...right.slice(j));
+      while (i < left.length && j < right.length) {
+        const a = left[i], b = right[j];
+        if (a <= b) { merged.push(a); i++; } else { merged.push(b); j++; }
+        commit();
+        snap(`Compare ${fmt(a)} vs ${fmt(b)} — place ${fmt(merged[merged.length - 1])}.`,
+          { merging: [lo, hi - 1], comparing: [a, b], placed: lo + merged.length - 1 });
+      }
+      while (i < left.length) {
+        merged.push(left[i++]); commit();
+        snap(`Copy remaining ${fmt(merged[merged.length - 1])}.`,
+          { merging: [lo, hi - 1], placed: lo + merged.length - 1 });
+      }
+      while (j < right.length) {
+        merged.push(right[j++]); commit();
+        snap(`Copy remaining ${fmt(merged[merged.length - 1])}.`,
+          { merging: [lo, hi - 1], placed: lo + merged.length - 1 });
+      }
+      for (let r = sortedRanges.length - 1; r >= 0; r--) {
+        if (lo <= sortedRanges[r][0] && sortedRanges[r][1] <= hi - 1) sortedRanges.splice(r, 1);
+      }
+      sortedRanges.push([lo, hi - 1]);
+      snap(`Positions ${lo}..${hi - 1} merged — this section is sorted.`, { merging: [lo, hi - 1] });
+    };
+    msort(0, arr.length);
+    snap('Every section merged — the whole array is in order.');
+    return { steps };
+  }
+
   async function checkBackend() {
     try {
       await api.getAlgorithms();
@@ -313,26 +580,37 @@ export function mountEngine(view, algo = 'dijkstra') {
     status.innerHTML = 'STATUS: <span style="color:var(--c)">TRACING...</span>';
     status.className = 'eyebrow running';
 
-    const ALGO_MAP = {
-      'graphs': 'bfs', 'graph': 'bfs', 'bfs': 'bfs', 'sixdegrees': 'bfs',
-      'social': 'bfs', 'dijkstra': 'dijkstra', 'gps': 'dijkstra',
-      'sorting': 'dijkstra',
-    };
-    const key = algo.toLowerCase().replace(/[\s-]/g, '');
-    const mappedAlgo = Object.keys(ALGO_MAP).find(k => key.includes(k))
-      ? ALGO_MAP[Object.keys(ALGO_MAP).find(k => key.includes(k))]
-      : 'dijkstra';
-
     try {
       let res;
-      if (isOffline) {
-        res = localTrace(mappedAlgo, 'A');
+      if (traceView === 'array') {
+        const parsed = parseArrayInput();
+        if (parsed.error) {
+          status.innerHTML = `STATUS: <span style="color:#ff5f5f">${escapeHTML(parsed.error).toUpperCase()}</span>`;
+          status.className = 'eyebrow';
+          runBtn.disabled = false;
+          return;
+        }
+        if (parsed.sortedForYou && arrayHint) {
+          arrayHint.textContent =
+            'Heads up: your numbers were sorted first — binary search only works on sorted data.';
+        }
+        renderArrayView(parsed.array);
+        if (isOffline) {
+          res = localArrayTrace(parsed);
+        } else {
+          const payload = algoId === 'binary_search'
+            ? { array: parsed.array, target: parsed.target }
+            : { array: parsed.array };
+          res = await api.postTrace(algoId, payload);
+        }
+      } else if (isOffline) {
+        res = localTrace(algoId, 'A');
       } else {
         const graph = {
           nodes: DATA.SAMPLE_GRAPH.nodes,
           edges: DATA.SAMPLE_GRAPH.links.map(l => [l.source, l.target, l.weight])
         };
-        res = await api.postTrace(mappedAlgo, 'A', graph);
+        res = await api.postTrace(algoId, { start: 'A', graph });
       }
       currentSteps = res.steps;
       currentStepIdx = -1;
@@ -350,7 +628,10 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentStepIdx++;
     if (currentStepIdx >= currentSteps.length) {
       stepBtn.disabled = true;
-      const doneMsg = currentMeta?.metaphors?.done || "ALGORITHM TRACE COMPLETE.";
+      const lastStep = currentSteps[currentSteps.length - 1];
+      const doneMsg = lastStep?.structures?.found === false
+        ? 'Search complete — the target is not in this array.'
+        : (currentMeta?.metaphors?.done || "ALGORITHM TRACE COMPLETE.");
       note.textContent = doneMsg.toUpperCase();
       status.innerHTML = 'STATUS: <span style="color:var(--cBright)">TERMINATED</span>';
       status.className = 'eyebrow done';
@@ -360,28 +641,32 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     const step = currentSteps[currentStepIdx];
 
-    // Reset highlights, mark visited
-    svg.querySelectorAll('.node.active').forEach(el => {
-      el.classList.remove('active');
-      el.classList.add('visited');
-    });
-    svg.querySelectorAll('.edge.active').forEach(el => {
-      el.classList.remove('active');
-      el.classList.add('visited');
-    });
+    if (traceView === 'array') {
+      renderArrayStep(step);
+    } else {
+      // Reset highlights, mark visited
+      svg.querySelectorAll('.node.active').forEach(el => {
+        el.classList.remove('active');
+        el.classList.add('visited');
+      });
+      svg.querySelectorAll('.edge.active').forEach(el => {
+        el.classList.remove('active');
+        el.classList.add('visited');
+      });
 
-    const nodeId = step.node || step.highlight?.node;
-    const edgeData = step.edge || step.highlight?.edge;
+      const nodeId = step.node || step.highlight?.node;
+      const edgeData = step.edge || step.highlight?.edge;
 
-    if (nodeId) {
-      const nodeEl = svg.querySelector(`#node-${nodeId}`);
-      if (nodeEl) nodeEl.classList.add('active');
-    }
-    if (edgeData) {
-      const s = Array.isArray(edgeData) ? edgeData[0] : edgeData.source;
-      const t = Array.isArray(edgeData) ? edgeData[1] : edgeData.target;
-      const edgeEl = svg.querySelector(`#edge-${s}-${t}`) || svg.querySelector(`#edge-${t}-${s}`);
-      if (edgeEl) edgeEl.classList.add('active');
+      if (nodeId) {
+        const nodeEl = svg.querySelector(`#node-${nodeId}`);
+        if (nodeEl) nodeEl.classList.add('active');
+      }
+      if (edgeData) {
+        const s = Array.isArray(edgeData) ? edgeData[0] : edgeData.source;
+        const t = Array.isArray(edgeData) ? edgeData[1] : edgeData.target;
+        const edgeEl = svg.querySelector(`#edge-${s}-${t}`) || svg.querySelector(`#edge-${t}-${s}`);
+        if (edgeEl) edgeEl.classList.add('active');
+      }
     }
 
     // Use scene narrator for real-world note
@@ -411,7 +696,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         const narration = currentScene?.stepNarrate(step, currentMeta || {}) || step.note;
         res = { text: `[OFFLINE] ${narration}` };
       } else {
-        res = await api.explainStep(algo, step, "beginner", currentMeta || {});
+        res = await api.explainStep(algoId, step, "beginner", currentMeta || {});
       }
       explanationBox.textContent = (res.text || "NO DATA AVAILABLE.").toUpperCase();
     } catch {
@@ -434,7 +719,11 @@ export function mountEngine(view, algo = 'dijkstra') {
     status.className = 'eyebrow';
     const counter = view.querySelector('#step-counter');
     if (counter) counter.textContent = '';
-    renderGraph(currentMeta);
+    if (traceView === 'array') {
+      renderArrayView(currentArrayValues);
+    } else {
+      renderGraph(currentMeta);
+    }
   });
   explainBtn.addEventListener('click', explain);
 
@@ -442,7 +731,7 @@ export function mountEngine(view, algo = 'dijkstra') {
   // Try to get realworld meta from backend detect endpoint
   async function init() {
     try {
-      const detection = await api.detect("", algo);
+      const detection = await api.detect("", algoId);
       currentMeta = detection.realworld;
       // Update page title/hook
       const hookEl = view.querySelector('#scene-hook');
@@ -453,10 +742,29 @@ export function mountEngine(view, algo = 'dijkstra') {
     } catch {
       // Use offline meta
       currentMeta = {
-        scene: resolveScene(algo),
+        scene: resolveScene(algoId),
         metaphors: { node: 'node', visit: 'Visiting', done: 'Complete.' }
       };
     }
+
+    if (traceView === 'array') {
+      const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
+      if (arrayControls) arrayControls.style.display = 'block';
+      if (arrayInput && !arrayInput.value) arrayInput.value = defaults.array;
+      if (algoId === 'binary_search' && targetWrap) {
+        targetWrap.style.display = 'inline-flex';
+        if (targetInput && !targetInput.value) targetInput.value = defaults.target;
+      }
+      if (arrayHint) arrayHint.textContent = defaults.hint;
+      // What-If sliders only make sense for graphs — hide the whole section.
+      const whatIfDetails = view.querySelector('#whatif-controls')?.closest('details');
+      if (whatIfDetails) whatIfDetails.style.display = 'none';
+      const parsed = parseArrayInput();
+      renderArrayView(parsed.array || []);
+      checkBackend();
+      return;
+    }
+
     renderGraph(currentMeta);
     checkBackend();
 

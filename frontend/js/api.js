@@ -66,10 +66,12 @@ export const api = {
     return request('/api/trace/algorithms');
   },
 
-  async postTrace(algorithm, start, graph) {
+  // payload: { start, graph } for graph algorithms,
+  //          { array, target } for array algorithms.
+  async postTrace(algorithm, payload) {
     return request('/api/trace', {
       method: 'POST',
-      body: JSON.stringify({ algorithm, start, graph }),
+      body: JSON.stringify({ algorithm, ...payload }),
     });
   },
 

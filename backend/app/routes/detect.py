@@ -12,13 +12,15 @@ class DetectRequest(BaseModel):
     problem: str = Field(default="", max_length=500)
 
 SIGNATURES = {
+    # Each list also contains the algorithm's own id so callers can pass an
+    # id as `problem` and get the matching real-world meta back.
     "dijkstra": ["heapq", "heappush", "heappop", "dist[", "shortest", "dijkstra", "priority queue", "pq"],
     "bfs": ["deque", "queue", "bfs", "level order", "breadth", "visited", "neighbors"],
     "dfs": ["dfs", "depth first", "recursive", "backtrack", "stack", "visited"],
-    "binary_search": ["binary search", "low", "high", "mid", "bisect", "log n", "sorted array"],
-    "merge_sort": ["merge sort", "mergesort", "merge(", "divide", "conquer", "mid = len"],
-    "quick_sort": ["quicksort", "quick sort", "pivot", "partition"],
-    "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools"],
+    "binary_search": ["binary search", "binary_search", "low", "high", "mid", "bisect", "log n", "sorted array"],
+    "merge_sort": ["merge sort", "merge_sort", "mergesort", "merge(", "divide", "conquer", "mid = len"],
+    "quick_sort": ["quicksort", "quick sort", "quick_sort", "pivot", "partition"],
+    "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming"],
     "two_pointers": ["two pointer", "left", "right", "while left < right", "sliding window"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
 }

@@ -259,6 +259,28 @@ export const PAGES = {
           border-left:3px solid var(--cAccent); background:rgba(255,107,0,0.04);">
         </div>
 
+        <div id="array-controls" class="panel" style="display:none; margin-bottom:1.5rem;
+          border-top:2px solid var(--cAccent);">
+          <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR DATA</span>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+            <input id="array-input" type="text" spellcheck="false"
+              placeholder="e.g. 7, 3, 9, 1"
+              style="flex:1; min-width:220px; background:rgba(2,4,6,0.9); color:var(--c);
+              font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
+              border:1px solid var(--panel-border); outline:none; border-radius:0;">
+            <span id="target-wrap" style="display:none; align-items:center; gap:0.5rem;
+              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              TARGET
+              <input id="target-input" type="text" inputmode="numeric"
+                style="width:80px; background:rgba(2,4,6,0.9); color:var(--c);
+                font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
+                border:1px solid var(--panel-border); outline:none; border-radius:0;">
+            </span>
+          </div>
+          <div id="array-hint" style="margin-top:0.6rem; font-size:0.8rem;
+            color:var(--inkDim); font-family:var(--font-body);"></div>
+        </div>
+
         <div class="panel" style="margin-bottom:1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">

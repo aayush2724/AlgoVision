@@ -32,7 +32,6 @@ def algorithms():
 @router.post("")
 @limiter.limit("30/minute")
 def run_trace(request: Request, req: TraceRequest):
-    import re
     fn = TRACERS.get(req.algorithm)
     if fn is None:
       raise HTTPException(
@@ -46,8 +45,4 @@ def run_trace(request: Request, req: TraceRequest):
         status_code=400,
         detail=f"Start node '{req.start}' not found in graph nodes."
       )
-    # Sanitise algorithm name (already constrained by TRACERS dict lookup,
-    # but belt-and-braces)
-    if not re.match(r'^[a-z_]{1,32}$', req.algorithm):
-      raise HTTPException(status_code=400, detail="Invalid algorithm name.")
     return fn(req.graph, req.start)

@@ -58,7 +58,8 @@ docker compose up --build
 Then open:
 - Frontend: http://localhost:5500 (or http://localhost:8080 via Docker)
 - API docs: http://localhost:8000/docs
-- ML health: http://localhost:8500/health
+- ML health: http://localhost:8500/health (start-dev.sh only — under Docker the
+  ML service is internal to the compose network and not published)
 
 ## Environment
 Copy the example files and adjust as needed:

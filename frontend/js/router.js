@@ -22,6 +22,14 @@ export function initRouter({ scene }) {
     const page = PAGES[route] || PAGES["#/404"];
 
     const render = () => {
+      // Dispose any mounted 3D viz scene before wiping the DOM,
+      // otherwise its WebGL context and animation loop leak.
+      const viz = app.querySelector('#viz-inner');
+      if (viz) {
+        if (viz._vizAutoInterval) { clearInterval(viz._vizAutoInterval); viz._vizAutoInterval = null; }
+        if (viz._vizDispose) { viz._vizDispose(); viz._vizDispose = null; }
+      }
+
       document.title = page.title;
       app.innerHTML = page.html(params);
       

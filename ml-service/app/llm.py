@@ -1,4 +1,11 @@
+import logging
+
 from app.config import settings
+
+log = logging.getLogger(__name__)
+
+# Groq decommissioned llama3-8b-8192; this is its designated replacement.
+_GROQ_MODEL = "llama-3.1-8b-instant"
 
 _TONE = {
     "beginner": "in plain, friendly language using a simple analogy",
@@ -50,7 +57,7 @@ def explain_step(algorithm: str, step: dict, level: str, realworld_meta: dict = 
                 f"Task: Explain this algorithm step {tone} in 2 sentences max."
             )
             resp = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model=_GROQ_MODEL,
                 messages=[
                     {"role": "system", "content": _SYSTEM_PROMPT},
                     {"role": "user", "content": user_msg}
@@ -64,8 +71,8 @@ def explain_step(algorithm: str, step: dict, level: str, realworld_meta: dict = 
                 "level": level,
                 "scene": scene_title
             }
-        except Exception as e:
-            pass  # fall through to offline
+        except Exception:
+            log.warning("Groq explain call failed — using offline fallback", exc_info=True)
 
     # Offline fallback — still uses real-world language from metaphors
     node_term = metaphors.get("node", "node")
@@ -82,7 +89,7 @@ def find_bug(language: str, code: str) -> dict:
             safe_lang = _sanitise_for_prompt(language, 20)
             # Wrap code in XML-style delimiters so model treats it as data
             resp = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model=_GROQ_MODEL,
                 messages=[{
                     "role": "user",
                     "content": (
@@ -102,7 +109,7 @@ def find_bug(language: str, code: str) -> dict:
             hints = [h for h in hints if len(h) > 10][:4]
             return {"hints": hints or [text], "live": True}
         except Exception:
-            pass
+            log.warning("Groq bugfind call failed — using offline fallback", exc_info=True)
 
     # Offline static analysis
     hints = []

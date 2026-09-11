@@ -47,27 +47,6 @@ class BugBody(BaseModel):
       return "python"
     return cleaned
 
-  @field_validator("code")
-  @classmethod
-  def sanitise_code(cls, v):
-    # Reject prompt injection attempts in the code field.
-    # Legitimate code never needs these phrases.
-    INJECTION_PATTERNS = [
-      "ignore previous",
-      "ignore all instructions",
-      "disregard",
-      "you are now",
-      "act as",
-      "jailbreak",
-      "dan mode",
-      "system prompt",
-    ]
-    low = v.lower()
-    for pat in INJECTION_PATTERNS:
-      if pat in low:
-        raise ValueError("Invalid code content.")
-    return v
-
 # 30 explain calls per minute per IP — generous for normal use
 @router.post("/explain")
 @limiter.limit("30/minute")

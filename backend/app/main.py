@@ -27,7 +27,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=["*"],      # public portfolio API — no credentials
+  allow_origins=settings.cors_origins,  # from BACKEND_CORS_ORIGINS; "*" by default (no credentials)
   allow_credentials=False,
   allow_methods=["GET", "POST"],
   allow_headers=["Content-Type"],

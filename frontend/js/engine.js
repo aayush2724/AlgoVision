@@ -99,6 +99,13 @@ function makeSVG(tag) {
   return document.createElementNS("http://www.w3.org/2000/svg", tag);
 }
 
+// Escape text that gets interpolated into innerHTML (AI output is untrusted).
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
 // ── MAIN ENGINE MOUNT ────────────────────────────────────────────────────────
 
 export function mountEngine(view, algo = 'dijkstra') {
@@ -226,7 +233,7 @@ export function mountEngine(view, algo = 'dijkstra') {
   }
 
   function localTrace(algorithm, startNode) {
-    // Full local Dijkstra emulator
+    // Local emulator for offline mode — Dijkstra and BFS
     const nodes = DATA.SAMPLE_GRAPH.nodes.map(n => n.id);
     const adj = {};
     DATA.SAMPLE_GRAPH.links.forEach(l => {
@@ -235,6 +242,34 @@ export function mountEngine(view, algo = 'dijkstra') {
       adj[l.source].push({ to: l.target, w: l.weight });
       adj[l.target].push({ to: l.source, w: l.weight });
     });
+
+    if (algorithm === 'bfs') {
+      const steps = [];
+      const visited = new Set([startNode]);
+      const queue = [startNode];
+      steps.push({ i: 0, highlight: { node: startNode, edge: null },
+        note: `Enqueue start node ${startNode}.`,
+        structures: { queue: [...queue], visited: [...visited] }
+      });
+      while (queue.length > 0) {
+        const u = queue.shift();
+        steps.push({ i: steps.length, highlight: { node: u, edge: null },
+          note: `Dequeue ${u}.`,
+          structures: { queue: [...queue], visited: [...visited] }
+        });
+        for (const edge of (adj[u] || [])) {
+          if (visited.has(edge.to)) continue;
+          visited.add(edge.to);
+          queue.push(edge.to);
+          steps.push({ i: steps.length, highlight: { node: edge.to, edge: [u, edge.to] },
+            note: `Discover ${edge.to} from ${u}.`,
+            structures: { queue: [...queue], visited: [...visited] }
+          });
+        }
+      }
+      return { steps };
+    }
+
     const dist = {};
     const steps = [];
     nodes.forEach(n => dist[n] = Infinity);
@@ -508,7 +543,7 @@ export function mountBugFinder(view) {
     try {
       const res = await api.bugFind(langSelect.value, codeArea.value);
       const hints = res.hints || ["No obvious bug found."];
-      result.innerHTML = `<strong style="color:var(--cBright)">AI BUG SCAN:</strong><br><br>${hints.map(h => `<span style="color:var(--cDim)">▸</span> ${h}`).join('<br><br>')}${res.fallback ? '<br><br><small style="opacity:0.5">(OFFLINE FALLBACK)</small>' : ''}`;
+      result.innerHTML = `<strong style="color:var(--cBright)">AI BUG SCAN:</strong><br><br>${hints.map(h => `<span style="color:var(--cDim)">▸</span> ${escapeHTML(h)}`).join('<br><br>')}${res.fallback ? '<br><br><small style="opacity:0.5">(OFFLINE FALLBACK)</small>' : ''}`;
     } catch {
       result.innerHTML = `<strong>ANALYSIS:</strong> Check loop boundaries and off-by-one errors.<br><small>(LOCAL FALLBACK)</small>`;
     } finally {

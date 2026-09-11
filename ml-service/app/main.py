@@ -1,4 +1,4 @@
-import os
+import ipaddress
 import logging
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,18 +15,21 @@ app = FastAPI(
   openapi_url=None,
 )
 
-# Only accept requests from localhost / backend container.
-# On Replit both services run on the same machine so this works.
-ALLOWED_INTERNAL_HOSTS = {
-  "localhost", "127.0.0.1", "0.0.0.0",
-  os.getenv("BACKEND_HOST", "localhost"),
-}
+def _is_internal(host: str) -> bool:
+  # Loopback (Replit / start-dev.sh) and private ranges (Docker bridge network).
+  # The compose file does not publish this service's port, so this is
+  # defense-in-depth, not the primary boundary.
+  try:
+    ip = ipaddress.ip_address(host)
+    return ip.is_loopback or ip.is_private
+  except ValueError:
+    return host == "localhost"
 
 @app.middleware("http")
 async def internal_only(request: Request, call_next):
   client_host = request.client.host if request.client else ""
   # Allow health checks from anywhere, restrict everything else
-  if request.url.path != "/health" and client_host not in ALLOWED_INTERNAL_HOSTS:
+  if request.url.path != "/health" and not _is_internal(client_host):
     log.warning("Blocked external request to ML service from %s", client_host)
     return JSONResponse(status_code=403, content={"detail": "Forbidden."})
   return await call_next(request)

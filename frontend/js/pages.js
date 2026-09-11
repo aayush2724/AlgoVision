@@ -52,19 +52,19 @@ export const PAGES = {
         <p class="hero-sub">Turn complex data structures into cinematic visual journeys — real-world metaphors, live step-by-step traces, and AI-powered explanations.</p>
         <div class="hero-stats">
           <div class="hero-stat">
-            <span class="hero-stat-num">450+</span>
+            <span class="hero-stat-num">${DATA.A2Z_STEPS.reduce((s, st) => s + (st.problems || []).length, 0)}</span>
             <span class="hero-stat-label">Problems</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-num">16</span>
+            <span class="hero-stat-num">${DATA.A2Z_STEPS.length}</span>
             <span class="hero-stat-label">Steps</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-num">40+</span>
+            <span class="hero-stat-num">12</span>
             <span class="hero-stat-label">3D Scenes</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-num">9</span>
+            <span class="hero-stat-num">${DATA.WORLDS.length}</span>
             <span class="hero-stat-label">Algo Worlds</span>
           </div>
         </div>
@@ -244,7 +244,8 @@ export const PAGES = {
   "#/experience": {
     title: "AlgoVision · Live Engine",
     html: (params) => {
-      const algo = params.get('algo') || 'dijkstra';
+      // Whitelist chars — this comes from the URL and lands in innerHTML.
+      const algo = (params.get('algo') || 'dijkstra').replace(/[^a-zA-Z0-9_-]/g, '') || 'dijkstra';
       const displayName = algo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
       return `
       <section>
@@ -338,7 +339,7 @@ export const PAGES = {
             <span class="journey-stat-label">Avg Progress</span>
           </div>
           <div class="journey-stat">
-            <span class="journey-stat-num">40+</span>
+            <span class="journey-stat-num">12</span>
             <span class="journey-stat-label">3D Vizzes</span>
           </div>
         </div>
@@ -845,7 +846,8 @@ export const PAGES = {
           <span class="eyebrow" style="margin:0;">PROGRESS DASHBOARD</span>
         </div>
         <h1 style="font-family:var(--font-display2); font-size:clamp(3rem,6vw,5rem); letter-spacing:0.04em; margin-bottom:0.5rem;">MY JOURNEY</h1>
-        <p style="margin-bottom:2.5rem;">Track your mastery across algorithms, topics, and practice sessions.</p>
+        <p style="margin-bottom:2.5rem;">Track your mastery across algorithms, topics, and practice sessions.
+          <span style="display:block; margin-top:0.5rem; font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">SAMPLE DATA — PROGRESS TRACKING COMING SOON</span></p>
         <div class="grid-2">
           ${DATA.STATS.map((stat, i) => {
             const raw = stat.value.split('/')[0].split(' ')[0];

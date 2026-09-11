@@ -24,22 +24,36 @@ export function playLoader(callback) {
     pIdx = (pIdx + 1) % PHASE_LIST.length;
   }, 100);
 
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    clearInterval(phaseInterval);
+    clearTimeout(safety);
+    bar.style.width = '100%';
+    count.textContent = '100';
+    gsap.to(loader, { opacity: 0, duration: 0.3, onComplete: () => {
+      loader.style.display = 'none';
+      if (callback) callback();
+    }});
+  };
+
+  // Safety net: requestAnimationFrame is throttled in background tabs and on
+  // slow machines, and GSAP's lag smoothing stalls the tween when frames run
+  // long. Never let the intro trap a student behind the loader.
+  const safety = setTimeout(finish, 2600);
+
   gsap.to({ val: 0 }, {
     val: 100,
     duration: 1.5,
     ease: "power2.inOut",
     onUpdate: function() {
+      if (done) return;
       const v = Math.floor(this.targets()[0].val);
       bar.style.width = v + "%";
       count.textContent = v.toString().padStart(3, '0');
     },
-    onComplete: () => {
-      clearInterval(phaseInterval);
-      gsap.to(loader, { opacity: 0, duration: 0.3, onComplete: () => {
-        loader.style.display = 'none';
-        if (callback) callback();
-      }});
-    }
+    onComplete: finish,
   });
 }
 

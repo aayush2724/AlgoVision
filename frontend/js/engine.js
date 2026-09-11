@@ -642,7 +642,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (inRange) cell.setAttribute("stroke", "var(--c)");
         if (idx === s.mid) {
-          cell.setAttribute("fill", "rgba(255,107,0,0.18)");
+          cell.setAttribute("fill", "rgba(168,85,247,0.18)");
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -651,7 +651,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (idx === s.left || idx === s.right) {
           cell.setAttribute("fill", s.found
-            ? "rgba(74,222,128,0.2)" : "rgba(255,107,0,0.18)");
+            ? "rgba(74,222,128,0.2)" : "rgba(168,85,247,0.18)");
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -660,7 +660,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
         if (inBest) cell.setAttribute("stroke", "#4ade80");
         if (inWindow) {
-          cell.setAttribute("fill", "rgba(255,107,0,0.14)");
+          cell.setAttribute("fill", "rgba(168,85,247,0.14)");
           if (!inBest) cell.setAttribute("stroke", "var(--cAccent)");
           cell.setAttribute("stroke-width", inBest ? "2.5" : "1.5");
         }
@@ -671,7 +671,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           cell.setAttribute("stroke", "var(--c)");
         }
         if (idx === s.placed) {
-          cell.setAttribute("fill", "rgba(255,107,0,0.18)");
+          cell.setAttribute("fill", "rgba(168,85,247,0.18)");
           cell.setAttribute("stroke", "var(--cAccent)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -901,7 +901,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       cell.setAttribute("stroke", filled ? "var(--c)" : "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (idx === s.computing) {
-        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(255,107,0,0.18)");
+        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(168,85,247,0.18)");
         cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--cAccent)");
         cell.setAttribute("stroke-width", "2");
       }
@@ -1114,7 +1114,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--cAccent)');
         cell.setAttribute('stroke-width', '2');
         cell.setAttribute('fill', s.action === 'mismatch'
-          ? 'rgba(248,113,113,0.15)' : 'rgba(255,107,0,0.15)');
+          ? 'rgba(248,113,113,0.15)' : 'rgba(168,85,247,0.15)');
       } else if (s.pos !== null && s.pos !== undefined && idx < s.pos) {
         cell.setAttribute('stroke', 'var(--c)');
         cell.setAttribute('stroke-width', '1');
@@ -1135,7 +1135,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('width', bw);
       rect.setAttribute('height', bh);
       const isTop = k === s.stack.length - 1;
-      rect.setAttribute('fill', isTop ? 'rgba(255,107,0,0.12)' : 'rgba(0,212,255,0.06)');
+      rect.setAttribute('fill', isTop ? 'rgba(168,85,247,0.12)' : 'rgba(0,212,255,0.06)');
       rect.setAttribute('stroke', isTop ? 'var(--cAccent)' : 'var(--c)');
       rect.setAttribute('stroke-width', isTop ? '2' : '1');
       g.appendChild(rect);
@@ -1234,7 +1234,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
       circle.setAttribute('r', '15');
       circle.setAttribute('fill', isCurrent
-        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(255,107,0,0.2)')
+        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(168,85,247,0.2)')
         : 'var(--cDeep)');
       circle.setAttribute('stroke', isCurrent
         ? (s.found === true ? '#4ade80' : 'var(--cAccent)')
@@ -1353,7 +1353,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         rect.setAttribute('width', cw - 2);
         rect.setAttribute('height', ch - 2);
         rect.setAttribute('fill', onPath ? 'rgba(74,222,128,0.22)'
-          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(255,107,0,0.18)')
+          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(168,85,247,0.18)')
           : isDep ? 'rgba(0,212,255,0.14)'
           : filled ? 'rgba(0,212,255,0.05)' : 'rgba(0,0,0,0.15)');
         rect.setAttribute('stroke', onPath ? '#4ade80'

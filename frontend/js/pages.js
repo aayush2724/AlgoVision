@@ -122,7 +122,7 @@ export const PAGES = {
           <div class="paste-detect-panel">
             <div id="paste-detect-status" style="display:none; font-family:var(--font-mono);
               font-size:1rem; color:var(--c); margin-bottom:1rem; padding:0.6rem 1rem;
-              border-left:3px solid var(--cAccent); background:rgba(255,107,0,0.04);">
+              border-left:3px solid var(--cAccent); background:rgba(168,85,247,0.04);">
             </div>
             <textarea id="hero-paste-area"
               style="width:100%; height:130px; background:rgba(2,4,6,0.9); color:var(--c);
@@ -257,7 +257,7 @@ export const PAGES = {
 
         <div id="scene-hook" style="display:none; font-family:var(--font-mono);
           font-size:1.05rem; color:var(--cDim); margin-bottom:2rem; padding:0.85rem 1.25rem;
-          border-left:3px solid var(--cAccent); background:rgba(255,107,0,0.04);">
+          border-left:3px solid var(--cAccent); background:rgba(168,85,247,0.04);">
         </div>
 
         <div id="array-controls" class="panel" style="display:none; margin-bottom:1.5rem;
@@ -670,7 +670,7 @@ export const PAGES = {
 
             // Highlight active problem in sidebar
             view.querySelectorAll('.prob-item').forEach((el, i) => {
-              el.style.background    = i === pi ? 'rgba(255,107,0,0.06)' : '';
+              el.style.background    = i === pi ? 'rgba(168,85,247,0.06)' : '';
               el.style.borderLeft    = i === pi ? '2px solid var(--cAccent)' : '2px solid transparent';
             });
 
@@ -1169,7 +1169,7 @@ export const PAGES = {
     html: () => `
       <section style="text-align:center; min-height:60vh; display:flex; flex-direction:column;
         justify-content:center; align-items:center;">
-        <div style="font-family:var(--font-display2); font-size:12rem; color:rgba(255,107,0,0.08); line-height:1; margin-bottom:-2rem;">404</div>
+        <div style="font-family:var(--font-display2); font-size:12rem; color:rgba(168,85,247,0.08); line-height:1; margin-bottom:-2rem;">404</div>
         <span class="eyebrow" style="color:var(--cAccent); margin-bottom:1rem;">NODE NOT FOUND</span>
         <h1 style="font-family:var(--font-display2); font-size:3rem; letter-spacing:0.04em; margin-bottom:1rem;">OFF THE GRAPH</h1>
         <p style="margin:0 auto 2rem;">You've wandered into untraced territory.</p>

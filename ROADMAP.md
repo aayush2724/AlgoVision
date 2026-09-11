@@ -165,10 +165,44 @@ all tests pass.
 
 ---
 
+## Phase 6+ — Full catalog coverage (the long arc)
+
+Goal (user directive): cover ALL algorithms and data structures — the full
+GfG/A2Z syllabus, LeetCode patterns, and Codeforces/competitive-programming
+topics. This lands in tiered batches, each batch a committable phase using
+the same recipe: **tracer + view renderer + metaphor entry + detect
+signature + tests**, all on the shared step envelope
+(`{i, structures, highlight, note}`).
+
+View types unlock topics — build a view once, reuse it for the whole family:
+- `array` (done) → sorting family, searching, two pointers, sliding window,
+  prefix sums, Kadane's
+- `graph` (done) → DFS, topological sort, MST (Prim/Kruskal), A*, flood fill
+- `tree` (new) → BST insert/search/delete, traversals, heaps, tries,
+  segment trees, Fenwick/BIT, LCA/binary lifting
+- `table` (new) → DP family: Fibonacci, knapsack, LCS, edit distance,
+  matrix paths, bitmask DP
+- `stack/queue` (new) → stack/queue ops, monotonic stack, expression
+  evaluation, sliding-window maximum
+- `list` (new) → linked lists: reverse, cycle detect (Floyd), merge
+- `string` (new) → KMP, Z-function, Rabin-Karp, palindromes, anagrams
+
+Suggested batch order (college-first, then patterns, then CP):
+1. **Tier A — college core (GfG/A2Z):** remaining sorts (quick, insertion,
+   bubble, selection, counting), DFS, linked lists, stacks/queues, BST,
+   heaps, hashing, recursion/backtracking (N-Queens), DP classics
+2. **Tier B — LeetCode patterns:** two pointers, sliding window, prefix
+   sums, intervals, monotonic stack, tries, union-find (DSU)
+3. **Tier C — Codeforces/CP:** segment tree, Fenwick tree, DSU with
+   rank/path compression, LCA/binary lifting, KMP/Z, sieve + number
+   theory, bitmask DP, max-flow intro
+
+The A2Z catalog in `data.js` grows alongside: every problem entry should
+eventually point at a real tracer, not a looping animation.
+
 ## Later (unscheduled ideas — do not build yet)
 
 - Accounts / teacher dashboards (needs a database — deliberate decision point)
 - Pseudocode panel with per-step line highlighting (`line` field already exists)
-- More DP visualizations (knapsack grid, LCS table)
 - Quiz mode: "predict the next step" before revealing it
 - i18n for non-English classrooms

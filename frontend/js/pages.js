@@ -271,7 +271,7 @@ export const PAGES = {
               border:1px solid var(--panel-border); outline:none; border-radius:0;">
             <span id="target-wrap" style="display:none; align-items:center; gap:0.5rem;
               font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
-              TARGET
+              <span id="target-label">TARGET</span>
               <input id="target-input" type="text" inputmode="numeric"
                 style="width:80px; background:rgba(2,4,6,0.9); color:var(--c);
                 font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
@@ -414,6 +414,14 @@ export const PAGES = {
 
         <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">
           <button id="explain-btn" class="btn btn-ghost" style="flex-shrink:0;">✦ AI NARRATE</button>
+          <select id="level-select" title="Narration level"
+            style="background:var(--bg1); border:1px solid var(--panel-border);
+            color:var(--ink); font-family:var(--font-body); font-size:0.8rem;
+            padding:0.5rem 0.6rem; border-radius:0; outline:none; flex-shrink:0;">
+            <option value="beginner" selected>Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
           <div id="explanation-box" class="panel" style="flex:1; display:none;
             font-family:var(--font-mono); font-size:1rem; color:var(--c);
             border-color:rgba(0,212,255,0.3); min-width:180px;">

@@ -31,7 +31,7 @@ export const WORLDS = [
   { name: "The Leaderboard",    metaphor: "Sorting",       category: "Foundations", emoji: "📊", hook: "Organize the chaos, one swap at a time.",          complexity: "O(n log n)", algo: "sorting"       },
   { name: "The Hunt",           metaphor: "Binary Search",  category: "Foundations", emoji: "🔍", hook: "Divide, conquer, find the needle in the haystack.", complexity: "O(log n)",   algo: "binary_search" },
   { name: "Six Degrees",        metaphor: "Graphs",         category: "Structures",  emoji: "🌐", hook: "Navigate the web of connections that define us.",   complexity: "O(V + E)",   algo: "bfs"           },
-  { name: "The Memo Vault",     metaphor: "DP",             category: "Mastery",     emoji: "💾", hook: "Remember the past to conquer the future.",          complexity: "O(n·m)",     algo: "dynamic_programming" },
+  { name: "The Memo Vault",     metaphor: "DP",             category: "Mastery",     emoji: "💾", hook: "Remember the past to conquer the future.",          complexity: "O(n)",       algo: "fibonacci_dp"  },
   { name: "The Priority Queue", metaphor: "Heaps",          category: "Structures",  emoji: "👑", hook: "Always keep the most important things on top.",     complexity: "O(log n)",   algo: "dijkstra"      },
   { name: "The Branching Tree", metaphor: "Recursion",      category: "Foundations", emoji: "🌿", hook: "Solve small to solve big.",                         complexity: "O(2^n)",     algo: "dfs"           },
   { name: "The Labyrinth",      metaphor: "Backtracking",   category: "Mastery",     emoji: "🗺️", hook: "Explore every path, but know when to turn back.",   complexity: "O(N!)",      algo: "dfs"           },
@@ -199,6 +199,29 @@ export const COMPLEXITY = {
       `${c.comparisons ?? 0} comparisons and ${c.writes ?? 0} writes to sort ${s.n} values — ` +
       `n·log₂ n ≈ ${Math.round(s.n * Math.log2(Math.max(s.n, 2)))}. ` +
       `The ${c.merges ?? 0} merges are where the ordering actually happens.`,
+  },
+  dfs: {
+    rows: [["Time", "O(V + E)"], ["Space", "O(V)"]],
+    reading: (c, s) =>
+      `Your graph: ${c.edge_checks ?? 0} edge checks and ${c.backtracks ?? 0} backtracks ` +
+      `for ${s.V} nodes / ${s.E} edges — linear like BFS, but the stack dives deep ` +
+      `before it sweeps wide.`,
+  },
+  quick_sort: {
+    rows: [["Best / Avg", "O(n log n)"], ["Worst", "O(n²)"], ["Space", "O(log n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.swaps ?? 0} swaps across ` +
+      `${c.partitions ?? 0} partitions to sort ${s.n} values — ` +
+      `n·log₂ n ≈ ${Math.round(s.n * Math.log2(Math.max(s.n, 2)))}. ` +
+      `An already-sorted input would push this toward n² = ${s.n * s.n}.`,
+  },
+  fibonacci_dp: {
+    rows: [["Time (memoized)", "O(n)"], ["Time (naive)", "O(2ⁿ)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.computes ?? 0} computations + ${c.cache_hits ?? 0} cache hits = ` +
+      `${c.calls ?? 0} total calls for fib(${s.n}). Naive recursion would need ` +
+      `~${Math.round(Math.pow(1.618, Math.max(s.n, 1)))} calls — the vault turned ` +
+      `exponential into linear.`,
   },
 };
 

@@ -4,9 +4,16 @@ Mission: make DSA easier to **understand and analyse** for colleges and learners
 Method: metaphor-first (Hook → Reveal → Mechanics), always traceable on the
 student's own input, never a canned animation when a real trace is possible.
 
+**Stack (user decision, 2026-09-11): staying on FastAPI + vanilla ES modules.**
+The user chose to keep and learn the current stack (Python/FastAPI backend +
+ML service, buildless JS frontend, Docker). A PERN migration was considered
+and cancelled.
+
 Each phase below is a self-contained prompt. Execute one phase per session/turn,
 verify its acceptance criteria, then stop so the phase can be committed before
 the next begins.
+
+**Status: Phases 0–5 DONE. Next up: Phase 6 (catalog batch 1).**
 
 ---
 

@@ -54,8 +54,25 @@ def explain_step(algorithm: str, step: dict, level: str, realworld_meta: dict = 
                 f"Node type in this world: [{safe_node_term}]. "
                 f"Edge type in this world: [{safe_edge_term}]. "
                 f"Current element: [{safe_node}]. "
-                f"Task: Explain this algorithm step {tone} in 2 sentences max."
             )
+            # Ground the narration in the actual live state, not just the note
+            s = step.get("structures", {}) if isinstance(step, dict) else {}
+            counts = s.get("counts") if isinstance(s.get("counts"), dict) else {}
+            count_txt = ", ".join(
+                f"{_sanitise_for_prompt(k, 20)}={v}"
+                for k, v in list(counts.items())[:6]
+                if isinstance(v, (int, float))
+            )
+            scalar_txt = ", ".join(
+                f"{_sanitise_for_prompt(k, 20)}={_sanitise_for_prompt(str(v), 20)}"
+                for k, v in list(s.items())[:8]
+                if k != "counts" and isinstance(v, (int, float, str, bool))
+            )
+            if count_txt:
+                user_msg += f"Live operation counts so far: [{count_txt}]. "
+            if scalar_txt:
+                user_msg += f"Current algorithm state: [{scalar_txt}]. "
+            user_msg += f"Task: Explain this algorithm step {tone} in 2 sentences max."
             resp = client.chat.completions.create(
                 model=_GROQ_MODEL,
                 messages=[

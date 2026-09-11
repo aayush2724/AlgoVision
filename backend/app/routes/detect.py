@@ -20,7 +20,7 @@ SIGNATURES = {
     "binary_search": ["binary search", "binary_search", "low", "high", "mid", "bisect", "log n", "sorted array"],
     "merge_sort": ["merge sort", "merge_sort", "mergesort", "merge(", "divide", "conquer", "mid = len"],
     "quick_sort": ["quicksort", "quick sort", "quick_sort", "pivot", "partition"],
-    "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming"],
+    "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming", "fibonacci", "fibonacci_dp", "fib("],
     "two_pointers": ["two pointer", "left", "right", "while left < right", "sliding window"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
 }
@@ -94,6 +94,20 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "quick_sort": {
+        "scene": "leaderboard",
+        "title": "Tournament Bracket Seeder",
+        "hook": "You are a tournament seeder — pick a player, split the field around them.",
+        "metaphors": {
+            "node": "player score",
+            "edge": "comparison",
+            "weight": "score value",
+            "visit": "Comparing against the pivot",
+            "partition": "Splitting the field",
+            "start": "Unseeded field",
+            "done": "Every player seeded in order."
         }
     },
     "dynamic_programming": {

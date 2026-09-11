@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
-from app.tracers import bfs, binary_search, dijkstra, merge_sort
+from app.tracers import (
+    bfs, binary_search, dfs, dijkstra, fibonacci_dp, merge_sort, quick_sort,
+)
 from app.tracers.common import Graph
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -12,8 +14,13 @@ router = APIRouter(prefix="/trace", tags=["trace"])
 GRAPH_TRACERS = {
     "dijkstra": dijkstra.trace,
     "bfs": bfs.trace,
+    "dfs": dfs.trace,
 }
-ARRAY_ALGORITHMS = {"binary_search", "merge_sort"}
+SORT_TRACERS = {
+    "merge_sort": merge_sort.trace,
+    "quick_sort": quick_sort.trace,
+}
+ARRAY_ALGORITHMS = {"binary_search", "merge_sort", "quick_sort"}
 
 MAX_BSEARCH_LEN = 64
 MAX_MSORT_LEN = merge_sort.MAX_ARRAY_LEN  # 16 — keeps the trace readable
@@ -32,8 +39,11 @@ def algorithms():
         "algorithms": [
             {"id": "dijkstra",      "name": "Dijkstra's Shortest Path", "input": "graph"},
             {"id": "bfs",           "name": "Breadth-First Search",     "input": "graph"},
+            {"id": "dfs",           "name": "Depth-First Search",       "input": "graph"},
             {"id": "binary_search", "name": "Binary Search",            "input": "array"},
             {"id": "merge_sort",    "name": "Merge Sort",               "input": "array"},
+            {"id": "quick_sort",    "name": "Quick Sort",               "input": "array"},
+            {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
         ]
     }
 
@@ -98,11 +108,25 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return binary_search.trace(arr, req.target)
 
-    if req.algorithm == "merge_sort":
-      arr = _validated_array(req.array, MAX_MSORT_LEN, "merge_sort")
-      return merge_sort.trace(arr)
+    if req.algorithm in SORT_TRACERS:
+      arr = _validated_array(req.array, MAX_MSORT_LEN, req.algorithm)
+      return SORT_TRACERS[req.algorithm](arr)
 
-    valid = list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
+    if req.algorithm == "fibonacci_dp":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="fibonacci_dp requires 'target' — the n to compute."
+        )
+      n = req.target
+      if n != int(n) or n < 0 or n > fibonacci_dp.MAX_N:
+        raise HTTPException(
+          status_code=400,
+          detail=f"n must be a whole number between 0 and {fibonacci_dp.MAX_N}."
+        )
+      return fibonacci_dp.trace(int(n))
+
+    valid = list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS) + ["fibonacci_dp"]
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

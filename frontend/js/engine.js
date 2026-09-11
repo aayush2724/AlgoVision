@@ -114,20 +114,27 @@ function escapeHTML(str) {
 // Maps any world/route name to a traceable algorithm id and its view type.
 
 const VIEW_FOR = {
-  dijkstra: 'graph', bfs: 'graph',
-  binary_search: 'array', merge_sort: 'array',
+  dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
+  binary_search: 'array', merge_sort: 'array', quick_sort: 'array',
+  fibonacci_dp: 'table',
 };
 
 function resolveAlgoId(raw) {
   const key = String(raw || '').toLowerCase().replace(/[\s-]/g, '');
   const MAP = [
+    ['fibonacci_dp', 'fibonacci_dp'], ['fibonacci', 'fibonacci_dp'],
+    ['dynamic_programming', 'fibonacci_dp'], ['memovault', 'fibonacci_dp'],
+    ['vault', 'fibonacci_dp'],
     ['binary_search', 'binary_search'], ['binarysearch', 'binary_search'],
     ['thehunt', 'binary_search'], ['library', 'binary_search'],
+    ['quick_sort', 'quick_sort'], ['quicksort', 'quick_sort'],
     ['merge_sort', 'merge_sort'], ['mergesort', 'merge_sort'],
-    ['quick_sort', 'merge_sort'], ['sorting', 'merge_sort'], ['leaderboard', 'merge_sort'],
+    ['sorting', 'merge_sort'], ['leaderboard', 'merge_sort'],
+    ['dfs', 'dfs'], ['maze', 'dfs'], ['labyrinth', 'dfs'], ['backtrack', 'dfs'],
     ['sixdegrees', 'bfs'], ['social', 'bfs'], ['graphs', 'bfs'], ['graph', 'bfs'],
-    ['bfs', 'bfs'], ['dfs', 'bfs'],
+    ['bfs', 'bfs'],
     ['gps', 'dijkstra'], ['dijkstra', 'dijkstra'],
+    ['dp', 'fibonacci_dp'],
   ];
   for (const [k, v] of MAP) if (key.includes(k)) return v;
   return 'dijkstra';
@@ -144,6 +151,8 @@ const COUNT_LABELS = {
   visits: 'VISITS', edge_checks: 'EDGE CHECKS', relaxations: 'RELAXATIONS',
   heap_pushes: 'HEAP PUSHES', enqueues: 'ENQUEUES', dequeues: 'DEQUEUES',
   comparisons: 'COMPARISONS', writes: 'WRITES', merges: 'MERGES',
+  swaps: 'SWAPS', partitions: 'PARTITIONS', backtracks: 'BACKTRACKS',
+  calls: 'CALLS', cache_hits: 'CACHE HITS', computes: 'COMPUTES',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -310,6 +319,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       dijkstra: 'gps', bfs: 'social', dfs: 'maze',
       binary_search: 'library', merge_sort: 'leaderboard',
       dynamic_programming: 'vault', quick_sort: 'leaderboard',
+      fibonacci_dp: 'vault',
     };
     return map[algoName] || 'gps';
   }
@@ -545,16 +555,30 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '7, 3, 9, 1, 12, 5',
       hint: 'Up to 16 numbers — watch them merge into order.',
     },
+    quick_sort: {
+      array: '7, 3, 9, 1, 12, 5',
+      hint: 'Up to 16 numbers — pivots lock into their final place one at a time.',
+    },
+    fibonacci_dp: {
+      target: '10',
+      hint: 'Pick n (0–18) — watch the memo vault fill; cache hits glow green.',
+    },
   };
 
   function parseArrayInput() {
+    if (traceView === 'table') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t) || t !== Math.floor(t)) return { error: 'Enter a whole number n.' };
+      if (t < 0 || t > 18) return { error: 'Keep n between 0 and 18.' };
+      return { target: t };
+    }
     const raw = (arrayInput?.value || '').trim();
     const parts = raw.split(/[\s,;]+/).filter(Boolean);
     if (!parts.length) return { error: 'Enter some numbers first — e.g. 7, 3, 9, 1' };
     const values = parts.map(Number);
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
-    const maxLen = algoId === 'merge_sort' ? 16 : 20;
+    const maxLen = (algoId === 'merge_sort' || algoId === 'quick_sort') ? 16 : 20;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
 
     if (algoId === 'binary_search') {
@@ -567,8 +591,125 @@ export function mountEngine(view, algo = 'dijkstra') {
     return { array: values };
   }
 
+  // ── Table view (memoized DP) ──
+  let currentTableN = 10;
+
+  function renderTableView(n) {
+    svg.innerHTML = '';
+    currentTableN = n;
+    const scene = SCENES[currentMeta?.scene] || SCENES.vault;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const cells = n + 1;
+    const w = Math.min(56, 700 / cells);
+    const x0 = (760 - w * cells) / 2;
+    const y = 110, h = 52;
+
+    for (let idx = 0; idx <= n; idx++) {
+      const rect = makeSVG("rect");
+      rect.setAttribute("x", x0 + idx * w + 2);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", Math.max(w - 4, 6));
+      rect.setAttribute("height", h);
+      rect.setAttribute("id", `cell-${idx}`);
+      rect.setAttribute("fill", "rgba(0,212,255,0.03)");
+      rect.setAttribute("stroke", "var(--cDim)");
+      rect.setAttribute("stroke-width", "1");
+      svg.appendChild(rect);
+
+      const val = makeSVG("text");
+      val.setAttribute("x", x0 + idx * w + w / 2);
+      val.setAttribute("y", y + h / 2 + 5);
+      val.setAttribute("text-anchor", "middle");
+      val.setAttribute("fill", "var(--cBright)");
+      val.setAttribute("font-family", "var(--font-mono)");
+      val.setAttribute("font-size", w < 34 ? "10" : "13");
+      val.setAttribute("id", `cellval-${idx}`);
+      svg.appendChild(val);
+
+      const pos = makeSVG("text");
+      pos.setAttribute("x", x0 + idx * w + w / 2);
+      pos.setAttribute("y", y + h + 16);
+      pos.setAttribute("text-anchor", "middle");
+      pos.setAttribute("fill", "var(--cDim)");
+      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-size", "6");
+      pos.textContent = `f(${idx})`;
+      svg.appendChild(pos);
+    }
+  }
+
+  function renderTableStep(step) {
+    const s = step.structures || {};
+    const table = s.table || {};
+    for (let idx = 0; idx <= currentTableN; idx++) {
+      const cell = svg.querySelector(`#cell-${idx}`);
+      const val = svg.querySelector(`#cellval-${idx}`);
+      if (!cell || !val) continue;
+      const v = table[String(idx)];
+      const filled = v !== null && v !== undefined;
+      val.textContent = filled ? fmt(v) : '';
+      cell.setAttribute("fill", filled ? "rgba(0,212,255,0.10)" : "rgba(0,212,255,0.03)");
+      cell.setAttribute("stroke", filled ? "var(--c)" : "var(--cDim)");
+      cell.setAttribute("stroke-width", "1");
+      if (idx === s.computing) {
+        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(255,107,0,0.18)");
+        cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--cAccent)");
+        cell.setAttribute("stroke-width", "2");
+      }
+    }
+  }
+
   // Offline emulator for the array algorithms — mirrors the backend step shapes.
   function localArrayTrace(parsed) {
+    if (algoId === 'fibonacci_dp') {
+      const n = parsed.target;
+      const memo = {}, stack = [], steps = [];
+      const counts = { calls: 0, cache_hits: 0, computes: 0 };
+      const add = (note2, computing = null, cacheHit = false) => steps.push({
+        i: steps.length,
+        structures: {
+          table: Object.fromEntries(
+            Array.from({ length: n + 1 }, (_, k) => [String(k), memo[k] ?? null])),
+          computing, cache_hit: cacheHit, stack: [...stack], counts: { ...counts },
+        },
+        highlight: { index: computing },
+        note: note2,
+      });
+      add(`Compute fib(${n}) — the vault starts empty.`);
+      const fib = (k) => {
+        counts.calls++;
+        if (memo[k] !== undefined) {
+          counts.cache_hits++;
+          add(`fib(${k}) is already in the vault: ${memo[k]}. No recomputation needed.`, k, true);
+          return memo[k];
+        }
+        stack.push(k);
+        if (k <= 1) {
+          memo[k] = k; counts.computes++;
+          add(`Base case: fib(${k}) = ${k}. Stored in the vault.`, k);
+          stack.pop();
+          return k;
+        }
+        add(`fib(${k}) unknown — need fib(${k - 1}) and fib(${k - 2}) first.`, k);
+        const v = fib(k - 1) + fib(k - 2);
+        memo[k] = v; counts.computes++;
+        stack.pop();
+        add(`fib(${k}) = ${v}. Stored in the vault.`, k);
+        return v;
+      };
+      const result = fib(n);
+      add(`Vault complete — fib(${n}) = ${result}.`);
+      return { steps };
+    }
     if (algoId === 'binary_search') {
       const arr = parsed.array, target = parsed.target;
       const steps = [];
@@ -605,6 +746,67 @@ export function mountEngine(view, algo = 'dijkstra') {
         push({ low, high, mid: null, found: false }, null,
           `The range is empty — ${fmt(target)} is not in the array.`);
       }
+      return { steps };
+    }
+
+    if (algoId === 'quick_sort') {
+      const arr = parsed.array.slice();
+      const steps = [];
+      const sortedRanges = [];
+      const counts = { comparisons: 0, swaps: 0, partitions: 0 };
+      const add = (note2, extra = {}) => steps.push({
+        i: steps.length,
+        structures: { array: arr.slice(), merging: null, comparing: null, placed: null,
+          sorted_ranges: sortedRanges.map(r => r.slice()), counts: { ...counts }, ...extra },
+        highlight: { index: extra.placed ?? null },
+        note: note2,
+      });
+      if (arr.length <= 1) {
+        if (arr.length) sortedRanges.push([0, 0]);
+        add('Nothing to sort — already in order.');
+        return { steps };
+      }
+      add(`Start with ${arr.length} unsorted values.`);
+      const qs = (lo, hi) => {
+        if (lo > hi) return;
+        if (lo === hi) {
+          sortedRanges.push([lo, lo]);
+          add(`Position ${lo} holds a single value — locked in place.`, { placed: lo });
+          return;
+        }
+        const pivot = arr[hi];
+        add(`Partition ${lo}..${hi}: pivot is ${fmt(pivot)} (position ${hi}).`,
+          { merging: [lo, hi], placed: hi });
+        let i = lo - 1;
+        for (let j = lo; j < hi; j++) {
+          counts.comparisons++;
+          if (arr[j] <= pivot) {
+            i++;
+            if (i !== j) {
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+              counts.swaps++;
+              add(`${fmt(arr[i])} <= pivot ${fmt(pivot)} — swap into the small side.`,
+                { merging: [lo, hi], comparing: [arr[i], pivot], placed: i });
+            } else {
+              add(`${fmt(arr[j])} <= pivot ${fmt(pivot)} — already on the small side.`,
+                { merging: [lo, hi], comparing: [arr[j], pivot], placed: j });
+            }
+          } else {
+            add(`${fmt(arr[j])} > pivot ${fmt(pivot)} — stays on the big side.`,
+              { merging: [lo, hi], comparing: [arr[j], pivot], placed: j });
+          }
+        }
+        const p = i + 1;
+        if (p !== hi) { [arr[p], arr[hi]] = [arr[hi], arr[p]]; counts.swaps++; }
+        counts.partitions++;
+        sortedRanges.push([p, p]);
+        add(`Pivot ${fmt(pivot)} locked at its final position ${p}.`,
+          { merging: [lo, hi], placed: p });
+        qs(lo, p - 1);
+        qs(p + 1, hi);
+      };
+      qs(0, arr.length - 1);
+      add('Every pivot locked — the array is sorted.');
       return { steps };
     }
 
@@ -910,6 +1112,36 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { steps };
     }
 
+    if (algorithm === 'dfs') {
+      const steps = [];
+      const visited = new Set();
+      const path = [];
+      const counts = { visits: 0, edge_checks: 0, backtracks: 0 };
+      const add = (note2, node = null, edge = null) => steps.push({
+        i: steps.length, highlight: { node, edge },
+        structures: { stack: [...path], visited: [...visited].sort(), counts: { ...counts } },
+        note: note2,
+      });
+      const go = (u, parent) => {
+        visited.add(u); path.push(u); counts.visits++;
+        add(parent ? `Go deeper: ${parent} to ${u}.` : `Start at ${u} — dive into the first corridor.`,
+          u, parent ? [parent, u] : null);
+        const neighbors = (adj[u] || []).slice().sort((a, b) => a.to < b.to ? -1 : 1);
+        for (const e of neighbors) {
+          counts.edge_checks++;
+          if (!visited.has(e.to)) go(e.to, u);
+        }
+        path.pop(); counts.backtracks++;
+        if (path.length) {
+          add(`All routes from ${u} explored — backtrack to ${path[path.length - 1]}.`,
+            path[path.length - 1]);
+        }
+      };
+      go(startNode, null);
+      add('Stack empty — every reachable room mapped.');
+      return { steps };
+    }
+
     const dist = {};
     const steps = [];
     nodes.forEach(n => dist[n] = Infinity);
@@ -964,7 +1196,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     try {
       let res;
-      if (traceView === 'array') {
+      if (traceView === 'array' || traceView === 'table') {
         const parsed = parseArrayInput();
         if (parsed.error) {
           status.innerHTML = `STATUS: <span style="color:#ff5f5f">${escapeHTML(parsed.error).toUpperCase()}</span>`;
@@ -976,14 +1208,21 @@ export function mountEngine(view, algo = 'dijkstra') {
           arrayHint.textContent =
             'Heads up: your numbers were sorted first — binary search only works on sorted data.';
         }
-        renderArrayView(parsed.array);
-        if (isOffline) {
-          res = localArrayTrace(parsed);
+        if (traceView === 'table') {
+          renderTableView(parsed.target);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { target: parsed.target });
         } else {
-          const payload = algoId === 'binary_search'
-            ? { array: parsed.array, target: parsed.target }
-            : { array: parsed.array };
-          res = await api.postTrace(algoId, payload);
+          renderArrayView(parsed.array);
+          if (isOffline) {
+            res = localArrayTrace(parsed);
+          } else {
+            const payload = algoId === 'binary_search'
+              ? { array: parsed.array, target: parsed.target }
+              : { array: parsed.array };
+            res = await api.postTrace(algoId, payload);
+          }
         }
       } else {
         if (!userGraph.nodes.length) {
@@ -1108,6 +1347,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const isLast = currentStepIdx === currentSteps.length - 1;
 
     if (traceView === 'array') renderArrayStep(step);
+    else if (traceView === 'table') renderTableStep(step);
     else renderGraphStep(step, currentStepIdx);
 
     let narration = step.note || "Processing...";
@@ -1170,7 +1410,9 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (!counts) return;
     const sizes = traceView === 'graph'
       ? { V: userGraph.nodes.length, E: userGraph.links.length, n: userGraph.nodes.length }
-      : { n: currentArrayValues.length, V: 0, E: 0 };
+      : traceView === 'table'
+        ? { n: currentTableN, V: 0, E: 0 }
+        : { n: currentArrayValues.length, V: 0, E: 0 };
     liveEl.textContent = card.reading(counts, sizes);
     liveEl.style.display = 'block';
   }
@@ -1349,7 +1591,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         const narration = currentScene?.stepNarrate(step, currentMeta || {}) || step.note;
         res = { text: `[OFFLINE] ${narration}` };
       } else {
-        res = await api.explainStep(algoId, step, "beginner", currentMeta || {});
+        const level = view.querySelector('#level-select')?.value || 'beginner';
+        res = await api.explainStep(algoId, step, level, currentMeta || {});
       }
       explanationBox.textContent = (res.text || "NO DATA AVAILABLE.").toUpperCase();
     } catch {
@@ -1370,6 +1613,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     resetTraceState();
     if (traceView === 'array') {
       renderArrayView(currentArrayValues);
+    } else if (traceView === 'table') {
+      renderTableView(currentTableN);
     } else {
       renderGraph(currentMeta);
     }
@@ -1403,11 +1648,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       };
     }
 
-    if (traceView === 'array') {
+    if (traceView === 'array' || traceView === 'table') {
       const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
       if (arrayControls) arrayControls.style.display = 'block';
-      if (arrayInput && !arrayInput.value) arrayInput.value = defaults.array;
-      if (algoId === 'binary_search' && targetWrap) {
+      if (traceView === 'table') {
+        // Table algorithms take a single n, not an array
+        if (arrayInput) arrayInput.style.display = 'none';
+        const targetLabel = view.querySelector('#target-label');
+        if (targetLabel) targetLabel.textContent = 'N =';
+      } else if (arrayInput && !arrayInput.value) {
+        arrayInput.value = defaults.array;
+      }
+      if ((algoId === 'binary_search' || traceView === 'table') && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
       }
@@ -1416,7 +1668,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       const whatIfDetails = view.querySelector('#whatif-controls')?.closest('details');
       if (whatIfDetails) whatIfDetails.style.display = 'none';
       const parsed = parseArrayInput();
-      renderArrayView(parsed.array || []);
+      if (traceView === 'table') renderTableView(parsed.target ?? 10);
+      else renderArrayView(parsed.array || []);
       checkBackend();
       initComplexityCard();
       return;

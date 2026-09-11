@@ -2,7 +2,9 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.tracers import (
-    bfs, binary_search, dfs, dijkstra, fibonacci_dp, merge_sort, quick_sort,
+    balanced_brackets, bfs, binary_search, bubble_sort, dfs, dijkstra,
+    fibonacci_dp, insertion_sort, linked_list_reverse, merge_sort,
+    quick_sort, selection_sort,
 )
 from app.tracers.common import Graph
 from slowapi import Limiter
@@ -19,8 +21,11 @@ GRAPH_TRACERS = {
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
     "quick_sort": quick_sort.trace,
+    "bubble_sort": bubble_sort.trace,
+    "insertion_sort": insertion_sort.trace,
+    "selection_sort": selection_sort.trace,
 }
-ARRAY_ALGORITHMS = {"binary_search", "merge_sort", "quick_sort"}
+ARRAY_ALGORITHMS = set(SORT_TRACERS) | {"binary_search", "linked_list_reverse"}
 
 MAX_BSEARCH_LEN = 64
 MAX_MSORT_LEN = merge_sort.MAX_ARRAY_LEN  # 16 — keeps the trace readable
@@ -32,6 +37,7 @@ class TraceRequest(BaseModel):
     graph:     Graph | None = None
     array:     list[float] | None = Field(default=None, max_length=MAX_BSEARCH_LEN)
     target:    float | None = None
+    text:      str | None = Field(default=None, max_length=64)
 
 @router.get("/algorithms")
 def algorithms():
@@ -43,6 +49,11 @@ def algorithms():
             {"id": "binary_search", "name": "Binary Search",            "input": "array"},
             {"id": "merge_sort",    "name": "Merge Sort",               "input": "array"},
             {"id": "quick_sort",    "name": "Quick Sort",               "input": "array"},
+            {"id": "bubble_sort",    "name": "Bubble Sort",             "input": "array"},
+            {"id": "insertion_sort", "name": "Insertion Sort",          "input": "array"},
+            {"id": "selection_sort", "name": "Selection Sort",          "input": "array"},
+            {"id": "linked_list_reverse", "name": "Reverse a Linked List", "input": "array"},
+            {"id": "balanced_brackets",   "name": "Balanced Brackets (Stack)", "input": "text"},
             {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
         ]
     }
@@ -112,6 +123,30 @@ def run_trace(request: Request, req: TraceRequest):
       arr = _validated_array(req.array, MAX_MSORT_LEN, req.algorithm)
       return SORT_TRACERS[req.algorithm](arr)
 
+    if req.algorithm == "linked_list_reverse":
+      arr = _validated_array(req.array, linked_list_reverse.MAX_LIST_LEN,
+                             "linked_list_reverse")
+      return linked_list_reverse.trace(arr)
+
+    if req.algorithm == "balanced_brackets":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="balanced_brackets requires 'text' — a bracket sequence."
+        )
+      cleaned = req.text.replace(" ", "")
+      if len(cleaned) > balanced_brackets.MAX_TEXT_LEN:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Max {balanced_brackets.MAX_TEXT_LEN} bracket characters."
+        )
+      if any(c not in balanced_brackets.ALLOWED_CHARS for c in cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail="Only bracket characters allowed: ( ) [ ] { }"
+        )
+      return balanced_brackets.trace(cleaned)
+
     if req.algorithm == "fibonacci_dp":
       if req.target is None:
         raise HTTPException(
@@ -126,7 +161,8 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return fibonacci_dp.trace(int(n))
 
-    valid = list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS) + ["fibonacci_dp"]
+    valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
+             + ["balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

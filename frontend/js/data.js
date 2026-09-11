@@ -36,7 +36,7 @@ export const WORLDS = [
   { name: "The Branching Tree", metaphor: "Recursion",      category: "Foundations", emoji: "🌿", hook: "Solve small to solve big.",                         complexity: "O(2^n)",     algo: "dfs"           },
   { name: "The Labyrinth",      metaphor: "Backtracking",   category: "Mastery",     emoji: "🗺️", hook: "Explore every path, but know when to turn back.",   complexity: "O(N!)",      algo: "dfs"           },
   { name: "The Hash Map",       metaphor: "Hashing",        category: "Structures",  emoji: "🔑", hook: "Instant lookup to any secret you store.",           complexity: "O(1)",       algo: "binary_search" },
-  { name: "The Flow",           metaphor: "Linked Lists",   category: "Structures",  emoji: "🔗", hook: "One link at a time, building the chain.",            complexity: "O(n)",       algo: "bfs"           }
+  { name: "The Flow",           metaphor: "Linked Lists",   category: "Structures",  emoji: "🔗", hook: "One link at a time, building the chain.",            complexity: "O(n)",       algo: "linked_list_reverse" }
 ];
 
 export const SAMPLE_GRAPH = {
@@ -214,6 +214,39 @@ export const COMPLEXITY = {
       `${c.partitions ?? 0} partitions to sort ${s.n} values — ` +
       `n·log₂ n ≈ ${Math.round(s.n * Math.log2(Math.max(s.n, 2)))}. ` +
       `An already-sorted input would push this toward n² = ${s.n * s.n}.`,
+  },
+  bubble_sort: {
+    rows: [["Best (sorted input)", "O(n)"], ["Avg / Worst", "O(n²)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.swaps ?? 0} swaps over ` +
+      `${c.passes ?? 0} passes for ${s.n} values. A sorted input exits after one ` +
+      `pass (${Math.max(s.n - 1, 0)} comparisons) — that's the O(n) best case.`,
+  },
+  insertion_sort: {
+    rows: [["Best (sorted input)", "O(n)"], ["Avg / Worst", "O(n²)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.shifts ?? 0} shifts to place ` +
+      `${c.inserts ?? 0} values. Nearly-sorted input shifts almost nothing — ` +
+      `that's why insertion sort is the choice for small or nearly-ordered data.`,
+  },
+  selection_sort: {
+    rows: [["Always", "O(n²)"], ["Space", "O(1)"], ["Swaps", "O(n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons — exactly n(n−1)/2 = ` +
+      `${(s.n * (s.n - 1)) / 2} for ${s.n} values, no matter the order. ` +
+      `Only ${c.swaps ?? 0} swaps though — selection sort never wastes a move.`,
+  },
+  linked_list_reverse: {
+    rows: [["Time", "O(n)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.flips ?? 0} pointer flips for ${s.n} nodes — one visit each, three ` +
+      `pointers total. No extra memory, no matter how long the chain.`,
+  },
+  balanced_brackets: {
+    rows: [["Time", "O(n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.pushes ?? 0} pushes and ${c.pops ?? 0} pops — each symbol touched ` +
+      `once. The stack's depth is the price of remembering what's still open.`,
   },
   fibonacci_dp: {
     rows: [["Time (memoized)", "O(n)"], ["Time (naive)", "O(2ⁿ)"], ["Space", "O(n)"]],

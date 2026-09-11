@@ -9,8 +9,9 @@ students **run it on their own input, step by step, and analyse the cost**.
 
 ## What it actually does
 
-- **7 live algorithm tracers** — Dijkstra, BFS, DFS, Binary Search, Merge
-  Sort, Quick Sort, and memoized Fibonacci (DP) — every step computed by the
+- **12 live algorithm tracers** — Dijkstra, BFS, DFS, Binary Search, Merge /
+  Quick / Bubble / Insertion / Selection Sort, Linked-List Reversal, Balanced
+  Brackets (stack), and memoized Fibonacci (DP) — every step computed by the
   backend from *your* input, never a canned animation.
 - **Bring your own data** — build a graph by clicking (add/delete nodes and
   edges, edit weights, pick the start node, teaching presets including a

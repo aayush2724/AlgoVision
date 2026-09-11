@@ -96,6 +96,28 @@ const SCENES = {
     stepNarrate(step, meta) {
       return `${step.note || "Computing optimal subproblem..."}`;
     }
+  },
+  train: {
+    label: "TRAIN YARD",
+    color: "#5fd6e6",
+    accentColor: "#a9f0fa",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `🚃 ${id}`,
+    edgeLabel: (w) => `coupling`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Recoupling carriages..."}`;
+    }
+  },
+  plates: {
+    label: "PLATE STACK",
+    color: "#a9f0fa",
+    accentColor: "#5fd6e6",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `🍽 ${id}`,
+    edgeLabel: (w) => `match`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Checking the stack..."}`;
+    }
   }
 };
 
@@ -116,6 +138,8 @@ function escapeHTML(str) {
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   binary_search: 'array', merge_sort: 'array', quick_sort: 'array',
+  bubble_sort: 'array', insertion_sort: 'array', selection_sort: 'array',
+  linked_list_reverse: 'list', balanced_brackets: 'stack',
   fibonacci_dp: 'table',
 };
 
@@ -125,6 +149,13 @@ function resolveAlgoId(raw) {
     ['fibonacci_dp', 'fibonacci_dp'], ['fibonacci', 'fibonacci_dp'],
     ['dynamic_programming', 'fibonacci_dp'], ['memovault', 'fibonacci_dp'],
     ['vault', 'fibonacci_dp'],
+    ['linked_list_reverse', 'linked_list_reverse'], ['linkedlist', 'linked_list_reverse'],
+    ['theflow', 'linked_list_reverse'], ['train', 'linked_list_reverse'],
+    ['balanced_brackets', 'balanced_brackets'], ['brackets', 'balanced_brackets'],
+    ['plates', 'balanced_brackets'], ['parenthes', 'balanced_brackets'],
+    ['bubble_sort', 'bubble_sort'], ['bubblesort', 'bubble_sort'], ['bubble', 'bubble_sort'],
+    ['insertion_sort', 'insertion_sort'], ['insertionsort', 'insertion_sort'], ['insertion', 'insertion_sort'],
+    ['selection_sort', 'selection_sort'], ['selectionsort', 'selection_sort'], ['selection', 'selection_sort'],
     ['binary_search', 'binary_search'], ['binarysearch', 'binary_search'],
     ['thehunt', 'binary_search'], ['library', 'binary_search'],
     ['quick_sort', 'quick_sort'], ['quicksort', 'quick_sort'],
@@ -153,6 +184,8 @@ const COUNT_LABELS = {
   comparisons: 'COMPARISONS', writes: 'WRITES', merges: 'MERGES',
   swaps: 'SWAPS', partitions: 'PARTITIONS', backtracks: 'BACKTRACKS',
   calls: 'CALLS', cache_hits: 'CACHE HITS', computes: 'COMPUTES',
+  passes: 'PASSES', shifts: 'SHIFTS', inserts: 'INSERTS',
+  flips: 'FLIPS', pushes: 'PUSHES', pops: 'POPS',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -320,6 +353,9 @@ export function mountEngine(view, algo = 'dijkstra') {
       binary_search: 'library', merge_sort: 'leaderboard',
       dynamic_programming: 'vault', quick_sort: 'leaderboard',
       fibonacci_dp: 'vault',
+      bubble_sort: 'leaderboard', insertion_sort: 'leaderboard',
+      selection_sort: 'leaderboard',
+      linked_list_reverse: 'train', balanced_brackets: 'plates',
     };
     return map[algoName] || 'gps';
   }
@@ -559,6 +595,26 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '7, 3, 9, 1, 12, 5',
       hint: 'Up to 16 numbers — pivots lock into their final place one at a time.',
     },
+    bubble_sort: {
+      array: '7, 3, 9, 1, 12, 5',
+      hint: 'Up to 16 numbers — heavy values bubble to the right, pass by pass.',
+    },
+    insertion_sort: {
+      array: '7, 3, 9, 1, 12, 5',
+      hint: 'Up to 16 numbers — each one slides into place like a playing card.',
+    },
+    selection_sort: {
+      array: '7, 3, 9, 1, 12, 5',
+      hint: 'Up to 16 numbers — every round crowns a champion.',
+    },
+    linked_list_reverse: {
+      array: '10, 20, 30, 40, 50',
+      hint: 'Up to 10 values — watch every coupling flip, one pointer at a time.',
+    },
+    balanced_brackets: {
+      array: '({[]})',
+      hint: 'Brackets only: ( ) [ ] { } — up to 20. Try breaking it: (] or ((',
+    },
     fibonacci_dp: {
       target: '10',
       hint: 'Pick n (0–18) — watch the memo vault fill; cache hits glow green.',
@@ -572,13 +628,21 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (t < 0 || t > 18) return { error: 'Keep n between 0 and 18.' };
       return { target: t };
     }
+    if (traceView === 'stack') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw) return { error: 'Type a bracket sequence — e.g. ({[]})' };
+      if (raw.length > 20) return { error: 'Max 20 characters.' };
+      if (!/^[()\[\]{}]+$/.test(raw)) return { error: 'Only brackets: ( ) [ ] { }' };
+      return { text: raw };
+    }
     const raw = (arrayInput?.value || '').trim();
     const parts = raw.split(/[\s,;]+/).filter(Boolean);
     if (!parts.length) return { error: 'Enter some numbers first — e.g. 7, 3, 9, 1' };
     const values = parts.map(Number);
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
-    const maxLen = (algoId === 'merge_sort' || algoId === 'quick_sort') ? 16 : 20;
+    const maxLen = algoId === 'linked_list_reverse' ? 10
+      : algoId === 'binary_search' ? 20 : 16;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
 
     if (algoId === 'binary_search') {
@@ -668,6 +732,272 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   }
 
+  // ── List view (linked list) ──
+  let currentListValues = [];
+  let listGeom = null;
+
+  function renderListView(values) {
+    svg.innerHTML = '';
+    currentListValues = values.slice();
+    const scene = SCENES[currentMeta?.scene] || SCENES.train;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const n = values.length;
+    if (!n) return;
+    const w = Math.min(72, 680 / n);
+    const x0 = (760 - w * n) / 2;
+    const y = 120, h = 46;
+    listGeom = { x0, w, y, h };
+
+    values.forEach((v, idx) => {
+      const rect = makeSVG("rect");
+      rect.setAttribute("x", x0 + idx * w + 6);
+      rect.setAttribute("y", y);
+      rect.setAttribute("width", w - 12);
+      rect.setAttribute("height", h);
+      rect.setAttribute("id", `cell-${idx}`);
+      rect.setAttribute("fill", "rgba(0,212,255,0.05)");
+      rect.setAttribute("stroke", "var(--cDim)");
+      svg.appendChild(rect);
+
+      const val = makeSVG("text");
+      val.setAttribute("x", x0 + idx * w + w / 2);
+      val.setAttribute("y", y + h / 2 + 5);
+      val.setAttribute("text-anchor", "middle");
+      val.setAttribute("fill", "var(--cBright)");
+      val.setAttribute("font-family", "var(--font-mono)");
+      val.setAttribute("font-size", "13");
+      val.textContent = fmt(v);
+      svg.appendChild(val);
+
+      const pos = makeSVG("text");
+      pos.setAttribute("x", x0 + idx * w + w / 2);
+      pos.setAttribute("y", y + h + 16);
+      pos.setAttribute("text-anchor", "middle");
+      pos.setAttribute("fill", "var(--cDim)");
+      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-size", "6");
+      pos.textContent = idx;
+      svg.appendChild(pos);
+    });
+  }
+
+  function renderListStep(step) {
+    if (!listGeom) return;
+    const s = step.structures || {};
+    const { x0, w, y, h } = listGeom;
+    svg.querySelector('#list-decor')?.remove();
+    const g = makeSVG('g');
+    g.setAttribute('id', 'list-decor');
+
+    const cx = (idx) => x0 + idx * w + w / 2;
+
+    // Arrows: rightward above the boxes, leftward below — they can't overlap
+    (s.next || []).forEach((to, from) => {
+      if (to === null || to === undefined) {
+        // end of chain marker
+        const t = makeSVG('text');
+        t.setAttribute('x', cx(from));
+        t.setAttribute('y', y - 12);
+        t.setAttribute('text-anchor', 'middle');
+        t.setAttribute('fill', 'var(--cDim)');
+        t.setAttribute('font-size', '11');
+        t.textContent = '∅';
+        g.appendChild(t);
+        return;
+      }
+      const right = to > from;
+      const yy = right ? y - 14 : y + h + 28;
+      const x1 = cx(from), x2 = cx(to) + (right ? -8 : 8);
+      const line = makeSVG('line');
+      line.setAttribute('x1', x1); line.setAttribute('y1', yy);
+      line.setAttribute('x2', x2); line.setAttribute('y2', yy);
+      const active = from === s.curr;
+      line.setAttribute('stroke', active ? 'var(--cAccent)' : 'var(--c)');
+      line.setAttribute('stroke-width', active ? '2.5' : '1.5');
+      g.appendChild(line);
+      const head = makeSVG('polygon');
+      const dir = right ? 1 : -1;
+      head.setAttribute('points',
+        `${x2 + dir * 8},${yy} ${x2},${yy - 4} ${x2},${yy + 4}`);
+      head.setAttribute('fill', active ? 'var(--cAccent)' : 'var(--c)');
+      g.appendChild(head);
+    });
+
+    // Pointer labels under the index row
+    const ptrs = [['P', s.prev, 'var(--cBright)'], ['C', s.curr, 'var(--cAccent)'],
+                  ['S', s.saved, 'var(--cDim)']];
+    ptrs.forEach(([label, idx, color]) => {
+      if (idx === null || idx === undefined) return;
+      const t = makeSVG('text');
+      t.setAttribute('x', cx(idx));
+      t.setAttribute('y', y + h + 46);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', color);
+      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-size', '8');
+      t.textContent = label;
+      g.appendChild(t);
+    });
+
+    // Highlight the current node's box
+    currentListValues.forEach((_, idx) => {
+      const cell = svg.querySelector(`#cell-${idx}`);
+      if (!cell) return;
+      cell.setAttribute('stroke', idx === s.curr ? 'var(--cAccent)' : 'var(--cDim)');
+      cell.setAttribute('stroke-width', idx === s.curr ? '2' : '1');
+    });
+
+    svg.appendChild(g);
+  }
+
+  // ── Stack view (balanced brackets) ──
+  let currentStackText = '';
+  let stackGeom = null;
+
+  function renderStackView(text) {
+    svg.innerHTML = '';
+    currentStackText = text;
+    const scene = SCENES[currentMeta?.scene] || SCENES.plates;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const n = text.length;
+    if (!n) return;
+    const w = Math.min(40, 640 / n);
+    const x0 = (760 - w * n) / 2;
+    const y = 55, h = 34;
+    stackGeom = { x0, w, y, h };
+
+    const rowLabel = makeSVG('text');
+    rowLabel.setAttribute('x', '380'); rowLabel.setAttribute('y', '44');
+    rowLabel.setAttribute('text-anchor', 'middle');
+    rowLabel.setAttribute('fill', 'var(--cDim)');
+    rowLabel.setAttribute('font-family', 'var(--font-pixel)');
+    rowLabel.setAttribute('font-size', '6');
+    rowLabel.textContent = 'INPUT — LEFT TO RIGHT';
+    svg.appendChild(rowLabel);
+
+    [...text].forEach((ch, idx) => {
+      const rect = makeSVG('rect');
+      rect.setAttribute('x', x0 + idx * w + 2);
+      rect.setAttribute('y', y);
+      rect.setAttribute('width', w - 4);
+      rect.setAttribute('height', h);
+      rect.setAttribute('id', `schar-${idx}`);
+      rect.setAttribute('fill', 'rgba(0,212,255,0.05)');
+      rect.setAttribute('stroke', 'var(--cDim)');
+      svg.appendChild(rect);
+      const t = makeSVG('text');
+      t.setAttribute('x', x0 + idx * w + w / 2);
+      t.setAttribute('y', y + h / 2 + 5);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', 'var(--cBright)');
+      t.setAttribute('font-family', 'var(--font-mono)');
+      t.setAttribute('font-size', '15');
+      t.textContent = ch;
+      svg.appendChild(t);
+    });
+
+    const stackLabel = makeSVG('text');
+    stackLabel.setAttribute('x', '80'); stackLabel.setAttribute('y', '205');
+    stackLabel.setAttribute('fill', 'var(--cDim)');
+    stackLabel.setAttribute('font-family', 'var(--font-pixel)');
+    stackLabel.setAttribute('font-size', '6');
+    stackLabel.textContent = 'STACK: BOTTOM → TOP';
+    svg.appendChild(stackLabel);
+  }
+
+  function renderStackStep(step) {
+    if (!stackGeom) return;
+    const s = step.structures || {};
+    svg.querySelector('#stack-decor')?.remove();
+    const g = makeSVG('g');
+    g.setAttribute('id', 'stack-decor');
+
+    // Highlight the current input character; mismatches turn red
+    [...currentStackText].forEach((_, idx) => {
+      const cell = svg.querySelector(`#schar-${idx}`);
+      if (!cell) return;
+      if (idx === s.pos) {
+        cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--cAccent)');
+        cell.setAttribute('stroke-width', '2');
+        cell.setAttribute('fill', s.action === 'mismatch'
+          ? 'rgba(248,113,113,0.15)' : 'rgba(255,107,0,0.15)');
+      } else if (s.pos !== null && s.pos !== undefined && idx < s.pos) {
+        cell.setAttribute('stroke', 'var(--c)');
+        cell.setAttribute('stroke-width', '1');
+        cell.setAttribute('fill', 'rgba(0,212,255,0.03)');
+      } else {
+        cell.setAttribute('stroke', 'var(--cDim)');
+        cell.setAttribute('stroke-width', '1');
+        cell.setAttribute('fill', 'rgba(0,212,255,0.05)');
+      }
+    });
+
+    // Draw the stack growing left → right along the bottom
+    const bx = 80, by = 215, bw = 38, bh = 36;
+    (s.stack || []).forEach((ch, k) => {
+      const rect = makeSVG('rect');
+      rect.setAttribute('x', bx + k * (bw + 4));
+      rect.setAttribute('y', by);
+      rect.setAttribute('width', bw);
+      rect.setAttribute('height', bh);
+      const isTop = k === s.stack.length - 1;
+      rect.setAttribute('fill', isTop ? 'rgba(255,107,0,0.12)' : 'rgba(0,212,255,0.06)');
+      rect.setAttribute('stroke', isTop ? 'var(--cAccent)' : 'var(--c)');
+      rect.setAttribute('stroke-width', isTop ? '2' : '1');
+      g.appendChild(rect);
+      const t = makeSVG('text');
+      t.setAttribute('x', bx + k * (bw + 4) + bw / 2);
+      t.setAttribute('y', by + bh / 2 + 5);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', 'var(--cBright)');
+      t.setAttribute('font-family', 'var(--font-mono)');
+      t.setAttribute('font-size', '15');
+      t.textContent = ch;
+      g.appendChild(t);
+    });
+    if (!(s.stack || []).length) {
+      const t = makeSVG('text');
+      t.setAttribute('x', bx); t.setAttribute('y', by + 24);
+      t.setAttribute('fill', 'var(--cDim)');
+      t.setAttribute('font-family', 'var(--font-mono)');
+      t.setAttribute('font-size', '12');
+      t.textContent = '(empty)';
+      g.appendChild(t);
+    }
+
+    // Verdict badge once decided
+    if (s.balanced === true || s.balanced === false) {
+      const t = makeSVG('text');
+      t.setAttribute('x', '680'); t.setAttribute('y', '235');
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', s.balanced ? '#4ade80' : '#f87171');
+      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-size', '9');
+      t.textContent = s.balanced ? 'BALANCED' : 'UNBALANCED';
+      g.appendChild(t);
+    }
+
+    svg.appendChild(g);
+  }
+
   // Offline emulator for the array algorithms — mirrors the backend step shapes.
   function localArrayTrace(parsed) {
     if (algoId === 'fibonacci_dp') {
@@ -708,6 +1038,165 @@ export function mountEngine(view, algo = 'dijkstra') {
       };
       const result = fib(n);
       add(`Vault complete — fib(${n}) = ${result}.`);
+      return { steps };
+    }
+
+    if (algoId === 'bubble_sort' || algoId === 'insertion_sort' || algoId === 'selection_sort') {
+      const arr = parsed.array.slice();
+      const n2 = arr.length;
+      const steps = [];
+      let sortedRanges = [];
+      const counts = algoId === 'bubble_sort'
+        ? { comparisons: 0, swaps: 0, passes: 0 }
+        : algoId === 'insertion_sort'
+          ? { comparisons: 0, shifts: 0, inserts: 0 }
+          : { comparisons: 0, swaps: 0 };
+      const add = (note2, extra = {}) => steps.push({
+        i: steps.length,
+        structures: { array: arr.slice(), merging: null, comparing: null, placed: null,
+          sorted_ranges: sortedRanges.map(r => r.slice()), counts: { ...counts }, ...extra },
+        highlight: { index: extra.placed ?? null },
+        note: note2,
+      });
+      if (n2 <= 1) {
+        if (n2) sortedRanges = [[0, 0]];
+        add('Nothing to sort — already in order.');
+        return { steps };
+      }
+      add(`Start with ${n2} unsorted values.`);
+      if (algoId === 'bubble_sort') {
+        let done = false;
+        for (let end = n2 - 1; end > 0 && !done; end--) {
+          counts.passes++;
+          let swapped = false;
+          for (let j = 0; j < end; j++) {
+            counts.comparisons++;
+            if (arr[j] > arr[j + 1]) {
+              [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+              counts.swaps++; swapped = true;
+              add(`${fmt(arr[j + 1])} > ${fmt(arr[j])} — swap; the heavier one bubbles right.`,
+                { comparing: [arr[j], arr[j + 1]], placed: j + 1 });
+            } else {
+              add(`${fmt(arr[j])} <= ${fmt(arr[j + 1])} — in order, move on.`,
+                { comparing: [arr[j], arr[j + 1]], placed: j });
+            }
+          }
+          sortedRanges = [[end, n2 - 1]];
+          add(`Pass ${counts.passes} done — position ${end} locked.`, { placed: end });
+          if (!swapped) { sortedRanges = [[0, n2 - 1]]; add('No swaps — already sorted. Early exit!'); done = true; }
+        }
+        if (!done) { sortedRanges = [[0, n2 - 1]]; add('Only one value left unlocked — sorted.'); }
+      } else if (algoId === 'insertion_sort') {
+        sortedRanges = [[0, 0]];
+        for (let i = 1; i < n2; i++) {
+          const key = arr[i];
+          add(`Pick up ${fmt(key)} (position ${i}) — find its slot.`, { placed: i });
+          let j = i;
+          while (j > 0) {
+            counts.comparisons++;
+            if (arr[j - 1] > key) {
+              [arr[j], arr[j - 1]] = [arr[j - 1], key];
+              counts.shifts++;
+              add(`${fmt(arr[j])} is bigger — shift it right; the card slides left.`,
+                { comparing: [arr[j], key], placed: j - 1 });
+              j--;
+            } else break;
+          }
+          counts.inserts++;
+          sortedRanges = [[0, i]];
+          add(`${fmt(key)} settles at position ${j}.`, { placed: j });
+        }
+        add('Every card placed — sorted.');
+      } else {
+        for (let i = 0; i < n2 - 1; i++) {
+          let minIdx = i;
+          add(`Round ${i + 1}: assume ${fmt(arr[i])} is the smallest.`, { placed: i, merging: [i, n2 - 1] });
+          for (let j = i + 1; j < n2; j++) {
+            counts.comparisons++;
+            const champ = arr[minIdx];
+            if (arr[j] < champ) {
+              minIdx = j;
+              add(`${fmt(arr[j])} beats ${fmt(champ)} — new champion.`,
+                { comparing: [arr[j], champ], placed: j, merging: [i, n2 - 1] });
+            } else {
+              add(`${fmt(arr[j])} is not smaller — champion unchanged.`,
+                { comparing: [arr[j], champ], placed: j, merging: [i, n2 - 1] });
+            }
+          }
+          if (minIdx !== i) { [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]; counts.swaps++; }
+          sortedRanges = [[0, i]];
+          add(`Champion ${fmt(arr[i])} locked at position ${i}.`, { placed: i });
+        }
+        sortedRanges = [[0, n2 - 1]];
+        add('Last value must be the biggest — sorted.');
+      }
+      return { steps };
+    }
+
+    if (algoId === 'linked_list_reverse') {
+      const values = parsed.array.slice();
+      const n2 = values.length;
+      const nxt = values.map((_, i) => (i < n2 - 1 ? i + 1 : null));
+      const steps = [];
+      const counts = { flips: 0 };
+      let prev = null, curr = n2 ? 0 : null, saved = null;
+      const add = (note2) => steps.push({
+        i: steps.length,
+        structures: { values: values.slice(), next: nxt.slice(), prev, curr, saved,
+          counts: { ...counts } },
+        highlight: { index: curr },
+        note: note2,
+      });
+      if (n2 === 0) { add('An empty chain — nothing to reverse.'); return { steps }; }
+      if (n2 === 1) { add('A single carriage is its own reversal.'); return { steps }; }
+      add(`A chain of ${n2} carriages. Reverse every coupling with prev / curr / next.`);
+      while (curr !== null) {
+        saved = nxt[curr];
+        nxt[curr] = prev;
+        counts.flips++;
+        add(`Save the next carriage, then flip node ${curr}'s coupling backwards.`);
+        prev = curr; curr = saved; saved = null;
+        add(`Advance: prev is node ${prev}, curr is ${curr === null ? 'None' : 'node ' + curr}.`);
+      }
+      add(`curr is None — node ${prev} is the new head. Chain reversed.`);
+      return { steps };
+    }
+
+    if (algoId === 'balanced_brackets') {
+      const text = parsed.text;
+      const PAIRS = { ')': '(', ']': '[', '}': '{' };
+      const steps = [];
+      const stack = [];
+      const counts = { pushes: 0, pops: 0 };
+      let balanced = null;
+      const add = (note2, pos = null, action = null) => steps.push({
+        i: steps.length,
+        structures: { stack: stack.slice(), pos, action, balanced, counts: { ...counts } },
+        highlight: { index: pos },
+        note: note2,
+      });
+      add(`Scan the ${text.length} symbols left to right.`);
+      let mismatched = false;
+      for (let idx = 0; idx < text.length; idx++) {
+        const ch = text[idx];
+        if ('([{'.includes(ch)) {
+          stack.push(ch); counts.pushes++;
+          add(`'${ch}' opens — push it. Depth ${stack.length}.`, idx, 'push');
+        } else if (stack.length && stack[stack.length - 1] === PAIRS[ch]) {
+          const op = stack.pop(); counts.pops++;
+          add(`'${ch}' closes '${op}' — pop. Depth ${stack.length}.`, idx, 'pop');
+        } else {
+          balanced = false; mismatched = true;
+          add(`'${ch}' has nothing to close — mismatch! Unbalanced.`, idx, 'mismatch');
+          break;
+        }
+      }
+      if (!mismatched) {
+        balanced = stack.length === 0;
+        add(balanced
+          ? 'Every opener matched and the stack is empty — balanced!'
+          : `${stack.length} opener(s) never closed — unbalanced.`, null, 'done');
+      }
       return { steps };
     }
     if (algoId === 'binary_search') {
@@ -1196,7 +1685,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     try {
       let res;
-      if (traceView === 'array' || traceView === 'table') {
+      if (traceView !== 'graph') {
         const parsed = parseArrayInput();
         if (parsed.error) {
           status.innerHTML = `STATUS: <span style="color:#ff5f5f">${escapeHTML(parsed.error).toUpperCase()}</span>`;
@@ -1213,6 +1702,16 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { target: parsed.target });
+        } else if (traceView === 'list') {
+          renderListView(parsed.array);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array });
+        } else if (traceView === 'stack') {
+          renderStackView(parsed.text);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
         } else {
           renderArrayView(parsed.array);
           if (isOffline) {
@@ -1348,6 +1847,8 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     if (traceView === 'array') renderArrayStep(step);
     else if (traceView === 'table') renderTableStep(step);
+    else if (traceView === 'list') renderListStep(step);
+    else if (traceView === 'stack') renderStackStep(step);
     else renderGraphStep(step, currentStepIdx);
 
     let narration = step.note || "Processing...";
@@ -1615,6 +2116,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       renderArrayView(currentArrayValues);
     } else if (traceView === 'table') {
       renderTableView(currentTableN);
+    } else if (traceView === 'list') {
+      renderListView(currentListValues);
+    } else if (traceView === 'stack') {
+      renderStackView(currentStackText);
     } else {
       renderGraph(currentMeta);
     }
@@ -1648,7 +2153,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       };
     }
 
-    if (traceView === 'array' || traceView === 'table') {
+    if (traceView !== 'graph') {
       const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
       if (arrayControls) arrayControls.style.display = 'block';
       if (traceView === 'table') {
@@ -1669,6 +2174,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (whatIfDetails) whatIfDetails.style.display = 'none';
       const parsed = parseArrayInput();
       if (traceView === 'table') renderTableView(parsed.target ?? 10);
+      else if (traceView === 'list') renderListView(parsed.array || []);
+      else if (traceView === 'stack') renderStackView(parsed.text || '');
       else renderArrayView(parsed.array || []);
       checkBackend();
       initComplexityCard();

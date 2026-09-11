@@ -121,10 +121,10 @@ class TestPhase5Endpoints:
         assert client.post("/api/trace",
                            json={"algorithm": "fibonacci_dp", "target": -1}).status_code == 400
 
-    def test_algorithms_listing_has_seven(self):
+    def test_algorithms_listing_has_phase5_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
-        assert ids == {"dijkstra", "bfs", "dfs", "binary_search",
-                       "merge_sort", "quick_sort", "fibonacci_dp"}
+        assert {"dijkstra", "bfs", "dfs", "binary_search",
+                "merge_sort", "quick_sort", "fibonacci_dp"} <= ids
 
     def test_detect_quick_sort_meta(self):
         r = client.post("/api/detect", json={"code": "", "problem": "quick_sort"})

@@ -20,6 +20,11 @@ SIGNATURES = {
     "binary_search": ["binary search", "binary_search", "low", "high", "mid", "bisect", "log n", "sorted array"],
     "merge_sort": ["merge sort", "merge_sort", "mergesort", "merge(", "divide", "conquer", "mid = len"],
     "quick_sort": ["quicksort", "quick sort", "quick_sort", "pivot", "partition"],
+    "bubble_sort": ["bubble sort", "bubble_sort", "bubblesort", "adjacent swap"],
+    "insertion_sort": ["insertion sort", "insertion_sort", "insertionsort", "key = arr"],
+    "selection_sort": ["selection sort", "selection_sort", "selectionsort", "min_idx", "find minimum"],
+    "linked_list_reverse": ["linked list", "linked_list", "linked_list_reverse", "listnode", ".next", "->next", "reverse list"],
+    "balanced_brackets": ["balanced_brackets", "balanced bracket", "valid parenthes", "matching bracket", "isvalid(s"],
     "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming", "fibonacci", "fibonacci_dp", "fib("],
     "two_pointers": ["two pointer", "left", "right", "while left < right", "sliding window"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
@@ -94,6 +99,71 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "bubble_sort": {
+        "scene": "leaderboard",
+        "title": "Bubble Tea Queue",
+        "hook": "Heavy bubbles sink, light ones rise — one neighbour swap at a time.",
+        "metaphors": {
+            "node": "bubble",
+            "edge": "comparison",
+            "weight": "density",
+            "visit": "Comparing neighbours",
+            "start": "A fizzy, unsorted queue",
+            "done": "Every bubble settled at its level."
+        }
+    },
+    "insertion_sort": {
+        "scene": "leaderboard",
+        "title": "Sorting a Hand of Cards",
+        "hook": "Pick up one card at a time and slide it into its place.",
+        "metaphors": {
+            "node": "card",
+            "edge": "comparison",
+            "weight": "face value",
+            "visit": "Sliding a card",
+            "start": "Cards dealt in random order",
+            "done": "The whole hand reads in order."
+        }
+    },
+    "selection_sort": {
+        "scene": "leaderboard",
+        "title": "Olympic Podium Selection",
+        "hook": "Scan the field, crown the champion, repeat with whoever's left.",
+        "metaphors": {
+            "node": "athlete",
+            "edge": "comparison",
+            "weight": "score",
+            "visit": "Scanning for the champion",
+            "start": "The full unranked field",
+            "done": "Every athlete on the right podium step."
+        }
+    },
+    "linked_list_reverse": {
+        "scene": "train",
+        "title": "Train Yard Reversal",
+        "hook": "Recouple every carriage so the train runs the other way.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "position",
+            "visit": "Flipping a coupling",
+            "start": "Engine at the front",
+            "done": "The caboose leads — train reversed."
+        }
+    },
+    "balanced_brackets": {
+        "scene": "plates",
+        "title": "Plate Stacking Inspector",
+        "hook": "Every opened box must be closed in reverse order — the stack remembers.",
+        "metaphors": {
+            "node": "plate",
+            "edge": "match",
+            "weight": "depth",
+            "visit": "Checking a symbol",
+            "start": "An empty stack",
+            "done": "Stack empty — everything matched."
         }
     },
     "quick_sort": {

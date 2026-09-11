@@ -7,12 +7,14 @@ def trace(array: list[float], target: float):
     steps = []
     low, high = 0, len(arr) - 1
     found_at = None
+    counts = {"comparisons": 0}
 
     def add(note, low_, high_, mid=None, found=None):
         steps.append({
             "i": len(steps),
             "line": 1 if not steps else 3,
-            "structures": {"low": low_, "high": high_, "mid": mid, "found": found},
+            "structures": {"low": low_, "high": high_, "mid": mid, "found": found,
+                           "counts": dict(counts)},
             "highlight": {"index": mid},
             "note": note,
         })
@@ -29,6 +31,7 @@ def trace(array: list[float], target: float):
 
     while low <= high:
         mid = (low + high) // 2
+        counts["comparisons"] += 1
         add(
             f"Check the middle: position {mid} holds {_fmt(arr[mid])}.",
             low, high, mid=mid,

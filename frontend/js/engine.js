@@ -134,6 +134,25 @@ function resolveAlgoId(raw) {
 
 const fmt = (v) => String(Number(v));
 
+// Undirected edge key — same key for either direction
+function edgeKey(a, b) {
+  return a < b ? `${a}|${b}` : `${b}|${a}`;
+}
+
+const COUNT_LABELS = {
+  visits: 'VISITS', edge_checks: 'EDGE CHECKS', relaxations: 'RELAXATIONS',
+  heap_pushes: 'HEAP PUSHES', enqueues: 'ENQUEUES', dequeues: 'DEQUEUES',
+  comparisons: 'COMPARISONS', writes: 'WRITES', merges: 'MERGES',
+};
+
+function countChips(counts, fontSize = '7px') {
+  return Object.entries(counts || {}).map(([k, v]) =>
+    `<span style="font-family:var(--font-pixel); font-size:${fontSize}; color:var(--cDim);
+      border:1px solid var(--panel-border); padding:4px 8px; white-space:nowrap;">` +
+    `${COUNT_LABELS[k] || k.toUpperCase()} <span style="color:var(--c);">${v}</span></span>`
+  ).join('');
+}
+
 // ── MAIN ENGINE MOUNT ────────────────────────────────────────────────────────
 
 export function mountEngine(view, algo = 'dijkstra') {
@@ -150,6 +169,15 @@ export function mountEngine(view, algo = 'dijkstra') {
   const targetWrap    = view.querySelector('#target-wrap');
   const targetInput   = view.querySelector('#target-input');
   const arrayHint     = view.querySelector('#array-hint');
+  const prevBtn       = view.querySelector('#prev-btn');
+  const playBtn       = view.querySelector('#play-btn');
+  const speedSelect   = view.querySelector('#speed-select');
+  const stepSlider    = view.querySelector('#step-slider');
+  const scrubRow      = view.querySelector('#scrub-row');
+  const counterPanel  = view.querySelector('#counter-panel');
+  const compareBtn    = view.querySelector('#compare-btn');
+  const comparePanel  = view.querySelector('#compare-panel');
+  const compareSlider = view.querySelector('#compare-slider');
 
   const algoId = resolveAlgoId(algo);
   const traceView = VIEW_FOR[algoId] || 'graph';
@@ -160,6 +188,11 @@ export function mountEngine(view, algo = 'dijkstra') {
   let currentMeta = null;  // stores realworld_meta for current algo
   let currentScene = null; // stores scene renderer
   let currentArrayValues = [];
+  let traceSummary = '';   // end-of-trace message (unreachable nodes, not-found…)
+  let playTimer = null;
+  let compareData = null;  // { bfs: steps[], dijkstra: steps[] }
+  let compareIdx = 0;
+  let comparePlayTimer = null;
 
   // ── Editable graph state (graph view) ──
   // Mirrors the server limits in tracers/common.py
@@ -237,12 +270,21 @@ export function mountEngine(view, algo = 'dijkstra') {
   }
 
   function resetTraceState() {
+    stopPlay();
     currentStepIdx = -1;
     currentSteps = [];
+    traceSummary = '';
     stepBtn.disabled = true;
+    if (prevBtn) prevBtn.disabled = true;
+    if (playBtn) playBtn.disabled = true;
+    if (scrubRow) scrubRow.style.display = 'none';
+    if (counterPanel) counterPanel.style.display = 'none';
+    const liveEl = view.querySelector('#complexity-live');
+    if (liveEl) liveEl.style.display = 'none';
     runBtn.disabled = false;
     note.style.opacity = 0;
     explanationBox.style.display = 'none';
+    status.innerHTML = 'STATUS: IDLE';
     status.className = 'eyebrow';
     const counter = view.querySelector('#step-counter');
     if (counter) counter.textContent = '';
@@ -254,6 +296,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
     selectedNodeId = null;
     resetTraceState();
+    // A stale comparison over an edited graph would lie — close it.
+    if (comparePanel && comparePanel.style.display !== 'none') closeCompare();
     renderGraph(currentMeta);
     updateGraphMeta();
     buildWhatIfSliders();
@@ -528,38 +572,37 @@ export function mountEngine(view, algo = 'dijkstra') {
       const arr = parsed.array, target = parsed.target;
       const steps = [];
       let low = 0, high = arr.length - 1, found = false;
-      steps.push({ i: 0, structures: { low, high, mid: null, found: null },
-        highlight: { index: null },
-        note: arr.length
-          ? `Search ${arr.length} sorted values for target ${fmt(target)}.`
-          : 'The array is empty — nothing to search.' });
+      const counts = { comparisons: 0 };
+      const push = (structures, index, note2) => steps.push({
+        i: steps.length, structures: { ...structures, counts: { ...counts } },
+        highlight: { index }, note: note2,
+      });
+      push({ low, high, mid: null, found: null }, null, arr.length
+        ? `Search ${arr.length} sorted values for target ${fmt(target)}.`
+        : 'The array is empty — nothing to search.');
       while (low <= high) {
         const mid = Math.floor((low + high) / 2);
-        steps.push({ i: steps.length, structures: { low, high, mid, found: null },
-          highlight: { index: mid },
-          note: `Check the middle: position ${mid} holds ${fmt(arr[mid])}.` });
+        counts.comparisons++;
+        push({ low, high, mid, found: null }, mid,
+          `Check the middle: position ${mid} holds ${fmt(arr[mid])}.`);
         if (arr[mid] === target) {
           found = true;
-          steps.push({ i: steps.length, structures: { low, high, mid, found: true },
-            highlight: { index: mid },
-            note: `Found it — ${fmt(target)} is at position ${mid}.` });
+          push({ low, high, mid, found: true }, mid,
+            `Found it — ${fmt(target)} is at position ${mid}.`);
           break;
         } else if (arr[mid] < target) {
           low = mid + 1;
-          steps.push({ i: steps.length, structures: { low, high, mid, found: null },
-            highlight: { index: mid },
-            note: `${fmt(arr[mid])} is smaller — search the right half.` });
+          push({ low, high, mid, found: null }, mid,
+            `${fmt(arr[mid])} is smaller — search the right half.`);
         } else {
           high = mid - 1;
-          steps.push({ i: steps.length, structures: { low, high, mid, found: null },
-            highlight: { index: mid },
-            note: `${fmt(arr[mid])} is larger — search the left half.` });
+          push({ low, high, mid, found: null }, mid,
+            `${fmt(arr[mid])} is larger — search the left half.`);
         }
       }
       if (!found) {
-        steps.push({ i: steps.length, structures: { low, high, mid: null, found: false },
-          highlight: { index: null },
-          note: `The range is empty — ${fmt(target)} is not in the array.` });
+        push({ low, high, mid: null, found: false }, null,
+          `The range is empty — ${fmt(target)} is not in the array.`);
       }
       return { steps };
     }
@@ -568,10 +611,11 @@ export function mountEngine(view, algo = 'dijkstra') {
     const arr = parsed.array.slice();
     const steps = [];
     const sortedRanges = [];
+    const mCounts = { comparisons: 0, writes: 0, merges: 0 };
     const snap = (note, extra = {}) => steps.push({
       i: steps.length,
       structures: { array: arr.slice(), merging: null, comparing: null, placed: null,
-        sorted_ranges: sortedRanges.map(r => r.slice()), ...extra },
+        sorted_ranges: sortedRanges.map(r => r.slice()), counts: { ...mCounts }, ...extra },
       highlight: { index: extra.placed ?? null },
       note,
     });
@@ -593,17 +637,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       while (i < left.length && j < right.length) {
         const a = left[i], b = right[j];
         if (a <= b) { merged.push(a); i++; } else { merged.push(b); j++; }
+        mCounts.comparisons++; mCounts.writes++;
         commit();
         snap(`Compare ${fmt(a)} vs ${fmt(b)} — place ${fmt(merged[merged.length - 1])}.`,
           { merging: [lo, hi - 1], comparing: [a, b], placed: lo + merged.length - 1 });
       }
       while (i < left.length) {
-        merged.push(left[i++]); commit();
+        merged.push(left[i++]); mCounts.writes++; commit();
         snap(`Copy remaining ${fmt(merged[merged.length - 1])}.`,
           { merging: [lo, hi - 1], placed: lo + merged.length - 1 });
       }
       while (j < right.length) {
-        merged.push(right[j++]); commit();
+        merged.push(right[j++]); mCounts.writes++; commit();
         snap(`Copy remaining ${fmt(merged[merged.length - 1])}.`,
           { merging: [lo, hi - 1], placed: lo + merged.length - 1 });
       }
@@ -611,6 +656,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (lo <= sortedRanges[r][0] && sortedRanges[r][1] <= hi - 1) sortedRanges.splice(r, 1);
       }
       sortedRanges.push([lo, hi - 1]);
+      mCounts.merges++;
       snap(`Positions ${lo}..${hi - 1} merged — this section is sorted.`, { merging: [lo, hi - 1] });
     };
     msort(0, arr.length);
@@ -832,26 +878,34 @@ export function mountEngine(view, algo = 'dijkstra') {
       const steps = [];
       const visited = new Set([startNode]);
       const queue = [startNode];
+      const counts = { enqueues: 1, dequeues: 0, edge_checks: 0 };
       steps.push({ i: 0, highlight: { node: startNode, edge: null },
         note: `Enqueue start node ${startNode}.`,
-        structures: { queue: [...queue], visited: [...visited] }
+        structures: { queue: [...queue], visited: [...visited], counts: { ...counts } }
       });
       while (queue.length > 0) {
         const u = queue.shift();
+        counts.dequeues++;
         steps.push({ i: steps.length, highlight: { node: u, edge: null },
           note: `Dequeue ${u}.`,
-          structures: { queue: [...queue], visited: [...visited] }
+          structures: { queue: [...queue], visited: [...visited], counts: { ...counts } }
         });
         for (const edge of (adj[u] || [])) {
+          counts.edge_checks++;
           if (visited.has(edge.to)) continue;
           visited.add(edge.to);
           queue.push(edge.to);
+          counts.enqueues++;
           steps.push({ i: steps.length, highlight: { node: edge.to, edge: [u, edge.to] },
             note: `Discover ${edge.to} from ${u}.`,
-            structures: { queue: [...queue], visited: [...visited] }
+            structures: { queue: [...queue], visited: [...visited], counts: { ...counts } }
           });
         }
       }
+      steps.push({ i: steps.length, highlight: { node: null, edge: null },
+        note: 'Queue empty — traversal complete.',
+        structures: { queue: [], visited: [...visited], counts: { ...counts } }
+      });
       return { steps };
     }
 
@@ -861,10 +915,11 @@ export function mountEngine(view, algo = 'dijkstra') {
     dist[startNode] = 0;
     const pq = [{ node: startNode, d: 0 }];
     const visited = new Set();
+    const counts = { visits: 0, edge_checks: 0, relaxations: 0, heap_pushes: 1 };
 
     steps.push({ i: 0, highlight: { node: startNode, edge: null },
       note: `Start at ${startNode} with distance 0.`,
-      structures: { dist: { ...dist }, visited: [] }
+      structures: { dist: { ...dist }, visited: [], counts: { ...counts } }
     });
 
     while (pq.length > 0) {
@@ -872,23 +927,31 @@ export function mountEngine(view, algo = 'dijkstra') {
       const { node, d } = pq.shift();
       if (visited.has(node)) continue;
       visited.add(node);
+      counts.visits++;
       steps.push({ i: steps.length, highlight: { node, edge: null },
         note: `Visit ${node} (distance ${d}).`,
-        structures: { dist: { ...dist }, visited: [...visited] }
+        structures: { dist: { ...dist }, visited: [...visited], counts: { ...counts } }
       });
       for (const edge of (adj[node] || [])) {
         if (visited.has(edge.to)) continue;
+        counts.edge_checks++;
         const nd = d + edge.w;
         if (nd < dist[edge.to]) {
           dist[edge.to] = nd;
           pq.push({ node: edge.to, d: nd });
+          counts.relaxations++;
+          counts.heap_pushes++;
           steps.push({ i: steps.length, highlight: { node: edge.to, edge: [node, edge.to] },
             note: `Relax edge ${node}→${edge.to}: new distance ${nd}.`,
-            structures: { dist: { ...dist }, visited: [...visited] }
+            structures: { dist: { ...dist }, visited: [...visited], counts: { ...counts } }
           });
         }
       }
     }
+    steps.push({ i: steps.length, highlight: { node: null, edge: null },
+      note: 'Priority queue empty — all reachable nodes finalized.',
+      structures: { dist: { ...dist }, visited: [...visited], counts: { ...counts } }
+    });
     return { steps };
   }
 
@@ -939,10 +1002,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = await api.postTrace(algoId, { start: startNodeId, graph });
         }
       }
-      currentSteps = res.steps;
-      currentStepIdx = -1;
-      stepBtn.disabled = false;
-      nextStep();
+      loadTrace(res.steps);
     } catch (e) {
       console.error(e);
       status.innerHTML = 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
@@ -951,94 +1011,327 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   }
 
-  function nextStep() {
-    currentStepIdx++;
-    if (currentStepIdx >= currentSteps.length) {
-      stepBtn.disabled = true;
-      const lastStep = currentSteps[currentSteps.length - 1];
-      let doneMsg = lastStep?.structures?.found === false
-        ? 'Search complete — the target is not in this array.'
-        : (currentMeta?.metaphors?.done || "ALGORITHM TRACE COMPLETE.");
+  // ── Step scrubber: any step index renders fully from its data ──
 
-      // Call out unreachable nodes so disconnected graphs teach something
-      if (traceView === 'graph' && lastStep) {
-        const s = lastStep.structures || {};
-        let unreachable = [];
-        if (s.dist) {
-          unreachable = Object.keys(s.dist)
-            .filter(k => s.dist[k] === null || s.dist[k] === Infinity);
-        } else if (s.visited) {
-          unreachable = userGraph.nodes.map(n => n.id)
-            .filter(id => !s.visited.includes(id));
-        }
-        if (unreachable.length) {
-          doneMsg += ` ${unreachable.length} unreachable from ${startNodeId}: ${unreachable.join(', ')}.`;
-          unreachable.forEach(id => {
-            const el = svg.querySelector(`#dist-${id}`);
-            if (el) el.textContent = '—';
-          });
-        }
+  function computeTraceSummary() {
+    const lastStep = currentSteps[currentSteps.length - 1];
+    if (!lastStep) return '';
+    let msg = lastStep?.structures?.found === false
+      ? '— The target is not in this array.'
+      : '';
+    if (traceView === 'graph') {
+      const s = lastStep.structures || {};
+      let unreachable = [];
+      if (s.dist) {
+        unreachable = Object.keys(s.dist)
+          .filter(k => s.dist[k] === null || s.dist[k] === Infinity);
+      } else if (s.visited) {
+        unreachable = userGraph.nodes.map(n => n.id)
+          .filter(id => !s.visited.includes(id));
       }
-      note.textContent = doneMsg.toUpperCase();
-      status.innerHTML = 'STATUS: <span style="color:var(--cBright)">TERMINATED</span>';
-      status.className = 'eyebrow done';
-      runBtn.disabled = false;
-      return;
+      if (unreachable.length) {
+        msg += ` — ${unreachable.length} unreachable from ${startNodeId}: ${unreachable.join(', ')}.`;
+      }
+    }
+    return msg.trim();
+  }
+
+  function loadTrace(steps) {
+    currentSteps = steps || [];
+    if (!currentSteps.length) { resetTraceState(); return; }
+    traceSummary = computeTraceSummary();
+    if (scrubRow) scrubRow.style.display = 'flex';
+    if (counterPanel) counterPanel.style.display = 'flex';
+    if (stepSlider) { stepSlider.max = currentSteps.length - 1; stepSlider.value = 0; }
+    if (playBtn) playBtn.disabled = false;
+    runBtn.disabled = false;
+    renderStep(0);
+    updateComplexityLive();
+  }
+
+  function renderGraphStep(step, idx) {
+    const s = step.structures || {};
+    const visited = new Set(s.visited || []);
+    const activeNode = step.node || step.highlight?.node;
+    const e = step.edge || step.highlight?.edge;
+    const activeEdgeKey = e
+      ? edgeKey(Array.isArray(e) ? e[0] : e.source, Array.isArray(e) ? e[1] : e.target)
+      : null;
+
+    // Edges traversed so far — replayed from history so backward scrubbing works
+    const traversed = new Set();
+    for (let k = 0; k < idx; k++) {
+      const pe = currentSteps[k].highlight?.edge;
+      if (pe) traversed.add(edgeKey(pe[0], pe[1]));
     }
 
+    userGraph.nodes.forEach(n => {
+      const el = svg.querySelector(`#node-${n.id}`);
+      if (!el) return;
+      el.classList.remove('active', 'visited');
+      if (n.id === activeNode) el.classList.add('active');
+      else if (visited.has(n.id)) el.classList.add('visited');
+    });
+    userGraph.links.forEach(l => {
+      const el = svg.querySelector(`#edge-${l.source}-${l.target}`);
+      if (!el) return;
+      el.classList.remove('active', 'visited');
+      const k = edgeKey(l.source, l.target);
+      if (k === activeEdgeKey) el.classList.add('active');
+      else if (traversed.has(k)) el.classList.add('visited');
+    });
+
+    const dist = s.dist;
+    const isLast = idx === currentSteps.length - 1;
+    userGraph.nodes.forEach(n => {
+      const el = svg.querySelector(`#dist-${n.id}`);
+      if (!el) return;
+      if (!dist) { el.textContent = ''; return; }
+      const v = dist[n.id];
+      const unreached = v === null || v === undefined || v === Infinity;
+      el.textContent = unreached ? (isLast ? '—' : '∞') : fmt(v);
+    });
+  }
+
+  function renderCounters(step) {
+    if (!counterPanel) return;
+    const counts = step.structures?.counts;
+    counterPanel.innerHTML = counts ? countChips(counts, '7px') : '';
+  }
+
+  function renderStep(i) {
+    if (!currentSteps.length) return;
+    currentStepIdx = Math.max(0, Math.min(i, currentSteps.length - 1));
     const step = currentSteps[currentStepIdx];
+    const isLast = currentStepIdx === currentSteps.length - 1;
 
-    if (traceView === 'array') {
-      renderArrayStep(step);
-    } else {
-      // Reset highlights, mark visited
-      svg.querySelectorAll('.node.active').forEach(el => {
-        el.classList.remove('active');
-        el.classList.add('visited');
-      });
-      svg.querySelectorAll('.edge.active').forEach(el => {
-        el.classList.remove('active');
-        el.classList.add('visited');
-      });
+    if (traceView === 'array') renderArrayStep(step);
+    else renderGraphStep(step, currentStepIdx);
 
-      const nodeId = step.node || step.highlight?.node;
-      const edgeData = step.edge || step.highlight?.edge;
-
-      if (nodeId) {
-        const nodeEl = svg.querySelector(`#node-${nodeId}`);
-        if (nodeEl) nodeEl.classList.add('active');
-      }
-      if (edgeData) {
-        const s = Array.isArray(edgeData) ? edgeData[0] : edgeData.source;
-        const t = Array.isArray(edgeData) ? edgeData[1] : edgeData.target;
-        const edgeEl = svg.querySelector(`#edge-${s}-${t}`) || svg.querySelector(`#edge-${t}-${s}`);
-        if (edgeEl) edgeEl.classList.add('active');
-      }
-
-      // Live distance readout (Dijkstra steps carry a dist table)
-      const dist = step.structures?.dist;
-      if (dist) {
-        userGraph.nodes.forEach(n => {
-          const el = svg.querySelector(`#dist-${n.id}`);
-          if (!el) return;
-          const v = dist[n.id];
-          el.textContent = (v === null || v === undefined || v === Infinity) ? '∞' : fmt(v);
-        });
-      }
-    }
-
-    // Use scene narrator for real-world note
     let narration = step.note || "Processing...";
     if (currentScene && currentMeta) {
       narration = currentScene.stepNarrate(step, currentMeta);
     }
-
+    if (isLast && traceSummary) narration = `${narration} ${traceSummary}`;
     note.textContent = narration.toUpperCase();
     note.style.opacity = 1;
 
-    // Update step counter
+    renderCounters(step);
+
+    if (stepSlider) stepSlider.value = currentStepIdx;
     const counter = view.querySelector('#step-counter');
     if (counter) counter.textContent = `STEP ${currentStepIdx + 1} / ${currentSteps.length}`;
+    if (prevBtn) prevBtn.disabled = currentStepIdx === 0;
+    stepBtn.disabled = isLast;
+    if (isLast) stopPlay();
+    status.innerHTML = isLast
+      ? 'STATUS: <span style="color:var(--cBright)">DONE</span>'
+      : 'STATUS: <span style="color:var(--c)">STEPPING</span>';
+    status.className = isLast ? 'eyebrow done' : 'eyebrow running';
+  }
+
+  function stopPlay() {
+    if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    if (playBtn) playBtn.textContent = '▶ PLAY';
+  }
+
+  function startPlay() {
+    if (!currentSteps.length) return;
+    if (currentStepIdx >= currentSteps.length - 1) renderStep(0);
+    stopPlay();
+    const speed = Number(speedSelect?.value || 1);
+    playTimer = setInterval(() => {
+      if (currentStepIdx >= currentSteps.length - 1) { stopPlay(); return; }
+      renderStep(currentStepIdx + 1);
+    }, 900 / speed);
+    if (playBtn) playBtn.textContent = '⏸ PAUSE';
+  }
+
+  function initComplexityCard() {
+    const card = DATA.COMPLEXITY?.[algoId];
+    const cardEl = view.querySelector('#complexity-card');
+    const rowsEl = view.querySelector('#complexity-rows');
+    if (!card || !cardEl || !rowsEl) return;
+    rowsEl.innerHTML = card.rows.map(([k, v]) =>
+      `<div><div style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);
+        margin-bottom:0.3rem;">${k.toUpperCase()}</div>
+        <div style="color:var(--cBright);">${v}</div></div>`
+    ).join('');
+    cardEl.style.display = 'block';
+  }
+
+  function updateComplexityLive() {
+    const card = DATA.COMPLEXITY?.[algoId];
+    const liveEl = view.querySelector('#complexity-live');
+    if (!card || !liveEl || !currentSteps.length) return;
+    const counts = currentSteps[currentSteps.length - 1]?.structures?.counts;
+    if (!counts) return;
+    const sizes = traceView === 'graph'
+      ? { V: userGraph.nodes.length, E: userGraph.links.length, n: userGraph.nodes.length }
+      : { n: currentArrayValues.length, V: 0, E: 0 };
+    liveEl.textContent = card.reading(counts, sizes);
+    liveEl.style.display = 'block';
+  }
+
+  // ── Compare mode: BFS vs Dijkstra on the same graph ──
+
+  function renderMiniGraph(svgEl, steps, idx) {
+    if (!svgEl) return;
+    svgEl.innerHTML = '';
+    const i2 = Math.min(idx, steps.length - 1);
+    const s = steps[i2].structures || {};
+    const visited = new Set(s.visited || []);
+    const activeNode = steps[i2].highlight?.node;
+    const ae = steps[i2].highlight?.edge;
+    const activeKey = ae ? edgeKey(ae[0], ae[1]) : null;
+    const traversed = new Set();
+    for (let k = 0; k < i2; k++) {
+      const pe = steps[k].highlight?.edge;
+      if (pe) traversed.add(edgeKey(pe[0], pe[1]));
+    }
+
+    userGraph.links.forEach(l => {
+      const a = userGraph.nodes.find(n => n.id === l.source);
+      const b = userGraph.nodes.find(n => n.id === l.target);
+      if (!a || !b) return;
+      const line = makeSVG('line');
+      line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+      line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+      const k = edgeKey(l.source, l.target);
+      line.setAttribute('stroke', k === activeKey
+        ? 'var(--c)' : traversed.has(k) ? 'rgba(0,212,255,0.35)' : 'rgba(0,150,184,0.2)');
+      line.setAttribute('stroke-width', k === activeKey ? '2.5' : '1.5');
+      svgEl.appendChild(line);
+    });
+    userGraph.nodes.forEach(n => {
+      const c = makeSVG('circle');
+      c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', '18');
+      c.setAttribute('fill', n.id === activeNode
+        ? 'var(--c)' : visited.has(n.id) ? 'rgba(0,80,100,0.5)' : 'var(--cDeep)');
+      c.setAttribute('stroke', n.id === activeNode ? 'var(--cBright)' : 'var(--cDim)');
+      svgEl.appendChild(c);
+      const t = makeSVG('text');
+      t.setAttribute('x', n.x); t.setAttribute('y', n.y + 4);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', 'var(--cBright)');
+      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-size', '8');
+      t.textContent = n.id;
+      svgEl.appendChild(t);
+      if (s.dist) {
+        const d = makeSVG('text');
+        d.setAttribute('x', n.x); d.setAttribute('y', n.y + 34);
+        d.setAttribute('text-anchor', 'middle');
+        d.setAttribute('fill', 'var(--c)');
+        d.setAttribute('font-family', 'var(--font-mono)');
+        d.setAttribute('font-size', '10');
+        const v = s.dist[n.id];
+        d.textContent = (v === null || v === undefined) ? '∞' : fmt(v);
+        svgEl.appendChild(d);
+      }
+    });
+  }
+
+  function renderCompareStep(i) {
+    if (!compareData) return;
+    const maxIdx = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+    compareIdx = Math.max(0, Math.min(i, maxIdx));
+    ['bfs', 'dijkstra'].forEach(alg => {
+      const steps = compareData[alg];
+      const i2 = Math.min(compareIdx, steps.length - 1);
+      renderMiniGraph(view.querySelector(`#compare-svg-${alg}`), steps, compareIdx);
+      const noteEl = view.querySelector(`#compare-note-${alg}`);
+      if (noteEl) {
+        const done = compareIdx > steps.length - 1;
+        noteEl.textContent = (steps[i2].note || '') + (done ? ' — FINISHED' : '');
+      }
+      const cEl = view.querySelector(`#compare-counts-${alg}`);
+      if (cEl) cEl.innerHTML = countChips(steps[i2].structures?.counts, '6px');
+    });
+    if (compareSlider) compareSlider.value = compareIdx;
+    const label = view.querySelector('#compare-step-label');
+    if (label) label.textContent = `STEP ${compareIdx + 1} / ${maxIdx + 1}`;
+    if (compareIdx >= maxIdx) stopComparePlay();
+  }
+
+  function stopComparePlay() {
+    if (comparePlayTimer) { clearInterval(comparePlayTimer); comparePlayTimer = null; }
+    const b = view.querySelector('#compare-play');
+    if (b) b.textContent = '▶';
+  }
+
+  function startComparePlay() {
+    if (!compareData) return;
+    const maxIdx = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+    if (compareIdx >= maxIdx) renderCompareStep(0);
+    stopComparePlay();
+    comparePlayTimer = setInterval(() => {
+      const m = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+      if (compareIdx >= m) { stopComparePlay(); return; }
+      renderCompareStep(compareIdx + 1);
+    }, 700);
+    const b = view.querySelector('#compare-play');
+    if (b) b.textContent = '⏸';
+  }
+
+  function closeCompare() {
+    stopComparePlay();
+    if (comparePanel) comparePanel.style.display = 'none';
+    const mainPanel = view.querySelector('#engine-panel');
+    if (mainPanel) mainPanel.style.display = 'block';
+    if (compareBtn) compareBtn.textContent = '⚖ COMPARE';
+    compareData = null;
+  }
+
+  async function toggleCompare() {
+    if (comparePanel && comparePanel.style.display !== 'none') {
+      closeCompare();
+      return;
+    }
+    if (!userGraph.nodes.length) {
+      showGraphError('Add some nodes first — the comparison needs a graph.');
+      return;
+    }
+    compareBtn.disabled = true;
+    compareBtn.textContent = 'LOADING...';
+    try {
+      const get = async (alg) => {
+        if (isOffline) return localTrace(alg, startNodeId).steps;
+        const graph = {
+          nodes: userGraph.nodes,
+          edges: userGraph.links.map(l => [l.source, l.target, l.weight]),
+        };
+        return (await api.postTrace(alg, { start: startNodeId, graph })).steps;
+      };
+      const [b, d] = await Promise.all([get('bfs'), get('dijkstra')]);
+      compareData = { bfs: b, dijkstra: d };
+      const totB = view.querySelector('#compare-total-bfs');
+      const totD = view.querySelector('#compare-total-dijkstra');
+      if (totB) totB.textContent = `· ${b.length} STEPS`;
+      if (totD) totD.textContent = `· ${d.length} STEPS`;
+      const bc = b[b.length - 1]?.structures?.counts || {};
+      const dc = d[d.length - 1]?.structures?.counts || {};
+      const verdict = view.querySelector('#compare-verdict');
+      if (verdict) {
+        verdict.textContent =
+          `Same graph, same start (${startNodeId}). BFS: ${b.length} steps, ` +
+          `${bc.edge_checks ?? '?'} edge checks — it ignores weights and explores level by level. ` +
+          `Dijkstra: ${d.length} steps, ${dc.relaxations ?? '?'} relaxations and ` +
+          `${dc.heap_pushes ?? '?'} heap pushes — extra work that buys the guaranteed ` +
+          `cheapest route when edges have costs.`;
+      }
+      if (compareSlider) compareSlider.max = Math.max(b.length, d.length) - 1;
+      if (comparePanel) comparePanel.style.display = 'block';
+      const mainPanel = view.querySelector('#engine-panel');
+      if (mainPanel) mainPanel.style.display = 'none';
+      compareBtn.textContent = '✕ CLOSE COMPARE';
+      renderCompareStep(0);
+    } catch (e) {
+      console.error(e);
+      showGraphError('Could not load the comparison traces.');
+    } finally {
+      compareBtn.disabled = false;
+    }
   }
 
   async function explain() {
@@ -1064,19 +1357,15 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   }
 
-  // ── Wire up buttons ──
+  // ── Wire up controls ──
   runBtn.addEventListener('click', run);
-  stepBtn.addEventListener('click', nextStep);
+  stepBtn.addEventListener('click', () => { stopPlay(); renderStep(currentStepIdx + 1); });
+  prevBtn?.addEventListener('click', () => { stopPlay(); renderStep(currentStepIdx - 1); });
+  playBtn?.addEventListener('click', () => playTimer ? stopPlay() : startPlay());
+  speedSelect?.addEventListener('change', () => { if (playTimer) startPlay(); });
+  stepSlider?.addEventListener('input', () => { stopPlay(); renderStep(Number(stepSlider.value)); });
   resetBtn.addEventListener('click', () => {
-    currentStepIdx = -1;
-    currentSteps = [];
-    stepBtn.disabled = true;
-    runBtn.disabled = false;
-    note.style.opacity = 0;
-    explanationBox.style.display = 'none';
-    status.className = 'eyebrow';
-    const counter = view.querySelector('#step-counter');
-    if (counter) counter.textContent = '';
+    resetTraceState();
     if (traceView === 'array') {
       renderArrayView(currentArrayValues);
     } else {
@@ -1084,6 +1373,13 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   });
   explainBtn.addEventListener('click', explain);
+  if (traceView === 'graph') {
+    compareBtn?.addEventListener('click', toggleCompare);
+    view.querySelector('#compare-prev')?.addEventListener('click', () => { stopComparePlay(); renderCompareStep(compareIdx - 1); });
+    view.querySelector('#compare-next')?.addEventListener('click', () => { stopComparePlay(); renderCompareStep(compareIdx + 1); });
+    view.querySelector('#compare-play')?.addEventListener('click', () => comparePlayTimer ? stopComparePlay() : startComparePlay());
+    compareSlider?.addEventListener('input', () => { stopComparePlay(); renderCompareStep(Number(compareSlider.value)); });
+  }
 
   // ── Init ──
   // Try to get realworld meta from backend detect endpoint
@@ -1120,15 +1416,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       const parsed = parseArrayInput();
       renderArrayView(parsed.array || []);
       checkBackend();
+      initComplexityCard();
       return;
     }
 
     if (graphControls) graphControls.style.display = 'block';
+    if (compareBtn) compareBtn.style.display = 'inline-block';
     updateGraphMeta();
     attachGraphEditor();
     renderGraph(currentMeta);
     checkBackend();
     buildWhatIfSliders();
+    initComplexityCard();
   }
 
   init();

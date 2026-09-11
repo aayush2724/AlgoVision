@@ -69,6 +69,20 @@ class TestMergeSortTracer:
         assert res["steps"][-1]["structures"]["array"] == [1, 2, 2]
 
 
+class TestArrayCounts:
+    def test_binary_search_comparisons_logarithmic(self):
+        res = binary_search.trace(list(range(16)), 11)
+        final = res["steps"][-1]["structures"]["counts"]
+        assert 1 <= final["comparisons"] <= 5   # log2(16) + 1
+
+    def test_merge_sort_counts(self):
+        res = merge_sort.trace([7, 3, 9, 1, 12, 5])
+        final = res["steps"][-1]["structures"]["counts"]
+        assert final["merges"] == 5             # n-1 merges for n=6
+        assert final["writes"] >= 6             # every element written at least once overall
+        assert 0 < final["comparisons"] <= 6 * 3
+
+
 class TestArrayEndpoints:
     def test_binary_search_ok(self):
         r = client.post("/api/trace", json={

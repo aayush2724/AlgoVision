@@ -10,6 +10,7 @@ def trace(array: list[float]):
     arr = list(array)
     steps = []
     sorted_ranges: list[list[int]] = []
+    counts = {"comparisons": 0, "writes": 0, "merges": 0}
 
     def add(note, merging=None, comparing=None, placed=None):
         steps.append({
@@ -21,6 +22,7 @@ def trace(array: list[float]):
                 "comparing": comparing,
                 "placed": placed,
                 "sorted_ranges": [list(r) for r in sorted_ranges],
+                "counts": dict(counts),
             },
             "highlight": {"index": placed},
             "note": note,
@@ -63,6 +65,8 @@ def trace(array: list[float]):
             else:
                 merged.append(b)
                 j += 1
+            counts["comparisons"] += 1
+            counts["writes"] += 1
             commit()
             k = lo + len(merged) - 1
             add(
@@ -73,6 +77,7 @@ def trace(array: list[float]):
         while i < len(left):
             merged.append(left[i])
             i += 1
+            counts["writes"] += 1
             commit()
             k = lo + len(merged) - 1
             add(
@@ -83,6 +88,7 @@ def trace(array: list[float]):
         while j < len(right):
             merged.append(right[j])
             j += 1
+            counts["writes"] += 1
             commit()
             k = lo + len(merged) - 1
             add(
@@ -96,6 +102,7 @@ def trace(array: list[float]):
             r for r in sorted_ranges if not (lo <= r[0] and r[1] <= hi - 1)
         ]
         sorted_ranges.append([lo, hi - 1])
+        counts["merges"] += 1
         add(
             f"Positions {lo}..{hi - 1} merged — this section is now sorted.",
             merging=[lo, hi - 1],

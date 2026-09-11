@@ -170,6 +170,37 @@ export const A2Z_STEPS = [
   },
 ];
 
+export const COMPLEXITY = {
+  dijkstra: {
+    rows: [["Time", "O((V + E) log V)"], ["Space", "O(V)"]],
+    reading: (c, s) =>
+      `Your graph: ${c.relaxations ?? 0} relaxations and ${c.heap_pushes ?? 0} heap pushes ` +
+      `across ${s.V} nodes / ${s.E} edges — that's the (V + E)·log V at work. ` +
+      `Every relaxation is the heap earning its keep.`,
+  },
+  bfs: {
+    rows: [["Time", "O(V + E)"], ["Space", "O(V)"]],
+    reading: (c, s) =>
+      `Your graph: ${c.edge_checks ?? 0} edge checks and ${c.enqueues ?? 0} enqueues ` +
+      `for ${s.V} nodes / ${s.E} edges — each node and edge touched a constant number ` +
+      `of times. That's what linear O(V + E) looks like.`,
+  },
+  binary_search: {
+    rows: [["Best", "O(1)"], ["Worst", "O(log n)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} probe${(c.comparisons ?? 0) === 1 ? '' : 's'} to search ` +
+      `${s.n} values — log₂(${s.n}) ≈ ${Math.max(1, Math.ceil(Math.log2(Math.max(s.n, 2))))}. ` +
+      `Each probe halves what's left.`,
+  },
+  merge_sort: {
+    rows: [["Best / Avg / Worst", "O(n log n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.writes ?? 0} writes to sort ${s.n} values — ` +
+      `n·log₂ n ≈ ${Math.round(s.n * Math.log2(Math.max(s.n, 2)))}. ` +
+      `The ${c.merges ?? 0} merges are where the ordering actually happens.`,
+  },
+};
+
 export const CLIPS = [
   { tag: "TODAY", topic: "Graphs",   title: "Why GPS uses Dijkstra's, not BFS" },
   { tag: "TODAY", topic: "Arrays",   title: "Kadane's Algorithm: The Hidden Pattern" },

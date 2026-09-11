@@ -57,6 +57,35 @@ class TestBFS:
         assert res["steps"][-1]["structures"]["visited"] == ["A"]
 
 
+class TestCounts:
+    def test_dijkstra_counts_present_and_monotonic(self):
+        res = dijkstra.trace(sample_graph(), "A")
+        prev = None
+        for step in res["steps"]:
+            counts = step["structures"]["counts"]
+            assert set(counts) == {"visits", "edge_checks", "relaxations", "heap_pushes"}
+            if prev is not None:
+                assert all(counts[k] >= prev[k] for k in counts)
+            prev = counts
+        assert prev["visits"] == 5          # all nodes reachable
+        assert prev["relaxations"] >= 4     # at least one relax per non-start node
+
+    def test_bfs_counts_track_traversal(self):
+        res = bfs.trace(sample_graph(), "A")
+        final = res["steps"][-1]["structures"]["counts"]
+        assert final["enqueues"] == 5       # every reachable node enqueued once
+        assert final["dequeues"] == 5
+        # undirected: every edge examined from both endpoints = sum of degrees
+        assert final["edge_checks"] == 12
+        assert res["steps"][-1]["note"].startswith("Queue empty")
+
+    def test_counts_survive_disconnection(self):
+        g = Graph(nodes=[{"id": "A"}, {"id": "B"}, {"id": "X"}],
+                  edges=[["A", "B", 1]])
+        final = bfs.trace(g, "A")["steps"][-1]["structures"]["counts"]
+        assert final["enqueues"] == 2       # X never enqueued
+
+
 class TestGraphValidation:
     def test_rejects_edge_to_unknown_node(self):
         with pytest.raises(ValidationError):

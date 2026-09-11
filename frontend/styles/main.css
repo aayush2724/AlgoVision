@@ -895,3 +895,10 @@ footer.footer p { font-size: 0.8rem; color: var(--inkDim); max-width: none; }
     min-height: 240px !important;
   }
 }
+
+/* Compare mode stacks vertically on narrow screens */
+@media (max-width: 700px) {
+  #compare-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

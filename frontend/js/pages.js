@@ -316,17 +316,27 @@ export const PAGES = {
             color:#ff5f5f; font-family:var(--font-mono);"></div>
         </div>
 
-        <div class="panel" style="margin-bottom:1.5rem;">
+        <div id="engine-panel" class="panel" style="margin-bottom:1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
             <div style="display:flex; align-items:center; gap:1rem;">
               <div id="engine-status" class="eyebrow" style="margin:0;">STATUS: IDLE</div>
               <div id="step-counter" style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></div>
             </div>
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
               <button id="run-btn" class="btn btn-primary" style="font-size:0.85rem;">▶ RUN</button>
-              <button id="step-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>STEP →</button>
+              <button id="prev-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>← PREV</button>
+              <button id="play-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>▶ PLAY</button>
+              <button id="step-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>NEXT →</button>
+              <select id="speed-select" style="background:var(--bg1); border:1px solid var(--panel-border);
+                color:var(--ink); font-family:var(--font-body); font-size:0.8rem; padding:0.35rem 0.5rem;
+                border-radius:0; outline:none;">
+                <option value="0.5">0.5×</option>
+                <option value="1" selected>1×</option>
+                <option value="2">2×</option>
+              </select>
               <button id="reset-btn" class="btn" style="font-size:0.85rem;">↺ RESET</button>
+              <button id="compare-btn" class="btn" style="font-size:0.85rem; display:none;">⚖ COMPARE</button>
             </div>
           </div>
 
@@ -339,6 +349,12 @@ export const PAGES = {
             </div>
           </div>
 
+          <div id="scrub-row" style="display:none; margin-top:1rem; align-items:center; gap:1rem;">
+            <input type="range" id="step-slider" min="0" max="0" value="0"
+              style="flex:1; width:100%; accent-color:var(--cAccent);">
+          </div>
+          <div id="counter-panel" style="display:none; margin-top:0.85rem; gap:0.5rem; flex-wrap:wrap;"></div>
+
           <details style="margin-top:1.25rem; border-top:1px solid var(--panel-border); padding-top:1rem;">
             <summary style="font-family:var(--font-body); font-size:0.8rem; font-weight:600;
               color:var(--inkDim); cursor:pointer; list-style:none; user-select:none;">
@@ -346,6 +362,53 @@ export const PAGES = {
             </summary>
             <div id="whatif-controls" style="margin-top:1rem; display:flex; flex-direction:column; gap:0.75rem;"></div>
           </details>
+        </div>
+
+        <div id="compare-panel" class="panel" style="display:none; margin-bottom:1.5rem; border-top:2px solid var(--c);">
+          <div style="display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+            <span class="eyebrow" style="margin:0;">SAME GRAPH · TWO ALGORITHMS</span>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <button id="compare-prev" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">←</button>
+              <button id="compare-play" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">▶</button>
+              <button id="compare-next" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">→</button>
+              <span id="compare-step-label" style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></span>
+            </div>
+          </div>
+          <input type="range" id="compare-slider" min="0" max="0" value="0"
+            style="width:100%; accent-color:var(--cAccent); margin-bottom:1rem;">
+          <div id="compare-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+            <div>
+              <div style="font-family:var(--font-pixel); font-size:8px; color:var(--c); margin-bottom:0.5rem;">
+                BFS <span id="compare-total-bfs" style="color:var(--cDim);"></span></div>
+              <svg id="compare-svg-bfs" viewBox="0 0 760 280"
+                style="width:100%; background:rgba(2,4,6,0.6); border:1px solid var(--panel-border);"></svg>
+              <div id="compare-note-bfs" style="font-family:var(--font-mono); font-size:0.85rem;
+                color:var(--c); margin-top:0.5rem; min-height:2.2em;"></div>
+              <div id="compare-counts-bfs" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
+            </div>
+            <div>
+              <div style="font-family:var(--font-pixel); font-size:8px; color:var(--cAccent); margin-bottom:0.5rem;">
+                DIJKSTRA <span id="compare-total-dijkstra" style="color:var(--cDim);"></span></div>
+              <svg id="compare-svg-dijkstra" viewBox="0 0 760 280"
+                style="width:100%; background:rgba(2,4,6,0.6); border:1px solid var(--panel-border);"></svg>
+              <div id="compare-note-dijkstra" style="font-family:var(--font-mono); font-size:0.85rem;
+                color:var(--c); margin-top:0.5rem; min-height:2.2em;"></div>
+              <div id="compare-counts-dijkstra" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
+            </div>
+          </div>
+          <p id="compare-verdict" style="font-family:var(--font-mono); font-size:0.9rem;
+            color:var(--inkDim); margin:1rem 0 0; border-left:3px solid var(--cAccent);
+            padding-left:1rem; max-width:none;"></p>
+        </div>
+
+        <div id="complexity-card" class="panel" style="display:none; margin-bottom:1.5rem;">
+          <span class="eyebrow" style="margin-bottom:0.85rem;">COMPLEXITY — WHAT AM I PAYING?</span>
+          <div id="complexity-rows" style="display:flex; gap:2.5rem; flex-wrap:wrap;
+            font-family:var(--font-mono); font-size:0.95rem;"></div>
+          <p id="complexity-live" style="display:none; font-family:var(--font-mono); font-size:0.9rem;
+            color:var(--cDim); margin:0.85rem 0 0; border-left:3px solid var(--c);
+            padding-left:1rem; max-width:none;"></p>
         </div>
 
         <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start;">

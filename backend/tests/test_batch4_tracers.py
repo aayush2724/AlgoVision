@@ -102,9 +102,8 @@ class TestBatch4Endpoints:
                 payload["text"] = text
             assert client.post("/api/trace", json=payload).status_code == 400, text
 
-    def test_algorithms_listing_has_twenty(self):
+    def test_algorithms_listing_has_batch4_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
-        assert len(ids) == 20
         assert {"knapsack_01", "lcs"} <= ids
 
     def test_detect_grid_metas(self):

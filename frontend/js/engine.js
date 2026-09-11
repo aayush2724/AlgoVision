@@ -163,6 +163,17 @@ const SCENES = {
       return `${step.note || "Tracking the run..."}`;
     }
   },
+  grid_power: {
+    label: "POWER GRID",
+    color: "#5fd6e6",
+    accentColor: "#a9f0fa",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `⚡ ${id}`,
+    edgeLabel: (w) => `${w} cost`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Laying cable..."}`;
+    }
+  },
   dna: {
     label: "GENE LAB",
     color: "#5fd6e6",
@@ -192,6 +203,7 @@ function escapeHTML(str) {
 
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
+  prims_mst: 'graph', kruskals_mst: 'graph',
   binary_search: 'array', merge_sort: 'array', quick_sort: 'array',
   bubble_sort: 'array', insertion_sort: 'array', selection_sort: 'array',
   linked_list_reverse: 'list', balanced_brackets: 'stack',
@@ -214,6 +226,10 @@ function resolveAlgoId(raw) {
     ['bubble_sort', 'bubble_sort'], ['bubblesort', 'bubble_sort'], ['bubble', 'bubble_sort'],
     ['insertion_sort', 'insertion_sort'], ['insertionsort', 'insertion_sort'], ['insertion', 'insertion_sort'],
     ['selection_sort', 'selection_sort'], ['selectionsort', 'selection_sort'], ['selection', 'selection_sort'],
+    ['prims_mst', 'prims_mst'], ['prim', 'prims_mst'],
+    ['kruskals_mst', 'kruskals_mst'], ['kruskal', 'kruskals_mst'],
+    ['unionfind', 'kruskals_mst'], ['dsu', 'kruskals_mst'],
+    ['spanningtree', 'prims_mst'], ['mst', 'prims_mst'],
     ['knapsack_01', 'knapsack_01'], ['knapsack', 'knapsack_01'],
     ['lcs', 'lcs'], ['longestcommon', 'lcs'], ['dna', 'lcs'], ['editdistance', 'lcs'],
     ['two_sum_sorted', 'two_sum_sorted'], ['twosum', 'two_sum_sorted'],
@@ -261,6 +277,8 @@ const COUNT_LABELS = {
   additions: 'ADDITIONS', windows: 'WINDOWS',
   extensions: 'EXTENSIONS', restarts: 'RESTARTS', steps: 'STEPS',
   cells: 'CELLS', takes: 'TAKES', skips: 'SKIPS', matches: 'MATCHES',
+  additions: 'EDGES ADDED', rejections: 'CYCLES AVOIDED',
+  unions: 'UNIONS', cycles_skipped: 'CYCLES SKIPPED',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -435,6 +453,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       bst_insert: 'files', bst_search: 'files', heap_insert: 'scheduler',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
+      prims_mst: 'grid_power', kruskals_mst: 'grid_power',
     };
     return map[algoName] || 'gps';
   }
@@ -2297,6 +2316,86 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { steps };
     }
 
+    if (algorithm === 'prims_mst' || algorithm === 'kruskals_mst') {
+      const steps = [];
+      const mst = [];
+      let total = 0;
+      const allIds = nodes.slice();
+
+      if (algorithm === 'prims_mst') {
+        const inTree = new Set([startNode]);
+        const counts = { edge_checks: 0, additions: 0, rejections: 0 };
+        const add = (note2, node = null, edge = null) => steps.push({
+          i: steps.length,
+          structures: { visited: [...inTree].sort(), mst_edges: mst.map(e => e.slice()),
+            total_weight: total, counts: { ...counts } },
+          highlight: { node, edge }, note: note2,
+        });
+        add(`Build the cheapest network. Start at ${startNode}.`, startNode);
+        const frontier = [];
+        (adj[startNode] || []).forEach(e => frontier.push({ w: e.w, u: startNode, v: e.to }));
+        while (frontier.length && inTree.size < allIds.length) {
+          frontier.sort((a, b) => a.w - b.w || (a.v < b.v ? -1 : 1));
+          const { w, u, v } = frontier.shift();
+          counts.edge_checks++;
+          if (inTree.has(v)) {
+            counts.rejections++;
+            add(`Edge ${u}–${v} (${fmt(w)}) leads back into the tree — would make a cycle. Skip.`, v, [u, v]);
+            continue;
+          }
+          inTree.add(v); mst.push([u, v]); total += w; counts.additions++;
+          add(`Add edge ${u}–${v} (${fmt(w)}) — cheapest way to a new node. ` +
+            `Tree spans ${inTree.size} of ${allIds.length}.`, v, [u, v]);
+          (adj[v] || []).forEach(e => { if (!inTree.has(e.to)) frontier.push({ w: e.w, u: v, v: e.to }); });
+        }
+        const unreached = allIds.filter(n => !inTree.has(n));
+        add(unreached.length
+          ? `${unreached.length} node(s) unreachable from ${startNode}: ${unreached.join(', ')}.`
+          : `Every node connected with ${mst.length} edges at total cost ${fmt(total)}.`);
+        return { steps };
+      }
+
+      // kruskals_mst
+      const parent = {};
+      allIds.forEach(n => { parent[n] = n; });
+      const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+      const comps = () => {
+        const g = {};
+        allIds.forEach(n => { (g[find(n)] = g[find(n)] || []).push(n); });
+        return Object.values(g).map(v => v.slice().sort()).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+      };
+      const counts = { edge_checks: 0, unions: 0, cycles_skipped: 0 };
+      const add = (note2, node = null, edge = null) => steps.push({
+        i: steps.length,
+        structures: { visited: [...new Set(mst.flat())].sort(), mst_edges: mst.map(e => e.slice()),
+          components: comps(), total_weight: total, counts: { ...counts } },
+        highlight: { node, edge }, note: note2,
+      });
+      const sorted = userGraph.links
+        .map(l => ({ w: l.weight, a: l.source, b: l.target }))
+        .sort((x, y) => x.w - y.w || (x.a < y.a ? -1 : 1));
+      if (!sorted.length) { add(`No edges — ${allIds.length} isolated node(s).`); return { steps }; }
+      add(`Sort every edge cheapest-first, then take each one unless it closes a cycle.`);
+      add(`Every node starts in its own group — ${allIds.length} components.`);
+      for (const { w, a, b } of sorted) {
+        counts.edge_checks++;
+        const ra = find(a), rb = find(b);
+        if (ra === rb) {
+          counts.cycles_skipped++;
+          add(`Edge ${a}–${b} (${fmt(w)}): already in the same group — would close a cycle. Reject.`, b, [a, b]);
+          continue;
+        }
+        parent[rb] = ra; mst.push([a, b]); total += w; counts.unions++;
+        add(`Edge ${a}–${b} (${fmt(w)}): different groups — safe, union them. Cost ${fmt(total)}.`, b, [a, b]);
+        if (mst.length === allIds.length - 1) break;
+      }
+      const groups = comps();
+      add(groups.length > 1
+        ? `${groups.length} components left — the graph is disconnected, so this is a spanning forest. Cost ${fmt(total)}.`
+        : `Every node connected with ${mst.length} edges at total cost ${fmt(total)}.`);
+      return { steps };
+    }
+
     if (algorithm === 'dfs') {
       const steps = [];
       const visited = new Set();
@@ -2524,14 +2623,39 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (n.id === activeNode) el.classList.add('active');
       else if (visited.has(n.id)) el.classList.add('visited');
     });
+    // Edges chosen for the spanning tree stay lit for the rest of the trace
+    const mstKeys = new Set((s.mst_edges || []).map(e => edgeKey(e[0], e[1])));
+
     userGraph.links.forEach(l => {
       const el = svg.querySelector(`#edge-${l.source}-${l.target}`);
       if (!el) return;
       el.classList.remove('active', 'visited');
+      el.style.stroke = '';
+      el.style.strokeWidth = '';
       const k = edgeKey(l.source, l.target);
-      if (k === activeEdgeKey) el.classList.add('active');
-      else if (traversed.has(k)) el.classList.add('visited');
+      if (mstKeys.has(k)) {
+        el.style.stroke = '#4ade80';
+        el.style.strokeWidth = '3';
+      } else if (k === activeEdgeKey) {
+        el.classList.add('active');
+      } else if (traversed.has(k)) {
+        el.classList.add('visited');
+      }
     });
+
+    // Running MST cost readout
+    svg.querySelector('#mst-total')?.remove();
+    if (s.total_weight !== null && s.total_weight !== undefined) {
+      const t = makeSVG('text');
+      t.setAttribute('x', '750'); t.setAttribute('y', '270');
+      t.setAttribute('text-anchor', 'end');
+      t.setAttribute('id', 'mst-total');
+      t.setAttribute('fill', '#4ade80');
+      t.setAttribute('font-family', 'var(--font-mono)');
+      t.setAttribute('font-size', '13');
+      t.textContent = `TREE COST: ${fmt(s.total_weight)}`;
+      svg.appendChild(t);
+    }
 
     const dist = s.dist;
     const isLast = idx === currentSteps.length - 1;

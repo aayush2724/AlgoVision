@@ -291,6 +291,20 @@ export const COMPLEXITY = {
       `${Math.max(1, Math.ceil(Math.log2(Math.max(s.n, 2))))} levels. ` +
       `The maximum is always at the root, for free.`,
   },
+  prims_mst: {
+    rows: [["Time", "O(E log V)"], ["Space", "O(V + E)"], ["Tree edges", "V − 1"]],
+    reading: (c, s) =>
+      `${c.edge_checks ?? 0} frontier edges examined to add ${c.additions ?? 0} — ` +
+      `always V−1 = ${Math.max(s.V - 1, 0)} for ${s.V} nodes, no matter how many ` +
+      `edges exist. ${c.rejections ?? 0} were skipped as cycles.`,
+  },
+  kruskals_mst: {
+    rows: [["Time", "O(E log E)"], ["Union-Find", "≈O(1) amortised"], ["Space", "O(V)"]],
+    reading: (c, s) =>
+      `${c.edge_checks ?? 0} of ${s.E} edges examined in sorted order: ` +
+      `${c.unions ?? 0} unions, ${c.cycles_skipped ?? 0} rejected as cycles. ` +
+      `The sort dominates the cost — union-find itself is near-constant per query.`,
+  },
   knapsack_01: {
     rows: [["Time", "O(n·W)"], ["Naive subsets", "O(2ⁿ)"], ["Space", "O(n·W)"]],
     reading: (c, s) =>

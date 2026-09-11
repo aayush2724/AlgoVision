@@ -9,7 +9,8 @@ students **run it on their own input, step by step, and analyse the cost**.
 
 ## What it actually does
 
-- **20 live algorithm tracers** — Dijkstra, BFS, DFS, Binary Search, Merge /
+- **22 live algorithm tracers** — Dijkstra, BFS, DFS, Prim's & Kruskal's
+  minimum spanning trees (with union-find), Binary Search, Merge /
   Quick / Bubble / Insertion / Selection Sort, Linked-List Reversal, Balanced
   Brackets (stack), BST build & search, Max-Heap build, Two Sum (two
   pointers), Sliding Window, Kadane's Max Subarray, memoized Fibonacci,

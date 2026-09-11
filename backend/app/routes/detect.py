@@ -36,6 +36,8 @@ SIGNATURES = {
     "two_sum_sorted": ["two_sum_sorted", "two sum", "two_sum", "twosum", "two pointer", "while left < right", "pair with sum"],
     "sliding_window": ["sliding_window", "sliding window", "window sum", "window size", "subarray of size"],
     "kadanes": ["kadane", "kadanes", "max subarray", "maximum subarray", "max_ending_here", "best sum"],
+    "prims_mst": ["prims_mst", "prim", "prims", "minimum spanning", "spanning tree", "mst"],
+    "kruskals_mst": ["kruskals_mst", "kruskal", "kruskals", "union find", "union_find", "disjoint set", "dsu"],
     "knapsack_01": ["knapsack", "knapsack_01", "0/1 knapsack", "capacity", "weights[", "values["],
     "lcs": ["lcs", "longest common subsequence", "common subsequence", "edit distance"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
@@ -110,6 +112,32 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "prims_mst": {
+        "scene": "grid_power",
+        "title": "Power Grid Planner",
+        "hook": "Wire every town to the grid using the least cable possible.",
+        "metaphors": {
+            "node": "town",
+            "edge": "cable run",
+            "weight": "cable cost",
+            "visit": "Connecting town",
+            "start": "The first substation",
+            "done": "Every town powered, minimum cable laid."
+        }
+    },
+    "kruskals_mst": {
+        "scene": "grid_power",
+        "title": "Island Bridge Builder",
+        "hook": "Cheapest bridges first — but never build one between islands already linked.",
+        "metaphors": {
+            "node": "island",
+            "edge": "bridge",
+            "weight": "build cost",
+            "visit": "Inspecting a bridge",
+            "start": "Every island alone",
+            "done": "All islands joined for the minimum cost."
         }
     },
     "knapsack_01": {

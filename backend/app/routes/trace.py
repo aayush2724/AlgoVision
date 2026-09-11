@@ -6,8 +6,8 @@ import re as _re
 from app.tracers import (
     balanced_brackets, bfs, binary_search, bst_insert, bst_search,
     bubble_sort, dfs, dijkstra, fibonacci_dp, heap_insert, insertion_sort,
-    kadanes, knapsack_01, lcs, linked_list_reverse, merge_sort, quick_sort,
-    selection_sort, sliding_window, two_sum_sorted,
+    kadanes, knapsack_01, kruskals_mst, lcs, linked_list_reverse, merge_sort,
+    prims_mst, quick_sort, selection_sort, sliding_window, two_sum_sorted,
 )
 from app.tracers.common import Graph
 import os
@@ -25,6 +25,8 @@ GRAPH_TRACERS = {
     "dijkstra": dijkstra.trace,
     "bfs": bfs.trace,
     "dfs": dfs.trace,
+    "prims_mst": prims_mst.trace,
+    "kruskals_mst": kruskals_mst.trace,
 }
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
@@ -54,6 +56,8 @@ def algorithms():
             {"id": "dijkstra",      "name": "Dijkstra's Shortest Path", "input": "graph"},
             {"id": "bfs",           "name": "Breadth-First Search",     "input": "graph"},
             {"id": "dfs",           "name": "Depth-First Search",       "input": "graph"},
+            {"id": "prims_mst",     "name": "Prim's Minimum Spanning Tree",    "input": "graph"},
+            {"id": "kruskals_mst",  "name": "Kruskal's MST (Union-Find)",      "input": "graph"},
             {"id": "binary_search", "name": "Binary Search",            "input": "array"},
             {"id": "merge_sort",    "name": "Merge Sort",               "input": "array"},
             {"id": "quick_sort",    "name": "Quick Sort",               "input": "array"},

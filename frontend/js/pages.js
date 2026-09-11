@@ -1,4 +1,5 @@
 import * as DATA from './data.js';
+import * as P from './progress.js';
 
 function clientDetect(text) {
   const t = text.toLowerCase();
@@ -455,8 +456,12 @@ export const PAGES = {
             <span class="journey-stat-label">Problems</span>
           </div>
           <div class="journey-stat">
-            <span class="journey-stat-num">${Math.round(DATA.A2Z_STEPS.reduce((s,st)=>s+st.progress,0)/DATA.A2Z_STEPS.length)}%</span>
-            <span class="journey-stat-label">Avg Progress</span>
+            <span class="journey-stat-num">${(() => {
+              const total = DATA.A2Z_STEPS.reduce((s, st) => s + (st.problems || []).length, 0);
+              const done = P.stats().completed;
+              return total ? Math.round((done / total) * 100) : 0;
+            })()}%</span>
+            <span class="journey-stat-label">Understood</span>
           </div>
           <div class="journey-stat">
             <span class="journey-stat-num">12</span>
@@ -471,9 +476,13 @@ export const PAGES = {
               <div class="a2z-card-num">${String(idx+1).padStart(2,'0')}</div>
               <div class="a2z-card-step">${step.step}</div>
               <div class="a2z-card-title">${step.title}</div>
-              <div class="a2z-card-count">${(step.problems||[]).length} problems</div>
+              <div class="a2z-card-count">${(() => {
+                const probs = step.problems || [];
+                const done = probs.filter(p => P.getStatus(p.id) === 'completed').length;
+                return done ? `${done} of ${probs.length} understood` : `${probs.length} problems`;
+              })()}</div>
               <div class="a2z-progress-bar">
-                <div class="a2z-progress-fill" style="width:${step.progress}%;"></div>
+                <div class="a2z-progress-fill" style="width:${P.stepProgress(step.problems)}%;"></div>
               </div>
             </a>
           `).join('')}
@@ -578,6 +587,9 @@ export const PAGES = {
                 <button id="next-prob" class="btn btn-primary" style="font-size:0.85rem;">
                   NEXT PROBLEM →
                 </button>
+                <button id="mark-understood" class="btn" style="font-size:0.85rem;">
+                  ☐ MARK AS UNDERSTOOD
+                </button>
                 <a id="practice-link" href="#/practice"
                   class="btn" style="margin-left:auto; font-size:0.85rem;">
                   🐞 PRACTICE
@@ -607,6 +619,14 @@ export const PAGES = {
           const prevBtn     = view.querySelector('#prev-prob');
           const nextBtn     = view.querySelector('#next-prob');
 
+          function refreshStatusMarker(pid) {
+            const el = view.querySelector(`.prob-status[data-pid="${pid}"]`);
+            if (!el) return;
+            const st = P.getStatus(pid);
+            el.textContent = st === 'completed' ? '✓' : st === 'viewed' ? '·' : '';
+            el.style.color = st === 'completed' ? '#4ade80' : 'var(--cDim)';
+          }
+
           function renderStep(si) {
             const step = DATA.A2Z_STEPS[si];
             stepTitleEl.textContent = `${step.step}: ${step.title}`;
@@ -619,6 +639,10 @@ export const PAGES = {
                 <span style="font-family:var(--font-pixel); font-size:6px; color:${cols[p.difficulty]};
                   min-width:10px;">${p.difficulty}</span>
                 <span style="color:var(--ink); flex:1;">${p.title}</span>
+                <span class="prob-status" data-pid="${p.id}" style="min-width:14px; text-align:center;
+                  font-family:var(--font-mono); font-size:0.85rem;
+                  color:${P.getStatus(p.id) === 'completed' ? '#4ade80' : 'var(--cDim)'};">${
+                  P.getStatus(p.id) === 'completed' ? '✓' : P.getStatus(p.id) === 'viewed' ? '·' : ''}</span>
               </div>`;
             }).join('');
             probListEl.querySelectorAll('.prob-item').forEach(el => {
@@ -659,6 +683,27 @@ export const PAGES = {
             }
             if (probWorld) probWorld.textContent = prob.world;
             if (probHook)  probHook.textContent  = `"${prob.hook}"`;
+
+            // Progress: opening a problem marks it viewed
+            P.markViewed(prob.id);
+            refreshStatusMarker(prob.id);
+            const muBtnOld = view.querySelector('#mark-understood');
+            if (muBtnOld) {
+              const muBtn = muBtnOld.cloneNode(true);
+              muBtnOld.parentNode.replaceChild(muBtn, muBtnOld);
+              const refreshMu = () => {
+                const done = P.getStatus(prob.id) === 'completed';
+                muBtn.textContent = done ? '✓ UNDERSTOOD' : '☐ MARK AS UNDERSTOOD';
+                muBtn.style.color = done ? '#4ade80' : '';
+                muBtn.style.borderColor = done ? '#4ade80' : '';
+              };
+              refreshMu();
+              muBtn.addEventListener('click', () => {
+                P.toggleCompleted(prob.id);
+                refreshMu();
+                refreshStatusMarker(prob.id);
+              });
+            }
 
             history.replaceState(null,'',`#/a2z-problem?step=${si+1}&prob=${prob.id}`);
 
@@ -966,26 +1011,125 @@ export const PAGES = {
           <span class="eyebrow" style="margin:0;">PROGRESS DASHBOARD</span>
         </div>
         <h1 style="font-family:var(--font-display2); font-size:clamp(3rem,6vw,5rem); letter-spacing:0.04em; margin-bottom:0.5rem;">MY JOURNEY</h1>
-        <p style="margin-bottom:2.5rem;">Track your mastery across algorithms, topics, and practice sessions.
-          <span style="display:block; margin-top:0.5rem; font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">SAMPLE DATA — PROGRESS TRACKING COMING SOON</span></p>
-        <div class="grid-2">
-          ${DATA.STATS.map((stat, i) => {
-            const raw = stat.value.split('/')[0].split(' ')[0];
-            const num = parseFloat(raw);
-            const pct = isNaN(num) ? 0 : Math.min((num / stat.target) * 100, 100);
-            return `
-            <div class="panel" style="border-top:3px solid ${i%2===0?'var(--cAccent)':'var(--c)'};">
-              <span class="eyebrow" style="margin-bottom:0.5rem;">${stat.label.toUpperCase()}</span>
-              <div style="font-family:var(--font-display2); font-size:5rem; color:var(--ink); margin:0.25rem 0; letter-spacing:0.02em; line-height:1;">${stat.value}</div>
-              <div class="stat-bar-bg">
-                <div class="stat-bar-fill" style="width:${pct}%;"></div>
-              </div>
-              <div style="font-size:0.75rem; color:var(--inkDim); margin-top:0.5rem;">Target: ${stat.target}</div>
-            </div>`;
-          }).join('')}
+        <p style="margin-bottom:2.5rem;">Your real progress — tracked in this browser as you explore, trace, and understand.</p>
+        <div id="journey-content"></div>
+        <div class="panel" style="margin-top:1.5rem;">
+          <span class="eyebrow" style="margin-bottom:0.75rem;">CLASSROOM TOOLS</span>
+          <p style="font-size:0.85rem; margin-bottom:1rem;">Progress lives in this browser only.
+            Export it to move machines or hand it in; import to restore.</p>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <button id="export-progress" class="btn btn-ghost" style="font-size:0.85rem;">⬇ EXPORT JSON</button>
+            <button id="import-progress" class="btn btn-ghost" style="font-size:0.85rem;">⬆ IMPORT JSON</button>
+            <input type="file" id="import-file" accept=".json,application/json" style="display:none;">
+            <button id="reset-progress" class="btn" style="font-size:0.85rem; margin-left:auto;">RESET PROGRESS</button>
+          </div>
+          <div id="journey-tools-msg" style="display:none; margin-top:0.75rem; font-family:var(--font-mono);
+            font-size:0.85rem; color:var(--c);"></div>
         </div>
       </section>
-    `
+    `,
+    mount: (view) => {
+      const content = view.querySelector('#journey-content');
+      const msg = view.querySelector('#journey-tools-msg');
+
+      const say = (text, isError = false) => {
+        if (!msg) return;
+        msg.textContent = text;
+        msg.style.color = isError ? '#ff5f5f' : 'var(--c)';
+        msg.style.display = 'block';
+      };
+
+      function tile(label, value, current, target, i) {
+        const pct = Math.min((current / target) * 100, 100);
+        return `
+          <div class="panel" style="border-top:3px solid ${i % 2 === 0 ? 'var(--cAccent)' : 'var(--c)'};">
+            <span class="eyebrow" style="margin-bottom:0.5rem;">${label}</span>
+            <div style="font-family:var(--font-display2); font-size:4.5rem; color:var(--ink); margin:0.25rem 0; letter-spacing:0.02em; line-height:1;">${value}</div>
+            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;"></div></div>
+            <div style="font-size:0.75rem; color:var(--inkDim); margin-top:0.5rem;">Target: ${target}</div>
+          </div>`;
+      }
+
+      function renderStats() {
+        if (!P.hasAnyActivity()) {
+          content.innerHTML = `
+            <div class="panel" style="text-align:center; padding:3rem 2rem; border-top:3px solid var(--cAccent);">
+              <div style="font-size:2.5rem; margin-bottom:1rem;">🌱</div>
+              <h3 style="margin-bottom:0.6rem;">Nothing tracked yet</h3>
+              <p style="margin:0 auto 1.5rem; max-width:44ch;">Open a problem in the A2Z roadmap or run a
+                live trace — your progress starts counting from the first step you take.</p>
+              <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+                <a href="#/a2z" class="btn btn-primary">Start Step 1 →</a>
+                <a href="#/experience" class="btn btn-ghost">Run a Trace</a>
+              </div>
+            </div>`;
+          return;
+        }
+        const s = P.stats();
+        const totalProblems = DATA.A2Z_STEPS.reduce((t, st) => t + (st.problems || []).length, 0);
+        content.innerHTML = `<div class="grid-2">
+          ${tile('PROBLEMS UNDERSTOOD', s.completed, s.completed, totalProblems, 0)}
+          ${tile('TRACES RUN', s.tracesRun, s.tracesRun, 50, 1)}
+          ${tile('STREAK', `${s.streak} day${s.streak === 1 ? '' : 's'}`, s.streak, 30, 2)}
+          ${tile('MASTERY SCORE', `${s.points} pts`, s.points, 1000, 3)}
+        </div>`;
+      }
+
+      renderStats();
+
+      view.querySelector('#export-progress')?.addEventListener('click', () => {
+        try {
+          const blob = new Blob([P.exportJSON()], { type: 'application/json' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'algovision-progress.json';
+          a.click();
+          URL.revokeObjectURL(a.href);
+          say('Progress exported — check your downloads.');
+        } catch {
+          say('Export failed — your browser may be blocking downloads.', true);
+        }
+      });
+
+      const fileInput = view.querySelector('#import-file');
+      view.querySelector('#import-progress')?.addEventListener('click', () => fileInput?.click());
+      fileInput?.addEventListener('change', () => {
+        const f = fileInput.files?.[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = P.importJSON(String(reader.result));
+          if (res.ok) { renderStats(); say('Progress imported.'); }
+          else say(res.error || 'Import failed.', true);
+          fileInput.value = '';
+        };
+        reader.onerror = () => say('Could not read that file.', true);
+        reader.readAsText(f);
+      });
+
+      // Two-click confirm — no blocking browser dialogs
+      const resetBtn = view.querySelector('#reset-progress');
+      let armed = false;
+      resetBtn?.addEventListener('click', () => {
+        if (!armed) {
+          armed = true;
+          resetBtn.textContent = 'CLICK AGAIN TO CONFIRM';
+          resetBtn.style.color = '#ff5f5f';
+          setTimeout(() => {
+            armed = false;
+            resetBtn.textContent = 'RESET PROGRESS';
+            resetBtn.style.color = '';
+          }, 3000);
+          return;
+        }
+        P.resetAll();
+        armed = false;
+        resetBtn.textContent = 'RESET PROGRESS';
+        resetBtn.style.color = '';
+        renderStats();
+        say('Progress cleared.');
+      });
+    }
   },
 
   "#/realworld": {

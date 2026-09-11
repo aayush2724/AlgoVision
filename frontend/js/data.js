@@ -4,6 +4,7 @@ export const NAV = [
   { label: "Experience", hash: "#/experience"},
   { label: "A2Z",        hash: "#/a2z"       },
   { label: "Practice",   hash: "#/practice"  },
+  { label: "Journey",    hash: "#/journey"   },
 ];
 
 export const HERO = {
@@ -208,13 +209,6 @@ export const CLIPS = [
   { tag: "TODAY", topic: "DP",       title: "Memoization vs Tabulation — when each wins" },
   { tag: "TODAY", topic: "Sorting",  title: "Tim Sort: Python's secret weapon" },
   { tag: "TODAY", topic: "Strings",  title: "KMP: Pattern matching without backtracking" },
-];
-
-export const STATS = [
-  { label: "Problems Solved",   value: "24",      target: 100 },
-  { label: "Algorithms Traced", value: "6",        target: 20  },
-  { label: "Streak",            value: "3 days",   target: 30  },
-  { label: "Mastery Score",     value: "340 pts",  target: 1000},
 ];
 
 export const REALWORLD = [

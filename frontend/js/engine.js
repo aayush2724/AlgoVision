@@ -1,5 +1,6 @@
 import { api } from './api.js';
 import * as DATA from './data.js';
+import * as Progress from './progress.js';
 
 // ── REAL-WORLD SCENE RENDERERS ──────────────────────────────────────────────
 // Each scene knows how to draw itself and label nodes/edges in metaphor language.
@@ -1039,6 +1040,7 @@ export function mountEngine(view, algo = 'dijkstra') {
   function loadTrace(steps) {
     currentSteps = steps || [];
     if (!currentSteps.length) { resetTraceState(); return; }
+    Progress.recordTraceRun(algoId);
     traceSummary = computeTraceSummary();
     if (scrubRow) scrubRow.style.display = 'flex';
     if (counterPanel) counterPanel.style.display = 'flex';

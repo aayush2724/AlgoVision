@@ -118,6 +118,28 @@ const SCENES = {
     stepNarrate(step, meta) {
       return `${step.note || "Checking the stack..."}`;
     }
+  },
+  files: {
+    label: "FILE SYSTEM",
+    color: "#5fd6e6",
+    accentColor: "#a9f0fa",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `📁 ${id}`,
+    edgeLabel: (w) => `subfolder`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Walking the directory tree..."}`;
+    }
+  },
+  scheduler: {
+    label: "TRIAGE QUEUE",
+    color: "#a9f0fa",
+    accentColor: "#5fd6e6",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `🏥 ${id}`,
+    edgeLabel: (w) => `priority`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Sorting the waiting room..."}`;
+    }
   }
 };
 
@@ -140,6 +162,7 @@ const VIEW_FOR = {
   binary_search: 'array', merge_sort: 'array', quick_sort: 'array',
   bubble_sort: 'array', insertion_sort: 'array', selection_sort: 'array',
   linked_list_reverse: 'list', balanced_brackets: 'stack',
+  bst_insert: 'tree', bst_search: 'tree', heap_insert: 'tree',
   fibonacci_dp: 'table',
 };
 
@@ -156,6 +179,10 @@ function resolveAlgoId(raw) {
     ['bubble_sort', 'bubble_sort'], ['bubblesort', 'bubble_sort'], ['bubble', 'bubble_sort'],
     ['insertion_sort', 'insertion_sort'], ['insertionsort', 'insertion_sort'], ['insertion', 'insertion_sort'],
     ['selection_sort', 'selection_sort'], ['selectionsort', 'selection_sort'], ['selection', 'selection_sort'],
+    ['binarysearchtree', 'bst_insert'], ['bst_search', 'bst_search'],
+    ['bst_insert', 'bst_insert'], ['bst', 'bst_insert'], ['files', 'bst_insert'],
+    ['heap_insert', 'heap_insert'], ['heapify', 'heap_insert'], ['heap', 'heap_insert'],
+    ['priorityqueue', 'heap_insert'], ['scheduler', 'heap_insert'], ['triage', 'heap_insert'],
     ['binary_search', 'binary_search'], ['binarysearch', 'binary_search'],
     ['thehunt', 'binary_search'], ['library', 'binary_search'],
     ['quick_sort', 'quick_sort'], ['quicksort', 'quick_sort'],
@@ -186,6 +213,7 @@ const COUNT_LABELS = {
   calls: 'CALLS', cache_hits: 'CACHE HITS', computes: 'COMPUTES',
   passes: 'PASSES', shifts: 'SHIFTS', inserts: 'INSERTS',
   flips: 'FLIPS', pushes: 'PUSHES', pops: 'POPS',
+  insertions: 'INSERTIONS',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -356,6 +384,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       bubble_sort: 'leaderboard', insertion_sort: 'leaderboard',
       selection_sort: 'leaderboard',
       linked_list_reverse: 'train', balanced_brackets: 'plates',
+      bst_insert: 'files', bst_search: 'files', heap_insert: 'scheduler',
     };
     return map[algoName] || 'gps';
   }
@@ -615,6 +644,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '({[]})',
       hint: 'Brackets only: ( ) [ ] { } — up to 20. Try breaking it: (] or ((',
     },
+    bst_insert: {
+      array: '8, 3, 10, 1, 6, 14, 4',
+      hint: 'Up to 12 values — try inserting sorted numbers and watch the tree degenerate into a chain.',
+    },
+    bst_search: {
+      array: '8, 3, 10, 1, 6, 14, 4', target: '6',
+      hint: 'The tree is built from your values, then searched — each comparison discards a whole subtree.',
+    },
+    heap_insert: {
+      array: '3, 9, 5, 1, 12, 8',
+      hint: 'Max-heap: every parent ≥ its children. Watch new values bubble up.',
+    },
     fibonacci_dp: {
       target: '10',
       hint: 'Pick n (0–18) — watch the memo vault fill; cache hits glow green.',
@@ -642,8 +683,15 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
     const maxLen = algoId === 'linked_list_reverse' ? 10
+      : traceView === 'tree' ? 12
       : algoId === 'binary_search' ? 20 : 16;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
+
+    if (algoId === 'bst_search') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t)) return { error: 'Enter a numeric target to search for.' };
+      return { array: values, target: t };
+    }
 
     if (algoId === 'binary_search') {
       const t = Number((targetInput?.value || '').trim());
@@ -998,6 +1046,107 @@ export function mountEngine(view, algo = 'dijkstra') {
     svg.appendChild(g);
   }
 
+  // ── Tree view (BST / heap) ──
+  function renderTreeView() {
+    svg.innerHTML = '';
+    const scene = SCENES[currentMeta?.scene] || SCENES.files;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const hint = makeSVG("text");
+    hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
+    hint.setAttribute("text-anchor", "middle");
+    hint.setAttribute("fill", "var(--cDim)");
+    hint.setAttribute("font-family", "var(--font-pixel)");
+    hint.setAttribute("font-size", "8");
+    hint.setAttribute("id", "tree-hint");
+    hint.textContent = "PRESS RUN TO GROW THE TREE";
+    svg.appendChild(hint);
+  }
+
+  function renderTreeStep(step) {
+    const s = step.structures || {};
+    svg.querySelector('#tree-hint')?.remove();
+    svg.querySelector('#tree-decor')?.remove();
+    const g = makeSVG('g');
+    g.setAttribute('id', 'tree-decor');
+
+    const nodes = s.tree || [];
+    if (!nodes.length) { svg.appendChild(g); return; }
+    const byId = Object.fromEntries(nodes.map(n => [n.id, n]));
+    const maxDepth = Math.max(...nodes.map(n => n.depth), 1);
+    const dy = Math.min(52, 210 / maxDepth);
+    const px = (n) => 60 + n.x * 640;
+    const py = (n) => 45 + n.depth * dy;
+
+    // Edges first so they sit behind the nodes
+    nodes.forEach(n => {
+      [n.left, n.right].forEach(cid => {
+        const c = byId[cid];
+        if (c === undefined) return;
+        const line = makeSVG('line');
+        line.setAttribute('x1', px(n)); line.setAttribute('y1', py(n));
+        line.setAttribute('x2', px(c)); line.setAttribute('y2', py(c));
+        line.setAttribute('stroke', 'rgba(0,150,184,0.35)');
+        line.setAttribute('stroke-width', '1.5');
+        g.appendChild(line);
+      });
+    });
+
+    nodes.forEach(n => {
+      const isCurrent = n.id === s.current;
+      const circle = makeSVG('circle');
+      circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
+      circle.setAttribute('r', '15');
+      circle.setAttribute('fill', isCurrent
+        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(255,107,0,0.2)')
+        : 'var(--cDeep)');
+      circle.setAttribute('stroke', isCurrent
+        ? (s.found === true ? '#4ade80' : 'var(--cAccent)')
+        : 'var(--cDim)');
+      circle.setAttribute('stroke-width', isCurrent ? '2' : '1');
+      g.appendChild(circle);
+
+      const t = makeSVG('text');
+      t.setAttribute('x', px(n)); t.setAttribute('y', py(n) + 4);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', 'var(--cBright)');
+      t.setAttribute('font-family', 'var(--font-mono)');
+      t.setAttribute('font-size', '11');
+      t.textContent = fmt(n.value);
+      g.appendChild(t);
+    });
+
+    if (s.inserting !== null && s.inserting !== undefined) {
+      const t = makeSVG('text');
+      t.setAttribute('x', '10'); t.setAttribute('y', '270');
+      t.setAttribute('fill', 'var(--cAccent)');
+      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-size', '8');
+      t.textContent = `INSERTING ${fmt(s.inserting)}`;
+      g.appendChild(t);
+    }
+    if (s.found === true || s.found === false) {
+      const t = makeSVG('text');
+      t.setAttribute('x', '700'); t.setAttribute('y', '270');
+      t.setAttribute('text-anchor', 'end');
+      t.setAttribute('fill', s.found ? '#4ade80' : '#f87171');
+      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-size', '9');
+      t.textContent = s.found ? 'FOUND' : 'NOT FOUND';
+      g.appendChild(t);
+    }
+
+    svg.appendChild(g);
+  }
+
   // Offline emulator for the array algorithms — mirrors the backend step shapes.
   function localArrayTrace(parsed) {
     if (algoId === 'fibonacci_dp') {
@@ -1038,6 +1187,138 @@ export function mountEngine(view, algo = 'dijkstra') {
       };
       const result = fib(n);
       add(`Vault complete — fib(${n}) = ${result}.`);
+      return { steps };
+    }
+
+    if (traceView === 'tree') {
+      const values = parsed.array.slice();
+      const steps = [];
+
+      const bstSerialize = (nodes, root) => {
+        const order = [];
+        const inorder = (nid, depth) => {
+          if (nid === null || nid === undefined) return;
+          inorder(nodes[nid].left, depth + 1);
+          order.push([nid, depth]);
+          inorder(nodes[nid].right, depth + 1);
+        };
+        inorder(root, 0);
+        const total = Math.max(order.length, 1);
+        return order.map(([nid, depth], rank) => ({
+          id: nid, value: nodes[nid].value,
+          left: nodes[nid].left, right: nodes[nid].right,
+          x: (rank + 0.5) / total, depth,
+        }));
+      };
+      const heapSerialize = (heap) => heap.map((v, i) => {
+        const depth = 31 - Math.clz32(i + 1);
+        const pos = i - (2 ** depth - 1);
+        return {
+          id: i, value: v,
+          left: 2 * i + 1 < heap.length ? 2 * i + 1 : null,
+          right: 2 * i + 2 < heap.length ? 2 * i + 2 : null,
+          x: (pos + 0.5) / (2 ** depth), depth,
+        };
+      });
+
+      if (algoId === 'heap_insert') {
+        const heap = [];
+        const counts = { insertions: 0, comparisons: 0, swaps: 0 };
+        const add = (note2, current = null) => steps.push({
+          i: steps.length,
+          structures: { tree: heapSerialize(heap), current, inserting: null,
+            found: null, counts: { ...counts } },
+          highlight: { node: current }, note: note2,
+        });
+        if (!values.length) { add('No values — an empty heap.'); return { steps }; }
+        add(`Build a max-heap from ${values.length} values.`);
+        for (const v of values) {
+          heap.push(v); counts.insertions++;
+          let i = heap.length - 1;
+          add(`Insert ${fmt(v)} at the next free slot (index ${i}).`, i);
+          while (i > 0) {
+            const p = Math.floor((i - 1) / 2);
+            counts.comparisons++;
+            if (heap[i] > heap[p]) {
+              [heap[i], heap[p]] = [heap[p], heap[i]];
+              counts.swaps++;
+              add(`${fmt(heap[p])} is bigger than its parent — swap up.`, p);
+              i = p;
+            } else {
+              add(`${fmt(heap[i])} <= parent ${fmt(heap[p])} — heap property holds.`, i);
+              break;
+            }
+          }
+        }
+        add(`Max-heap complete — ${fmt(heap[0])} sits at the root.`);
+        return { steps };
+      }
+
+      // BST build (insert traces steps; search builds silently then traces)
+      const nodes = {};
+      let root = null;
+      const bstAttach = (v) => {
+        if (root === null) { nodes[0] = { value: v, left: null, right: null }; root = 0; return [0, 0]; }
+        let cur = root, comps = 0;
+        for (;;) {
+          comps++;
+          const n = nodes[cur];
+          const side = v < n.value ? 'left' : 'right';
+          if (n[side] === null) {
+            const nid = Object.keys(nodes).length;
+            nodes[nid] = { value: v, left: null, right: null };
+            n[side] = nid;
+            return [nid, comps];
+          }
+          cur = n[side];
+        }
+      };
+
+      if (algoId === 'bst_insert') {
+        const counts = { comparisons: 0, insertions: 0 };
+        const add = (note2, current = null, inserting = null) => steps.push({
+          i: steps.length,
+          structures: { tree: bstSerialize(nodes, root), current, inserting,
+            found: null, counts: { ...counts } },
+          highlight: { node: current }, note: note2,
+        });
+        if (!values.length) { add('No values — an empty tree.'); return { steps }; }
+        add(`Insert ${values.length} values: smaller left, bigger right.`);
+        for (const v of values) {
+          const [nid, comps] = bstAttach(v);
+          counts.comparisons += comps;
+          counts.insertions++;
+          add(nid === 0 && Object.keys(nodes).length === 1
+            ? `${fmt(v)} is the first value — it becomes the root.`
+            : `${fmt(v)} attached after ${comps} comparison(s).`, nid);
+        }
+        add('Tree built — an in-order walk reads sorted.');
+        return { steps };
+      }
+
+      // bst_search
+      values.forEach(bstAttach);
+      const target = parsed.target;
+      const counts = { comparisons: 0 };
+      const add = (note2, current = null, found = null) => steps.push({
+        i: steps.length,
+        structures: { tree: bstSerialize(nodes, root), current, inserting: null,
+          found, counts: { ...counts } },
+        highlight: { node: current }, note: note2,
+      });
+      if (root === null) { add('The tree is empty — nothing to search.', null, false); return { steps }; }
+      add(`BST built. Search for ${fmt(target)}.`, root);
+      let cur = root;
+      while (cur !== null) {
+        counts.comparisons++;
+        const n = nodes[cur];
+        if (target === n.value) { add(`${fmt(target)} found!`, cur, true); return { steps }; }
+        const nxt = target < n.value ? n.left : n.right;
+        add(`${fmt(target)} ${target < n.value ? '<' : '>'} ${fmt(n.value)} — go ${target < n.value ? 'left' : 'right'}.`,
+          nxt === null ? cur : nxt);
+        cur = nxt;
+      }
+      add(`Reached an empty branch — ${fmt(target)} is not in the tree.`, null, false);
       return { steps };
     }
 
@@ -1712,6 +1993,13 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
+        } else if (traceView === 'tree') {
+          currentArrayValues = parsed.array.slice();
+          renderTreeView();
+          const payload = algoId === 'bst_search'
+            ? { array: parsed.array, target: parsed.target }
+            : { array: parsed.array };
+          res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
         } else {
           renderArrayView(parsed.array);
           if (isOffline) {
@@ -1849,6 +2137,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     else if (traceView === 'table') renderTableStep(step);
     else if (traceView === 'list') renderListStep(step);
     else if (traceView === 'stack') renderStackStep(step);
+    else if (traceView === 'tree') renderTreeStep(step);
     else renderGraphStep(step, currentStepIdx);
 
     let narration = step.note || "Processing...";
@@ -1913,7 +2202,11 @@ export function mountEngine(view, algo = 'dijkstra') {
       ? { V: userGraph.nodes.length, E: userGraph.links.length, n: userGraph.nodes.length }
       : traceView === 'table'
         ? { n: currentTableN, V: 0, E: 0 }
-        : { n: currentArrayValues.length, V: 0, E: 0 };
+        : traceView === 'list'
+          ? { n: currentListValues.length, V: 0, E: 0 }
+          : traceView === 'stack'
+            ? { n: currentStackText.length, V: 0, E: 0 }
+            : { n: currentArrayValues.length, V: 0, E: 0 };
     liveEl.textContent = card.reading(counts, sizes);
     liveEl.style.display = 'block';
   }
@@ -2120,6 +2413,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       renderListView(currentListValues);
     } else if (traceView === 'stack') {
       renderStackView(currentStackText);
+    } else if (traceView === 'tree') {
+      renderTreeView();
     } else {
       renderGraph(currentMeta);
     }
@@ -2164,7 +2459,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       } else if (arrayInput && !arrayInput.value) {
         arrayInput.value = defaults.array;
       }
-      if ((algoId === 'binary_search' || traceView === 'table') && targetWrap) {
+      if ((algoId === 'binary_search' || algoId === 'bst_search' || traceView === 'table') && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
       }
@@ -2176,6 +2471,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (traceView === 'table') renderTableView(parsed.target ?? 10);
       else if (traceView === 'list') renderListView(parsed.array || []);
       else if (traceView === 'stack') renderStackView(parsed.text || '');
+      else if (traceView === 'tree') renderTreeView();
       else renderArrayView(parsed.array || []);
       checkBackend();
       initComplexityCard();

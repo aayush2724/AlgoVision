@@ -1,10 +1,15 @@
+import os
+
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field, field_validator
 from app.services import ml_client
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(
+    key_func=get_remote_address,
+    enabled=os.getenv("ALGOVISION_DISABLE_RATELIMIT") != "1",
+)
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 # Max sizes — large enough for real code, blocks abuse

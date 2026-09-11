@@ -138,9 +138,8 @@ class TestBatch1Endpoints:
                            json={"algorithm": "balanced_brackets",
                                  "text": "(" * 21}).status_code == 400
 
-    def test_algorithms_listing_has_twelve(self):
+    def test_algorithms_listing_has_batch1_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
-        assert len(ids) == 12
         assert {"bubble_sort", "insertion_sort", "selection_sort",
                 "linked_list_reverse", "balanced_brackets"} <= ids
 

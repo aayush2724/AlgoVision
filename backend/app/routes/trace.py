@@ -2,15 +2,20 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.tracers import (
-    balanced_brackets, bfs, binary_search, bubble_sort, dfs, dijkstra,
-    fibonacci_dp, insertion_sort, linked_list_reverse, merge_sort,
-    quick_sort, selection_sort,
+    balanced_brackets, bfs, binary_search, bst_insert, bst_search,
+    bubble_sort, dfs, dijkstra, fibonacci_dp, heap_insert, insertion_sort,
+    linked_list_reverse, merge_sort, quick_sort, selection_sort,
 )
 from app.tracers.common import Graph
+import os
+
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(
+    key_func=get_remote_address,
+    enabled=os.getenv("ALGOVISION_DISABLE_RATELIMIT") != "1",
+)
 router = APIRouter(prefix="/trace", tags=["trace"])
 
 GRAPH_TRACERS = {
@@ -54,6 +59,9 @@ def algorithms():
             {"id": "selection_sort", "name": "Selection Sort",          "input": "array"},
             {"id": "linked_list_reverse", "name": "Reverse a Linked List", "input": "array"},
             {"id": "balanced_brackets",   "name": "Balanced Brackets (Stack)", "input": "text"},
+            {"id": "bst_insert",    "name": "BST — Build by Insertion", "input": "array"},
+            {"id": "bst_search",    "name": "BST — Search",             "input": "array"},
+            {"id": "heap_insert",   "name": "Max-Heap — Build",         "input": "array"},
             {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
         ]
     }
@@ -147,6 +155,25 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return balanced_brackets.trace(cleaned)
 
+    if req.algorithm in ("bst_insert", "heap_insert"):
+      arr = _validated_array(req.array, bst_insert.MAX_TREE_LEN, req.algorithm)
+      fn = bst_insert.trace if req.algorithm == "bst_insert" else heap_insert.trace
+      return fn(arr)
+
+    if req.algorithm == "bst_search":
+      arr = _validated_array(req.array, bst_insert.MAX_TREE_LEN, "bst_search")
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="bst_search requires a 'target' value to search for."
+        )
+      if abs(req.target) > MAX_VALUE:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Target must be within ±{MAX_VALUE}."
+        )
+      return bst_search.trace(arr, req.target)
+
     if req.algorithm == "fibonacci_dp":
       if req.target is None:
         raise HTTPException(
@@ -162,7 +189,8 @@ def run_trace(request: Request, req: TraceRequest):
       return fibonacci_dp.trace(int(n))
 
     valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
-             + ["balanced_brackets", "fibonacci_dp"])
+             + ["bst_insert", "bst_search", "heap_insert",
+                "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

@@ -1,10 +1,14 @@
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, Field
+import os
 import re
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(
+    key_func=get_remote_address,
+    enabled=os.getenv("ALGOVISION_DISABLE_RATELIMIT") != "1",
+)
 router = APIRouter(prefix="/detect", tags=["detect"])
 
 class DetectRequest(BaseModel):
@@ -25,6 +29,9 @@ SIGNATURES = {
     "selection_sort": ["selection sort", "selection_sort", "selectionsort", "min_idx", "find minimum"],
     "linked_list_reverse": ["linked list", "linked_list", "linked_list_reverse", "listnode", ".next", "->next", "reverse list"],
     "balanced_brackets": ["balanced_brackets", "balanced bracket", "valid parenthes", "matching bracket", "isvalid(s"],
+    "bst_insert": ["bst_insert", "bst", "binary search tree", "binarysearchtree", "node.left", "node.right", "root.left", "root.right"],
+    "bst_search": ["bst_search", "search bst", "find in tree", "tree search"],
+    "heap_insert": ["heap_insert", "heapify", "bubble up", "sift up", "max heap", "min heap", "binary heap", "max-heap"],
     "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming", "fibonacci", "fibonacci_dp", "fib("],
     "two_pointers": ["two pointer", "left", "right", "while left < right", "sliding window"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
@@ -99,6 +106,45 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "bst_insert": {
+        "scene": "files",
+        "title": "Directory Tree Organizer",
+        "hook": "Every file finds its folder — smaller names left, bigger right.",
+        "metaphors": {
+            "node": "folder",
+            "edge": "subfolder link",
+            "weight": "name order",
+            "visit": "Comparing at folder",
+            "start": "An empty drive",
+            "done": "Every file filed — in-order walk reads alphabetically."
+        }
+    },
+    "bst_search": {
+        "scene": "files",
+        "title": "File System Lookup",
+        "hook": "Find one file among thousands — each folder halves the search.",
+        "metaphors": {
+            "node": "folder",
+            "edge": "subfolder link",
+            "weight": "name order",
+            "visit": "Opening folder",
+            "start": "Start at the root directory",
+            "done": "Lookup complete."
+        }
+    },
+    "heap_insert": {
+        "scene": "scheduler",
+        "title": "Hospital Triage Queue",
+        "hook": "The most urgent patient is always seen first — the heap guarantees it.",
+        "metaphors": {
+            "node": "patient",
+            "edge": "priority link",
+            "weight": "urgency",
+            "visit": "Checking urgency",
+            "start": "An empty waiting room",
+            "done": "Most urgent case on top, guaranteed."
         }
     },
     "bubble_sort": {

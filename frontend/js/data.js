@@ -32,7 +32,7 @@ export const WORLDS = [
   { name: "The Hunt",           metaphor: "Binary Search",  category: "Foundations", emoji: "🔍", hook: "Divide, conquer, find the needle in the haystack.", complexity: "O(log n)",   algo: "binary_search" },
   { name: "Six Degrees",        metaphor: "Graphs",         category: "Structures",  emoji: "🌐", hook: "Navigate the web of connections that define us.",   complexity: "O(V + E)",   algo: "bfs"           },
   { name: "The Memo Vault",     metaphor: "DP",             category: "Mastery",     emoji: "💾", hook: "Remember the past to conquer the future.",          complexity: "O(n)",       algo: "fibonacci_dp"  },
-  { name: "The Priority Queue", metaphor: "Heaps",          category: "Structures",  emoji: "👑", hook: "Always keep the most important things on top.",     complexity: "O(log n)",   algo: "dijkstra"      },
+  { name: "The Priority Queue", metaphor: "Heaps",          category: "Structures",  emoji: "👑", hook: "Always keep the most important things on top.",     complexity: "O(log n)",   algo: "heap_insert"   },
   { name: "The Branching Tree", metaphor: "Recursion",      category: "Foundations", emoji: "🌿", hook: "Solve small to solve big.",                         complexity: "O(2^n)",     algo: "dfs"           },
   { name: "The Labyrinth",      metaphor: "Backtracking",   category: "Mastery",     emoji: "🗺️", hook: "Explore every path, but know when to turn back.",   complexity: "O(N!)",      algo: "dfs"           },
   { name: "The Hash Map",       metaphor: "Hashing",        category: "Structures",  emoji: "🔑", hook: "Instant lookup to any secret you store.",           complexity: "O(1)",       algo: "binary_search" },
@@ -247,6 +247,28 @@ export const COMPLEXITY = {
     reading: (c, s) =>
       `${c.pushes ?? 0} pushes and ${c.pops ?? 0} pops — each symbol touched ` +
       `once. The stack's depth is the price of remembering what's still open.`,
+  },
+  bst_insert: {
+    rows: [["Avg insert", "O(log n)"], ["Worst (sorted input)", "O(n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons to insert ${c.insertions ?? 0} values. ` +
+      `Balanced height would be ~${Math.max(1, Math.ceil(Math.log2(Math.max(s.n, 2) + 1)))} — ` +
+      `insert sorted numbers and the tree degenerates into an O(n) chain.`,
+  },
+  bst_search: {
+    rows: [["Avg", "O(log n)"], ["Worst (chain)", "O(n)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparison${(c.comparisons ?? 0) === 1 ? '' : 's'} to settle the ` +
+      `search among ${s.n} values — each one discarded a whole subtree. ` +
+      `That's binary search, living in a tree.`,
+  },
+  heap_insert: {
+    rows: [["Per insert", "O(log n)"], ["Build (n inserts)", "O(n log n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.swaps ?? 0} bubble-up swaps for ` +
+      `${c.insertions ?? 0} inserts — each value climbs at most log₂(n) ≈ ` +
+      `${Math.max(1, Math.ceil(Math.log2(Math.max(s.n, 2))))} levels. ` +
+      `The maximum is always at the root, for free.`,
   },
   fibonacci_dp: {
     rows: [["Time (memoized)", "O(n)"], ["Time (naive)", "O(2ⁿ)"], ["Space", "O(n)"]],

@@ -161,6 +161,104 @@ export function mountEngine(view, algo = 'dijkstra') {
   let currentScene = null; // stores scene renderer
   let currentArrayValues = [];
 
+  // ── Editable graph state (graph view) ──
+  // Mirrors the server limits in tracers/common.py
+  const GRAPH_LIMITS = { nodes: 50, edges: 200, weight: 1_000_000 };
+
+  const graphControls = view.querySelector('#graph-controls');
+  const presetSelect  = view.querySelector('#preset-select');
+  const startSelect   = view.querySelector('#start-select');
+  const graphStats    = view.querySelector('#graph-stats');
+  const graphError    = view.querySelector('#graph-error');
+
+  function graphPreset(name) {
+    if (name === 'tree') return {
+      nodes: [
+        { id: 'A', x: 380, y: 50 },  { id: 'B', x: 220, y: 130 }, { id: 'C', x: 540, y: 130 },
+        { id: 'D', x: 140, y: 225 }, { id: 'E', x: 300, y: 225 }, { id: 'F', x: 460, y: 225 },
+        { id: 'G', x: 620, y: 225 },
+      ],
+      links: [
+        { source: 'A', target: 'B', weight: 2 }, { source: 'A', target: 'C', weight: 3 },
+        { source: 'B', target: 'D', weight: 1 }, { source: 'B', target: 'E', weight: 4 },
+        { source: 'C', target: 'F', weight: 2 }, { source: 'C', target: 'G', weight: 5 },
+      ],
+    };
+    if (name === 'disconnected') return {
+      nodes: [
+        { id: 'A', x: 140, y: 100 }, { id: 'B', x: 300, y: 70 },  { id: 'C', x: 300, y: 185 },
+        { id: 'D', x: 520, y: 90 },  { id: 'E', x: 660, y: 150 }, { id: 'F', x: 520, y: 230 },
+      ],
+      links: [
+        { source: 'A', target: 'B', weight: 3 }, { source: 'A', target: 'C', weight: 2 },
+        { source: 'B', target: 'C', weight: 4 }, { source: 'D', target: 'E', weight: 2 },
+      ],
+    };
+    if (name === 'clear') return { nodes: [], links: [] };
+    return JSON.parse(JSON.stringify({
+      nodes: DATA.SAMPLE_GRAPH.nodes,
+      links: DATA.SAMPLE_GRAPH.links,
+    }));
+  }
+
+  let userGraph = graphPreset('sample');
+  let startNodeId = userGraph.nodes[0]?.id || null;
+  let selectedNodeId = null;
+
+  function nextNodeId() {
+    const used = new Set(userGraph.nodes.map(n => n.id));
+    for (let c = 65; c <= 90; c++) {
+      const id = String.fromCharCode(c);
+      if (!used.has(id)) return id;
+    }
+    let n = 27;
+    while (used.has(`N${n}`)) n++;
+    return `N${n}`;
+  }
+
+  function showGraphError(msg) {
+    if (!graphError) return;
+    graphError.textContent = msg;
+    graphError.style.display = 'block';
+    clearTimeout(graphError._t);
+    graphError._t = setTimeout(() => { graphError.style.display = 'none'; }, 3500);
+  }
+
+  function updateGraphMeta() {
+    if (graphStats) {
+      graphStats.textContent =
+        `${userGraph.nodes.length} nodes · ${userGraph.links.length} edges`;
+    }
+    if (startSelect) {
+      startSelect.innerHTML = userGraph.nodes
+        .map(n => `<option value="${n.id}"${n.id === startNodeId ? ' selected' : ''}>${n.id}</option>`)
+        .join('');
+    }
+  }
+
+  function resetTraceState() {
+    currentStepIdx = -1;
+    currentSteps = [];
+    stepBtn.disabled = true;
+    runBtn.disabled = false;
+    note.style.opacity = 0;
+    explanationBox.style.display = 'none';
+    status.className = 'eyebrow';
+    const counter = view.querySelector('#step-counter');
+    if (counter) counter.textContent = '';
+  }
+
+  function graphChanged() {
+    if (!userGraph.nodes.find(n => n.id === startNodeId)) {
+      startNodeId = userGraph.nodes[0]?.id || null;
+    }
+    selectedNodeId = null;
+    resetTraceState();
+    renderGraph(currentMeta);
+    updateGraphMeta();
+    buildWhatIfSliders();
+  }
+
   // ── Set scene based on algo name ──
   function resolveScene(algoName) {
     const map = {
@@ -179,21 +277,34 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     // Scene-specific background decoration
-    if (scene.renderBase) scene.renderBase(svg, DATA.SAMPLE_GRAPH, meta);
+    if (scene.renderBase) scene.renderBase(svg, userGraph, meta);
+
+    if (!userGraph.nodes.length) {
+      const hint = makeSVG("text");
+      hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
+      hint.setAttribute("text-anchor", "middle");
+      hint.setAttribute("fill", "var(--cDim)");
+      hint.setAttribute("font-family", "var(--font-pixel)");
+      hint.setAttribute("font-size", "9");
+      hint.textContent = "CLICK ANYWHERE TO ADD YOUR FIRST NODE";
+      svg.appendChild(hint);
+    }
 
     // Draw edges
-    DATA.SAMPLE_GRAPH.links.forEach(link => {
-      const source = DATA.SAMPLE_GRAPH.nodes.find(n => n.id === link.source);
-      const target = DATA.SAMPLE_GRAPH.nodes.find(n => n.id === link.target);
+    userGraph.links.forEach((link, idx) => {
+      const source = userGraph.nodes.find(n => n.id === link.source);
+      const target = userGraph.nodes.find(n => n.id === link.target);
+      if (!source || !target) return;
 
       const line = makeSVG("line");
       line.setAttribute("x1", source.x); line.setAttribute("y1", source.y);
       line.setAttribute("x2", target.x); line.setAttribute("y2", target.y);
       line.setAttribute("class", "edge");
       line.setAttribute("id", `edge-${link.source}-${link.target}`);
+      line.dataset.idx = idx;
       svg.appendChild(line);
 
-      // Edge weight label
+      // Edge weight label — click to edit, right-click to delete
       const tx = makeSVG("text");
       tx.setAttribute("x", (source.x + target.x) / 2);
       tx.setAttribute("y", (source.y + target.y) / 2 - 6);
@@ -201,17 +312,25 @@ export function mountEngine(view, algo = 'dijkstra') {
       tx.setAttribute("font-family", "var(--font-mono)");
       tx.setAttribute("font-size", "11");
       tx.setAttribute("text-anchor", "middle");
+      tx.setAttribute("class", "edge-weight");
+      tx.dataset.idx = idx;
+      tx.style.cursor = 'pointer';
       tx.textContent = scene.edgeLabel(link.weight);
       svg.appendChild(tx);
     });
 
     // Draw nodes
-    DATA.SAMPLE_GRAPH.nodes.forEach(node => {
+    userGraph.nodes.forEach(node => {
       const circle = makeSVG("circle");
       circle.setAttribute("cx", node.x); circle.setAttribute("cy", node.y);
       circle.setAttribute("r", "22");
       circle.setAttribute("class", "node");
       circle.setAttribute("id", `node-${node.id}`);
+      circle.style.cursor = 'pointer';
+      if (node.id === selectedNodeId) {
+        circle.style.stroke = 'var(--cAccent)';
+        circle.style.strokeWidth = '3';
+      }
       svg.appendChild(circle);
 
       // Node ID label
@@ -234,11 +353,22 @@ export function mountEngine(view, algo = 'dijkstra') {
       emojiText.textContent = label.split(' ')[0]; // just the emoji
       svg.appendChild(emojiText);
 
+      // Distance readout below node (filled in per-step for Dijkstra)
+      const distText = makeSVG("text");
+      distText.setAttribute("x", node.x);
+      distText.setAttribute("y", node.y + 38);
+      distText.setAttribute("text-anchor", "middle");
+      distText.setAttribute("fill", "var(--c)");
+      distText.setAttribute("font-family", "var(--font-mono)");
+      distText.setAttribute("font-size", "10");
+      distText.setAttribute("id", `dist-${node.id}`);
+      svg.appendChild(distText);
+
       // Full location name below node (for GPS scene)
       if (node.label && currentMeta?.scene === 'gps') {
         const nameText = makeSVG("text");
         nameText.setAttribute("x", node.x);
-        nameText.setAttribute("y", node.y + 38);
+        nameText.setAttribute("y", node.y + 51);
         nameText.setAttribute("text-anchor", "middle");
         nameText.setAttribute("fill", "var(--cDim)");
         nameText.setAttribute("font-family", "var(--font-mono)");
@@ -488,6 +618,194 @@ export function mountEngine(view, algo = 'dijkstra') {
     return { steps };
   }
 
+  // ── Graph editor ──
+  function svgCoords(e) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: Math.round((e.clientX - rect.left) * 760 / rect.width),
+      y: Math.round((e.clientY - rect.top) * 280 / rect.height),
+    };
+  }
+
+  function addNodeAt(x, y) {
+    if (userGraph.nodes.length >= GRAPH_LIMITS.nodes) {
+      showGraphError(`Max ${GRAPH_LIMITS.nodes} nodes — that's plenty for one trace.`);
+      return;
+    }
+    const id = nextNodeId();
+    userGraph.nodes.push({
+      id,
+      x: Math.min(Math.max(x, 30), 730),
+      y: Math.min(Math.max(y, 35), 240),
+    });
+    if (!startNodeId) startNodeId = id;
+    graphChanged();
+  }
+
+  function addEdge(a, b) {
+    if (a === b) return;
+    if (userGraph.links.length >= GRAPH_LIMITS.edges) {
+      showGraphError(`Max ${GRAPH_LIMITS.edges} edges.`);
+      return;
+    }
+    const exists = userGraph.links.some(l =>
+      (l.source === a && l.target === b) || (l.source === b && l.target === a));
+    if (exists) {
+      showGraphError('Those two are already connected — click the weight to change it.');
+      graphChanged();
+      return;
+    }
+    userGraph.links.push({ source: a, target: b, weight: 5 });
+    graphChanged();
+  }
+
+  function deleteNode(id) {
+    userGraph.nodes = userGraph.nodes.filter(n => n.id !== id);
+    userGraph.links = userGraph.links.filter(l => l.source !== id && l.target !== id);
+    graphChanged();
+  }
+
+  function deleteEdge(idx) {
+    if (Number.isNaN(idx)) return;
+    userGraph.links.splice(idx, 1);
+    graphChanged();
+  }
+
+  function editWeight(idx, anchorEl) {
+    const link = userGraph.links[idx];
+    const host = view.querySelector('#engine-view');
+    if (!link || !host) return;
+    host.style.position = 'relative';
+    host.querySelector('.weight-editor')?.remove();
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '0';
+    input.max = String(GRAPH_LIMITS.weight);
+    input.value = link.weight;
+    input.className = 'weight-editor';
+    const hostRect = host.getBoundingClientRect();
+    const aRect = anchorEl.getBoundingClientRect();
+    input.style.cssText = `position:absolute; width:72px; z-index:5;
+      left:${Math.round(aRect.left - hostRect.left - 12)}px;
+      top:${Math.round(aRect.top - hostRect.top - 10)}px;
+      background:rgba(2,4,6,0.95); color:var(--c); border:1px solid var(--cAccent);
+      font-family:var(--font-mono); font-size:0.9rem; padding:2px 6px; outline:none;`;
+
+    const commit = () => {
+      const w = Number(input.value);
+      input.remove();
+      if (!Number.isFinite(w) || w < 0 || w > GRAPH_LIMITS.weight) {
+        showGraphError(`Weight must be between 0 and ${GRAPH_LIMITS.weight.toLocaleString()}.`);
+        return;
+      }
+      link.weight = w;
+      graphChanged();
+    };
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') commit();
+      if (ev.key === 'Escape') input.remove();
+    });
+    input.addEventListener('blur', () => {
+      if (document.body.contains(input)) commit();
+    });
+    host.appendChild(input);
+    input.focus();
+    input.select();
+  }
+
+  function attachGraphEditor() {
+    svg.style.cursor = 'crosshair';
+
+    svg.addEventListener('click', (e) => {
+      const t = e.target;
+      if (t.classList?.contains('node')) {
+        const id = t.id.replace('node-', '');
+        resetTraceState();
+        if (selectedNodeId && selectedNodeId !== id) {
+          const from = selectedNodeId;
+          selectedNodeId = null;
+          addEdge(from, id);
+        } else if (selectedNodeId === id) {
+          selectedNodeId = null;
+          renderGraph(currentMeta);
+        } else {
+          selectedNodeId = id;
+          renderGraph(currentMeta);
+        }
+        return;
+      }
+      if (t.classList?.contains('edge-weight')) {
+        editWeight(Number(t.dataset.idx), t);
+        return;
+      }
+      if (t === svg) {
+        const { x, y } = svgCoords(e);
+        addNodeAt(x, y);
+      }
+    });
+
+    const deleteTarget = (t) => {
+      if (t.classList?.contains('node')) { deleteNode(t.id.replace('node-', '')); return true; }
+      if (t.classList?.contains('edge') || t.classList?.contains('edge-weight')) {
+        deleteEdge(Number(t.dataset.idx));
+        return true;
+      }
+      return false;
+    };
+
+    svg.addEventListener('contextmenu', (e) => {
+      if (deleteTarget(e.target)) e.preventDefault();
+    });
+
+    // Long-press delete for touch devices
+    let pressTimer = null;
+    svg.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'touch') return;
+      const t = e.target;
+      pressTimer = setTimeout(() => deleteTarget(t), 650);
+    });
+    ['pointerup', 'pointermove', 'pointercancel'].forEach(ev =>
+      svg.addEventListener(ev, () => clearTimeout(pressTimer)));
+
+    presetSelect?.addEventListener('change', () => {
+      userGraph = graphPreset(presetSelect.value);
+      startNodeId = userGraph.nodes[0]?.id || null;
+      graphChanged();
+    });
+    startSelect?.addEventListener('change', () => {
+      startNodeId = startSelect.value;
+      resetTraceState();
+      renderGraph(currentMeta);
+    });
+  }
+
+  function buildWhatIfSliders() {
+    const whatIfContainer = view.querySelector('#whatif-controls');
+    if (!whatIfContainer || traceView !== 'graph') return;
+    whatIfContainer.innerHTML = '';
+    userGraph.links.forEach((link, idx) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex; align-items:center; gap:1rem; font-family:var(--font-mono); font-size:0.9rem; color:var(--cDim);';
+      row.innerHTML = `
+        <span style="min-width:120px;">${link.source}→${link.target}</span>
+        <input type="range" min="1" max="${Math.max(30, link.weight)}" value="${link.weight}"
+          style="flex:1; accent-color:var(--c);"
+          id="whatif-${idx}">
+        <span id="whatif-val-${idx}" style="min-width:40px; color:var(--c);">${link.weight}</span>
+      `;
+      const slider = row.querySelector('input');
+      const valLabel = row.querySelector(`#whatif-val-${idx}`);
+      slider.addEventListener('input', () => {
+        userGraph.links[idx].weight = parseInt(slider.value);
+        valLabel.textContent = slider.value;
+        resetTraceState();
+        renderGraph(currentMeta);
+      });
+      whatIfContainer.appendChild(row);
+    });
+  }
+
   async function checkBackend() {
     try {
       await api.getAlgorithms();
@@ -500,10 +818,10 @@ export function mountEngine(view, algo = 'dijkstra') {
   }
 
   function localTrace(algorithm, startNode) {
-    // Local emulator for offline mode — Dijkstra and BFS
-    const nodes = DATA.SAMPLE_GRAPH.nodes.map(n => n.id);
+    // Local emulator for offline mode — Dijkstra and BFS on the user's graph
+    const nodes = userGraph.nodes.map(n => n.id);
     const adj = {};
-    DATA.SAMPLE_GRAPH.links.forEach(l => {
+    userGraph.links.forEach(l => {
       if (!adj[l.source]) adj[l.source] = [];
       if (!adj[l.target]) adj[l.target] = [];
       adj[l.source].push({ to: l.target, w: l.weight });
@@ -603,14 +921,23 @@ export function mountEngine(view, algo = 'dijkstra') {
             : { array: parsed.array };
           res = await api.postTrace(algoId, payload);
         }
-      } else if (isOffline) {
-        res = localTrace(algoId, 'A');
       } else {
-        const graph = {
-          nodes: DATA.SAMPLE_GRAPH.nodes,
-          edges: DATA.SAMPLE_GRAPH.links.map(l => [l.source, l.target, l.weight])
-        };
-        res = await api.postTrace(algoId, { start: 'A', graph });
+        if (!userGraph.nodes.length) {
+          status.innerHTML = 'STATUS: <span style="color:#ff5f5f">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
+          status.className = 'eyebrow';
+          runBtn.disabled = false;
+          return;
+        }
+        if (!startNodeId) startNodeId = userGraph.nodes[0].id;
+        if (isOffline) {
+          res = localTrace(algoId, startNodeId);
+        } else {
+          const graph = {
+            nodes: userGraph.nodes,
+            edges: userGraph.links.map(l => [l.source, l.target, l.weight])
+          };
+          res = await api.postTrace(algoId, { start: startNodeId, graph });
+        }
       }
       currentSteps = res.steps;
       currentStepIdx = -1;
@@ -629,9 +956,29 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (currentStepIdx >= currentSteps.length) {
       stepBtn.disabled = true;
       const lastStep = currentSteps[currentSteps.length - 1];
-      const doneMsg = lastStep?.structures?.found === false
+      let doneMsg = lastStep?.structures?.found === false
         ? 'Search complete — the target is not in this array.'
         : (currentMeta?.metaphors?.done || "ALGORITHM TRACE COMPLETE.");
+
+      // Call out unreachable nodes so disconnected graphs teach something
+      if (traceView === 'graph' && lastStep) {
+        const s = lastStep.structures || {};
+        let unreachable = [];
+        if (s.dist) {
+          unreachable = Object.keys(s.dist)
+            .filter(k => s.dist[k] === null || s.dist[k] === Infinity);
+        } else if (s.visited) {
+          unreachable = userGraph.nodes.map(n => n.id)
+            .filter(id => !s.visited.includes(id));
+        }
+        if (unreachable.length) {
+          doneMsg += ` ${unreachable.length} unreachable from ${startNodeId}: ${unreachable.join(', ')}.`;
+          unreachable.forEach(id => {
+            const el = svg.querySelector(`#dist-${id}`);
+            if (el) el.textContent = '—';
+          });
+        }
+      }
       note.textContent = doneMsg.toUpperCase();
       status.innerHTML = 'STATUS: <span style="color:var(--cBright)">TERMINATED</span>';
       status.className = 'eyebrow done';
@@ -666,6 +1013,17 @@ export function mountEngine(view, algo = 'dijkstra') {
         const t = Array.isArray(edgeData) ? edgeData[1] : edgeData.target;
         const edgeEl = svg.querySelector(`#edge-${s}-${t}`) || svg.querySelector(`#edge-${t}-${s}`);
         if (edgeEl) edgeEl.classList.add('active');
+      }
+
+      // Live distance readout (Dijkstra steps carry a dist table)
+      const dist = step.structures?.dist;
+      if (dist) {
+        userGraph.nodes.forEach(n => {
+          const el = svg.querySelector(`#dist-${n.id}`);
+          if (!el) return;
+          const v = dist[n.id];
+          el.textContent = (v === null || v === undefined || v === Infinity) ? '∞' : fmt(v);
+        });
       }
     }
 
@@ -765,38 +1123,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       return;
     }
 
+    if (graphControls) graphControls.style.display = 'block';
+    updateGraphMeta();
+    attachGraphEditor();
     renderGraph(currentMeta);
     checkBackend();
-
-    // Build "What If" sliders for each edge weight
-    const whatIfContainer = view.querySelector('#whatif-controls');
-    if (whatIfContainer) {
-      DATA.SAMPLE_GRAPH.links.forEach((link, idx) => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex; align-items:center; gap:1rem; font-family:var(--font-mono); font-size:0.9rem; color:var(--cDim);';
-        row.innerHTML = `
-          <span style="min-width:120px;">${link.source}→${link.target}</span>
-          <input type="range" min="1" max="30" value="${link.weight}"
-            style="flex:1; accent-color:var(--c);"
-            id="whatif-${idx}">
-          <span id="whatif-val-${idx}" style="min-width:40px; color:var(--c);">${link.weight}</span>
-        `;
-        const slider = row.querySelector('input');
-        const valLabel = row.querySelector(`#whatif-val-${idx}`);
-        slider.addEventListener('input', () => {
-          DATA.SAMPLE_GRAPH.links[idx].weight = parseInt(slider.value);
-          valLabel.textContent = slider.value;
-          renderGraph(currentMeta);
-          // Reset trace
-          currentStepIdx = -1;
-          currentSteps = [];
-          stepBtn.disabled = true;
-          runBtn.disabled = false;
-          note.style.opacity = 0;
-        });
-        whatIfContainer.appendChild(row);
-      });
-    }
+    buildWhatIfSliders();
   }
 
   init();

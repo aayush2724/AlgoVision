@@ -281,6 +281,41 @@ export const PAGES = {
             color:var(--inkDim); font-family:var(--font-body);"></div>
         </div>
 
+        <div id="graph-controls" class="panel" style="display:none; margin-bottom:1.5rem;
+          border-top:2px solid var(--cAccent);">
+          <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR GRAPH</span>
+          <div style="display:flex; gap:1.25rem; flex-wrap:wrap; align-items:center;">
+            <label style="display:flex; align-items:center; gap:0.5rem;
+              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              PRESET
+              <select id="preset-select" style="background:var(--bg1); border:1px solid var(--panel-border);
+                color:var(--ink); font-family:var(--font-body); font-size:0.8rem; padding:0.35rem 0.6rem;
+                border-radius:0; outline:none;">
+                <option value="sample">City map</option>
+                <option value="tree">Small tree</option>
+                <option value="disconnected">Disconnected</option>
+                <option value="clear">Empty (build your own)</option>
+              </select>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem;
+              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              START
+              <select id="start-select" style="background:var(--bg1); border:1px solid var(--panel-border);
+                color:var(--ink); font-family:var(--font-body); font-size:0.8rem; padding:0.35rem 0.6rem;
+                border-radius:0; outline:none;"></select>
+            </label>
+            <span id="graph-stats" style="font-family:var(--font-mono); font-size:0.8rem;
+              color:var(--cDim);"></span>
+          </div>
+          <div style="margin-top:0.6rem; font-size:0.8rem; color:var(--inkDim);
+            font-family:var(--font-body);">
+            Click empty space to add a node &middot; click two nodes to connect them &middot;
+            click a weight to edit it &middot; right-click (or long-press) a node or edge to delete
+          </div>
+          <div id="graph-error" style="display:none; margin-top:0.5rem; font-size:0.8rem;
+            color:#ff5f5f; font-family:var(--font-mono);"></div>
+        </div>
+
         <div class="panel" style="margin-bottom:1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">

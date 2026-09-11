@@ -1,11 +1,13 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
+import re as _re
+
 from app.tracers import (
     balanced_brackets, bfs, binary_search, bst_insert, bst_search,
     bubble_sort, dfs, dijkstra, fibonacci_dp, heap_insert, insertion_sort,
-    kadanes, linked_list_reverse, merge_sort, quick_sort, selection_sort,
-    sliding_window, two_sum_sorted,
+    kadanes, knapsack_01, lcs, linked_list_reverse, merge_sort, quick_sort,
+    selection_sort, sliding_window, two_sum_sorted,
 )
 from app.tracers.common import Graph
 import os
@@ -66,6 +68,8 @@ def algorithms():
             {"id": "two_sum_sorted", "name": "Two Sum (Two Pointers)",  "input": "array"},
             {"id": "sliding_window", "name": "Max Window Sum (Sliding Window)", "input": "array"},
             {"id": "kadanes",       "name": "Max Subarray (Kadane's)",  "input": "array"},
+            {"id": "knapsack_01",   "name": "0/1 Knapsack (DP Grid)",   "input": "text"},
+            {"id": "lcs",           "name": "Longest Common Subsequence", "input": "text"},
             {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
         ]
     }
@@ -211,6 +215,56 @@ def run_trace(request: Request, req: TraceRequest):
       arr = _validated_array(req.array, kadanes.MAX_ARRAY_LEN, "kadanes")
       return kadanes.trace(arr)
 
+    if req.algorithm == "knapsack_01":
+      if req.text is None or req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="knapsack_01 requires 'text' (weight:value pairs, e.g. "
+                 "'2:3,3:4') and 'target' (the capacity)."
+        )
+      cleaned = req.text.replace(" ", "")
+      if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail="Items must be weight:value pairs — e.g. 2:3,3:4,4:5"
+        )
+      items = [tuple(int(x) for x in p.split(":")) for p in cleaned.split(",")]
+      if len(items) > knapsack_01.MAX_ITEMS:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Max {knapsack_01.MAX_ITEMS} items."
+        )
+      if any(w < 1 or w > knapsack_01.MAX_WEIGHT_VALUE
+             or v < 1 or v > knapsack_01.MAX_WEIGHT_VALUE for w, v in items):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Weights and values must be 1..{knapsack_01.MAX_WEIGHT_VALUE}."
+        )
+      cap = req.target
+      if cap != int(cap) or int(cap) < 1 or int(cap) > knapsack_01.MAX_CAPACITY:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Capacity must be a whole number 1..{knapsack_01.MAX_CAPACITY}."
+        )
+      return knapsack_01.trace(items, int(cap))
+
+    if req.algorithm == "lcs":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="lcs requires 'text' — two words separated by a comma."
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{lcs.MAX_LEN}}},[A-Z0-9]{{1,{lcs.MAX_LEN}}}",
+                           cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Provide two words (letters/digits, 1-{lcs.MAX_LEN} chars "
+                 f"each) separated by a comma — e.g. ABCBDAB,BDCAB"
+        )
+      a, b = cleaned.split(",")
+      return lcs.trace(a, b)
+
     if req.algorithm == "fibonacci_dp":
       if req.target is None:
         raise HTTPException(
@@ -228,6 +282,7 @@ def run_trace(request: Request, req: TraceRequest):
     valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
              + ["bst_insert", "bst_search", "heap_insert",
                 "two_sum_sorted", "sliding_window", "kadanes",
+                "knapsack_01", "lcs",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

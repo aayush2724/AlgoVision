@@ -162,6 +162,17 @@ const SCENES = {
     stepNarrate(step, meta) {
       return `${step.note || "Tracking the run..."}`;
     }
+  },
+  dna: {
+    label: "GENE LAB",
+    color: "#5fd6e6",
+    accentColor: "#a9f0fa",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `🧬 ${id}`,
+    edgeLabel: (w) => `alignment`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Aligning strands..."}`;
+    }
   }
 };
 
@@ -186,6 +197,7 @@ const VIEW_FOR = {
   linked_list_reverse: 'list', balanced_brackets: 'stack',
   bst_insert: 'tree', bst_search: 'tree', heap_insert: 'tree',
   two_sum_sorted: 'array', sliding_window: 'array', kadanes: 'array',
+  knapsack_01: 'grid', lcs: 'grid',
   fibonacci_dp: 'table',
 };
 
@@ -202,6 +214,8 @@ function resolveAlgoId(raw) {
     ['bubble_sort', 'bubble_sort'], ['bubblesort', 'bubble_sort'], ['bubble', 'bubble_sort'],
     ['insertion_sort', 'insertion_sort'], ['insertionsort', 'insertion_sort'], ['insertion', 'insertion_sort'],
     ['selection_sort', 'selection_sort'], ['selectionsort', 'selection_sort'], ['selection', 'selection_sort'],
+    ['knapsack_01', 'knapsack_01'], ['knapsack', 'knapsack_01'],
+    ['lcs', 'lcs'], ['longestcommon', 'lcs'], ['dna', 'lcs'], ['editdistance', 'lcs'],
     ['two_sum_sorted', 'two_sum_sorted'], ['twosum', 'two_sum_sorted'],
     ['two_pointers', 'two_sum_sorted'], ['twopointer', 'two_sum_sorted'],
     ['market', 'two_sum_sorted'],
@@ -246,6 +260,7 @@ const COUNT_LABELS = {
   insertions: 'INSERTIONS', checks: 'CHECKS', moves: 'MOVES',
   additions: 'ADDITIONS', windows: 'WINDOWS',
   extensions: 'EXTENSIONS', restarts: 'RESTARTS', steps: 'STEPS',
+  cells: 'CELLS', takes: 'TAKES', skips: 'SKIPS', matches: 'MATCHES',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -292,6 +307,7 @@ export function mountEngine(view, algo = 'dijkstra') {
   let currentScene = null; // stores scene renderer
   let currentArrayValues = [];
   let traceSummary = '';   // end-of-trace message (unreachable nodes, not-found…)
+  let currentTraceMeta = null;  // meta of the loaded trace (grid labels, results…)
   let playTimer = null;
   let compareData = null;  // { bfs: steps[], dijkstra: steps[] }
   let compareIdx = 0;
@@ -418,6 +434,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       linked_list_reverse: 'train', balanced_brackets: 'plates',
       bst_insert: 'files', bst_search: 'files', heap_insert: 'scheduler',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
+      knapsack_01: 'vault', lcs: 'dna',
     };
     return map[algoName] || 'gps';
   }
@@ -719,6 +736,14 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '3, 9, 5, 1, 12, 8',
       hint: 'Max-heap: every parent ≥ its children. Watch new values bubble up.',
     },
+    knapsack_01: {
+      array: '2:3, 3:4, 4:5, 5:6', target: '8',
+      hint: 'weight:value pairs (up to 6 items) and a capacity (1–10). Every cell of the DP table, solved once.',
+    },
+    lcs: {
+      array: 'ABCBDAB, BDCAB',
+      hint: 'Two words (letters/digits, up to 8 chars each). The traceback at the end reveals the shared sequence.',
+    },
     fibonacci_dp: {
       target: '10',
       hint: 'Pick n (0–18) — watch the memo vault fill; cache hits glow green.',
@@ -738,6 +763,31 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (raw.length > 20) return { error: 'Max 20 characters.' };
       if (!/^[()\[\]{}]+$/.test(raw)) return { error: 'Only brackets: ( ) [ ] { }' };
       return { text: raw };
+    }
+    if (traceView === 'grid') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (algoId === 'knapsack_01') {
+        if (!/^\d+:\d+(,\d+:\d+)*$/.test(raw)) {
+          return { error: 'Items as weight:value pairs — e.g. 2:3, 3:4, 4:5' };
+        }
+        const items = raw.split(',').map(p => p.split(':').map(Number));
+        if (items.length > 6) return { error: 'Max 6 items.' };
+        if (items.some(([w, v]) => w < 1 || w > 20 || v < 1 || v > 20)) {
+          return { error: 'Weights and values must be 1–20.' };
+        }
+        const cap = Number((targetInput?.value || '').trim());
+        if (!Number.isFinite(cap) || cap !== Math.floor(cap) || cap < 1 || cap > 10) {
+          return { error: 'Capacity must be a whole number 1–10.' };
+        }
+        return { text: raw, target: cap, items };
+      }
+      // lcs
+      const up = raw.toUpperCase();
+      if (!/^[A-Z0-9]{1,8},[A-Z0-9]{1,8}$/.test(up)) {
+        return { error: 'Two words (letters/digits, 1–8 chars each), comma-separated.' };
+      }
+      const [a, b] = up.split(',');
+      return { text: up, a, b };
     }
     const raw = (arrayInput?.value || '').trim();
     const parts = raw.split(/[\s,;]+/).filter(Boolean);
@@ -1225,6 +1275,102 @@ export function mountEngine(view, algo = 'dijkstra') {
     svg.appendChild(g);
   }
 
+  // ── Grid view (2-D DP tables: knapsack, LCS) ──
+  function renderGridView() {
+    svg.innerHTML = '';
+    const scene = SCENES[currentMeta?.scene] || SCENES.vault;
+    currentScene = scene;
+
+    const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
+    sceneLabel.setAttribute("fill", "var(--cDim)");
+    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-size", "8");
+    sceneLabel.textContent = scene.label;
+    svg.appendChild(sceneLabel);
+
+    const hint = makeSVG("text");
+    hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
+    hint.setAttribute("text-anchor", "middle");
+    hint.setAttribute("fill", "var(--cDim)");
+    hint.setAttribute("font-family", "var(--font-pixel)");
+    hint.setAttribute("font-size", "8");
+    hint.setAttribute("id", "grid-hint");
+    hint.textContent = "PRESS RUN TO FILL THE TABLE";
+    svg.appendChild(hint);
+  }
+
+  function renderGridStep(step) {
+    const s = step.structures || {};
+    svg.querySelector('#grid-hint')?.remove();
+    svg.querySelector('#grid-decor')?.remove();
+    const g = makeSVG('g');
+    g.setAttribute('id', 'grid-decor');
+
+    const grid = s.grid || [];
+    if (!grid.length) { svg.appendChild(g); return; }
+    const rowLabels = currentTraceMeta?.row_labels || grid.map((_, i) => String(i));
+    const colLabels = currentTraceMeta?.col_labels || (grid[0] || []).map((_, i) => String(i));
+    const rows = grid.length, cols = (grid[0] || []).length;
+    const cw = Math.min(64, 690 / (cols + 1));
+    const ch = Math.min(34, 235 / (rows + 1));
+    const x0 = (760 - cw * (cols + 1)) / 2;
+    const y0 = 32;
+    const pathSet = new Set((s.path || []).map(([r, c]) => `${r}|${c}`));
+    const depSet = new Set((s.deps || []).map(([r, c]) => `${r}|${c}`));
+
+    const text = (x, y, str, fill, size, family = 'var(--font-mono)') => {
+      const t = makeSVG('text');
+      t.setAttribute('x', x); t.setAttribute('y', y);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', fill);
+      t.setAttribute('font-family', family);
+      t.setAttribute('font-size', size);
+      t.textContent = str;
+      g.appendChild(t);
+    };
+
+    // Headers
+    colLabels.forEach((lab, c) => {
+      text(x0 + cw * (c + 1) + cw / 2, y0 + ch / 2 + 3, lab, 'var(--cDim)', '9');
+    });
+    rowLabels.forEach((lab, r) => {
+      text(x0 + cw / 2, y0 + ch * (r + 1) + ch / 2 + 3,
+        String(lab).slice(0, 8), 'var(--cDim)', '8');
+    });
+
+    // Cells
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const v = grid[r][c];
+        const filled = v !== null && v !== undefined;
+        const isCurrent = r === s.row && c === s.col;
+        const isDep = depSet.has(`${r}|${c}`);
+        const onPath = pathSet.has(`${r}|${c}`);
+        const rect = makeSVG('rect');
+        rect.setAttribute('x', x0 + cw * (c + 1) + 1);
+        rect.setAttribute('y', y0 + ch * (r + 1) + 1);
+        rect.setAttribute('width', cw - 2);
+        rect.setAttribute('height', ch - 2);
+        rect.setAttribute('fill', onPath ? 'rgba(74,222,128,0.22)'
+          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(255,107,0,0.18)')
+          : isDep ? 'rgba(0,212,255,0.14)'
+          : filled ? 'rgba(0,212,255,0.05)' : 'rgba(0,0,0,0.15)');
+        rect.setAttribute('stroke', onPath ? '#4ade80'
+          : isCurrent ? (s.match ? '#4ade80' : 'var(--cAccent)')
+          : isDep ? 'var(--c)' : 'var(--cDim)');
+        rect.setAttribute('stroke-width', isCurrent || onPath ? '2' : '0.75');
+        g.appendChild(rect);
+        if (filled) {
+          text(x0 + cw * (c + 1) + cw / 2, y0 + ch * (r + 1) + ch / 2 + 3.5,
+            fmt(v), 'var(--cBright)', ch < 26 ? '9' : '11');
+        }
+      }
+    }
+
+    svg.appendChild(g);
+  }
+
   // Offline emulator for the array algorithms — mirrors the backend step shapes.
   function localArrayTrace(parsed) {
     if (algoId === 'fibonacci_dp') {
@@ -1398,6 +1544,103 @@ export function mountEngine(view, algo = 'dijkstra') {
       }
       add(`Reached an empty branch — ${fmt(target)} is not in the tree.`, null, false);
       return { steps };
+    }
+
+    if (algoId === 'knapsack_01') {
+      const items = parsed.items, W = parsed.target;
+      const n = items.length;
+      const grid = Array.from({ length: n + 1 }, () => Array(W + 1).fill(null));
+      const steps = [];
+      const counts = { cells: 0, takes: 0, skips: 0 };
+      const add = (note2, row = null, col = null, deps = [], choice = null) =>
+        steps.push({
+          i: steps.length,
+          structures: { grid: grid.map(r => r.slice()), row, col, deps,
+            choice, path: [], counts: { ...counts } },
+          highlight: { index: col }, note: note2,
+        });
+      const meta = {
+        row_labels: ['no items', ...items.map(([w, v]) => `w${w}·v${v}`)],
+        col_labels: Array.from({ length: W + 1 }, (_, c) => String(c)),
+      };
+      add(`Pack a capacity-${W} bag from ${n} items.`);
+      for (let c = 0; c <= W; c++) grid[0][c] = 0;
+      add('Row 0: with no items, every capacity holds value 0.', 0);
+      for (let i = 1; i <= n; i++) {
+        const [w, v] = items[i - 1];
+        for (let c = 0; c <= W; c++) {
+          counts.cells++;
+          if (w > c) {
+            grid[i][c] = grid[i - 1][c];
+            counts.skips++;
+            add(`Item ${i} (weight ${w}) doesn't fit in ${c} — copy from above.`,
+              i, c, [[i - 1, c]], 'skip');
+          } else {
+            const skipV = grid[i - 1][c];
+            const takeV = grid[i - 1][c - w] + v;
+            grid[i][c] = Math.max(skipV, takeV);
+            if (takeV > skipV) counts.takes++; else counts.skips++;
+            add(`Capacity ${c}: ${takeV > skipV ? 'take' : 'skip'} item ${i} — ` +
+              `max(${skipV}, ${takeV}) = ${grid[i][c]}.`,
+              i, c, [[i - 1, c], [i - 1, c - w]], takeV > skipV ? 'take' : 'skip');
+          }
+        }
+      }
+      add(`Table complete — best value ${grid[n][W]} for capacity ${W}.`, n, W);
+      return { steps, meta };
+    }
+
+    if (algoId === 'lcs') {
+      const a = parsed.a, b = parsed.b;
+      const n = a.length, m = b.length;
+      const grid = Array.from({ length: n + 1 }, () => Array(m + 1).fill(null));
+      const steps = [];
+      const counts = { cells: 0, matches: 0 };
+      const path = [];
+      const add = (note2, row = null, col = null, deps = [], match = null) =>
+        steps.push({
+          i: steps.length,
+          structures: { grid: grid.map(r => r.slice()), row, col, deps, match,
+            path: path.map(p => p.slice()), counts: { ...counts } },
+          highlight: { index: col }, note: note2,
+        });
+      const meta = { row_labels: ['∅', ...a], col_labels: ['∅', ...b] };
+      add(`Find the longest subsequence common to '${a}' and '${b}'.`);
+      for (let c = 0; c <= m; c++) grid[0][c] = 0;
+      for (let r = 0; r <= n; r++) grid[r][0] = 0;
+      add('Row 0 and column 0: against an empty string, the LCS is empty.', 0);
+      for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= m; j++) {
+          counts.cells++;
+          if (a[i - 1] === b[j - 1]) {
+            grid[i][j] = grid[i - 1][j - 1] + 1;
+            counts.matches++;
+            add(`'${a[i - 1]}' matches — diagonal + 1 = ${grid[i][j]}.`,
+              i, j, [[i - 1, j - 1]], true);
+          } else {
+            grid[i][j] = Math.max(grid[i - 1][j], grid[i][j - 1]);
+            add(`No match — carry max(${grid[i - 1][j]}, ${grid[i][j - 1]}) = ${grid[i][j]}.`,
+              i, j, [[i - 1, j], [i, j - 1]], false);
+          }
+        }
+      }
+      let i = n, j = m;
+      const chars = [];
+      add(`Table complete — LCS length ${grid[n][m]}. Walk back to recover it.`, n, m);
+      while (i > 0 && j > 0) {
+        if (a[i - 1] === b[j - 1]) {
+          chars.push(a[i - 1]);
+          path.push([i, j]);
+          add(`'${a[i - 1]}' is part of the LCS — step diagonally.`, i, j, [], true);
+          i--; j--;
+        } else if (grid[i - 1][j] >= grid[i][j - 1]) {
+          i--; add('Follow the larger neighbour upward.', i, j);
+        } else {
+          j--; add('Follow the larger neighbour leftward.', i, j);
+        }
+      }
+      add(`The longest common subsequence is '${chars.reverse().join('')}'.`);
+      return { steps, meta };
     }
 
     if (algoId === 'two_sum_sorted') {
@@ -2172,6 +2415,12 @@ export function mountEngine(view, algo = 'dijkstra') {
             ? { array: parsed.array, target: parsed.target }
             : { array: parsed.array };
           res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
+        } else if (traceView === 'grid') {
+          renderGridView();
+          const payload = algoId === 'knapsack_01'
+            ? { text: parsed.text, target: parsed.target }
+            : { text: parsed.text };
+          res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
         } else {
           renderArrayView(parsed.array);
           if (isOffline) {
@@ -2203,7 +2452,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = await api.postTrace(algoId, { start: startNodeId, graph });
         }
       }
-      loadTrace(res.steps);
+      loadTrace(res.steps, res.meta);
     } catch (e) {
       console.error(e);
       status.innerHTML = 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
@@ -2237,8 +2486,9 @@ export function mountEngine(view, algo = 'dijkstra') {
     return msg.trim();
   }
 
-  function loadTrace(steps) {
+  function loadTrace(steps, meta) {
     currentSteps = steps || [];
+    currentTraceMeta = meta || null;
     if (!currentSteps.length) { resetTraceState(); return; }
     Progress.recordTraceRun(algoId);
     traceSummary = computeTraceSummary();
@@ -2312,6 +2562,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     else if (traceView === 'list') renderListStep(step);
     else if (traceView === 'stack') renderStackStep(step);
     else if (traceView === 'tree') renderTreeStep(step);
+    else if (traceView === 'grid') renderGridStep(step);
     else renderGraphStep(step, currentStepIdx);
 
     let narration = step.note || "Processing...";
@@ -2589,6 +2840,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       renderStackView(currentStackText);
     } else if (traceView === 'tree') {
       renderTreeView();
+    } else if (traceView === 'grid') {
+      renderGridView();
     } else {
       renderGraph(currentMeta);
     }
@@ -2634,12 +2887,13 @@ export function mountEngine(view, algo = 'dijkstra') {
         arrayInput.value = defaults.array;
       }
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
-        'sliding_window'].includes(algoId) || traceView === 'table';
+        'sliding_window', 'knapsack_01'].includes(algoId) || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
         const targetLabel = view.querySelector('#target-label');
         if (targetLabel && algoId === 'sliding_window') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'knapsack_01') targetLabel.textContent = 'CAP =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.
@@ -2650,6 +2904,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       else if (traceView === 'list') renderListView(parsed.array || []);
       else if (traceView === 'stack') renderStackView(parsed.text || '');
       else if (traceView === 'tree') renderTreeView();
+      else if (traceView === 'grid') renderGridView();
       else renderArrayView(parsed.array || []);
       checkBackend();
       initComplexityCard();

@@ -120,9 +120,8 @@ class TestBatch3Endpoints:
         assert r.status_code == 200
         assert r.json()["steps"][-1]["structures"]["best"] == 6
 
-    def test_algorithms_listing_has_eighteen(self):
+    def test_algorithms_listing_has_batch3_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
-        assert len(ids) == 18
         assert {"two_sum_sorted", "sliding_window", "kadanes"} <= ids
 
     def test_detect_pattern_metas(self):

@@ -9,12 +9,13 @@ students **run it on their own input, step by step, and analyse the cost**.
 
 ## What it actually does
 
-- **18 live algorithm tracers** — Dijkstra, BFS, DFS, Binary Search, Merge /
+- **20 live algorithm tracers** — Dijkstra, BFS, DFS, Binary Search, Merge /
   Quick / Bubble / Insertion / Selection Sort, Linked-List Reversal, Balanced
   Brackets (stack), BST build & search, Max-Heap build, Two Sum (two
-  pointers), Sliding Window, Kadane's Max Subarray, and memoized Fibonacci
-  (DP) — every step computed by the backend from *your* input, never a
-  canned animation.
+  pointers), Sliding Window, Kadane's Max Subarray, memoized Fibonacci,
+  0/1 Knapsack, and Longest Common Subsequence (full DP grids with
+  traceback) — every step computed by the backend from *your* input, never
+  a canned animation.
 - **Bring your own data** — build a graph by clicking (add/delete nodes and
   edges, edit weights, pick the start node, teaching presets including a
   disconnected graph), paste your own numbers for the array algorithms, pick

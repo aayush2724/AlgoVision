@@ -36,6 +36,8 @@ SIGNATURES = {
     "two_sum_sorted": ["two_sum_sorted", "two sum", "two_sum", "twosum", "two pointer", "while left < right", "pair with sum"],
     "sliding_window": ["sliding_window", "sliding window", "window sum", "window size", "subarray of size"],
     "kadanes": ["kadane", "kadanes", "max subarray", "maximum subarray", "max_ending_here", "best sum"],
+    "knapsack_01": ["knapsack", "knapsack_01", "0/1 knapsack", "capacity", "weights[", "values["],
+    "lcs": ["lcs", "longest common subsequence", "common subsequence", "edit distance"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
 }
 
@@ -108,6 +110,32 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "knapsack_01": {
+        "scene": "vault",
+        "title": "Cargo Hold Packing",
+        "hook": "A limited hold, priceless cargo — every subproblem solved exactly once.",
+        "metaphors": {
+            "node": "cargo crate",
+            "edge": "packing choice",
+            "weight": "crate weight",
+            "visit": "Weighing take vs skip",
+            "start": "An empty hold",
+            "done": "The manifest is optimal — guaranteed."
+        }
+    },
+    "lcs": {
+        "scene": "dna",
+        "title": "Genome Alignment Lab",
+        "hook": "Two DNA strands — find the longest sequence they share.",
+        "metaphors": {
+            "node": "base pair",
+            "edge": "alignment",
+            "weight": "match length",
+            "visit": "Comparing bases",
+            "start": "Two raw strands",
+            "done": "The shared sequence is isolated."
         }
     },
     "two_sum_sorted": {

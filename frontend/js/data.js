@@ -291,6 +291,20 @@ export const COMPLEXITY = {
       `${Math.max(1, Math.ceil(Math.log2(Math.max(s.n, 2))))} levels. ` +
       `The maximum is always at the root, for free.`,
   },
+  knapsack_01: {
+    rows: [["Time", "O(n·W)"], ["Naive subsets", "O(2ⁿ)"], ["Space", "O(n·W)"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cells filled — each subproblem solved exactly once ` +
+      `(${c.takes ?? 0} takes, ${c.skips ?? 0} skips). Trying every subset ` +
+      `would mean 2ⁿ combinations; the table makes it a grid walk.`,
+  },
+  lcs: {
+    rows: [["Time", "O(n·m)"], ["Naive", "O(2ⁿ)"], ["Space", "O(n·m)"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cells with ${c.matches ?? 0} character matches — then a ` +
+      `single traceback walk recovers the actual sequence. Without the table, ` +
+      `you'd compare exponentially many subsequences.`,
+  },
   fibonacci_dp: {
     rows: [["Time (memoized)", "O(n)"], ["Time (naive)", "O(2ⁿ)"], ["Space", "O(n)"]],
     reading: (c, s) =>

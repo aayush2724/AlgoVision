@@ -33,7 +33,9 @@ SIGNATURES = {
     "bst_search": ["bst_search", "search bst", "find in tree", "tree search"],
     "heap_insert": ["heap_insert", "heapify", "bubble up", "sift up", "max heap", "min heap", "binary heap", "max-heap"],
     "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming", "fibonacci", "fibonacci_dp", "fib("],
-    "two_pointers": ["two pointer", "left", "right", "while left < right", "sliding window"],
+    "two_sum_sorted": ["two_sum_sorted", "two sum", "two_sum", "twosum", "two pointer", "while left < right", "pair with sum"],
+    "sliding_window": ["sliding_window", "sliding window", "window sum", "window size", "subarray of size"],
+    "kadanes": ["kadane", "kadanes", "max subarray", "maximum subarray", "max_ending_here", "best sum"],
     "greedy": ["greedy", "interval", "sort(", "local optimal", "activity selection"],
 }
 
@@ -106,6 +108,45 @@ REALWORLD_META = {
             "merge": "Combining sorted groups",
             "start": "Unsorted leaderboard",
             "done": "Global leaderboard ready."
+        }
+    },
+    "two_sum_sorted": {
+        "scene": "market",
+        "title": "Supermarket Pairing",
+        "hook": "Find two items that together hit the target price exactly.",
+        "metaphors": {
+            "node": "item",
+            "edge": "pairing",
+            "weight": "price",
+            "visit": "Checking a pair",
+            "start": "Cheapest and priciest items in hand",
+            "done": "Pairing settled in one pass."
+        }
+    },
+    "sliding_window": {
+        "scene": "stocks",
+        "title": "Best Sales Week",
+        "hook": "Slide a fixed window over daily sales — never re-add what you already know.",
+        "metaphors": {
+            "node": "day",
+            "edge": "streak",
+            "weight": "revenue",
+            "visit": "Sliding the window",
+            "start": "The first k days",
+            "done": "Best stretch found without recounting."
+        }
+    },
+    "kadanes": {
+        "scene": "stocks",
+        "title": "Best Stock Run",
+        "hook": "Find the most profitable streak — extend the run, or cut your losses.",
+        "metaphors": {
+            "node": "day",
+            "edge": "streak",
+            "weight": "gain/loss",
+            "visit": "Extending the run",
+            "start": "Day one",
+            "done": "The best run is locked in."
         }
     },
     "bst_insert": {

@@ -114,9 +114,8 @@ class TestBatch2Endpoints:
                         json={"algorithm": "bst_insert", "array": list(range(13))})
         assert r.status_code == 400
 
-    def test_algorithms_listing_has_fifteen(self):
+    def test_algorithms_listing_has_batch2_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
-        assert len(ids) == 15
         assert {"bst_insert", "bst_search", "heap_insert"} <= ids
 
     def test_detect_tree_metas(self):

@@ -4,7 +4,8 @@ from pydantic import BaseModel, Field
 from app.tracers import (
     balanced_brackets, bfs, binary_search, bst_insert, bst_search,
     bubble_sort, dfs, dijkstra, fibonacci_dp, heap_insert, insertion_sort,
-    linked_list_reverse, merge_sort, quick_sort, selection_sort,
+    kadanes, linked_list_reverse, merge_sort, quick_sort, selection_sort,
+    sliding_window, two_sum_sorted,
 )
 from app.tracers.common import Graph
 import os
@@ -62,6 +63,9 @@ def algorithms():
             {"id": "bst_insert",    "name": "BST — Build by Insertion", "input": "array"},
             {"id": "bst_search",    "name": "BST — Search",             "input": "array"},
             {"id": "heap_insert",   "name": "Max-Heap — Build",         "input": "array"},
+            {"id": "two_sum_sorted", "name": "Two Sum (Two Pointers)",  "input": "array"},
+            {"id": "sliding_window", "name": "Max Window Sum (Sliding Window)", "input": "array"},
+            {"id": "kadanes",       "name": "Max Subarray (Kadane's)",  "input": "array"},
             {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
         ]
     }
@@ -174,6 +178,39 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return bst_search.trace(arr, req.target)
 
+    if req.algorithm == "two_sum_sorted":
+      arr = _validated_array(req.array, two_sum_sorted.MAX_ARRAY_LEN, "two_sum_sorted")
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="two_sum_sorted requires a 'target' sum."
+        )
+      if any(arr[i] > arr[i + 1] for i in range(len(arr) - 1)):
+        raise HTTPException(
+          status_code=400,
+          detail="Two-pointer Two Sum requires a sorted array — sort your input first."
+        )
+      return two_sum_sorted.trace(arr, req.target)
+
+    if req.algorithm == "sliding_window":
+      arr = _validated_array(req.array, sliding_window.MAX_ARRAY_LEN, "sliding_window")
+      k = req.target
+      if k is None:
+        raise HTTPException(
+          status_code=400,
+          detail="sliding_window requires 'target' — the window size k."
+        )
+      if k != int(k) or int(k) < 1 or int(k) > len(arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Window size k must be a whole number between 1 and {len(arr)}."
+        )
+      return sliding_window.trace(arr, int(k))
+
+    if req.algorithm == "kadanes":
+      arr = _validated_array(req.array, kadanes.MAX_ARRAY_LEN, "kadanes")
+      return kadanes.trace(arr)
+
     if req.algorithm == "fibonacci_dp":
       if req.target is None:
         raise HTTPException(
@@ -190,6 +227,7 @@ def run_trace(request: Request, req: TraceRequest):
 
     valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
              + ["bst_insert", "bst_search", "heap_insert",
+                "two_sum_sorted", "sliding_window", "kadanes",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

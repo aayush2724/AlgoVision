@@ -140,6 +140,28 @@ const SCENES = {
     stepNarrate(step, meta) {
       return `${step.note || "Sorting the waiting room..."}`;
     }
+  },
+  market: {
+    label: "SUPERMARKET",
+    color: "#5fd6e6",
+    accentColor: "#a9f0fa",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `🛒 ${id}`,
+    edgeLabel: (w) => `pairing`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Checking prices..."}`;
+    }
+  },
+  stocks: {
+    label: "MARKET CHART",
+    color: "#a9f0fa",
+    accentColor: "#5fd6e6",
+    renderBase(svg, graph, meta) {},
+    nodeLabel: (id) => `📈 ${id}`,
+    edgeLabel: (w) => `streak`,
+    stepNarrate(step, meta) {
+      return `${step.note || "Tracking the run..."}`;
+    }
   }
 };
 
@@ -163,6 +185,7 @@ const VIEW_FOR = {
   bubble_sort: 'array', insertion_sort: 'array', selection_sort: 'array',
   linked_list_reverse: 'list', balanced_brackets: 'stack',
   bst_insert: 'tree', bst_search: 'tree', heap_insert: 'tree',
+  two_sum_sorted: 'array', sliding_window: 'array', kadanes: 'array',
   fibonacci_dp: 'table',
 };
 
@@ -179,6 +202,13 @@ function resolveAlgoId(raw) {
     ['bubble_sort', 'bubble_sort'], ['bubblesort', 'bubble_sort'], ['bubble', 'bubble_sort'],
     ['insertion_sort', 'insertion_sort'], ['insertionsort', 'insertion_sort'], ['insertion', 'insertion_sort'],
     ['selection_sort', 'selection_sort'], ['selectionsort', 'selection_sort'], ['selection', 'selection_sort'],
+    ['two_sum_sorted', 'two_sum_sorted'], ['twosum', 'two_sum_sorted'],
+    ['two_pointers', 'two_sum_sorted'], ['twopointer', 'two_sum_sorted'],
+    ['market', 'two_sum_sorted'],
+    ['sliding_window', 'sliding_window'], ['slidingwindow', 'sliding_window'],
+    ['windowslide', 'sliding_window'],
+    ['kadane', 'kadanes'], ['maxsubarray', 'kadanes'], ['stockchart', 'kadanes'],
+    ['stocks', 'kadanes'],
     ['binarysearchtree', 'bst_insert'], ['bst_search', 'bst_search'],
     ['bst_insert', 'bst_insert'], ['bst', 'bst_insert'], ['files', 'bst_insert'],
     ['heap_insert', 'heap_insert'], ['heapify', 'heap_insert'], ['heap', 'heap_insert'],
@@ -213,7 +243,9 @@ const COUNT_LABELS = {
   calls: 'CALLS', cache_hits: 'CACHE HITS', computes: 'COMPUTES',
   passes: 'PASSES', shifts: 'SHIFTS', inserts: 'INSERTS',
   flips: 'FLIPS', pushes: 'PUSHES', pops: 'POPS',
-  insertions: 'INSERTIONS',
+  insertions: 'INSERTIONS', checks: 'CHECKS', moves: 'MOVES',
+  additions: 'ADDITIONS', windows: 'WINDOWS',
+  extensions: 'EXTENSIONS', restarts: 'RESTARTS', steps: 'STEPS',
 };
 
 function countChips(counts, fontSize = '7px') {
@@ -385,6 +417,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       selection_sort: 'leaderboard',
       linked_list_reverse: 'train', balanced_brackets: 'plates',
       bst_insert: 'files', bst_search: 'files', heap_insert: 'scheduler',
+      two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
     };
     return map[algoName] || 'gps';
   }
@@ -596,6 +629,24 @@ export function mountEngine(view, algo = 'dijkstra') {
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
           cell.setAttribute("stroke-width", "2");
         }
+      } else if (algoId === 'two_sum_sorted') {
+        const inRange = s.left != null && idx >= s.left && idx <= s.right;
+        if (!inRange && g) g.setAttribute("opacity", "0.22");
+        if (idx === s.left || idx === s.right) {
+          cell.setAttribute("fill", s.found
+            ? "rgba(74,222,128,0.2)" : "rgba(255,107,0,0.18)");
+          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
+          cell.setAttribute("stroke-width", "2");
+        }
+      } else if (algoId === 'sliding_window' || algoId === 'kadanes') {
+        const inBest = s.best_window && idx >= s.best_window[0] && idx <= s.best_window[1];
+        const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
+        if (inBest) cell.setAttribute("stroke", "#4ade80");
+        if (inWindow) {
+          cell.setAttribute("fill", "rgba(255,107,0,0.14)");
+          if (!inBest) cell.setAttribute("stroke", "var(--cAccent)");
+          cell.setAttribute("stroke-width", inBest ? "2.5" : "1.5");
+        }
       } else {
         const inSorted = (s.sorted_ranges || []).some(r => idx >= r[0] && idx <= r[1]);
         if (inSorted) cell.setAttribute("stroke", "#4ade80");
@@ -644,6 +695,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '({[]})',
       hint: 'Brackets only: ( ) [ ] { } — up to 20. Try breaking it: (] or ((',
     },
+    two_sum_sorted: {
+      array: '1, 3, 5, 7, 9, 12', target: '16',
+      hint: 'Sorted values + a target sum. Two pointers converge from both ends — one pass, no nested loops.',
+    },
+    sliding_window: {
+      array: '4, 2, 9, 7, 1, 8, 6', target: '3',
+      hint: 'K is the window size. Slide it across — drop one value, add one value, never recount.',
+    },
+    kadanes: {
+      array: '-2, 1, -3, 4, -1, 2, 1, -5, 4',
+      hint: 'Negatives welcome — that\'s the whole point. Extend the run or cut your losses.',
+    },
     bst_insert: {
       array: '8, 3, 10, 1, 6, 14, 4',
       hint: 'Up to 12 values — try inserting sorted numbers and watch the tree degenerate into a chain.',
@@ -690,6 +753,21 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (algoId === 'bst_search') {
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isFinite(t)) return { error: 'Enter a numeric target to search for.' };
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'two_sum_sorted') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t)) return { error: 'Enter a numeric target sum.' };
+      const sorted = values.slice().sort((a, b) => a - b);
+      const sortedForYou = sorted.some((v, i) => v !== values[i]);
+      return { array: sorted, target: t, sortedForYou };
+    }
+
+    if (algoId === 'sliding_window') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t) || t !== Math.floor(t)) return { error: 'Window size k must be a whole number.' };
+      if (t < 1 || t > values.length) return { error: `Keep k between 1 and ${values.length}.` };
       return { array: values, target: t };
     }
 
@@ -1319,6 +1397,100 @@ export function mountEngine(view, algo = 'dijkstra') {
         cur = nxt;
       }
       add(`Reached an empty branch — ${fmt(target)} is not in the tree.`, null, false);
+      return { steps };
+    }
+
+    if (algoId === 'two_sum_sorted') {
+      const arr = parsed.array, target = parsed.target;
+      const steps = [];
+      const counts = { checks: 0, moves: 0 };
+      const add = (note2, left = null, right = null, sum = null, found = null) =>
+        steps.push({
+          i: steps.length,
+          structures: { left, right, sum, found, counts: { ...counts } },
+          highlight: { index: left }, note: note2,
+        });
+      if (arr.length < 2) { add('Fewer than two values — no pair to find.', null, null, null, false); return { steps }; }
+      let left = 0, right = arr.length - 1;
+      add(`Find two values summing to ${fmt(target)} — pointers start at both ends.`, left, right);
+      while (left < right) {
+        const s = arr[left] + arr[right];
+        counts.checks++;
+        if (s === target) {
+          add(`${fmt(arr[left])} + ${fmt(arr[right])} = ${fmt(target)} — pair found!`, left, right, s, true);
+          return { steps };
+        }
+        if (s < target) {
+          add(`Sum ${fmt(s)} is too small — move the left pointer right.`, left, right, s);
+          left++; counts.moves++;
+        } else {
+          add(`Sum ${fmt(s)} is too big — move the right pointer left.`, left, right, s);
+          right--; counts.moves++;
+        }
+      }
+      add(`Pointers met — no pair sums to ${fmt(target)}.`, left, right, null, false);
+      return { steps };
+    }
+
+    if (algoId === 'sliding_window') {
+      const arr = parsed.array, k = parsed.target;
+      const steps = [];
+      const counts = { additions: 0, windows: 0 };
+      const add = (note2, window = null, sum = null, best = null, bw = null) =>
+        steps.push({
+          i: steps.length,
+          structures: { window, sum, best, best_window: bw, counts: { ...counts } },
+          highlight: { index: window ? window[1] : null }, note: note2,
+        });
+      add(`Find the size-${k} window with the biggest sum — drop one, add one.`);
+      let cur = arr.slice(0, k).reduce((a, b) => a + b, 0);
+      counts.additions += k; counts.windows++;
+      let best = cur, bw = [0, k - 1];
+      add(`First window [0..${k - 1}] sums to ${fmt(cur)}.`, [0, k - 1], cur, best, bw.slice());
+      for (let i = k; i < arr.length; i++) {
+        cur = cur - arr[i - k] + arr[i];
+        counts.additions++; counts.windows++;
+        const w = [i - k + 1, i];
+        const isBest = cur > best;
+        if (isBest) { best = cur; bw = w.slice(); }
+        add(`Slide: drop ${fmt(arr[i - k])}, add ${fmt(arr[i])} — sum ${fmt(cur)}.${isBest ? ' New best!' : ''}`,
+          w, cur, best, bw.slice());
+      }
+      add(`Done — best window [${bw[0]}..${bw[1]}] sums to ${fmt(best)}.`, null, cur, best, bw.slice());
+      return { steps };
+    }
+
+    if (algoId === 'kadanes') {
+      const arr = parsed.array;
+      const steps = [];
+      const counts = { steps: 0, extensions: 0, restarts: 0 };
+      const add = (note2, window = null, sum = null, best = null, bw = null) =>
+        steps.push({
+          i: steps.length,
+          structures: { window, sum, best, best_window: bw, counts: { ...counts } },
+          highlight: { index: window ? window[1] : null }, note: note2,
+        });
+      if (!arr.length) { add('An empty array has no subarray to maximize.'); return { steps }; }
+      add('Extend the current run, or cut losses and restart — one pass.');
+      let cur = arr[0], start = 0, best = arr[0], bw = [0, 0];
+      counts.steps++;
+      add(`Start the run at ${fmt(arr[0])}.`, [0, 0], cur, best, bw.slice());
+      for (let i = 1; i < arr.length; i++) {
+        const v = arr[i];
+        counts.steps++;
+        let note2;
+        if (cur + v < v) {
+          cur = v; start = i; counts.restarts++;
+          note2 = `The old run would drag ${fmt(v)} down — restart here.`;
+        } else {
+          cur += v; counts.extensions++;
+          note2 = `Extend the run with ${fmt(v)} — run sum ${fmt(cur)}.`;
+        }
+        const w = [start, i];
+        if (cur > best) { best = cur; bw = w.slice(); note2 += ' New best!'; }
+        add(note2, w, cur, best, bw.slice());
+      }
+      add(`Best run [${bw[0]}..${bw[1]}] with sum ${fmt(best)}.`, null, cur, best, bw.slice());
       return { steps };
     }
 
@@ -1976,7 +2148,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
         if (parsed.sortedForYou && arrayHint) {
           arrayHint.textContent =
-            'Heads up: your numbers were sorted first — binary search only works on sorted data.';
+            'Heads up: your numbers were sorted first — this algorithm only works on sorted data.';
         }
         if (traceView === 'table') {
           renderTableView(parsed.target);
@@ -2005,7 +2177,9 @@ export function mountEngine(view, algo = 'dijkstra') {
           if (isOffline) {
             res = localArrayTrace(parsed);
           } else {
-            const payload = algoId === 'binary_search'
+            const needsTarget = ['binary_search', 'two_sum_sorted', 'sliding_window']
+              .includes(algoId);
+            const payload = needsTarget
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
             res = await api.postTrace(algoId, payload);
@@ -2459,9 +2633,13 @@ export function mountEngine(view, algo = 'dijkstra') {
       } else if (arrayInput && !arrayInput.value) {
         arrayInput.value = defaults.array;
       }
-      if ((algoId === 'binary_search' || algoId === 'bst_search' || traceView === 'table') && targetWrap) {
+      const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
+        'sliding_window'].includes(algoId) || traceView === 'table';
+      if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
+        const targetLabel = view.querySelector('#target-label');
+        if (targetLabel && algoId === 'sliding_window') targetLabel.textContent = 'K =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

@@ -248,6 +248,27 @@ export const COMPLEXITY = {
       `${c.pushes ?? 0} pushes and ${c.pops ?? 0} pops — each symbol touched ` +
       `once. The stack's depth is the price of remembering what's still open.`,
   },
+  two_sum_sorted: {
+    rows: [["Time", "O(n)"], ["Naive pairs", "O(n²)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.checks ?? 0} pair checks and ${c.moves ?? 0} pointer moves for ${s.n} values — ` +
+      `the naive approach would test up to ${(s.n * (s.n - 1)) / 2} pairs. ` +
+      `Sorted order lets each check discard a whole line of candidates.`,
+  },
+  sliding_window: {
+    rows: [["Time", "O(n)"], ["Naive", "O(n·k)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.additions ?? 0} additions across ${c.windows ?? 0} windows — ` +
+      `recomputing every window from scratch would cost far more. ` +
+      `Drop one, add one: that's the whole trick.`,
+  },
+  kadanes: {
+    rows: [["Time", "O(n)"], ["Naive subarrays", "O(n²)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `One pass: ${c.extensions ?? 0} extensions and ${c.restarts ?? 0} restarts over ` +
+      `${s.n} values. Checking every subarray would mean ~${(s.n * (s.n + 1)) / 2} sums — ` +
+      `Kadane's insight makes all but ${s.n} of them unnecessary.`,
+  },
   bst_insert: {
     rows: [["Avg insert", "O(log n)"], ["Worst (sorted input)", "O(n)"], ["Space", "O(n)"]],
     reading: (c, s) =>

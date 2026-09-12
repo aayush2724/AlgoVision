@@ -14,11 +14,6 @@ export const HERO = {
   ghostCTA: "View A2Z Roadmap"
 };
 
-export const MARQUEE = [
-  "Dynamic Programming", "Graph Theory", "Binary Search", "Recursion",
-  "Trees", "Sorting", "Greedy", "Backtracking", "Bit Manipulation"
-];
-
 export const ACTS = [
   { title: "The Hook",     desc: "Every algorithm starts with a real-world problem worth solving. We set the stage with cinematic metaphors.", icon: "01" },
   { title: "The Reveal",   desc: "Watch the mechanics unfold in real-time. Animated graphs reveal the 'why' behind the 'how'.", icon: "02" },
@@ -26,6 +21,65 @@ export const ACTS = [
 ];
 
 export const CATEGORIES = ["All", "Foundations", "Structures", "Mastery"];
+
+// Every traceable algorithm, in one place. The Explore page, the engine's
+// quick-switcher and compare mode all read from this — add a tracer here and
+// it becomes discoverable everywhere.
+export const ALGO_CATEGORIES = ["All", "Graphs", "Sorting", "Searching", "Patterns", "Structures", "DP"];
+
+export const ALGORITHMS = [
+  { id: "dijkstra",     name: "Dijkstra's Shortest Path", category: "Graphs", emoji: "📍", complexity: "O((V+E) log V)", input: "graph",
+    hook: "Find the fastest route through a city." },
+  { id: "bfs",          name: "Breadth-First Search",     category: "Graphs", emoji: "👤", complexity: "O(V + E)",       input: "graph",
+    hook: "Explore the network level by level." },
+  { id: "dfs",          name: "Depth-First Search",       category: "Graphs", emoji: "🗺️", complexity: "O(V + E)",       input: "graph",
+    hook: "Dive deep, backtrack, map every corridor." },
+  { id: "prims_mst",    name: "Prim's Spanning Tree",     category: "Graphs", emoji: "⚡", complexity: "O(E log V)",     input: "graph",
+    hook: "Wire every town with the least cable possible." },
+  { id: "kruskals_mst", name: "Kruskal's MST (Union-Find)", category: "Graphs", emoji: "🌉", complexity: "O(E log E)",   input: "graph",
+    hook: "Cheapest bridges first — but never close a cycle." },
+
+  { id: "merge_sort",     name: "Merge Sort",     category: "Sorting", emoji: "🏆", complexity: "O(n log n)", input: "array",
+    hook: "Divide the chaos. Merge into order." },
+  { id: "quick_sort",     name: "Quick Sort",     category: "Sorting", emoji: "🎯", complexity: "O(n log n)", input: "array",
+    hook: "Pick a pivot — the crowd splits around it." },
+  { id: "bubble_sort",    name: "Bubble Sort",    category: "Sorting", emoji: "🫧", complexity: "O(n²)",      input: "array",
+    hook: "Heavy values sink, light ones rise." },
+  { id: "insertion_sort", name: "Insertion Sort", category: "Sorting", emoji: "🃏", complexity: "O(n²)",      input: "array",
+    hook: "Pick up a card, slide it into place." },
+  { id: "selection_sort", name: "Selection Sort", category: "Sorting", emoji: "🥇", complexity: "O(n²)",      input: "array",
+    hook: "Crown the champion of what's left. Repeat." },
+
+  { id: "binary_search", name: "Binary Search", category: "Searching", emoji: "📚", complexity: "O(log n)", input: "array",
+    hook: "Halve the search space with every guess." },
+  { id: "bst_search",    name: "BST Search",    category: "Searching", emoji: "🔎", complexity: "O(log n)", input: "array",
+    hook: "Each comparison discards a whole subtree." },
+
+  { id: "two_sum_sorted", name: "Two Sum (Two Pointers)", category: "Patterns", emoji: "🛒", complexity: "O(n)", input: "array",
+    hook: "Two pointers converge on the target sum." },
+  { id: "sliding_window", name: "Sliding Window",         category: "Patterns", emoji: "📈", complexity: "O(n)", input: "array",
+    hook: "Drop one, add one — never recount." },
+  { id: "kadanes",        name: "Kadane's Max Subarray",  category: "Patterns", emoji: "💹", complexity: "O(n)", input: "array",
+    hook: "Extend the run, or cut your losses." },
+
+  { id: "linked_list_reverse", name: "Reverse a Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)",     input: "array",
+    hook: "Flip every coupling, one pointer at a time." },
+  { id: "balanced_brackets",   name: "Balanced Brackets",     category: "Structures", emoji: "🍽️", complexity: "O(n)",     input: "text",
+    hook: "The stack remembers what's still open." },
+  { id: "bst_insert",          name: "BST — Build a Tree",    category: "Structures", emoji: "📁", complexity: "O(log n)", input: "array",
+    hook: "Every value finds its own branch." },
+  { id: "heap_insert",         name: "Max-Heap — Build",      category: "Structures", emoji: "🏥", complexity: "O(log n)", input: "array",
+    hook: "The most urgent always rises to the top." },
+
+  { id: "fibonacci_dp", name: "Fibonacci (Memoized)",       category: "DP", emoji: "💾", complexity: "O(n)",   input: "number",
+    hook: "Remember the past to conquer the future." },
+  { id: "knapsack_01",  name: "0/1 Knapsack",               category: "DP", emoji: "🎒", complexity: "O(n·W)", input: "text",
+    hook: "A limited hold, priceless cargo." },
+  { id: "lcs",          name: "Longest Common Subsequence", category: "DP", emoji: "🧬", complexity: "O(n·m)", input: "text",
+    hook: "Find the sequence two strands share." },
+];
+
+export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
 
 export const WORLDS = [
   { name: "The Leaderboard",    metaphor: "Sorting",       category: "Foundations", emoji: "📊", hook: "Organize the chaos, one swap at a time.",          complexity: "O(n log n)", algo: "sorting"       },

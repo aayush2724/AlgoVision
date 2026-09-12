@@ -43,43 +43,27 @@ export const PAGES = {
   "#/": {
     title: "AlgoVision · See the algorithm before the code",
     html: () => `
-      <section class="hero">
-        <div class="hero-eyebrow">ALGORITHM VISUALIZATION ENGINE · A2Z ROADMAP</div>
-        <h1 class="hero-title">
-          <span class="hero-line hero-line-outline">SEE THE</span>
-          <span class="hero-line hero-line-accent">ALGO-</span>
-          <span class="hero-line hero-line-filled">RITHM</span>
-        </h1>
-        <p class="hero-sub">Turn complex data structures into cinematic visual journeys — real-world metaphors, live step-by-step traces, and AI-powered explanations.</p>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <span class="hero-stat-num">${DATA.A2Z_STEPS.reduce((s, st) => s + (st.problems || []).length, 0)}</span>
-            <span class="hero-stat-label">Problems</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-num">${DATA.A2Z_STEPS.length}</span>
-            <span class="hero-stat-label">Steps</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-num">12</span>
-            <span class="hero-stat-label">3D Scenes</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-num">${DATA.WORLDS.length}</span>
-            <span class="hero-stat-label">Algo Worlds</span>
-          </div>
+      <section class="hero hero-kbd">
+        <div id="kbd-stage" class="kbd-stage"></div>
+        <div class="kbd-corner kbd-tl">
+          <span class="kbd-tiny-label">KEYS EXPLORED</span>
+          <span id="kbd-count" class="kbd-count">0 / ${DATA.ALGORITHMS.length}</span>
         </div>
-        <div class="hero-cta">
-          <a href="#/explore" class="btn btn-primary">Start Exploring →</a>
-          <a href="#/a2z" class="btn btn-ghost">A2Z Roadmap</a>
+        <div class="kbd-corner kbd-tc">
+          <span class="kbd-tc-brand">AlgoVision</span>
+          <span class="kbd-tc-sub">A Display of Algorithms</span>
+        </div>
+        <div class="kbd-corner kbd-ml">
+          <span class="kbd-tiny-label">NAVIGATION</span>
+          <div class="kbd-legend"><span>DRAG</span><em>ROTATE</em></div>
+          <div class="kbd-legend"><span>SCROLL</span><em>ZOOM</em></div>
+          <div class="kbd-legend"><span>CLICK KEY</span><em>TRACE IT</em></div>
+        </div>
+        <div class="kbd-corner kbd-br">
+          <a href="#/explore">ALL ALGORITHMS →</a>
+          <a href="#/a2z">A2Z ROADMAP →</a>
         </div>
       </section>
-
-      <div class="marquee-wrap">
-        <div class="marquee" id="marquee-inner">
-          ${[...DATA.MARQUEE, ...DATA.MARQUEE, ...DATA.MARQUEE].map(m => `<span>${m}</span>`).join('')}
-        </div>
-      </div>
 
       <section>
         <div class="section-label">
@@ -113,7 +97,7 @@ export const PAGES = {
       </section>
 
       <section style="padding-bottom:6rem;">
-        <div class="panel" style="max-width:680px; margin:0 auto; padding:3rem 2.5rem; border-top:3px solid var(--cAccent);">
+        <div class="panel" style="max-width:680px; margin:0 auto; padding:3rem 2.5rem; border-top:3px solid var(--c);">
           <div class="section-label">
             <span class="eyebrow" style="margin:0;">QUICK START</span>
           </div>
@@ -122,7 +106,7 @@ export const PAGES = {
           <div class="paste-detect-panel">
             <div id="paste-detect-status" style="display:none; font-family:var(--font-mono);
               font-size:1rem; color:var(--c); margin-bottom:1rem; padding:0.6rem 1rem;
-              border-left:3px solid var(--cAccent); background:rgba(168,85,247,0.04);">
+              border-left:3px solid var(--c); background:rgba(212, 96, 44,0.04);">
             </div>
             <textarea id="hero-paste-area"
               style="width:100%; height:130px; background:rgba(2,4,6,0.9); color:var(--c);
@@ -139,9 +123,27 @@ export const PAGES = {
       </section>
     `,
     mount: (view) => {
-      const marquee = view.querySelector('#marquee-inner');
-      if (marquee && typeof gsap !== 'undefined') {
-        gsap.to(marquee, { xPercent: -33.33, duration: 28, ease: 'none', repeat: -1 });
+      // ── The keyboard ──
+      const stage = view.querySelector('#kbd-stage');
+      const countEl = view.querySelector('#kbd-count');
+      if (stage) {
+        import('./keyboard3d.js').then(({ initKeyboard }) => {
+          // Guard: user may have navigated away while the module loaded
+          if (!document.body.contains(stage)) return;
+          const kbd = initKeyboard(stage, {
+            onCount: (n, total) => {
+              if (countEl) countEl.textContent = `${n} / ${total}`;
+            },
+          });
+          // Dispose with the page — hook into the router's DOM teardown
+          const mo = new MutationObserver(() => {
+            if (!document.body.contains(stage)) { kbd.dispose(); mo.disconnect(); }
+          });
+          mo.observe(document.getElementById('app'), { childList: true });
+        }).catch(e => {
+          console.warn('Keyboard unavailable:', e);
+          stage.innerHTML = '<p style="padding:2rem;">3D not available on this device — <a href="#/explore" style="color:var(--c)">browse the algorithm index instead →</a></p>';
+        });
       }
 
       const pasteArea    = view.querySelector('#hero-paste-area');
@@ -208,37 +210,74 @@ export const PAGES = {
   },
 
   "#/explore": {
-    title: "AlgoVision · Explore Worlds",
+    title: "AlgoVision · Explore Algorithms",
     html: () => `
       <section>
         <div class="section-label">
-          <span class="eyebrow" style="margin:0;">WORLD SELECTION</span>
+          <span class="eyebrow" style="margin:0;">ALGORITHM INDEX</span>
         </div>
-        <h1 style="font-family:var(--font-display2); font-size:clamp(3rem,7vw,6rem); letter-spacing:0.04em; margin-bottom:0.5rem;">ALGORITHM WORLDS</h1>
-        <p style="margin-bottom:2.5rem;">Each world frames a classic algorithm as a real-world story. Click any card to watch it run live.</p>
+        <h1 style="font-family:var(--font-display2); font-size:clamp(3rem,7vw,6rem); letter-spacing:0.04em; margin-bottom:0.5rem;">EVERY ALGORITHM</h1>
+        <p style="margin-bottom:2rem;">All ${DATA.ALGORITHMS.length} trace live on your own input — pick one and watch it run, step by step.</p>
+
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:2rem;">
+          <input id="algo-search" type="search" placeholder="Search algorithms…" autocomplete="off"
+            style="flex:1; min-width:220px; background:rgba(2,4,6,0.9); color:var(--c);
+            font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
+            border:1px solid var(--panel-border); outline:none; border-radius:0;">
+          <span id="algo-count" style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);"></span>
+        </div>
+
         <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2.5rem;">
-          ${DATA.CATEGORIES.map(cat => `<button class="btn filter-btn" data-cat="${cat}">${cat}</button>`).join('')}
+          ${DATA.ALGO_CATEGORIES.map(cat => `<button class="btn filter-btn" data-cat="${cat}">${cat}</button>`).join('')}
         </div>
-        <div class="grid-3" id="worlds-grid">
-          ${DATA.WORLDS.map(w => renderWorldCard(w)).join('')}
-        </div>
+        <div class="grid-3" id="algo-grid"></div>
+        <p id="algo-empty" style="display:none; font-family:var(--font-mono); color:var(--cDim);">
+          No algorithm matches that search.
+        </p>
       </section>
     `,
     mount: (view) => {
-      const grid = view.querySelector('#worlds-grid');
+      const grid = view.querySelector('#algo-grid');
+      const search = view.querySelector('#algo-search');
+      const countEl = view.querySelector('#algo-count');
+      const emptyEl = view.querySelector('#algo-empty');
       const btns = view.querySelectorAll('.filter-btn');
+      let cat = 'All';
+
+      const card = (a) => `
+        <a href="#/experience?algo=${a.id}" class="world-card">
+          <span class="world-card-complexity">${a.complexity}</span>
+          <span class="world-card-emoji">${a.emoji}</span>
+          <span class="world-card-metaphor">${a.category}</span>
+          <h3>${a.name}</h3>
+          <p>${a.hook}</p>
+          <div class="world-card-cta">Trace it <span style="margin-left:0.25rem;">→</span></div>
+        </a>`;
+
+      function render() {
+        const q = (search?.value || '').trim().toLowerCase();
+        const list = DATA.ALGORITHMS.filter(a =>
+          (cat === 'All' || a.category === cat) &&
+          (!q || a.name.toLowerCase().includes(q) || a.hook.toLowerCase().includes(q) ||
+           a.category.toLowerCase().includes(q) || a.id.includes(q)));
+        grid.innerHTML = list.map(card).join('');
+        if (countEl) countEl.textContent = `${list.length} / ${DATA.ALGORITHMS.length} SHOWN`;
+        if (emptyEl) emptyEl.style.display = list.length ? 'none' : 'block';
+        import('./animations.js').then(m => m.revealView(grid));
+      }
+
       const allBtn = view.querySelector('.filter-btn[data-cat="All"]');
       if (allBtn) allBtn.classList.add('active');
       btns.forEach(btn => {
         btn.addEventListener('click', () => {
           btns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          const cat = btn.dataset.cat;
-          const filtered = cat === "All" ? DATA.WORLDS : DATA.WORLDS.filter(w => w.category === cat);
-          grid.innerHTML = filtered.map(w => renderWorldCard(w)).join('');
-          import('./animations.js').then(m => m.revealView(grid));
+          cat = btn.dataset.cat;
+          render();
         });
       });
+      search?.addEventListener('input', render);
+      render();
     }
   },
 
@@ -253,15 +292,32 @@ export const PAGES = {
         <div class="section-label">
           <span class="eyebrow" style="margin:0;">LIVE EXECUTION ENGINE</span>
         </div>
-        <h1 id="experience-title" style="font-family:var(--font-display2); font-size:clamp(3rem,6vw,5rem); letter-spacing:0.04em;">${displayName.toUpperCase()}</h1>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;
+          gap:1rem; flex-wrap:wrap;">
+          <h1 id="experience-title" style="font-family:var(--font-display2); font-size:clamp(3rem,6vw,5rem); letter-spacing:0.04em; margin-bottom:0;">${displayName.toUpperCase()}</h1>
+          <label style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.6rem;
+            font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);">
+            SWITCH
+            <select id="algo-switch" style="background:var(--bg1); border:1px solid var(--panel-border);
+              color:var(--ink); font-family:var(--font-body); font-size:0.85rem;
+              padding:0.45rem 0.7rem; border-radius:0; outline:none; max-width:260px;">
+              ${DATA.ALGO_CATEGORIES.filter(c => c !== 'All').map(cat => `
+                <optgroup label="${cat}">
+                  ${DATA.ALGORITHMS.filter(a => a.category === cat).map(a =>
+                    `<option value="${a.id}"${a.id === algo ? ' selected' : ''}>${a.emoji} ${a.name}</option>`
+                  ).join('')}
+                </optgroup>`).join('')}
+            </select>
+          </label>
+        </div>
 
         <div id="scene-hook" style="display:none; font-family:var(--font-mono);
           font-size:1.05rem; color:var(--cDim); margin-bottom:2rem; padding:0.85rem 1.25rem;
-          border-left:3px solid var(--cAccent); background:rgba(168,85,247,0.04);">
+          border-left:3px solid var(--c); background:rgba(212, 96, 44,0.04);">
         </div>
 
-        <div id="array-controls" class="panel" style="display:none; margin-bottom:1.5rem;
-          border-top:2px solid var(--cAccent);">
+        <div id="array-controls" class="panel is-hidden" style="margin-bottom:1.5rem;
+          border-top:2px solid var(--c);">
           <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR DATA</span>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
             <input id="array-input" type="text" spellcheck="false"
@@ -270,7 +326,7 @@ export const PAGES = {
               font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
               border:1px solid var(--panel-border); outline:none; border-radius:0;">
             <span id="target-wrap" style="display:none; align-items:center; gap:0.5rem;
-              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);">
               <span id="target-label">TARGET</span>
               <input id="target-input" type="text" inputmode="numeric"
                 style="width:80px; background:rgba(2,4,6,0.9); color:var(--c);
@@ -282,12 +338,12 @@ export const PAGES = {
             color:var(--inkDim); font-family:var(--font-body);"></div>
         </div>
 
-        <div id="graph-controls" class="panel" style="display:none; margin-bottom:1.5rem;
-          border-top:2px solid var(--cAccent);">
+        <div id="graph-controls" class="panel is-hidden" style="margin-bottom:1.5rem;
+          border-top:2px solid var(--c);">
           <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR GRAPH</span>
           <div style="display:flex; gap:1.25rem; flex-wrap:wrap; align-items:center;">
             <label style="display:flex; align-items:center; gap:0.5rem;
-              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);">
               PRESET
               <select id="preset-select" style="background:var(--bg1); border:1px solid var(--panel-border);
                 color:var(--ink); font-family:var(--font-body); font-size:0.8rem; padding:0.35rem 0.6rem;
@@ -299,7 +355,7 @@ export const PAGES = {
               </select>
             </label>
             <label style="display:flex; align-items:center; gap:0.5rem;
-              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);">
+              font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);">
               START
               <select id="start-select" style="background:var(--bg1); border:1px solid var(--panel-border);
                 color:var(--ink); font-family:var(--font-body); font-size:0.8rem; padding:0.35rem 0.6rem;
@@ -322,10 +378,12 @@ export const PAGES = {
             margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
             <div style="display:flex; align-items:center; gap:1rem;">
               <div id="engine-status" class="eyebrow" style="margin:0;">STATUS: IDLE</div>
-              <div id="step-counter" style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></div>
+              <div id="step-counter" style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);"></div>
             </div>
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
               <button id="run-btn" class="btn btn-primary" style="font-size:0.85rem;">▶ RUN</button>
+              <button id="challenge-btn" class="btn" style="font-size:0.85rem;">🎮 Challenge</button>
+              <span id="combo-chip" class="combo-chip is-hidden">COMBO ×0</span>
               <button id="prev-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>← PREV</button>
               <button id="play-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>▶ PLAY</button>
               <button id="step-btn" class="btn btn-ghost" style="font-size:0.85rem;" disabled>NEXT →</button>
@@ -337,7 +395,7 @@ export const PAGES = {
                 <option value="2">2×</option>
               </select>
               <button id="reset-btn" class="btn" style="font-size:0.85rem;">↺ RESET</button>
-              <button id="compare-btn" class="btn" style="font-size:0.85rem; display:none;">⚖ COMPARE</button>
+              <button id="compare-btn" class="btn is-hidden" style="font-size:0.85rem;">⚖ COMPARE</button>
             </div>
           </div>
 
@@ -352,7 +410,7 @@ export const PAGES = {
 
           <div id="scrub-row" style="display:none; margin-top:1rem; align-items:center; gap:1rem;">
             <input type="range" id="step-slider" min="0" max="0" value="0"
-              style="flex:1; width:100%; accent-color:var(--cAccent);">
+              style="flex:1; width:100%; accent-color:var(--c);">
           </div>
           <div id="counter-panel" style="display:none; margin-top:0.85rem; gap:0.5rem; flex-wrap:wrap;"></div>
 
@@ -365,7 +423,7 @@ export const PAGES = {
           </details>
         </div>
 
-        <div id="compare-panel" class="panel" style="display:none; margin-bottom:1.5rem; border-top:2px solid var(--c);">
+        <div id="compare-panel" class="panel is-hidden" style="margin-bottom:1.5rem; border-top:2px solid var(--c);">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
             <span class="eyebrow" style="margin:0;">SAME GRAPH · TWO ALGORITHMS</span>
@@ -373,37 +431,38 @@ export const PAGES = {
               <button id="compare-prev" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">←</button>
               <button id="compare-play" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">▶</button>
               <button id="compare-next" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">→</button>
-              <span id="compare-step-label" style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></span>
+              <span id="compare-step-label" style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);"></span>
             </div>
           </div>
           <input type="range" id="compare-slider" min="0" max="0" value="0"
-            style="width:100%; accent-color:var(--cAccent); margin-bottom:1rem;">
+            style="width:100%; accent-color:var(--c); margin-bottom:1rem;">
           <div id="compare-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+            ${['a', 'b'].map((side, i) => `
             <div>
-              <div style="font-family:var(--font-pixel); font-size:8px; color:var(--c); margin-bottom:0.5rem;">
-                BFS <span id="compare-total-bfs" style="color:var(--cDim);"></span></div>
-              <svg id="compare-svg-bfs" viewBox="0 0 760 280"
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+                <select id="compare-pick-${side}" style="background:var(--bg1);
+                  border:1px solid ${i === 0 ? 'var(--c)' : 'var(--c)'};
+                  color:var(--ink); font-family:var(--font-body); font-size:0.8rem;
+                  padding:0.3rem 0.5rem; border-radius:0; outline:none;">
+                  ${DATA.GRAPH_ALGORITHMS.map(a =>
+                    `<option value="${a.id}"${(i === 0 ? a.id === 'bfs' : a.id === 'dijkstra') ? ' selected' : ''}>${a.emoji} ${a.name}</option>`
+                  ).join('')}
+                </select>
+                <span id="compare-total-${side}" style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);"></span>
+              </div>
+              <svg id="compare-svg-${side}" viewBox="0 0 760 280"
                 style="width:100%; background:rgba(2,4,6,0.6); border:1px solid var(--panel-border);"></svg>
-              <div id="compare-note-bfs" style="font-family:var(--font-mono); font-size:0.85rem;
+              <div id="compare-note-${side}" style="font-family:var(--font-mono); font-size:0.85rem;
                 color:var(--c); margin-top:0.5rem; min-height:2.2em;"></div>
-              <div id="compare-counts-bfs" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
-            </div>
-            <div>
-              <div style="font-family:var(--font-pixel); font-size:8px; color:var(--cAccent); margin-bottom:0.5rem;">
-                DIJKSTRA <span id="compare-total-dijkstra" style="color:var(--cDim);"></span></div>
-              <svg id="compare-svg-dijkstra" viewBox="0 0 760 280"
-                style="width:100%; background:rgba(2,4,6,0.6); border:1px solid var(--panel-border);"></svg>
-              <div id="compare-note-dijkstra" style="font-family:var(--font-mono); font-size:0.85rem;
-                color:var(--c); margin-top:0.5rem; min-height:2.2em;"></div>
-              <div id="compare-counts-dijkstra" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
-            </div>
+              <div id="compare-counts-${side}" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
+            </div>`).join('')}
           </div>
           <p id="compare-verdict" style="font-family:var(--font-mono); font-size:0.9rem;
-            color:var(--inkDim); margin:1rem 0 0; border-left:3px solid var(--cAccent);
+            color:var(--inkDim); margin:1rem 0 0; border-left:3px solid var(--c);
             padding-left:1rem; max-width:none;"></p>
         </div>
 
-        <div id="complexity-card" class="panel" style="display:none; margin-bottom:1.5rem;">
+        <div id="complexity-card" class="panel is-hidden" style="margin-bottom:1.5rem;">
           <span class="eyebrow" style="margin-bottom:0.85rem;">COMPLEXITY — WHAT AM I PAYING?</span>
           <div id="complexity-rows" style="display:flex; gap:2.5rem; flex-wrap:wrap;
             font-family:var(--font-mono); font-size:0.95rem;"></div>
@@ -422,14 +481,14 @@ export const PAGES = {
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
           </select>
-          <div id="explanation-box" class="panel" style="flex:1; display:none;
+          <div id="explanation-box" class="panel is-hidden" style="flex:1;
             font-family:var(--font-mono); font-size:1rem; color:var(--c);
-            border-color:rgba(0,212,255,0.3); min-width:180px;">
+            border-color:rgba(212, 96, 44,0.3); min-width:180px;">
           </div>
         </div>
 
         <div style="margin-top:2rem; display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-          <span style="font-size:0.8rem; color:var(--inkDim); font-family:var(--font-pixel); font-size:7px; letter-spacing:0.1em;">TRY ANOTHER:</span>
+          <span style="font-size:0.8rem; color:var(--inkDim); font-family:var(--font-pixel); font-size:0.72rem; letter-spacing:0.1em;">TRY ANOTHER:</span>
           ${DATA.WORLDS.slice(0,4).map(w => `
             <a href="#/experience?algo=${w.algo || 'dijkstra'}" class="btn" style="font-size:0.8rem; padding:0.4rem 0.8rem;">
               ${w.emoji} ${w.metaphor}
@@ -439,6 +498,10 @@ export const PAGES = {
       </section>
     `},
     mount: (view, params) => {
+      const switcher = view.querySelector('#algo-switch');
+      switcher?.addEventListener('change', () => {
+        window.location.hash = `#/experience?algo=${switcher.value}`;
+      });
       import('./engine.js').then(m => m.mountEngine(view, params.get('algo') || 'dijkstra'));
     }
   },
@@ -524,7 +587,7 @@ export const PAGES = {
         <div style="display:grid; grid-template-columns:280px 1fr; gap:1.5rem; margin-top:1.5rem;" id="prob-layout">
           <div class="panel" style="padding:0; overflow:hidden; align-self:start;">
             <div id="step-title" style="padding:0.85rem 1.25rem; border-bottom:1px solid var(--panel-border);
-              font-family:var(--font-pixel); font-size:7px; color:var(--cDim);"></div>
+              font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);"></div>
             <div id="prob-list" style="overflow-y:auto; max-height:70vh;"></div>
           </div>
 
@@ -538,7 +601,7 @@ export const PAGES = {
             </div>
 
             <!-- Step Controls -->
-            <div class="panel" style="padding:1rem 1.25rem; border-top:2px solid var(--cAccent);">
+            <div class="panel" style="padding:1rem 1.25rem; border-top:2px solid var(--c);">
               <div style="display:flex; align-items:center; gap:0.75rem;
                 margin-bottom:0.75rem; flex-wrap:wrap;">
                 <button id="scene-step-back" class="btn btn-ghost"
@@ -546,7 +609,7 @@ export const PAGES = {
                   ← PREV STEP
                 </button>
                 <span id="scene-step-counter"
-                  style="font-family:var(--font-pixel); font-size:8px;
+                  style="font-family:var(--font-pixel); font-size:0.75rem;
                   color:var(--cDim); min-width:60px; text-align:center;">
                   1 / ?
                 </span>
@@ -577,7 +640,7 @@ export const PAGES = {
               </div>
               <div style="display:flex; gap:0.75rem; align-items:center;
                 margin-bottom:1rem; flex-wrap:wrap;">
-                <span style="font-family:var(--font-pixel); font-size:7px;
+                <span style="font-family:var(--font-pixel); font-size:0.72rem;
                   color:var(--cDim);">REAL WORLD:</span>
                 <span id="prob-world"
                   style="font-family:var(--font-mono); font-size:1.1rem; color:var(--c);">
@@ -585,7 +648,7 @@ export const PAGES = {
               </div>
               <p id="prob-hook"
                 style="font-family:var(--font-mono); font-size:1rem;
-                color:var(--inkDim); border-left:3px solid var(--cAccent);
+                color:var(--inkDim); border-left:3px solid var(--c);
                 padding-left:1rem; margin-bottom:1.5rem; max-width:none;">
               </p>
               <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
@@ -639,12 +702,12 @@ export const PAGES = {
             const step = DATA.A2Z_STEPS[si];
             stepTitleEl.textContent = `${step.step}: ${step.title}`;
             probListEl.innerHTML = (step.problems||[]).map((p, pi) => {
-              const cols = { E:'var(--cDim)', M:'var(--c)', H:'var(--cAccent)' };
+              const cols = { E:'var(--cDim)', M:'var(--c)', H:'var(--c)' };
               return `<div class="prob-item" data-pi="${pi}" style="
                 padding:0.7rem 1.25rem; border-bottom:1px solid var(--panel-border);
                 cursor:pointer; display:flex; align-items:center; gap:0.75rem;
                 transition:background 0.15s; font-size:0.875rem; border-left:2px solid transparent;">
-                <span style="font-family:var(--font-pixel); font-size:6px; color:${cols[p.difficulty]};
+                <span style="font-family:var(--font-pixel); font-size:0.7rem; color:${cols[p.difficulty]};
                   min-width:10px;">${p.difficulty}</span>
                 <span style="color:var(--ink); flex:1;">${p.title}</span>
                 <span class="prob-status" data-pid="${p.id}" style="min-width:14px; text-align:center;
@@ -654,7 +717,7 @@ export const PAGES = {
               </div>`;
             }).join('');
             probListEl.querySelectorAll('.prob-item').forEach(el => {
-              el.addEventListener('mouseenter', () => el.style.background='rgba(0,212,255,0.04)');
+              el.addEventListener('mouseenter', () => el.style.background='rgba(212, 96, 44,0.04)');
               el.addEventListener('mouseleave', () => { if (el.dataset.pi != currentProbIdx) el.style.background=''; });
               el.addEventListener('click', () => {
                 currentProbIdx = parseInt(el.dataset.pi);
@@ -670,8 +733,8 @@ export const PAGES = {
 
             // Highlight active problem in sidebar
             view.querySelectorAll('.prob-item').forEach((el, i) => {
-              el.style.background    = i === pi ? 'rgba(168,85,247,0.06)' : '';
-              el.style.borderLeft    = i === pi ? '2px solid var(--cAccent)' : '2px solid transparent';
+              el.style.background    = i === pi ? 'rgba(212, 96, 44,0.06)' : '';
+              el.style.borderLeft    = i === pi ? '2px solid var(--c)' : '2px solid transparent';
             });
 
             // Update metadata
@@ -685,7 +748,7 @@ export const PAGES = {
             if (probTitle)   probTitle.textContent   = prob.title;
             if (probDiff) {
               const diffMap = { E:'EASY', M:'MEDIUM', H:'HARD' };
-              const colMap  = { E:'var(--cDim)', M:'var(--c)', H:'var(--cAccent)' };
+              const colMap  = { E:'var(--cDim)', M:'var(--c)', H:'var(--c)' };
               probDiff.textContent = diffMap[prob.difficulty] || prob.difficulty;
               probDiff.style.color = colMap[prob.difficulty] || 'var(--c)';
             }
@@ -707,7 +770,10 @@ export const PAGES = {
               };
               refreshMu();
               muBtn.addEventListener('click', () => {
-                P.toggleCompleted(prob.id);
+                const st = P.toggleCompleted(prob.id);
+                if (st === 'completed') {
+                  import('./game.js').then(G => G.recordProblemDone());
+                }
                 refreshMu();
                 refreshStatusMarker(prob.id);
               });
@@ -831,7 +897,7 @@ export const PAGES = {
         <h1 style="font-family:var(--font-display2); font-size:clamp(3rem,6vw,5rem); letter-spacing:0.04em; margin-bottom:0.5rem;">PRACTICE & DEBUG</h1>
         <p style="margin-bottom:2.5rem;">Paste any DSA code. AlgoVision detects the algorithm and the AI scans for bugs.</p>
         <div id="practice-grid" style="display:grid; grid-template-columns:2fr 1fr; gap:1.5rem;">
-          <div class="panel" style="border-top:3px solid var(--cAccent);">
+          <div class="panel" style="border-top:3px solid var(--c);">
             <span class="eyebrow" style="margin-bottom:1.25rem;">CODE EDITOR</span>
             <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1rem;">
               <label style="font-size:0.8rem; color:var(--inkDim);">Language:</label>
@@ -855,9 +921,9 @@ export const PAGES = {
               SCAN FOR BUGS
             </button>
             <div id="bug-result" style="margin-top:1.25rem; padding:1.25rem;
-              border:1px solid rgba(0,212,255,0.2);
+              border:1px solid rgba(212, 96, 44,0.2);
               display:none; color:var(--cBright); font-family:var(--font-mono); font-size:1rem;
-              background:rgba(0,212,255,0.03); line-height:1.7;"></div>
+              background:rgba(212, 96, 44,0.03); line-height:1.7;"></div>
           </div>
           <div class="panel">
             <span class="eyebrow" style="margin-bottom:1.5rem;">PRO TIPS</span>
@@ -869,7 +935,7 @@ export const PAGES = {
                 ['→', 'Complexity matters', 'O(n²) may pass small tests but fail large inputs.'],
               ].map(([icon, title, desc]) => `
                 <div style="display:flex; gap:0.75rem; align-items:flex-start; padding-bottom:1.25rem; border-bottom:1px solid var(--panel-border);">
-                  <span style="color:var(--cAccent); font-family:var(--font-condensed); font-weight:700; font-size:1.1rem; flex-shrink:0; margin-top:0.1rem;">${icon}</span>
+                  <span style="color:var(--c); font-family:var(--font-condensed); font-weight:700; font-size:1.1rem; flex-shrink:0; margin-top:0.1rem;">${icon}</span>
                   <div>
                     <div style="font-family:var(--font-condensed); font-size:1rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink); margin-bottom:0.2rem;">${title}</div>
                     <div style="font-size:0.8rem; color:var(--inkDim);">${desc}</div>
@@ -901,7 +967,7 @@ export const PAGES = {
               style="width:100%; min-width:900px; display:block;"></svg>
           </div>
         </div>
-        <div id="family-info" class="panel" style="margin-top:1.5rem; display:none; border-top:3px solid var(--cAccent);">
+        <div id="family-info" class="panel" style="margin-top:1.5rem; display:none; border-top:3px solid var(--c);">
           <h3 id="family-info-title" style="color:var(--cAccentBright); margin-bottom:0.4rem;"></h3>
           <p id="family-info-desc" style="font-size:0.875rem; margin-bottom:1rem; max-width:none;"></p>
           <a id="family-info-link" href="#/" class="btn btn-ghost">Visualize this →</a>
@@ -927,7 +993,7 @@ export const PAGES = {
         { id:'sort',      label:'Sorting',           x:680, y:60,  emoji:'📊', desc:'Order elements by comparison or distribution.', color:'var(--cDim)' },
         { id:'msort',     label:'Merge Sort',        x:600, y:200, emoji:'🏆', desc:'Divide & conquer. O(n log n). Stable.', color:'var(--c)', algo:'sorting' },
         { id:'qsort',     label:'Quick Sort',        x:740, y:200, emoji:'⚡', desc:'Pivot & partition. O(n log n) avg. Cache-friendly.', color:'var(--c)', algo:'sorting' },
-        { id:'dp',        label:'Dynamic Programming',x:140, y:420, emoji:'💾', desc:'Optimal substructure + overlapping subproblems = memoization.', color:'var(--cAccent)', algo:'dp' },
+        { id:'dp',        label:'Dynamic Programming',x:140, y:420, emoji:'💾', desc:'Optimal substructure + overlapping subproblems = memoization.', color:'var(--c)', algo:'dp' },
         { id:'greedy',    label:'Greedy',            x:300, y:460, emoji:'🎯', desc:'Local optimal choice at each step.', color:'var(--c)', algo:'greedy' },
         { id:'backtrack', label:'Backtracking',      x:500, y:460, emoji:'🔄', desc:'DFS + undo. Explores all possibilities. N-Queens, Sudoku.', color:'var(--c)', algo:'backtracking' },
         { id:'twoptr',    label:'Two Pointers',      x:180, y:320, emoji:'👈👉', desc:'Binary search pattern. Converging/expanding window. O(n).', color:'var(--c)', algo:'binary_search' },
@@ -996,14 +1062,14 @@ export const PAGES = {
         <p style="margin-bottom:2.5rem;">Quick deep-dives into algorithm concepts — one insight at a time.</p>
         <div class="grid-3">
           ${DATA.CLIPS.map((clip, i) => `
-            <div class="panel panel-glow" style="cursor:pointer; border-top:3px solid ${i%2===0?'var(--cAccent)':'var(--c)'};">
+            <div class="panel panel-glow" style="cursor:pointer; border-top:3px solid ${i%2===0?'var(--c)':'var(--c)'};">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-                <span style="font-family:var(--font-pixel); font-size:7px; color:var(--c);">${clip.tag}</span>
-                <span style="font-family:var(--font-display2); font-size:1.5rem; color:rgba(0,212,255,0.15);">${(i+1).toString().padStart(2,'0')}</span>
+                <span style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--c);">${clip.tag}</span>
+                <span style="font-family:var(--font-display2); font-size:1.5rem; color:rgba(212, 96, 44,0.15);">${(i+1).toString().padStart(2,'0')}</span>
               </div>
               <span class="eyebrow" style="margin-bottom:0.5rem; color:var(--cDim);">${clip.topic}</span>
               <h3 style="font-size:0.95rem; line-height:1.4;">${clip.title}</h3>
-              <div style="margin-top:1.25rem; font-family:var(--font-condensed); font-size:0.85rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cAccent);">Read more →</div>
+              <div style="margin-top:1.25rem; font-family:var(--font-condensed); font-size:0.85rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--c);">Read more →</div>
             </div>
           `).join('')}
         </div>
@@ -1040,6 +1106,70 @@ export const PAGES = {
       const content = view.querySelector('#journey-content');
       const msg = view.querySelector('#journey-tools-msg');
 
+      // ── Player card + quests + achievement wall ──
+      import('./game.js').then((Game) => {
+        const host = document.createElement('div');
+        view.querySelector('section')?.insertBefore(host, content);
+
+        function renderGame() {
+          const g = Game.state();
+          const quests = Game.questState();
+          host.innerHTML = `
+            <div class="player-card panel">
+              <div class="pc-left">
+                <div class="pc-level">${g.level}</div>
+                <div>
+                  <div class="pc-rank">${g.rank}</div>
+                  <div class="pc-xpbar"><span style="width:${Math.max(4, g.pct)}%"></span></div>
+                  <div class="pc-xptext">${g.intoLevel} / ${g.levelSpan} XP to level ${g.level + 1}</div>
+                </div>
+              </div>
+              <div class="pc-stats">
+                <div><strong>${g.tracesRun}</strong><span>traces</span></div>
+                <div><strong>${g.accuracy}%</strong><span>prediction acc.</span></div>
+                <div><strong>×${g.bestCombo}</strong><span>best combo</span></div>
+                <div><strong>${g.streak}</strong><span>day streak</span></div>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-bottom:1rem;">
+              <span class="eyebrow">DAILY QUESTS — RESET AT MIDNIGHT</span>
+              ${quests.map(q => `
+                <div class="quest-row ${q.claimed ? 'claimed' : q.done ? 'ready' : ''}">
+                  <span class="q-icon">${q.icon}</span>
+                  <span class="q-name">${q.name}</span>
+                  <span class="q-progress">${q.have}/${q.goal}</span>
+                  <button class="btn q-claim" data-q="${q.id}"
+                    ${q.done && !q.claimed ? '' : 'disabled'}>
+                    ${q.claimed ? '✓ Claimed' : q.done ? `Claim +${Game.XP.QUEST_DONE} XP` : 'In progress'}
+                  </button>
+                </div>`).join('')}
+            </div>
+
+            <div class="panel" style="margin-bottom:1rem;">
+              <span class="eyebrow">ACHIEVEMENTS — ${g.unlocked.length}/${Game.ACHIEVEMENTS.length}</span>
+              <div class="achv-grid">
+                ${Game.ACHIEVEMENTS.map(a2 => {
+                  const got = g.unlocked.includes(a2.id);
+                  return `<div class="achv ${got ? 'got' : 'locked'}" title="${a2.desc}">
+                    <span class="a-icon">${a2.icon}</span>
+                    <span class="a-name">${a2.name}</span>
+                    <span class="a-desc">${a2.desc}</span>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>`;
+
+          host.querySelectorAll('.q-claim').forEach(btn => {
+            btn.addEventListener('click', () => {
+              if (Game.claimQuest(btn.dataset.q)) renderGame();
+            });
+          });
+        }
+        renderGame();
+        addEventListener('av:xp', renderGame);
+      });
+
       const say = (text, isError = false) => {
         if (!msg) return;
         msg.textContent = text;
@@ -1050,7 +1180,7 @@ export const PAGES = {
       function tile(label, value, current, target, i) {
         const pct = Math.min((current / target) * 100, 100);
         return `
-          <div class="panel" style="border-top:3px solid ${i % 2 === 0 ? 'var(--cAccent)' : 'var(--c)'};">
+          <div class="panel" style="border-top:3px solid ${i % 2 === 0 ? 'var(--c)' : 'var(--c)'};">
             <span class="eyebrow" style="margin-bottom:0.5rem;">${label}</span>
             <div style="font-family:var(--font-display2); font-size:4.5rem; color:var(--ink); margin:0.25rem 0; letter-spacing:0.02em; line-height:1;">${value}</div>
             <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;"></div></div>
@@ -1061,7 +1191,7 @@ export const PAGES = {
       function renderStats() {
         if (!P.hasAnyActivity()) {
           content.innerHTML = `
-            <div class="panel" style="text-align:center; padding:3rem 2rem; border-top:3px solid var(--cAccent);">
+            <div class="panel" style="text-align:center; padding:3rem 2rem; border-top:3px solid var(--c);">
               <div style="font-size:2.5rem; margin-bottom:1rem;">🌱</div>
               <h3 style="margin-bottom:0.6rem;">Nothing tracked yet</h3>
               <p style="margin:0 auto 1.5rem; max-width:44ch;">Open a problem in the A2Z roadmap or run a
@@ -1156,7 +1286,7 @@ export const PAGES = {
               <span class="eyebrow" style="margin-bottom:0.4rem; color:var(--cDim);">${item.metaphor.toUpperCase()}</span>
               <h3 style="margin-bottom:0.6rem;">${item.title}</h3>
               <p style="font-size:0.875rem;">${item.desc}</p>
-              <div style="position:absolute; bottom:0; left:0; width:${20+i*15}%; height:2px; background:var(--cAccent); opacity:0.4;"></div>
+              <div style="position:absolute; bottom:0; left:0; width:${20+i*15}%; height:2px; background:var(--c); opacity:0.4;"></div>
             </div>
           `).join('')}
         </div>
@@ -1169,8 +1299,8 @@ export const PAGES = {
     html: () => `
       <section style="text-align:center; min-height:60vh; display:flex; flex-direction:column;
         justify-content:center; align-items:center;">
-        <div style="font-family:var(--font-display2); font-size:12rem; color:rgba(168,85,247,0.08); line-height:1; margin-bottom:-2rem;">404</div>
-        <span class="eyebrow" style="color:var(--cAccent); margin-bottom:1rem;">NODE NOT FOUND</span>
+        <div style="font-family:var(--font-display2); font-size:12rem; color:rgba(212, 96, 44,0.08); line-height:1; margin-bottom:-2rem;">404</div>
+        <span class="eyebrow" style="color:var(--c); margin-bottom:1rem;">NODE NOT FOUND</span>
         <h1 style="font-family:var(--font-display2); font-size:3rem; letter-spacing:0.04em; margin-bottom:1rem;">OFF THE GRAPH</h1>
         <p style="margin:0 auto 2rem;">You've wandered into untraced territory.</p>
         <a href="#/" class="btn btn-primary">Return to Root →</a>

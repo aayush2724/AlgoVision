@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import * as DATA from './data.js';
 import * as Progress from './progress.js';
+import * as Game from './game.js';
 
 // ── REAL-WORLD SCENE RENDERERS ──────────────────────────────────────────────
 // Each scene knows how to draw itself and label nodes/edges in metaphor language.
@@ -420,7 +421,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (liveEl) liveEl.style.display = 'none';
     runBtn.disabled = false;
     note.style.opacity = 0;
-    explanationBox.style.display = 'none';
+    explanationBox.classList.add('is-hidden');
     status.innerHTML = 'STATUS: IDLE';
     status.className = 'eyebrow';
     const counter = view.querySelector('#step-counter');
@@ -434,7 +435,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     selectedNodeId = null;
     resetTraceState();
     // A stale comparison over an edited graph would lie — close it.
-    if (comparePanel && comparePanel.style.display !== 'none') closeCompare();
+    if (comparePanel && !comparePanel.classList.contains('is-hidden')) closeCompare();
     renderGraph(currentMeta);
     updateGraphMeta();
     buildWhatIfSliders();
@@ -517,7 +518,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       circle.setAttribute("id", `node-${node.id}`);
       circle.style.cursor = 'pointer';
       if (node.id === selectedNodeId) {
-        circle.style.stroke = 'var(--cAccent)';
+        circle.style.stroke = 'var(--c)';
         circle.style.strokeWidth = '3';
       }
       svg.appendChild(circle);
@@ -608,7 +609,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(0,212,255,0.05)");
+      rect.setAttribute("fill", "rgba(212, 96, 44,0.05)");
       rect.setAttribute("stroke", "var(--cDim)");
       rect.setAttribute("stroke-width", "1");
       g.appendChild(rect);
@@ -651,7 +652,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       const cell = svg.querySelector(`#cell-${idx}`);
       const g = svg.querySelector(`#cellg-${idx}`);
       if (!cell) continue;
-      cell.setAttribute("fill", "rgba(0,212,255,0.05)");
+      cell.setAttribute("fill", "rgba(212, 96, 44,0.05)");
       cell.setAttribute("stroke", "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (g) g.setAttribute("opacity", "1");
@@ -661,8 +662,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (inRange) cell.setAttribute("stroke", "var(--c)");
         if (idx === s.mid) {
-          cell.setAttribute("fill", "rgba(168,85,247,0.18)");
-          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
+          cell.setAttribute("fill", "rgba(212, 96, 44,0.18)");
+          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'two_sum_sorted') {
@@ -670,8 +671,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (idx === s.left || idx === s.right) {
           cell.setAttribute("fill", s.found
-            ? "rgba(74,222,128,0.2)" : "rgba(168,85,247,0.18)");
-          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--cAccent)");
+            ? "rgba(74,222,128,0.2)" : "rgba(212, 96, 44,0.18)");
+          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'sliding_window' || algoId === 'kadanes') {
@@ -679,8 +680,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
         if (inBest) cell.setAttribute("stroke", "#4ade80");
         if (inWindow) {
-          cell.setAttribute("fill", "rgba(168,85,247,0.14)");
-          if (!inBest) cell.setAttribute("stroke", "var(--cAccent)");
+          cell.setAttribute("fill", "rgba(212, 96, 44,0.14)");
+          if (!inBest) cell.setAttribute("stroke", "var(--c)");
           cell.setAttribute("stroke-width", inBest ? "2.5" : "1.5");
         }
       } else {
@@ -690,8 +691,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           cell.setAttribute("stroke", "var(--c)");
         }
         if (idx === s.placed) {
-          cell.setAttribute("fill", "rgba(168,85,247,0.18)");
-          cell.setAttribute("stroke", "var(--cAccent)");
+          cell.setAttribute("fill", "rgba(212, 96, 44,0.18)");
+          cell.setAttribute("stroke", "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
       }
@@ -879,7 +880,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(0,212,255,0.03)");
+      rect.setAttribute("fill", "rgba(212, 96, 44,0.03)");
       rect.setAttribute("stroke", "var(--cDim)");
       rect.setAttribute("stroke-width", "1");
       svg.appendChild(rect);
@@ -916,12 +917,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       const v = table[String(idx)];
       const filled = v !== null && v !== undefined;
       val.textContent = filled ? fmt(v) : '';
-      cell.setAttribute("fill", filled ? "rgba(0,212,255,0.10)" : "rgba(0,212,255,0.03)");
+      cell.setAttribute("fill", filled ? "rgba(212, 96, 44,0.10)" : "rgba(212, 96, 44,0.03)");
       cell.setAttribute("stroke", filled ? "var(--c)" : "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (idx === s.computing) {
-        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(168,85,247,0.18)");
-        cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--cAccent)");
+        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(212, 96, 44,0.18)");
+        cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--c)");
         cell.setAttribute("stroke-width", "2");
       }
     }
@@ -959,7 +960,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", w - 12);
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(0,212,255,0.05)");
+      rect.setAttribute("fill", "rgba(212, 96, 44,0.05)");
       rect.setAttribute("stroke", "var(--cDim)");
       svg.appendChild(rect);
 
@@ -1016,19 +1017,19 @@ export function mountEngine(view, algo = 'dijkstra') {
       line.setAttribute('x1', x1); line.setAttribute('y1', yy);
       line.setAttribute('x2', x2); line.setAttribute('y2', yy);
       const active = from === s.curr;
-      line.setAttribute('stroke', active ? 'var(--cAccent)' : 'var(--c)');
+      line.setAttribute('stroke', active ? 'var(--c)' : 'var(--c)');
       line.setAttribute('stroke-width', active ? '2.5' : '1.5');
       g.appendChild(line);
       const head = makeSVG('polygon');
       const dir = right ? 1 : -1;
       head.setAttribute('points',
         `${x2 + dir * 8},${yy} ${x2},${yy - 4} ${x2},${yy + 4}`);
-      head.setAttribute('fill', active ? 'var(--cAccent)' : 'var(--c)');
+      head.setAttribute('fill', active ? 'var(--c)' : 'var(--c)');
       g.appendChild(head);
     });
 
     // Pointer labels under the index row
-    const ptrs = [['P', s.prev, 'var(--cBright)'], ['C', s.curr, 'var(--cAccent)'],
+    const ptrs = [['P', s.prev, 'var(--cBright)'], ['C', s.curr, 'var(--c)'],
                   ['S', s.saved, 'var(--cDim)']];
     ptrs.forEach(([label, idx, color]) => {
       if (idx === null || idx === undefined) return;
@@ -1047,7 +1048,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentListValues.forEach((_, idx) => {
       const cell = svg.querySelector(`#cell-${idx}`);
       if (!cell) return;
-      cell.setAttribute('stroke', idx === s.curr ? 'var(--cAccent)' : 'var(--cDim)');
+      cell.setAttribute('stroke', idx === s.curr ? 'var(--c)' : 'var(--cDim)');
       cell.setAttribute('stroke-width', idx === s.curr ? '2' : '1');
     });
 
@@ -1095,7 +1096,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('width', w - 4);
       rect.setAttribute('height', h);
       rect.setAttribute('id', `schar-${idx}`);
-      rect.setAttribute('fill', 'rgba(0,212,255,0.05)');
+      rect.setAttribute('fill', 'rgba(212, 96, 44,0.05)');
       rect.setAttribute('stroke', 'var(--cDim)');
       svg.appendChild(rect);
       const t = makeSVG('text');
@@ -1130,18 +1131,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       const cell = svg.querySelector(`#schar-${idx}`);
       if (!cell) return;
       if (idx === s.pos) {
-        cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--cAccent)');
+        cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--c)');
         cell.setAttribute('stroke-width', '2');
         cell.setAttribute('fill', s.action === 'mismatch'
-          ? 'rgba(248,113,113,0.15)' : 'rgba(168,85,247,0.15)');
+          ? 'rgba(248,113,113,0.15)' : 'rgba(212, 96, 44,0.15)');
       } else if (s.pos !== null && s.pos !== undefined && idx < s.pos) {
         cell.setAttribute('stroke', 'var(--c)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(0,212,255,0.03)');
+        cell.setAttribute('fill', 'rgba(212, 96, 44,0.03)');
       } else {
         cell.setAttribute('stroke', 'var(--cDim)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(0,212,255,0.05)');
+        cell.setAttribute('fill', 'rgba(212, 96, 44,0.05)');
       }
     });
 
@@ -1154,8 +1155,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('width', bw);
       rect.setAttribute('height', bh);
       const isTop = k === s.stack.length - 1;
-      rect.setAttribute('fill', isTop ? 'rgba(168,85,247,0.12)' : 'rgba(0,212,255,0.06)');
-      rect.setAttribute('stroke', isTop ? 'var(--cAccent)' : 'var(--c)');
+      rect.setAttribute('fill', isTop ? 'rgba(212, 96, 44,0.12)' : 'rgba(212, 96, 44,0.06)');
+      rect.setAttribute('stroke', isTop ? 'var(--c)' : 'var(--c)');
       rect.setAttribute('stroke-width', isTop ? '2' : '1');
       g.appendChild(rect);
       const t = makeSVG('text');
@@ -1250,13 +1251,14 @@ export function mountEngine(view, algo = 'dijkstra') {
     nodes.forEach(n => {
       const isCurrent = n.id === s.current;
       const circle = makeSVG('circle');
+      circle.dataset.nodeId = n.id;
       circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
       circle.setAttribute('r', '15');
       circle.setAttribute('fill', isCurrent
-        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(168,85,247,0.2)')
+        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(212, 96, 44,0.2)')
         : 'var(--cDeep)');
       circle.setAttribute('stroke', isCurrent
-        ? (s.found === true ? '#4ade80' : 'var(--cAccent)')
+        ? (s.found === true ? '#4ade80' : 'var(--c)')
         : 'var(--cDim)');
       circle.setAttribute('stroke-width', isCurrent ? '2' : '1');
       g.appendChild(circle);
@@ -1274,7 +1276,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (s.inserting !== null && s.inserting !== undefined) {
       const t = makeSVG('text');
       t.setAttribute('x', '10'); t.setAttribute('y', '270');
-      t.setAttribute('fill', 'var(--cAccent)');
+      t.setAttribute('fill', 'var(--c)');
       t.setAttribute('font-family', 'var(--font-pixel)');
       t.setAttribute('font-size', '8');
       t.textContent = `INSERTING ${fmt(s.inserting)}`;
@@ -1372,11 +1374,11 @@ export function mountEngine(view, algo = 'dijkstra') {
         rect.setAttribute('width', cw - 2);
         rect.setAttribute('height', ch - 2);
         rect.setAttribute('fill', onPath ? 'rgba(74,222,128,0.22)'
-          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(168,85,247,0.18)')
-          : isDep ? 'rgba(0,212,255,0.14)'
-          : filled ? 'rgba(0,212,255,0.05)' : 'rgba(0,0,0,0.15)');
+          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(212, 96, 44,0.18)')
+          : isDep ? 'rgba(212, 96, 44,0.14)'
+          : filled ? 'rgba(212, 96, 44,0.05)' : 'rgba(0,0,0,0.15)');
         rect.setAttribute('stroke', onPath ? '#4ade80'
-          : isCurrent ? (s.match ? '#4ade80' : 'var(--cAccent)')
+          : isCurrent ? (s.match ? '#4ade80' : 'var(--c)')
           : isDep ? 'var(--c)' : 'var(--cDim)');
         rect.setAttribute('stroke-width', isCurrent || onPath ? '2' : '0.75');
         g.appendChild(rect);
@@ -2142,7 +2144,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     input.style.cssText = `position:absolute; width:72px; z-index:5;
       left:${Math.round(aRect.left - hostRect.left - 12)}px;
       top:${Math.round(aRect.top - hostRect.top - 10)}px;
-      background:rgba(2,4,6,0.95); color:var(--c); border:1px solid var(--cAccent);
+      background:rgba(2,4,6,0.95); color:var(--c); border:1px solid var(--c);
       font-family:var(--font-mono); font-size:0.9rem; padding:2px 6px; outline:none;`;
 
     const commit = () => {
@@ -2172,6 +2174,12 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     svg.addEventListener('click', (e) => {
       const t = e.target;
+      if (challenge.active) {
+        if (challenge.awaiting && t.classList?.contains('node')) {
+          challengeGuess(t.id.replace('node-', ''));
+        }
+        return;   // no graph editing mid-challenge
+      }
       if (t.classList?.contains('node')) {
         const id = t.id.replace('node-', '');
         resetTraceState();
@@ -2474,7 +2482,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   async function run() {
     runBtn.disabled = true;
-    explanationBox.style.display = 'none';
+    explanationBox.classList.add('is-hidden');
     status.innerHTML = 'STATUS: <span style="color:var(--c)">TRACING...</span>';
     status.className = 'eyebrow running';
 
@@ -2560,6 +2568,122 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   }
 
+  // ── CHALLENGE MODE: predict the next step ─────────────────
+  // After each shown step, the player clicks the node/cell they think the
+  // algorithm touches next. Correct = XP + combo; wrong = reveal + reset.
+  const challengeBtn = view.querySelector('#challenge-btn');
+  const comboChip = view.querySelector('#combo-chip');
+  const challenge = { on: false, active: false, awaiting: null, combo: 0, right: 0, total: 0 };
+
+  const challengeSupported = () => ['graph', 'array', 'tree'].includes(traceView);
+
+  function challengeTargetOf(step) {
+    if (!step) return null;
+    if (traceView === 'graph') return step.highlight?.node ?? null;
+    const idx = step.highlight?.index;
+    return (idx === null || idx === undefined) ? null : idx;
+  }
+
+  function updateComboChip() {
+    if (!comboChip) return;
+    comboChip.classList.toggle('is-hidden', !challenge.active);
+    comboChip.textContent = `COMBO ×${challenge.combo}`;
+    comboChip.classList.toggle('combo-hot', challenge.combo >= 3);
+  }
+
+  function challengeFlash(target, good) {
+    let el = null;
+    if (traceView === 'graph') el = svg.querySelector(`#node-${target}`);
+    else el = svg.querySelector(`#cell-${target}`) ||
+              svg.querySelector(`[data-node-id="${target}"]`);
+    if (!el) return;
+    el.classList.remove('guess-good', 'guess-bad');
+    void el.getBBox && el.getBoundingClientRect();
+    el.classList.add(good ? 'guess-good' : 'guess-bad');
+    setTimeout(() => el.classList.remove('guess-good', 'guess-bad'), 800);
+  }
+
+  function challengePrompt() {
+    const cur = challengeTargetOf(currentSteps[currentStepIdx]);
+    let j = currentStepIdx + 1;
+    while (j < currentSteps.length) {
+      const t = challengeTargetOf(currentSteps[j]);
+      if (t !== null && String(t) !== String(cur)) break;
+      j++;
+    }
+    if (j >= currentSteps.length) { challengeEnd(); return; }
+    challenge.awaiting = { j, target: challengeTargetOf(currentSteps[j]) };
+    const what = traceView === 'graph' ? 'node' : 'cell';
+    note.textContent = `🎮 PREDICT — CLICK THE ${what.toUpperCase()} THE ALGORITHM TOUCHES NEXT (${challenge.right}/${challenge.total} SO FAR)`;
+    note.style.opacity = 1;
+    status.innerHTML = 'STATUS: <span style="color:var(--c)">YOUR MOVE</span>';
+  }
+
+  function challengeGuess(value) {
+    if (!challenge.awaiting) return;
+    const { j, target } = challenge.awaiting;
+    challenge.awaiting = null;
+    challenge.total++;
+    const ok = String(value) === String(target);
+    if (ok) {
+      challenge.right++;
+      challenge.combo++;
+      Game.recordPrediction(true, challenge.combo);
+    } else {
+      challenge.combo = 0;
+      Game.recordPrediction(false, 0);
+      if (value !== null && value !== undefined) challengeFlash(value, false);
+    }
+    updateComboChip();
+    renderStep(j);
+    challengeFlash(target, true);
+    setTimeout(challengePrompt, ok ? 700 : 1100);
+  }
+
+  function challengeBegin() {
+    challenge.active = true;
+    challenge.combo = 0; challenge.right = 0; challenge.total = 0;
+    updateComboChip();
+    if (scrubRow) scrubRow.style.display = 'none';
+    challengePrompt();
+  }
+
+  function challengeEnd() {
+    challenge.active = false;
+    challenge.awaiting = null;
+    updateComboChip();
+    const acc = challenge.total ? Math.round((challenge.right / challenge.total) * 100) : 0;
+    if (challenge.total > 0) {
+      Game.award(25 + (acc >= 80 ? 25 : 0), `Challenge complete — ${acc}% accuracy`);
+      note.textContent = `CHALLENGE COMPLETE: ${challenge.right}/${challenge.total} (${acc}%).` +
+        (acc >= 80 ? ' PERFECT-RUN BONUS!' : ' RUN IT AGAIN TO BEAT IT.');
+    }
+    if (scrubRow && currentSteps.length) scrubRow.style.display = 'flex';
+    status.innerHTML = 'STATUS: <span style="color:var(--cBright)">DONE</span>';
+  }
+
+  // One shared click listener for array/tree challenge guesses.
+  svg.addEventListener('click', (e) => {
+    if (!challenge.active || !challenge.awaiting) return;
+    if (traceView === 'array') {
+      const m = (e.target.id || '').match(/^(?:cell|cellval)-(\d+)$/);
+      if (m) challengeGuess(Number(m[1]));
+    } else if (traceView === 'tree') {
+      const id = e.target.dataset?.nodeId;
+      if (id !== undefined) challengeGuess(id);
+    }
+  });
+
+  challengeBtn?.addEventListener('click', () => {
+    challenge.on = !challenge.on;
+    challengeBtn.classList.toggle('btn-primary', challenge.on);
+    challengeBtn.textContent = challenge.on ? '🎮 Challenge ON' : '🎮 Challenge';
+    if (!challenge.on && challenge.active) challengeEnd();
+    if (challenge.on) {
+      status.innerHTML = 'STATUS: <span style="color:var(--c)">PRESS RUN TO PLAY</span>';
+    }
+  });
+
   // ── Step scrubber: any step index renders fully from its data ──
 
   function computeTraceSummary() {
@@ -2589,7 +2713,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentSteps = steps || [];
     currentTraceMeta = meta || null;
     if (!currentSteps.length) { resetTraceState(); return; }
-    Progress.recordTraceRun(algoId);
+    Game.recordTrace(algoId);
     traceSummary = computeTraceSummary();
     if (scrubRow) scrubRow.style.display = 'flex';
     if (counterPanel) counterPanel.style.display = 'flex';
@@ -2598,6 +2722,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     runBtn.disabled = false;
     renderStep(0);
     updateComplexityLive();
+    if (challenge.on && challengeSupported()) challengeBegin();
   }
 
   function renderGraphStep(step, idx) {
@@ -2702,8 +2827,9 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (stepSlider) stepSlider.value = currentStepIdx;
     const counter = view.querySelector('#step-counter');
     if (counter) counter.textContent = `STEP ${currentStepIdx + 1} / ${currentSteps.length}`;
-    if (prevBtn) prevBtn.disabled = currentStepIdx === 0;
-    stepBtn.disabled = isLast;
+    if (prevBtn) prevBtn.disabled = challenge.active || currentStepIdx === 0;
+    stepBtn.disabled = challenge.active || isLast;
+    if (playBtn && challenge.active) playBtn.disabled = true;
     if (isLast) stopPlay();
     status.innerHTML = isLast
       ? 'STATUS: <span style="color:var(--cBright)">DONE</span>'
@@ -2734,11 +2860,11 @@ export function mountEngine(view, algo = 'dijkstra') {
     const rowsEl = view.querySelector('#complexity-rows');
     if (!card || !cardEl || !rowsEl) return;
     rowsEl.innerHTML = card.rows.map(([k, v]) =>
-      `<div><div style="font-family:var(--font-pixel); font-size:7px; color:var(--cDim);
+      `<div><div style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);
         margin-bottom:0.3rem;">${k.toUpperCase()}</div>
         <div style="color:var(--cBright);">${v}</div></div>`
     ).join('');
-    cardEl.style.display = 'block';
+    cardEl.classList.remove('is-hidden');
   }
 
   function updateComplexityLive() {
@@ -2786,7 +2912,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
       const k = edgeKey(l.source, l.target);
       line.setAttribute('stroke', k === activeKey
-        ? 'var(--c)' : traversed.has(k) ? 'rgba(0,212,255,0.35)' : 'rgba(0,150,184,0.2)');
+        ? 'var(--c)' : traversed.has(k) ? 'rgba(212, 96, 44,0.35)' : 'rgba(0,150,184,0.2)');
       line.setAttribute('stroke-width', k === activeKey ? '2.5' : '1.5');
       svgEl.appendChild(line);
     });
@@ -2821,18 +2947,18 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   function renderCompareStep(i) {
     if (!compareData) return;
-    const maxIdx = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+    const maxIdx = Math.max(compareData.a.steps.length, compareData.b.steps.length) - 1;
     compareIdx = Math.max(0, Math.min(i, maxIdx));
-    ['bfs', 'dijkstra'].forEach(alg => {
-      const steps = compareData[alg];
+    ['a', 'b'].forEach(side => {
+      const steps = compareData[side].steps;
       const i2 = Math.min(compareIdx, steps.length - 1);
-      renderMiniGraph(view.querySelector(`#compare-svg-${alg}`), steps, compareIdx);
-      const noteEl = view.querySelector(`#compare-note-${alg}`);
+      renderMiniGraph(view.querySelector(`#compare-svg-${side}`), steps, compareIdx);
+      const noteEl = view.querySelector(`#compare-note-${side}`);
       if (noteEl) {
         const done = compareIdx > steps.length - 1;
         noteEl.textContent = (steps[i2].note || '') + (done ? ' — FINISHED' : '');
       }
-      const cEl = view.querySelector(`#compare-counts-${alg}`);
+      const cEl = view.querySelector(`#compare-counts-${side}`);
       if (cEl) cEl.innerHTML = countChips(steps[i2].structures?.counts, '6px');
     });
     if (compareSlider) compareSlider.value = compareIdx;
@@ -2849,11 +2975,11 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   function startComparePlay() {
     if (!compareData) return;
-    const maxIdx = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+    const maxIdx = Math.max(compareData.a.steps.length, compareData.b.steps.length) - 1;
     if (compareIdx >= maxIdx) renderCompareStep(0);
     stopComparePlay();
     comparePlayTimer = setInterval(() => {
-      const m = Math.max(compareData.bfs.length, compareData.dijkstra.length) - 1;
+      const m = Math.max(compareData.a.steps.length, compareData.b.steps.length) - 1;
       if (compareIdx >= m) { stopComparePlay(); return; }
       renderCompareStep(compareIdx + 1);
     }, 700);
@@ -2863,15 +2989,15 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   function closeCompare() {
     stopComparePlay();
-    if (comparePanel) comparePanel.style.display = 'none';
+    if (comparePanel) comparePanel.classList.add('is-hidden');
     const mainPanel = view.querySelector('#engine-panel');
-    if (mainPanel) mainPanel.style.display = 'block';
+    if (mainPanel) mainPanel.classList.remove('is-hidden');
     if (compareBtn) compareBtn.textContent = '⚖ COMPARE';
     compareData = null;
   }
 
   async function toggleCompare() {
-    if (comparePanel && comparePanel.style.display !== 'none') {
+    if (comparePanel && !comparePanel.classList.contains('is-hidden')) {
       closeCompare();
       return;
     }
@@ -2882,37 +3008,11 @@ export function mountEngine(view, algo = 'dijkstra') {
     compareBtn.disabled = true;
     compareBtn.textContent = 'LOADING...';
     try {
-      const get = async (alg) => {
-        if (isOffline) return localTrace(alg, startNodeId).steps;
-        const graph = {
-          nodes: userGraph.nodes,
-          edges: userGraph.links.map(l => [l.source, l.target, l.weight]),
-        };
-        return (await api.postTrace(alg, { start: startNodeId, graph })).steps;
-      };
-      const [b, d] = await Promise.all([get('bfs'), get('dijkstra')]);
-      compareData = { bfs: b, dijkstra: d };
-      const totB = view.querySelector('#compare-total-bfs');
-      const totD = view.querySelector('#compare-total-dijkstra');
-      if (totB) totB.textContent = `· ${b.length} STEPS`;
-      if (totD) totD.textContent = `· ${d.length} STEPS`;
-      const bc = b[b.length - 1]?.structures?.counts || {};
-      const dc = d[d.length - 1]?.structures?.counts || {};
-      const verdict = view.querySelector('#compare-verdict');
-      if (verdict) {
-        verdict.textContent =
-          `Same graph, same start (${startNodeId}). BFS: ${b.length} steps, ` +
-          `${bc.edge_checks ?? '?'} edge checks — it ignores weights and explores level by level. ` +
-          `Dijkstra: ${d.length} steps, ${dc.relaxations ?? '?'} relaxations and ` +
-          `${dc.heap_pushes ?? '?'} heap pushes — extra work that buys the guaranteed ` +
-          `cheapest route when edges have costs.`;
-      }
-      if (compareSlider) compareSlider.max = Math.max(b.length, d.length) - 1;
-      if (comparePanel) comparePanel.style.display = 'block';
+      await loadComparePair();
+      if (comparePanel) comparePanel.classList.remove('is-hidden');
       const mainPanel = view.querySelector('#engine-panel');
-      if (mainPanel) mainPanel.style.display = 'none';
+      if (mainPanel) mainPanel.classList.add('is-hidden');
       compareBtn.textContent = '✕ CLOSE COMPARE';
-      renderCompareStep(0);
     } catch (e) {
       console.error(e);
       showGraphError('Could not load the comparison traces.');
@@ -2921,10 +3021,61 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   }
 
+  // Runs whichever two graph algorithms the dropdowns name, on the same graph.
+  async function loadComparePair() {
+    const pickA = view.querySelector('#compare-pick-a');
+    const pickB = view.querySelector('#compare-pick-b');
+    const idA = pickA?.value || 'bfs';
+    const idB = pickB?.value || 'dijkstra';
+
+    const get = async (alg) => {
+      if (isOffline) return localTrace(alg, startNodeId).steps;
+      const graph = {
+        nodes: userGraph.nodes,
+        edges: userGraph.links.map(l => [l.source, l.target, l.weight]),
+      };
+      return (await api.postTrace(alg, { start: startNodeId, graph })).steps;
+    };
+
+    const [sa, sb] = await Promise.all([get(idA), get(idB)]);
+    compareData = { a: { id: idA, steps: sa }, b: { id: idB, steps: sb } };
+
+    const nameOf = (id) =>
+      DATA.ALGORITHMS.find(x => x.id === id)?.name || id.toUpperCase();
+    const totA = view.querySelector('#compare-total-a');
+    const totB = view.querySelector('#compare-total-b');
+    if (totA) totA.textContent = `· ${sa.length} STEPS`;
+    if (totB) totB.textContent = `· ${sb.length} STEPS`;
+
+    const ca = sa[sa.length - 1]?.structures?.counts || {};
+    const cb = sb[sb.length - 1]?.structures?.counts || {};
+    const summarise = (id, steps, c) => {
+      const bits = Object.entries(c)
+        .map(([k, v]) => `${v} ${(COUNT_LABELS[k] || k).toLowerCase()}`);
+      return `${nameOf(id)}: ${steps.length} steps` +
+        (bits.length ? ` (${bits.join(', ')})` : '');
+    };
+    const verdict = view.querySelector('#compare-verdict');
+    if (verdict) {
+      let text = `Same graph, same start (${startNodeId}). ` +
+        `${summarise(idA, sa, ca)}. ${summarise(idB, sb, cb)}.`;
+      const mstA = sa[sa.length - 1]?.structures?.total_weight;
+      const mstB = sb[sb.length - 1]?.structures?.total_weight;
+      if (mstA !== undefined && mstB !== undefined && mstA !== null && mstB !== null) {
+        text += mstA === mstB
+          ? ` Both build a spanning tree costing ${fmt(mstA)} — different routes, identical minimum.`
+          : ` Tree costs differ: ${fmt(mstA)} vs ${fmt(mstB)}.`;
+      }
+      verdict.textContent = text;
+    }
+    if (compareSlider) compareSlider.max = Math.max(sa.length, sb.length) - 1;
+    renderCompareStep(0);
+  }
+
   async function explain() {
     if (currentStepIdx < 0 || currentStepIdx >= currentSteps.length) return;
     explainBtn.disabled = true;
-    explanationBox.style.display = 'block';
+    explanationBox.classList.remove('is-hidden');
     explanationBox.textContent = "CONSULTING AI NARRATOR...";
 
     try {
@@ -2977,6 +3128,14 @@ export function mountEngine(view, algo = 'dijkstra') {
     view.querySelector('#compare-next')?.addEventListener('click', () => { stopComparePlay(); renderCompareStep(compareIdx + 1); });
     view.querySelector('#compare-play')?.addEventListener('click', () => comparePlayTimer ? stopComparePlay() : startComparePlay());
     compareSlider?.addEventListener('input', () => { stopComparePlay(); renderCompareStep(Number(compareSlider.value)); });
+    // Changing either dropdown re-runs the pair on the same graph
+    ['#compare-pick-a', '#compare-pick-b'].forEach(sel => {
+      view.querySelector(sel)?.addEventListener('change', async () => {
+        stopComparePlay();
+        try { await loadComparePair(); }
+        catch (e) { console.error(e); showGraphError('Could not load that comparison.'); }
+      });
+    });
   }
 
   // ── Init ──
@@ -3001,7 +3160,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     if (traceView !== 'graph') {
       const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
-      if (arrayControls) arrayControls.style.display = 'block';
+      if (arrayControls) arrayControls.classList.remove('is-hidden');
       if (traceView === 'table') {
         // Table algorithms take a single n, not an array
         if (arrayInput) arrayInput.style.display = 'none';
@@ -3035,8 +3194,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       return;
     }
 
-    if (graphControls) graphControls.style.display = 'block';
-    if (compareBtn) compareBtn.style.display = 'inline-block';
+    if (graphControls) graphControls.classList.remove('is-hidden');
+    if (compareBtn) compareBtn.classList.remove('is-hidden');
     updateGraphMeta();
     attachGraphEditor();
     renderGraph(currentMeta);
@@ -3083,7 +3242,7 @@ export function mountBugFinder(view) {
         if (detectResult) {
           detectResult.style.display = 'block';
           const conf = Math.round(res.confidence * 100);
-          detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${res.algorithm.toUpperCase().replace('_',' ')}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${res.realworld?.title || ''}</span>  <a href="#/experience?algo=${res.algorithm}" style="color:var(--c);font-family:var(--font-pixel);font-size:8px;margin-left:1rem;">VISUALIZE →</a>`;
+          detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${res.algorithm.toUpperCase().replace('_',' ')}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${res.realworld?.title || ''}</span>  <a href="#/experience?algo=${res.algorithm}" style="color:var(--c);font-family:var(--font-pixel);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
         }
       } catch { /* silent */ }
     }, 600);

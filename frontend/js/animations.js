@@ -1,3 +1,9 @@
+// GSAP clamps its delta when a frame runs long ("lag smoothing"), which stalls
+// tweens on slow machines and in background tabs. Our reveals animate *from*
+// opacity 0, so a stalled tween leaves content permanently invisible. Use real
+// elapsed time instead.
+if (typeof gsap !== 'undefined') gsap.ticker.lagSmoothing(0);
+
 export function initCursor() {
   const cursor = document.getElementById('cursor');
   if (!cursor || matchMedia('(pointer: coarse)').matches) return;
@@ -25,6 +31,16 @@ export function playLoader(callback) {
   }, 100);
 
   let done = false;
+  let handedOff = false;
+
+  // Booting the app must never depend on an animation finishing.
+  const handOff = () => {
+    if (handedOff) return;
+    handedOff = true;
+    loader.style.display = 'none';
+    if (callback) callback();
+  };
+
   const finish = () => {
     if (done) return;
     done = true;
@@ -32,10 +48,12 @@ export function playLoader(callback) {
     clearTimeout(safety);
     bar.style.width = '100%';
     count.textContent = '100';
-    gsap.to(loader, { opacity: 0, duration: 0.3, onComplete: () => {
-      loader.style.display = 'none';
-      if (callback) callback();
-    }});
+    if (typeof gsap !== 'undefined') {
+      gsap.to(loader, { opacity: 0, duration: 0.3, onComplete: handOff });
+      setTimeout(handOff, 700);   // fade is cosmetic; the handoff is not
+    } else {
+      handOff();
+    }
   };
 
   // Safety net: requestAnimationFrame is throttled in background tabs and on
@@ -57,18 +75,30 @@ export function playLoader(callback) {
   });
 }
 
+// Entry reveal is CSS-driven on purpose — see the .av-reveal note in main.css.
+// A stalled JS tween used to leave whole pages invisible.
 export function revealView(el) {
   if (!el) return;
-  const targets = Array.from(el.querySelectorAll('h1, h2, p, .panel, .world-card, .a2z-card, .act-card, .btn, .eyebrow'));
+  const targets = Array.from(el.querySelectorAll(
+    'h1, h2, p, .panel, .world-card, .a2z-card, .act-card, .btn, .eyebrow'));
   if (!targets.length) return;
-  gsap.from(targets, {
-    y: 24,
-    opacity: 0,
-    duration: 0.5,
-    stagger: 0.06,
-    ease: "power3.out",
-    clearProps: "all"
+
+  // Total stagger stays under ~0.6s however many cards there are
+  const step = Math.min(30, 600 / targets.length);
+
+  targets.forEach((t, i) => {
+    t.classList.remove('av-reveal');
+    t.style.animationDelay = `${Math.round(i * step)}ms`;
+    // Restart the animation even if the class was just removed
+    void t.offsetWidth;
+    t.classList.add('av-reveal');
   });
+
+  // Drop the class once it has played so later layout work isn't affected
+  setTimeout(() => targets.forEach(t => {
+    t.classList.remove('av-reveal');
+    t.style.removeProperty('animation-delay');
+  }), 1400);
 }
 
 export async function pageTransition(render) {

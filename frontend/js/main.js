@@ -1,5 +1,4 @@
 import { NAV } from './data.js';
-import { initScene } from './scene.js';
 import { initCursor, playLoader } from './animations.js';
 import { initRouter } from './router.js';
 
@@ -70,16 +69,14 @@ async function start() {
     initCursor();
     initVizzy();
 
-    const canvas = document.getElementById('bg-canvas');
-    let scene = null;
-    try {
-      if (canvas) scene = initScene(canvas);
-    } catch (e) {
-      console.warn("Scene init failed:", e);
-    }
+    // Background stays intentionally calm — the 3D lives in the home
+    // keyboard, not behind every page.
+    const scene = null;
+    document.getElementById('bg-canvas')?.remove();
 
     playLoader(() => {
       initRouter({ scene });
+      import('./hud.js').then(m => m.initHUD()).catch(e => console.warn('HUD failed:', e));
     });
 
   } catch (err) {

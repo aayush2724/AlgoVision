@@ -40,6 +40,11 @@ const SHORT = {
   binary_search: 'BIN', bst_search: 'BSTs', two_sum_sorted: '2SUM', sliding_window: 'WIN', kadanes: 'KDN',
   linked_list_reverse: 'LIST', balanced_brackets: '{ }', bst_insert: 'BST', heap_insert: 'HEAP',
   fibonacci_dp: 'FIB', knapsack_01: 'KNAP', lcs: 'LCS',
+  edit_distance: 'EDIT', topological_sort: 'TOPO', counting_sort: 'CNT',
+  prefix_sums: 'PRE', next_greater_element: 'NGE', floyd_cycle: 'CYCL',
+  tree_traversal: 'WALK', trie_insert: 'TRIE', n_queens: 'NQ',
+  unique_paths: 'PATH', sieve: 'PRIME',
+  kmp_search: 'KMP', segment_tree: 'SEG', fenwick_tree: 'BIT',
 };
 
 // Layout entries: a = algorithm key, g = glyph novelty, m = modifier.
@@ -49,16 +54,20 @@ const G = (glyph, c = 'grey', w = 1) => ({ t: 'g', glyph, c, w });
 const M = (label, w, c = 'cream')    => ({ t: 'm', label, c, w });
 
 const LAYOUT = [
-  [ M('ESC', 1, 'orange'), G('1'), G('2'), A('fibonacci_dp'), G('4'), G('5'),
+  [ M('FN', 1, 'grey'), A('tree_traversal'), A('trie_insert'), G('F3'), A('n_queens'),
+    G('F5'), A('unique_paths'), G('F7'), A('sieve'), A('kmp_search'), G('F10'),
+    A('segment_tree'), A('fenwick_tree'), M('DEL', 2, 'orange') ],
+  [ M('ESC', 1, 'orange'), A('edit_distance'), G('2'), A('fibonacci_dp'), G('4'), G('5'),
     A('knapsack_01'), G('7'), G('8'), G('9', 'tan'), A('lcs'), G('-'), G('='), M('⌫', 2) ],
-  [ M('TAB', 1.5), A('dijkstra'), G('λ'), A('bfs'), G('Σ'), A('dfs'), G('π'),
-    G('∞', 'tan'), A('prims_mst'), G('⊕'), A('kruskals_mst'), G('√'),
-    A('balanced_brackets'), G('∴', 'grey', 1.5) ],
-  [ M('CAPS', 1.75), A('merge_sort'), G('α'), A('quick_sort'), G('Δ'), A('bubble_sort'),
-    G('θ'), A('insertion_sort'), G('μ'), A('selection_sort'), G('Ω', 'tan'),
-    A('bst_search'), M('ENTER', 2.25) ],
-  [ M('SHIFT', 2.25), A('binary_search'), G('✦'), A('linked_list_reverse'), A('two_sum_sorted'),
-    G('◇', 'tan'), A('sliding_window'), A('bst_insert'), G('∂'), A('kadanes'),
+  [ M('TAB', 1.5), A('dijkstra'), G('λ'), A('bfs'), G('Σ'), A('dfs'),
+    A('topological_sort'), G('∞', 'tan'), A('prims_mst'), G('⊕'),
+    A('kruskals_mst'), G('√'), A('balanced_brackets'), G('∴', 'grey', 1.5) ],
+  [ M('CAPS', 1.75), A('merge_sort'), A('counting_sort'), A('quick_sort'), G('Δ'),
+    A('bubble_sort'), G('θ'), A('insertion_sort'), G('μ'), A('selection_sort'),
+    G('Ω', 'tan'), A('bst_search'), M('ENTER', 2.25) ],
+  [ M('SHIFT', 2.25), A('binary_search'), A('prefix_sums'), A('linked_list_reverse'),
+    A('two_sum_sorted'), A('next_greater_element'), A('sliding_window'),
+    A('bst_insert'), A('floyd_cycle'), A('kadanes'),
     A('heap_insert'), M('SHIFT', 2.75) ],
   [ M('CTRL', 1.25, 'grey'), M('FN', 1.25, 'grey'), M('ALT', 1.25, 'grey'),
     M('ALGOVISION', 6.25), M('ALT', 1.25, 'grey'), M('⌘', 1.25, 'grey'), M('CTRL', 2.5, 'grey') ],

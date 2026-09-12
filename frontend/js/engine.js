@@ -212,11 +212,32 @@ const VIEW_FOR = {
   two_sum_sorted: 'array', sliding_window: 'array', kadanes: 'array',
   knapsack_01: 'grid', lcs: 'grid',
   fibonacci_dp: 'table',
+  topological_sort: 'graph',
+  counting_sort: 'array', prefix_sums: 'array', next_greater_element: 'array',
+  edit_distance: 'grid', floyd_cycle: 'list',
+  tree_traversal: 'tree', trie_insert: 'tree',
+  n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
+  kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
 };
 
 function resolveAlgoId(raw) {
   const key = String(raw || '').toLowerCase().replace(/[\s-]/g, '');
+  // An exact catalog id always wins. The fuzzy list below is only for
+  // aliases and scene names; without this, a new algorithm that matches no
+  // alias would silently fall through to the dijkstra default.
+  if (DATA.ALGORITHMS.some(a => a.id === key)) return key;
   const MAP = [
+    ['edit_distance', 'edit_distance'], ['editdistance', 'edit_distance'],
+    ['levenshtein', 'edit_distance'],
+    ['topological', 'topological_sort'], ['toposort', 'topological_sort'],
+    ['kahn', 'topological_sort'],
+    ['counting_sort', 'counting_sort'], ['countingsort', 'counting_sort'],
+    ['counting', 'counting_sort'],
+    ['prefix', 'prefix_sums'], ['rangesum', 'prefix_sums'],
+    ['nextgreater', 'next_greater_element'], ['next_greater', 'next_greater_element'],
+    ['monotonic', 'next_greater_element'], ['nge', 'next_greater_element'],
+    ['floyd', 'floyd_cycle'], ['tortoise', 'floyd_cycle'],
+    ['cycledetect', 'floyd_cycle'], ['detectcycle', 'floyd_cycle'],
     ['fibonacci_dp', 'fibonacci_dp'], ['fibonacci', 'fibonacci_dp'],
     ['dynamic_programming', 'fibonacci_dp'], ['memovault', 'fibonacci_dp'],
     ['vault', 'fibonacci_dp'],
@@ -232,7 +253,7 @@ function resolveAlgoId(raw) {
     ['unionfind', 'kruskals_mst'], ['dsu', 'kruskals_mst'],
     ['spanningtree', 'prims_mst'], ['mst', 'prims_mst'],
     ['knapsack_01', 'knapsack_01'], ['knapsack', 'knapsack_01'],
-    ['lcs', 'lcs'], ['longestcommon', 'lcs'], ['dna', 'lcs'], ['editdistance', 'lcs'],
+    ['lcs', 'lcs'], ['longestcommon', 'lcs'], ['dna', 'lcs'],
     ['two_sum_sorted', 'two_sum_sorted'], ['twosum', 'two_sum_sorted'],
     ['two_pointers', 'two_sum_sorted'], ['twopointer', 'two_sum_sorted'],
     ['market', 'two_sum_sorted'],
@@ -260,6 +281,9 @@ function resolveAlgoId(raw) {
 }
 
 const fmt = (v) => String(Number(v));
+// Cells are usually numbers, but some structures carry glyphs or letters
+// (a trie's characters, a chessboard's queens) — pass those through as-is.
+const fmtCell = (v) => (typeof v === 'string' ? v : fmt(v));
 
 // Undirected edge key — same key for either direction
 function edgeKey(a, b) {
@@ -278,7 +302,23 @@ const COUNT_LABELS = {
   additions: 'ADDITIONS', windows: 'WINDOWS',
   extensions: 'EXTENSIONS', restarts: 'RESTARTS', steps: 'STEPS',
   cells: 'CELLS', takes: 'TAKES', skips: 'SKIPS', matches: 'MATCHES',
-  additions: 'EDGES ADDED', rejections: 'CYCLES AVOIDED',
+  edges_added: 'EDGES ADDED', rejections: 'CYCLES AVOIDED',
+  emitted: 'TASKS EMITTED', edge_relaxations: 'DEPENDENCIES CLEARED',
+  tallies: 'TALLIES', query_ops: 'RANGE QUERIES',
+  free_matches: 'FREE MATCHES', edits_charged: 'EDITS CHARGED',
+  slow_moves: 'SLOW STEPS', fast_moves: 'FAST STEPS',
+  descents: 'RECURSIVE CALLS', nodes_created: 'NODES CREATED',
+  prefix_reuses: 'PREFIXES REUSED', words_added: 'WORDS ADDED',
+  placements: 'QUEENS PLACED', conflicts: 'SQUARES REJECTED',
+  solutions: 'SOLUTIONS', blocked: 'WALLS',
+  primes_found: 'PRIMES FOUND', crossings: 'NUMBERS CROSSED OUT',
+  skipped_as_done: 'PAST √N',
+  shifts: 'PATTERN SHIFTS', naive_would_cost: 'NAIVE WOULD COST',
+  nodes_built: 'NODES BUILT', nodes_visited: 'NODES VISITED',
+  full_covers: 'WHOLE BLOCKS REUSED',
+  elements_scanned_naively: 'NAIVE WOULD SCAN',
+  updates: 'VALUES FOLDED IN', slots_touched: 'SLOTS TOUCHED',
+  query_reads: 'SLOTS READ',
   unions: 'UNIONS', cycles_skipped: 'CYCLES SKIPPED',
 };
 
@@ -622,7 +662,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       val.setAttribute("font-family", "var(--font-mono)");
       val.setAttribute("font-size", w < 34 ? "11" : "14");
       val.setAttribute("id", `cellval-${idx}`);
-      val.textContent = fmt(v);
+      val.textContent = fmtCell(v);
       g.appendChild(val);
 
       const pos = makeSVG("text");
@@ -645,7 +685,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (Array.isArray(s.array)) {
       s.array.forEach((v, idx) => {
         const el = svg.querySelector(`#cellval-${idx}`);
-        if (el) el.textContent = fmt(v);
+        if (el) el.textContent = fmtCell(v);
       });
     }
     for (let idx = 0; idx < currentArrayValues.length; idx++) {
@@ -744,6 +784,58 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '-2, 1, -3, 4, -1, 2, 1, -5, 4',
       hint: 'Negatives welcome — that\'s the whole point. Extend the run or cut your losses.',
     },
+    counting_sort: {
+      array: '4, 2, 2, 8, 3, 3, 1',
+      hint: 'Whole numbers 0–20 only. It sorts without ever comparing two values — try a big value like 20 and watch the empty buckets it costs.',
+    },
+    prefix_sums: {
+      array: '3, 1, 4, 1, 5, 9',
+      hint: 'The cells become running totals, not your original values. Any range sum then costs one subtraction.',
+    },
+    next_greater_element: {
+      array: '2, 1, 2, 4, 3',
+      hint: 'For each value, the first bigger one to its right. Try a descending list — nothing ever gets popped.',
+    },
+    edit_distance: {
+      array: 'KITTEN, SITTING',
+      hint: 'Two words, comma-separated (1–8 chars each). The answer is the fewest insert/delete/substitute edits.',
+    },
+    floyd_cycle: {
+      array: '1, 2, 3, 4, 5', target: '2',
+      hint: 'LOOPS TO is the index the tail points back to — use -1 for a normal list with no cycle.',
+    },
+    tree_traversal: {
+      array: '8, 3, 10, 1, 6, 14, 4',
+      hint: 'Up to 12 values. The same tree is walked three ways — watch inorder come out sorted.',
+    },
+    trie_insert: {
+      array: 'CAT, CAR, DOG',
+      hint: 'Up to 5 words, letters only. Words sharing a prefix reuse the same path — that is the whole idea.',
+    },
+    n_queens: {
+      array: '', target: '6',
+      hint: 'Board size 4–6. Watch queens get placed and then taken back off — that undo is backtracking.',
+    },
+    unique_paths: {
+      array: '', target: '4',
+      hint: 'Grid side 2–7. Optionally add walls as row:col pairs (e.g. 1:1, 2:0) and watch the count drop.',
+    },
+    kmp_search: {
+      array: 'ABABDABACDABABCABAB, ABABCABAB',
+      hint: 'Text and pattern, comma-separated. Watch the failure table get built first — that is the real algorithm.',
+    },
+    segment_tree: {
+      array: '3, 1, 4, 1, 5, 9, 2, 6', target: '',
+      hint: 'Up to 8 values. Optionally set a query range as lo:hi in the range box — blank sums everything.',
+    },
+    fenwick_tree: {
+      array: '3, 1, 4, 1, 5, 9, 2, 6', target: '4',
+      hint: 'Up to 8 values. UP TO is the prefix end index — watch the low-bit trick pick which slots to read.',
+    },
+    sieve: {
+      array: '', target: '30',
+      hint: 'Upper limit 10–50. Crossing out starts at p², not 2p — the trace shows why that is safe.',
+    },
     bst_insert: {
       array: '8, 3, 10, 1, 6, 14, 4',
       hint: 'Up to 12 values — try inserting sorted numbers and watch the tree degenerate into a chain.',
@@ -770,7 +862,64 @@ export function mountEngine(view, algo = 'dijkstra') {
     },
   };
 
+  // Algorithms whose only input is a single number, whatever their view.
+  const NUMBER_ONLY = { sieve: [10, 50, 'N ='], n_queens: [4, 6, 'BOARD ='] };
+
   function parseArrayInput() {
+    const numOnly = NUMBER_ONLY[algoId];
+    if (numOnly) {
+      const [lo, hi] = numOnly;
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t) || t !== Math.floor(t)) {
+        return { error: 'Enter a whole number.' };
+      }
+      if (t < lo || t > hi) return { error: `Keep it between ${lo} and ${hi}.` };
+      return { target: t };
+    }
+
+    if (algoId === 'unique_paths') {
+      const side = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(side) || side !== Math.floor(side) || side < 2 || side > 7) {
+        return { error: 'Grid side must be a whole number 2–7.' };
+      }
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw) return { target: side };
+      if (!/^\d+:\d+(,\d+:\d+)*$/.test(raw)) {
+        return { error: 'Walls are row:col pairs — e.g. 1:1, 2:0. Leave blank for an open grid.' };
+      }
+      const walls = raw.split(',').map(p => p.split(':').map(Number));
+      if (walls.some(([r, c]) => r >= side || c >= side)) {
+        return { error: `Wall coordinates must be within 0–${side - 1}.` };
+      }
+      if (walls.some(([r, c]) => r === 0 && c === 0)) {
+        return { error: 'The start square cannot be a wall.' };
+      }
+      return { target: side, text: raw };
+    }
+
+    if (algoId === 'kmp_search') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{1,24},[A-Z0-9]{1,12}$/.test(raw)) {
+        return { error: 'Text then pattern, comma-separated — e.g. ABABCABAB, ABAB' };
+      }
+      const [hay, needle] = raw.split(',');
+      if (needle.length > hay.length) {
+        return { error: 'The pattern cannot be longer than the text.' };
+      }
+      return { text: raw, chars: hay.split('') };
+    }
+
+    if (algoId === 'trie_insert') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      const words = raw.split(',').filter(Boolean);
+      if (!words.length) return { error: 'Type some words — e.g. CAT, CAR, DOG' };
+      if (words.length > 5) return { error: 'Max 5 words.' };
+      if (words.some(w => !/^[A-Z]{1,8}$/.test(w))) {
+        return { error: 'Letters only, 1–8 characters per word.' };
+      }
+      return { text: words.join(','), words };
+    }
+
     if (traceView === 'table') {
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isFinite(t) || t !== Math.floor(t)) return { error: 'Enter a whole number n.' };
@@ -801,7 +950,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
         return { text: raw, target: cap, items };
       }
-      // lcs
+      // lcs and edit_distance — both take two comma-separated words
       const up = raw.toUpperCase();
       if (!/^[A-Z0-9]{1,8},[A-Z0-9]{1,8}$/.test(up)) {
         return { error: 'Two words (letters/digits, 1–8 chars each), comma-separated.' };
@@ -815,10 +964,50 @@ export function mountEngine(view, algo = 'dijkstra') {
     const values = parts.map(Number);
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
-    const maxLen = algoId === 'linked_list_reverse' ? 10
+    const maxLen = (algoId === 'linked_list_reverse' || algoId === 'floyd_cycle') ? 10
       : traceView === 'tree' ? 12
       : algoId === 'binary_search' ? 20 : 16;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
+
+    if (algoId === 'segment_tree') {
+      const raw = (targetInput?.value || '').trim();
+      if (!raw) return { array: values };
+      if (!/^\d+:\d+$/.test(raw)) {
+        return { error: 'Query range is lo:hi — e.g. 2:5. Leave blank to sum everything.' };
+      }
+      const [lo, hi] = raw.split(':').map(Number);
+      if (lo > hi || hi >= values.length) {
+        return { error: `Range must satisfy 0 ≤ lo ≤ hi ≤ ${values.length - 1}.` };
+      }
+      return { array: values, text: raw };
+    }
+
+    if (algoId === 'fenwick_tree') {
+      const raw = (targetInput?.value || '').trim();
+      const t = raw === '' ? values.length - 1 : Number(raw);
+      if (!Number.isFinite(t) || t !== Math.floor(t) || t < 0 || t >= values.length) {
+        return { error: `Prefix end index must be 0–${values.length - 1}.` };
+      }
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'counting_sort') {
+      if (values.some(v => v !== Math.floor(v) || v < 0 || v > 20)) {
+        return { error: 'Counting sort needs whole numbers 0–20 — one bucket per value.' };
+      }
+      return { array: values };
+    }
+
+    if (algoId === 'floyd_cycle') {
+      const raw = (targetInput?.value || '').trim();
+      // Blank means a normal terminated list; otherwise it is the index the
+      // tail loops back to.
+      const t = raw === '' ? -1 : Number(raw);
+      if (!Number.isFinite(t) || t !== Math.floor(t) || t < -1 || t >= values.length) {
+        return { error: `Link-back index must be -1 (no cycle) or 0–${values.length - 1}.` };
+      }
+      return { array: values, target: t };
+    }
 
     if (algoId === 'bst_search') {
       const t = Number((targetInput?.value || '').trim());
@@ -971,7 +1160,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       val.setAttribute("fill", "var(--cBright)");
       val.setAttribute("font-family", "var(--font-mono)");
       val.setAttribute("font-size", "13");
-      val.textContent = fmt(v);
+      val.textContent = fmtCell(v);
       svg.appendChild(val);
 
       const pos = makeSVG("text");
@@ -1028,13 +1217,21 @@ export function mountEngine(view, algo = 'dijkstra') {
       g.appendChild(head);
     });
 
-    // Pointer labels under the index row
-    const ptrs = [['P', s.prev, 'var(--cBright)'], ['C', s.curr, 'var(--c)'],
-                  ['S', s.saved, 'var(--cDim)']];
+    // Pointer labels under the index row. A step may name its own pointers
+    // (Floyd's slow/fast); otherwise fall back to the prev/curr/next trio.
+    const palette = ['var(--c)', 'var(--cBright)', 'var(--cDim)'];
+    const ptrs = Array.isArray(s.pointers) && s.pointers.length
+      ? s.pointers.map(([label, idx], n) => [label, idx, palette[n % palette.length]])
+      : [['P', s.prev, 'var(--cBright)'], ['C', s.curr, 'var(--c)'],
+         ['S', s.saved, 'var(--cDim)']];
+    const seenAt = {};
     ptrs.forEach(([label, idx, color]) => {
       if (idx === null || idx === undefined) return;
+      // Two pointers can share a node (that's the whole point of Floyd's
+      // collision) — fan them out so neither label hides the other.
+      const nth = seenAt[idx] = (seenAt[idx] ?? -1) + 1;
       const t = makeSVG('text');
-      t.setAttribute('x', cx(idx));
+      t.setAttribute('x', cx(idx) + nth * 11);
       t.setAttribute('y', y + h + 46);
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', color);
@@ -1269,7 +1466,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       t.setAttribute('fill', 'var(--cBright)');
       t.setAttribute('font-family', 'var(--font-mono)');
       t.setAttribute('font-size', '11');
-      t.textContent = fmt(n.value);
+      t.textContent = fmtCell(n.value);
       g.appendChild(t);
     });
 
@@ -1384,7 +1581,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         g.appendChild(rect);
         if (filled) {
           text(x0 + cw * (c + 1) + cw / 2, y0 + ch * (r + 1) + ch / 2 + 3.5,
-            fmt(v), 'var(--cBright)', ch < 26 ? '9' : '11');
+            fmtCell(v), 'var(--cBright)', ch < 26 ? '9' : '11');
         }
       }
     }
@@ -2332,7 +2529,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
       if (algorithm === 'prims_mst') {
         const inTree = new Set([startNode]);
-        const counts = { edge_checks: 0, additions: 0, rejections: 0 };
+        const counts = { edge_checks: 0, edges_added: 0, rejections: 0 };
         const add = (note2, node = null, edge = null) => steps.push({
           i: steps.length,
           structures: { visited: [...inTree].sort(), mst_edges: mst.map(e => e.slice()),
@@ -2351,7 +2548,7 @@ export function mountEngine(view, algo = 'dijkstra') {
             add(`Edge ${u}–${v} (${fmt(w)}) leads back into the tree — would make a cycle. Skip.`, v, [u, v]);
             continue;
           }
-          inTree.add(v); mst.push([u, v]); total += w; counts.additions++;
+          inTree.add(v); mst.push([u, v]); total += w; counts.edges_added++;
           add(`Add edge ${u}–${v} (${fmt(w)}) — cheapest way to a new node. ` +
             `Tree spans ${inTree.size} of ${allIds.length}.`, v, [u, v]);
           (adj[v] || []).forEach(e => { if (!inTree.has(e.to)) frontier.push({ w: e.w, u: v, v: e.to }); });
@@ -2507,14 +2704,57 @@ export function mountEngine(view, algo = 'dijkstra') {
             : await api.postTrace(algoId, { target: parsed.target });
         } else if (traceView === 'list') {
           renderListView(parsed.array);
+          const payload = algoId === 'floyd_cycle'
+            ? { array: parsed.array, target: parsed.target }
+            : { array: parsed.array };
           res = isOffline
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array });
+            : await api.postTrace(algoId, payload);
         } else if (traceView === 'stack') {
           renderStackView(parsed.text);
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'kmp_search') {
+          renderArrayView(parsed.chars);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'segment_tree') {
+          renderTreeView();
+          const payload = parsed.text
+            ? { array: parsed.array, text: parsed.text }
+            : { array: parsed.array };
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, payload);
+        } else if (algoId === 'fenwick_tree') {
+          renderArrayView(parsed.array);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+        } else if (algoId === 'trie_insert') {
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'n_queens' || algoId === 'sieve') {
+          if (algoId === 'sieve') {
+            renderArrayView(Array.from({ length: parsed.target + 1 }, (_, i) => i));
+          } else {
+            renderGridView();
+          }
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { target: parsed.target });
+        } else if (algoId === 'unique_paths') {
+          renderGridView();
+          const payload = parsed.text
+            ? { target: parsed.target, text: parsed.text }
+            : { target: parsed.target };
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, payload);
         } else if (traceView === 'tree') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
@@ -3161,22 +3401,29 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (traceView !== 'graph') {
       const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
       if (arrayControls) arrayControls.classList.remove('is-hidden');
-      if (traceView === 'table') {
-        // Table algorithms take a single n, not an array
+      const numberOnly = !!NUMBER_ONLY[algoId];
+      if (traceView === 'table' || numberOnly) {
+        // These take a single number, not an array
         if (arrayInput) arrayInput.style.display = 'none';
         const targetLabel = view.querySelector('#target-label');
-        if (targetLabel) targetLabel.textContent = 'N =';
+        if (targetLabel) targetLabel.textContent = NUMBER_ONLY[algoId]?.[2] || 'N =';
       } else if (arrayInput && !arrayInput.value) {
         arrayInput.value = defaults.array;
       }
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
-        'sliding_window', 'knapsack_01'].includes(algoId) || traceView === 'table';
+        'sliding_window', 'knapsack_01', 'floyd_cycle',
+        'unique_paths', 'segment_tree', 'fenwick_tree'].includes(algoId)
+        || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
         const targetLabel = view.querySelector('#target-label');
         if (targetLabel && algoId === 'sliding_window') targetLabel.textContent = 'K =';
         if (targetLabel && algoId === 'knapsack_01') targetLabel.textContent = 'CAP =';
+        if (targetLabel && algoId === 'floyd_cycle') targetLabel.textContent = 'LOOPS TO =';
+        if (targetLabel && algoId === 'unique_paths') targetLabel.textContent = 'GRID =';
+        if (targetLabel && algoId === 'segment_tree') targetLabel.textContent = 'RANGE =';
+        if (targetLabel && algoId === 'fenwick_tree') targetLabel.textContent = 'UP TO =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.
@@ -3184,7 +3431,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (whatIfDetails) whatIfDetails.style.display = 'none';
       const parsed = parseArrayInput();
       if (traceView === 'table') renderTableView(parsed.target ?? 10);
-      else if (traceView === 'list') renderListView(parsed.array || []);
+      else if (algoId === 'kmp_search') renderArrayView(parsed.chars || []);
+      else if (algoId === 'sieve') {
+        renderArrayView(Array.from({ length: (parsed.target ?? 30) + 1 }, (_, i) => i));
+      } else if (traceView === 'list') renderListView(parsed.array || []);
       else if (traceView === 'stack') renderStackView(parsed.text || '');
       else if (traceView === 'tree') renderTreeView();
       else if (traceView === 'grid') renderGridView();

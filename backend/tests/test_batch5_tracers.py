@@ -62,7 +62,7 @@ class TestPrims:
 
     def test_counts_present(self):
         final = _final(prims_mst.trace(GRAPH, "A"))
-        assert final["counts"]["additions"] == len(GRAPH.nodes) - 1
+        assert final["counts"]["edges_added"] == len(GRAPH.nodes) - 1
         assert final["counts"]["edge_checks"] > 0
 
 
@@ -145,7 +145,8 @@ class TestBatch5Endpoints:
     def test_algorithms_listing_has_batch5_set(self):
         ids = {a["id"] for a in client.get("/api/trace/algorithms").json()["algorithms"]}
         assert {"prims_mst", "kruskals_mst"} <= ids
-        assert len(ids) == 22
+        # A lower bound, not an exact count — later batches keep adding.
+        assert len(ids) >= 22
 
     def test_detect_mst_metas(self):
         for problem in ("prims_mst", "kruskals_mst"):

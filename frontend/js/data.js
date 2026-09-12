@@ -77,6 +77,34 @@ export const ALGORITHMS = [
     hook: "A limited hold, priceless cargo." },
   { id: "lcs",          name: "Longest Common Subsequence", category: "DP", emoji: "🧬", complexity: "O(n·m)", input: "text",
     hook: "Find the sequence two strands share." },
+  { id: "edit_distance", name: "Edit Distance (Levenshtein)", category: "DP", emoji: "✍️", complexity: "O(n·m)", input: "text",
+    hook: "How many keystrokes turn one word into another?" },
+  { id: "topological_sort", name: "Topological Sort (Kahn's)", category: "Graphs", emoji: "🗓️", complexity: "O(V + E)", input: "graph",
+    hook: "Order the tasks so nothing starts before its prerequisite." },
+  { id: "counting_sort", name: "Counting Sort",             category: "Sorting", emoji: "🗳️", complexity: "O(n + k)", input: "array",
+    hook: "Sort without ever comparing two values." },
+  { id: "prefix_sums",  name: "Prefix Sums",                category: "Patterns", emoji: "🧾", complexity: "O(n) build, O(1) query", input: "array",
+    hook: "Pay once, then answer any range sum instantly." },
+  { id: "next_greater_element", name: "Next Greater Element", category: "Patterns", emoji: "📈", complexity: "O(n)", input: "array",
+    hook: "Who is the first taller person to your right?" },
+  { id: "floyd_cycle",  name: "Cycle Detection (Floyd's)",  category: "Structures", emoji: "🐢", complexity: "O(n) time, O(1) space", input: "array",
+    hook: "Two runners at different speeds reveal a hidden loop." },
+  { id: "tree_traversal", name: "Tree Traversals",          category: "Structures", emoji: "🌳", complexity: "O(n)", input: "array",
+    hook: "One tree, three reading orders — inorder comes out sorted." },
+  { id: "trie_insert",  name: "Trie — Prefix Tree",         category: "Structures", emoji: "🔤", complexity: "O(word length)", input: "text",
+    hook: "How autocomplete stores a dictionary without repeating prefixes." },
+  { id: "n_queens",     name: "N-Queens",                   category: "Patterns", emoji: "♛", complexity: "O(n!)", input: "number",
+    hook: "Place, fail, take it back — backtracking you can watch." },
+  { id: "unique_paths", name: "Unique Paths",               category: "DP", emoji: "🤖", complexity: "O(rows·cols)", input: "number",
+    hook: "Count every route to the corner without listing one." },
+  { id: "sieve",        name: "Sieve of Eratosthenes",      category: "Searching", emoji: "🔱", complexity: "O(n log log n)", input: "number",
+    hook: "Strike out the multiples; the primes are what's left." },
+  { id: "kmp_search",   name: "KMP Substring Search",       category: "Patterns", emoji: "🧾", complexity: "O(n + m)", input: "text",
+    hook: "Find a pattern without ever re-reading a character." },
+  { id: "segment_tree", name: "Segment Tree",               category: "Structures", emoji: "🗼", complexity: "O(log n) query", input: "array",
+    hook: "Range sums in log time, because every node summarises a block." },
+  { id: "fenwick_tree", name: "Fenwick Tree (BIT)",         category: "Structures", emoji: "🪜", complexity: "O(log n)", input: "array",
+    hook: "Prefix sums that stay cheap when the numbers change." },
 ];
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -348,7 +376,7 @@ export const COMPLEXITY = {
   prims_mst: {
     rows: [["Time", "O(E log V)"], ["Space", "O(V + E)"], ["Tree edges", "V − 1"]],
     reading: (c, s) =>
-      `${c.edge_checks ?? 0} frontier edges examined to add ${c.additions ?? 0} — ` +
+      `${c.edge_checks ?? 0} frontier edges examined to add ${c.edges_added ?? 0} — ` +
       `always V−1 = ${Math.max(s.V - 1, 0)} for ${s.V} nodes, no matter how many ` +
       `edges exist. ${c.rejections ?? 0} were skipped as cycles.`,
   },
@@ -380,6 +408,106 @@ export const COMPLEXITY = {
       `${c.calls ?? 0} total calls for fib(${s.n}). Naive recursion would need ` +
       `~${Math.round(Math.pow(1.618, Math.max(s.n, 1)))} calls — the vault turned ` +
       `exponential into linear.`,
+  },
+  topological_sort: {
+    rows: [["Time", "O(V + E)"], ["Space", "O(V)"], ["Detects cycles", "yes"]],
+    reading: (c, s) =>
+      `${c.emitted ?? 0} tasks emitted after clearing ${c.edge_relaxations ?? 0} ` +
+      `dependencies — every node and every edge touched exactly once, which is ` +
+      `the V + E. If it stops early, the leftovers form a cycle.`,
+  },
+  counting_sort: {
+    rows: [["Time", "O(n + k)"], ["Space", "O(k)"], ["Comparisons", "0"]],
+    reading: (c, s) =>
+      `${c.tallies ?? 0} tallies then ${c.writes ?? 0} writes, with ` +
+      `${c.comparisons ?? 0} comparisons — it never compares two values. The catch ` +
+      `is k: the bucket array is sized by your largest value, not your count.`,
+  },
+  prefix_sums: {
+    rows: [["Build", "O(n)"], ["Each query", "O(1)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.additions ?? 0} additions to build, then ${c.query_ops ?? 0} range ` +
+      `query answered by a single subtraction. Ten more queries would still cost ` +
+      `one subtraction each — that is the trade for the O(n) setup.`,
+  },
+  next_greater_element: {
+    rows: [["Time", "O(n)"], ["Space", "O(n)"], ["Naive", "O(n²)"]],
+    reading: (c, s) =>
+      `${c.pushes ?? 0} pushes and ${c.pops ?? 0} pops — each index enters and ` +
+      `leaves the stack at most once, so the work is linear even though the code ` +
+      `has a loop inside a loop.`,
+  },
+  edit_distance: {
+    rows: [["Time", "O(n·m)"], ["Space", "O(n·m)"], ["Traceback", "O(n + m)"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cells filled — ${c.free_matches ?? 0} were free matches and ` +
+      `${c.edits_charged ?? 0} cost an edit. Every cell is one min() over three ` +
+      `neighbours, which is why the grid is the whole algorithm.`,
+  },
+  floyd_cycle: {
+    rows: [["Time", "O(n)"], ["Space", "O(1)"], ["vs. hash set", "O(n) space"]],
+    reading: (c, s) =>
+      `${c.slow_moves ?? 0} slow steps against ${c.fast_moves ?? 0} fast ones. ` +
+      `Storing every visited node in a set would also find the loop — but this ` +
+      `uses two pointers and no extra memory at all.`,
+  },
+  tree_traversal: {
+    rows: [["Time", "O(n) per walk"], ["Space", "O(height)"], ["Walks shown", "3"]],
+    reading: (c, s) =>
+      `${c.visits ?? 0} reads across three traversals of the same tree, with ` +
+      `${c.descents ?? 0} recursive calls. Each walk touches every node once — ` +
+      `only the moment of reading moves.`,
+  },
+  trie_insert: {
+    rows: [["Insert", "O(word length)"], ["Lookup", "O(word length)"], ["Space", "O(total chars)"]],
+    reading: (c, s) =>
+      `${c.words_added ?? 0} words in ${c.nodes_created ?? 0} nodes, with ` +
+      `${c.prefix_reuses ?? 0} steps riding an existing prefix. Lookup never ` +
+      `depends on how many words are stored — only on how long yours is.`,
+  },
+  n_queens: {
+    rows: [["Worst case", "O(n!)"], ["Space", "O(n)"], ["Pruning", "rows + diagonals"]],
+    reading: (c, s) =>
+      `${c.placements ?? 0} queens placed, ${c.conflicts ?? 0} squares rejected ` +
+      `outright and ${c.backtracks ?? 0} taken back off. Pruning attacked ` +
+      `squares before recursing is what keeps this far below brute force.`,
+  },
+  unique_paths: {
+    rows: [["Time", "O(rows·cols)"], ["Space", "O(rows·cols)"], ["Brute force", "exponential"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cells filled with ${c.additions ?? 0} additions` +
+      `${c.blocked ? ` and ${c.blocked} wall(s)` : ''}. Every cell is solved ` +
+      `once and reused — enumerating routes individually would blow up.`,
+  },
+  kmp_search: {
+    rows: [["Time", "O(n + m)"], ["Space", "O(m)"], ["Naive", "O(n·m)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparisons and ${c.shifts ?? 0} pattern shifts, ` +
+      `finding ${c.matches ?? 0} match(es). The naive nested loop could have ` +
+      `needed up to ${c.naive_would_cost ?? 0} — the failure table is what ` +
+      `stops the text pointer from ever backing up.`,
+  },
+  segment_tree: {
+    rows: [["Build", "O(n)"], ["Query", "O(log n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.nodes_built ?? 0} nodes built once, then the query touched only ` +
+      `${c.nodes_visited ?? 0} of them and reused ${c.full_covers ?? 0} whole ` +
+      `block(s). Summing the range directly would have read ` +
+      `${c.elements_scanned_naively ?? 0} elements.`,
+  },
+  fenwick_tree: {
+    rows: [["Update", "O(log n)"], ["Query", "O(log n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.updates ?? 0} values folded into ${c.slots_touched ?? 0} slots, and ` +
+      `the prefix query read just ${c.query_reads ?? 0}. A plain prefix array ` +
+      `queries faster but costs O(n) per update — this balances both.`,
+  },
+  sieve: {
+    rows: [["Time", "O(n log log n)"], ["Space", "O(n)"], ["Crossing starts at", "p²"]],
+    reading: (c, s) =>
+      `${c.primes_found ?? 0} primes found with only ${c.crossings ?? 0} ` +
+      `crossings. ${c.skipped_as_done ?? 0} primes were past √n, where no ` +
+      `multiples remain to cross — that early stop is the optimisation.`,
   },
 };
 

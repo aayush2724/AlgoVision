@@ -13,7 +13,30 @@ Each phase below is a self-contained prompt. Execute one phase per session/turn,
 verify its acceptance criteria, then stop so the phase can be committed before
 the next begins.
 
-**Status: Phases 0–5 DONE. Next up: Phase 6 (catalog batch 1).**
+**Status: Phases 0–5 DONE. Catalog batches 1–8 DONE — 36 algorithms live,
+323 backend tests passing. Every named topic in the Tier A/B/C plan below is
+covered.**
+
+Batch log (each = tracer + view + metaphor + detect signature + tests):
+- Batches 1–5: the first 22 (graphs, all five sorts, searching, patterns,
+  structures, DP grids, MST).
+- Batch 6: topological sort (Kahn's), counting sort, prefix sums, next
+  greater element (monotonic stack), edit distance, Floyd's cycle detection.
+- Batch 7: tree traversals (in/pre/post in one trace), trie insert, N-Queens,
+  unique paths, sieve of Eratosthenes.
+- Batch 8: KMP substring search, segment tree, Fenwick tree (BIT).
+
+No new view archetypes were needed for batches 6–8: the array and grid
+renderers now tolerate string cells (`fmtCell`), so KMP shows characters and
+N-Queens shows queens without a bespoke `string` view.
+
+**Deliberately not built yet** (would each need a new interaction model, not
+just another tracer):
+- Max-flow / Ford-Fulkerson — needs residual-edge rendering on the graph view.
+- LCA / binary lifting — needs a jump-pointer overlay to be worth watching.
+- Bitmask DP — the grid view can hold it, but the subset axis needs labels
+  that read as bitmasks rather than integers.
+- A standalone DSU tracer — union-find is already visible inside Kruskal's.
 
 ---
 

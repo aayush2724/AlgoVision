@@ -14,7 +14,7 @@ def trace(graph: Graph, start: str):
     mst_edges: list = []
     total = 0.0
     steps = []
-    counts = {"edge_checks": 0, "additions": 0, "rejections": 0}
+    counts = {"edge_checks": 0, "edges_added": 0, "rejections": 0}
 
     def add(note, node=None, edge=None):
         steps.append({
@@ -55,7 +55,7 @@ def trace(graph: Graph, start: str):
         in_tree.add(v)
         mst_edges.append([u, v])
         total += w
-        counts["additions"] += 1
+        counts["edges_added"] += 1
         add(
             f"Add edge {u}–{v} ({_fmt(w)}) — the cheapest way to reach a new "
             f"node. Tree now spans {len(in_tree)} of {len(all_nodes)}.",

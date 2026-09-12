@@ -5,9 +5,13 @@ import re as _re
 
 from app.tracers import (
     balanced_brackets, bfs, binary_search, bst_insert, bst_search,
-    bubble_sort, dfs, dijkstra, fibonacci_dp, heap_insert, insertion_sort,
-    kadanes, knapsack_01, kruskals_mst, lcs, linked_list_reverse, merge_sort,
-    prims_mst, quick_sort, selection_sort, sliding_window, two_sum_sorted,
+    bubble_sort, counting_sort, dfs, dijkstra, edit_distance, fenwick_tree,
+    fibonacci_dp, floyd_cycle, heap_insert, insertion_sort, kadanes,
+    kmp_search, knapsack_01, segment_tree,
+    kruskals_mst, lcs, linked_list_reverse, merge_sort, n_queens,
+    next_greater_element, prefix_sums, prims_mst, quick_sort, selection_sort,
+    sieve, sliding_window, topological_sort, tree_traversal, trie_insert,
+    two_sum_sorted, unique_paths,
 )
 from app.tracers.common import Graph
 import os
@@ -27,6 +31,7 @@ GRAPH_TRACERS = {
     "dfs": dfs.trace,
     "prims_mst": prims_mst.trace,
     "kruskals_mst": kruskals_mst.trace,
+    "topological_sort": topological_sort.trace,
 }
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
@@ -75,6 +80,20 @@ def algorithms():
             {"id": "knapsack_01",   "name": "0/1 Knapsack (DP Grid)",   "input": "text"},
             {"id": "lcs",           "name": "Longest Common Subsequence", "input": "text"},
             {"id": "fibonacci_dp",  "name": "Fibonacci (Memoized DP)",  "input": "number"},
+            {"id": "topological_sort", "name": "Topological Sort (Kahn's)", "input": "graph"},
+            {"id": "counting_sort", "name": "Counting Sort",           "input": "array"},
+            {"id": "prefix_sums",   "name": "Prefix Sums (Range Queries)", "input": "array"},
+            {"id": "next_greater_element", "name": "Next Greater Element (Monotonic Stack)", "input": "array"},
+            {"id": "edit_distance", "name": "Edit Distance (Levenshtein)", "input": "text"},
+            {"id": "floyd_cycle",   "name": "Cycle Detection (Floyd's Tortoise & Hare)", "input": "array"},
+            {"id": "tree_traversal", "name": "Tree Traversals (In/Pre/Post-order)", "input": "array"},
+            {"id": "trie_insert",   "name": "Trie — Build a Prefix Tree", "input": "text"},
+            {"id": "n_queens",      "name": "N-Queens (Backtracking)",   "input": "number"},
+            {"id": "unique_paths",  "name": "Unique Paths (Grid DP)",    "input": "number"},
+            {"id": "sieve",         "name": "Sieve of Eratosthenes",     "input": "number"},
+            {"id": "kmp_search",    "name": "KMP Substring Search",      "input": "text"},
+            {"id": "segment_tree",  "name": "Segment Tree — Range Sum",  "input": "array"},
+            {"id": "fenwick_tree",  "name": "Fenwick Tree (BIT)",        "input": "array"},
         ]
     }
 
@@ -219,6 +238,222 @@ def run_trace(request: Request, req: TraceRequest):
       arr = _validated_array(req.array, kadanes.MAX_ARRAY_LEN, "kadanes")
       return kadanes.trace(arr)
 
+    if req.algorithm == "counting_sort":
+      arr = _validated_array(req.array, counting_sort.MAX_ARRAY_LEN, "counting_sort")
+      if any(v != int(v) or v < 0 or v > counting_sort.MAX_VALUE for v in arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Counting sort needs whole numbers from 0 to "
+                 f"{counting_sort.MAX_VALUE} — it allocates one bucket per value."
+        )
+      return counting_sort.trace([int(v) for v in arr])
+
+    if req.algorithm == "prefix_sums":
+      arr = _validated_array(req.array, prefix_sums.MAX_ARRAY_LEN, "prefix_sums")
+      return prefix_sums.trace(arr)
+
+    if req.algorithm == "next_greater_element":
+      arr = _validated_array(req.array, next_greater_element.MAX_ARRAY_LEN,
+                             "next_greater_element")
+      return next_greater_element.trace(arr)
+
+    if req.algorithm == "floyd_cycle":
+      arr = _validated_array(req.array, floyd_cycle.MAX_LIST_LEN, "floyd_cycle")
+      link = -1 if req.target is None else req.target
+      if link != int(link) or int(link) < -1 or int(link) >= max(len(arr), 1):
+        raise HTTPException(
+          status_code=400,
+          detail=f"'target' is the index the tail links back to: -1 for no "
+                 f"cycle, or 0..{max(len(arr) - 1, 0)} to create one."
+        )
+      return floyd_cycle.trace(arr, int(link))
+
+    if req.algorithm == "kmp_search":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="kmp_search requires 'text' — the haystack and the pattern "
+                 "separated by a comma, e.g. ABABCABAB,ABAB"
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(
+          rf"[A-Z0-9]{{1,{kmp_search.MAX_TEXT}}},[A-Z0-9]{{1,{kmp_search.MAX_PATTERN}}}",
+          cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Provide text (1-{kmp_search.MAX_TEXT} chars) and a pattern "
+                 f"(1-{kmp_search.MAX_PATTERN} chars), comma-separated — "
+                 f"e.g. ABABDABACDABABCABAB,ABABCABAB"
+        )
+      hay, needle = cleaned.split(",")
+      if len(needle) > len(hay):
+        raise HTTPException(
+          status_code=400,
+          detail="The pattern cannot be longer than the text."
+        )
+      return kmp_search.trace(hay, needle)
+
+    if req.algorithm == "segment_tree":
+      arr = _validated_array(req.array, segment_tree.MAX_ARRAY_LEN,
+                             "segment_tree")
+      if not arr:
+        raise HTTPException(
+          status_code=400,
+          detail="segment_tree needs at least one value."
+        )
+      lo, hi = 0, len(arr) - 1
+      if req.text:
+        cleaned = req.text.replace(" ", "")
+        if not _re.fullmatch(r"\d+:\d+", cleaned):
+          raise HTTPException(
+            status_code=400,
+            detail="Query range is lo:hi — e.g. 2:5. Leave blank to sum "
+                   "the whole array."
+          )
+        lo, hi = (int(x) for x in cleaned.split(":"))
+        if lo > hi or hi >= len(arr):
+          raise HTTPException(
+            status_code=400,
+            detail=f"Range must satisfy 0 ≤ lo ≤ hi ≤ {len(arr) - 1}."
+          )
+      return segment_tree.trace(arr, lo, hi)
+
+    if req.algorithm == "fenwick_tree":
+      arr = _validated_array(req.array, fenwick_tree.MAX_ARRAY_LEN,
+                             "fenwick_tree")
+      if not arr:
+        raise HTTPException(
+          status_code=400,
+          detail="fenwick_tree needs at least one value."
+        )
+      upto = len(arr) - 1 if req.target is None else req.target
+      if upto != int(upto) or int(upto) < 0 or int(upto) >= len(arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"'target' is the prefix end index — 0..{len(arr) - 1}."
+        )
+      return fenwick_tree.trace(arr, int(upto))
+
+    if req.algorithm == "tree_traversal":
+      arr = _validated_array(req.array, tree_traversal.MAX_TREE_LEN,
+                             "tree_traversal")
+      return tree_traversal.trace(arr)
+
+    if req.algorithm == "trie_insert":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="trie_insert requires 'text' — comma-separated words, "
+                 "e.g. CAT,CAR,DOG"
+        )
+      words = [w for w in req.text.replace(" ", "").upper().split(",") if w]
+      if not words:
+        raise HTTPException(
+          status_code=400,
+          detail="Give at least one word — e.g. CAT,CAR,DOG"
+        )
+      if len(words) > trie_insert.MAX_WORDS:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Max {trie_insert.MAX_WORDS} words."
+        )
+      if any(not _re.fullmatch(rf"[A-Z]{{1,{trie_insert.MAX_WORD_LEN}}}", w)
+             for w in words):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Words must be letters only, 1-{trie_insert.MAX_WORD_LEN} "
+                 f"characters each."
+        )
+      return trie_insert.trace(words)
+
+    if req.algorithm == "n_queens":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail=f"n_queens requires 'target' — the board size "
+                 f"({n_queens.MIN_N}-{n_queens.MAX_N})."
+        )
+      n = req.target
+      if n != int(n) or int(n) < n_queens.MIN_N or int(n) > n_queens.MAX_N:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Board size must be a whole number between {n_queens.MIN_N} "
+                 f"and {n_queens.MAX_N} — smaller boards have no solution and "
+                 f"bigger ones make an unreadable trace."
+        )
+      return n_queens.trace(int(n))
+
+    if req.algorithm == "unique_paths":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail=f"unique_paths requires 'target' — the grid side "
+                 f"(2-{unique_paths.MAX_SIDE})."
+        )
+      side = req.target
+      if side != int(side) or int(side) < 2 or int(side) > unique_paths.MAX_SIDE:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Grid side must be a whole number between 2 and "
+                 f"{unique_paths.MAX_SIDE}."
+        )
+      side = int(side)
+      walls: list = []
+      if req.text:
+        cleaned = req.text.replace(" ", "")
+        if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", cleaned):
+          raise HTTPException(
+            status_code=400,
+            detail="Walls are row:col pairs — e.g. 1:1,2:0. Leave blank for "
+                   "an open grid."
+          )
+        walls = [tuple(int(x) for x in p.split(":")) for p in cleaned.split(",")]
+        if any(r >= side or c >= side for r, c in walls):
+          raise HTTPException(
+            status_code=400,
+            detail=f"Wall coordinates must be within 0..{side - 1}."
+          )
+        if (0, 0) in walls:
+          raise HTTPException(
+            status_code=400,
+            detail="The start square cannot be a wall."
+          )
+      return unique_paths.trace(side, side, walls)
+
+    if req.algorithm == "sieve":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail=f"sieve requires 'target' — the upper limit n "
+                 f"({sieve.MIN_N}-{sieve.MAX_N})."
+        )
+      n = req.target
+      if n != int(n) or int(n) < sieve.MIN_N or int(n) > sieve.MAX_N:
+        raise HTTPException(
+          status_code=400,
+          detail=f"n must be a whole number between {sieve.MIN_N} and "
+                 f"{sieve.MAX_N}."
+        )
+      return sieve.trace(int(n))
+
+    if req.algorithm == "edit_distance":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="edit_distance requires 'text' — two words separated by a comma."
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(
+          rf"[A-Z0-9]{{1,{edit_distance.MAX_LEN}}},[A-Z0-9]{{1,{edit_distance.MAX_LEN}}}",
+          cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Provide two words (letters/digits, 1-{edit_distance.MAX_LEN} "
+                 f"chars each) separated by a comma — e.g. KITTEN,SITTING"
+        )
+      a, b = cleaned.split(",")
+      return edit_distance.trace(a, b)
+
     if req.algorithm == "knapsack_01":
       if req.text is None or req.target is None:
         raise HTTPException(
@@ -286,7 +521,11 @@ def run_trace(request: Request, req: TraceRequest):
     valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
              + ["bst_insert", "bst_search", "heap_insert",
                 "two_sum_sorted", "sliding_window", "kadanes",
-                "knapsack_01", "lcs",
+                "knapsack_01", "lcs", "edit_distance",
+                "counting_sort", "prefix_sums", "next_greater_element",
+                "floyd_cycle", "tree_traversal", "trie_insert", "n_queens",
+                "unique_paths", "sieve", "kmp_search", "segment_tree",
+                "fenwick_tree",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

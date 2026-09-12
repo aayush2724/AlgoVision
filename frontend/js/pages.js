@@ -26,6 +26,15 @@ export const ROUTE_THEME = {
   "#/journey": "default", "#/realworld": "default"
 };
 
+// Mirrors capStyle() in keyboard3d.js so the flat mobile caps carry the same
+// colourway as the 3D board. If one changes, change both.
+function capClass(algo) {
+  if (algo.id === 'dijkstra' || algo.id === 'lcs') return 'cap-orange';
+  if (algo.category === 'DP' || algo.category === 'Searching') return 'cap-cream';
+  if (algo.category === 'Structures') return 'cap-tan';
+  return '';
+}
+
 function renderWorldCard(world) {
   return `
     <a href="#/experience?algo=${world.algo || 'dijkstra'}" class="world-card">
@@ -62,6 +71,37 @@ export const PAGES = {
         <div class="kbd-corner kbd-br">
           <a href="#/explore">ALL ALGORITHMS →</a>
           <a href="#/a2z">A2Z ROADMAP →</a>
+        </div>
+
+        <!-- Phones get this instead of the board. 42 caps on a 390px screen
+             are legible but fiddly to hit, and the 3D costs a three.js
+             download on the worst connections — so on mobile the caps go flat
+             and tappable, and keyboard3d is never imported at all. -->
+        <div class="kbd-flat">
+          <div class="kbd-flat-head">
+            <span class="kbd-tc-brand">AlgoVision</span>
+            <span class="kbd-tc-sub">${DATA.ALGORITHMS.length} algorithms · tap one to trace it</span>
+          </div>
+          ${DATA.ALGO_CATEGORIES.filter(c => c !== 'All').map(cat => {
+            const items = DATA.ALGORITHMS.filter(a => a.category === cat);
+            if (!items.length) return '';
+            return `
+              <div class="kbd-flat-group">
+                <span class="eyebrow">${cat}</span>
+                <div class="kbd-flat-grid">
+                  ${items.map(a => `
+                    <a class="kbd-cap ${capClass(a)}" href="#/experience?algo=${a.id}">
+                      <span class="kbd-cap-label">${DATA.KEYCAP_LABEL[a.id] || a.id.slice(0,4).toUpperCase()}</span>
+                      <span class="kbd-cap-cx">${a.complexity}</span>
+                      <span class="visually-hidden">${a.name}</span>
+                    </a>`).join('')}
+                </div>
+              </div>`;
+          }).join('')}
+          <div class="kbd-flat-foot">
+            <a href="#/explore" class="btn">Browse all →</a>
+            <a href="#/a2z" class="btn btn-ghost">A2Z roadmap →</a>
+          </div>
         </div>
       </section>
 
@@ -121,7 +161,10 @@ export const PAGES = {
       // ── The keyboard ──
       const stage = view.querySelector('#kbd-stage');
       const countEl = view.querySelector('#kbd-count');
-      if (stage) {
+      // The flat grid is the mobile hero, so skip the 3D entirely rather than
+      // downloading three.js to render something CSS has already hidden.
+      const wantsBoard = window.matchMedia('(min-width: 641px)').matches;
+      if (stage && wantsBoard) {
         import('./keyboard3d.js').then(({ initKeyboard }) => {
           // Guard: user may have navigated away while the module loaded
           if (!document.body.contains(stage)) return;
@@ -434,8 +477,7 @@ export const PAGES = {
             <span id="graph-stats" style="font-family:var(--font-mono); font-size:0.8rem;
               color:var(--cDim);"></span>
           </div>
-          <div style="margin-top:0.6rem; font-size:0.8rem; color:var(--inkDim);
-            font-family:var(--font-body);">
+          <div class="graph-hint touch-hint-hide">
             Click empty space to add a node &middot; click two nodes to connect them &middot;
             click a weight to edit it &middot; right-click (or long-press) a node or edge to delete
           </div>

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { ALGORITHMS } from './data.js';
+import { ALGORITHMS, KEYCAP_LABEL as SHORT } from './data.js';
 
 /* ══════════════════════════════════════════════════════════════
    The AlgoVision keyboard.
@@ -33,21 +33,6 @@ function capStyle(algo) {
   return CAP_COLORS.grey;
 }
 
-// Short face label per algorithm.
-const SHORT = {
-  dijkstra: 'DIJK', bfs: 'BFS', dfs: 'DFS', prims_mst: 'PRIM', kruskals_mst: 'KRSK',
-  merge_sort: 'MRG', quick_sort: 'QCK', bubble_sort: 'BUB', insertion_sort: 'INS', selection_sort: 'SEL',
-  binary_search: 'BIN', bst_search: 'BSTs', two_sum_sorted: '2SUM', sliding_window: 'WIN', kadanes: 'KDN',
-  linked_list_reverse: 'LIST', balanced_brackets: '{ }', bst_insert: 'BST', heap_insert: 'HEAP',
-  fibonacci_dp: 'FIB', knapsack_01: 'KNAP', lcs: 'LCS',
-  edit_distance: 'EDIT', topological_sort: 'TOPO', counting_sort: 'CNT',
-  prefix_sums: 'PRE', next_greater_element: 'NGE', floyd_cycle: 'CYCL',
-  tree_traversal: 'WALK', trie_insert: 'TRIE', n_queens: 'NQ',
-  unique_paths: 'PATH', sieve: 'PRIME',
-  kmp_search: 'KMP', segment_tree: 'SEG', fenwick_tree: 'BIT',
-  hash_table: 'HASH', bst_delete: 'DEL', heap_extract: 'POP',
-  dsu: 'DSU', merge_intervals: 'IVAL', coin_change: 'COIN',
-};
 
 // Layout entries: a = algorithm key, g = glyph novelty, m = modifier.
 // `w` is width in key units; every row sums to 15u like a real 60% board.

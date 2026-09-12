@@ -1218,6 +1218,82 @@ input[type="range"]::-moz-range-thumb {
 .kbd-tip strong { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
 .kbd-tip span { font-size: 0.7rem; color: var(--cDim); font-family: var(--font-mono); }
 
+/* ── FLAT KEYCAP GRID (mobile hero) ─────────────────────────────────────
+   Same caps, same colourway, same short legends as the 3D board — just
+   flat and thumb-sized. Hidden above the mobile breakpoint. */
+.kbd-flat { display: none; }
+
+.kbd-flat-head { margin-bottom: 1.25rem; }
+.kbd-flat-head .kbd-tc-brand { display: block; margin-bottom: 0.3rem; }
+.kbd-flat-head .kbd-tc-sub { display: block; letter-spacing: 0.12em; }
+
+.kbd-flat-group { margin-bottom: 1.25rem; }
+.kbd-flat-group .eyebrow { margin-bottom: 0.55rem; color: var(--cMag); }
+.kbd-flat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 0.5rem;
+}
+
+/* Built to read as a keycap: light top, darker skirt, a little depth. */
+.kbd-cap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-height: 56px;
+  padding: 0.5rem 0.35rem;
+  text-decoration: none;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #5c564c 0%, #4a453d 100%);
+  box-shadow: 0 2px 0 #2e2a24, 0 3px 5px rgba(0, 0, 0, 0.45);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.kbd-cap:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #2e2a24, 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.kbd-cap-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #eae3d3;
+  line-height: 1;
+}
+.kbd-cap-cx {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: rgba(234, 227, 211, 0.62);
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Category colourways, matching capStyle() on the 3D board. */
+.kbd-flat-group:nth-child(n) .kbd-cap { /* default grey, overridden below */ }
+.kbd-flat-grid .kbd-cap.cap-cream {
+  background: linear-gradient(180deg, #efe7d2 0%, #ddd2b6 100%);
+  box-shadow: 0 2px 0 #8d8471, 0 3px 5px rgba(0, 0, 0, 0.45);
+}
+.kbd-flat-grid .kbd-cap.cap-cream .kbd-cap-label { color: #3a352c; }
+.kbd-flat-grid .kbd-cap.cap-cream .kbd-cap-cx { color: rgba(58, 53, 44, 0.72); }
+.kbd-flat-grid .kbd-cap.cap-tan {
+  background: linear-gradient(180deg, #b5956a 0%, #9a7d55 100%);
+  box-shadow: 0 2px 0 #665238, 0 3px 5px rgba(0, 0, 0, 0.45);
+}
+.kbd-flat-grid .kbd-cap.cap-tan .kbd-cap-label { color: #2e2820; }
+.kbd-flat-grid .kbd-cap.cap-tan .kbd-cap-cx { color: rgba(46, 40, 32, 0.72); }
+.kbd-flat-grid .kbd-cap.cap-orange {
+  background: linear-gradient(180deg, #d8592a 0%, #b9451d 100%);
+  box-shadow: 0 2px 0 #7a2d12, 0 3px 5px rgba(0, 0, 0, 0.45);
+}
+.kbd-flat-grid .kbd-cap.cap-orange .kbd-cap-label { color: #f7ede2; }
+.kbd-flat-grid .kbd-cap.cap-orange .kbd-cap-cx { color: rgba(247, 237, 226, 0.8); }
+
+.kbd-flat-foot { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.kbd-flat-foot .btn { flex: 1 1 auto; justify-content: center; }
+
 /* ── THE DESK SCREEN ────────────────────────────────────────────────────
    An HTML panel glued to the monitor's screen in the 3D scene. keyboard3d
    projects the screen's corners every frame and sets the transform, so this
@@ -1823,6 +1899,13 @@ input[type="range"]::-moz-range-thumb {
 .toolbar-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .toolbar-actions .btn { font-size: 0.8rem; padding: 0.45rem 0.9rem; }
 
+.graph-hint {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--inkDim);
+}
+
 .scene-hook {
   font-size: 0.9rem;
   line-height: 1.6;
@@ -2338,4 +2421,117 @@ input[type="range"]::-moz-range-thumb {
 }
 .skip-link:focus {
   left: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE
+   Two separate concerns, so two separate queries:
+   `pointer: coarse` is about fingers (hit sizes), width is about
+   layout. A desktop at a narrow window wants the layout changes
+   but not the 44px controls.
+══════════════════════════════════════════════════════════ */
+
+@media (pointer: coarse) {
+  /* 44px is the floor for a finger. Most controls here were 28–33px. */
+  .btn,
+  .transport-btn,
+  .segmented > button,
+  select,
+  .prob-item,
+  .quest-row .q-claim {
+    min-height: 44px;
+  }
+  .transport-btn { width: 44px; }
+  .segmented > button { min-width: 44px; }   /* short labels like "All" */
+  .btn, select { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+  .mini-transport .transport-btn { min-height: 34px; width: 34px; }
+
+  /* Hover affordances never resolve on touch and leave things stuck. */
+  .world-card:hover, .a2z-card:hover, .act-card:hover, .panel-glow:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  section { padding: 1.5rem 1rem 2rem; }
+  .experience-section { padding-top: 1rem; }
+
+  /* The switcher directly beneath already names the algorithm — the heading
+     was costing a whole row to repeat it. */
+  #experience-title { display: none; }
+  .toolbar { gap: 0.6rem; padding-bottom: 0.6rem; margin-bottom: 0.875rem; }
+  .toolbar-switch, .toolbar-switch select { width: 100%; max-width: none; }
+  .toolbar-actions { width: 100%; }
+  .toolbar-actions .btn { flex: 1 1 auto; justify-content: center; }
+  .toolbar-field { display: none; }        /* start/graph summary duplicates the panel */
+
+  /* These instructions describe right-click and hover, which don't exist
+     here. The panel keeps the controls; the prose goes. */
+  .touch-hint-hide { display: none; }
+
+  /* A 340px stage letterboxes a 760×280 viewBox into a lot of dead space. */
+  #engine-view, #engine-svg { min-height: 220px !important; }
+  #viz-inner { min-height: 200px !important; }
+
+  .page-head { margin-bottom: 1rem; }
+  .page-title { font-size: 1.375rem; }
+  .home-last { padding-bottom: 2.5rem; }
+  .crumbs { min-height: 0; padding-bottom: 0.6rem; margin-bottom: 0.875rem; }
+  .crumb-current { font-size: 0.8rem; }
+
+  /* Counters wrap to a second line rather than squeezing to nothing. */
+  .transport { gap: 0.6rem; }
+  .counters { width: 100%; justify-content: space-between; gap: 0.5rem; }
+  .transport-sep { display: none; }
+
+  .prob-actions-btns { width: 100%; }
+  .prob-actions-btns .btn { flex: 1 1 40%; justify-content: center; }
+  .prob-actions-btns #practice-link { margin-left: 0; }
+
+  .journey-stats { gap: 0.75rem; }
+  .achv-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+
+/* The keyboard hero is the one place a phone genuinely struggles: 42 caps on
+   a 390px screen are unreadable. Give it the whole viewport rather than
+   letting it float in dead space, and point at the flat index as a way out. */
+@media (max-width: 640px) {
+  /* Swap the 3D board for the flat grid. pages.js also skips importing
+     keyboard3d at this width, so three.js never reaches the phone. */
+  .hero-kbd {
+    width: auto;
+    margin-left: 0;
+    height: auto;
+    min-height: 0;
+    padding: 1.5rem 1rem 2.5rem;
+  }
+  .kbd-stage, .kbd-corner { display: none; }
+  .kbd-flat { display: block; }
+
+  /* Glued to the 3D screen, the panel lands about 340×182 on a phone — far
+     too small for a header, stage, transport, narration and footer. Keep the
+     pan (the monitor is still the thing you flew to) but show the panel as a
+     bottom sheet so it is actually readable. The !importants override the
+     per-frame inline transform keyboard3d sets to track the screen. */
+  .kbd-deck {
+    position: fixed;
+    inset: auto 0 0 0;
+    transform: none !important;
+    width: 100% !important;
+    height: 74svh !important;
+    border-top: 1px solid var(--panel-hi);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: var(--lift-2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .mini-bezel {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 0.85rem 0.9rem 1rem;
+    gap: 0.6rem;
+  }
+  .mini-title { font-size: 0.95rem; }
+  .kbd-deck #engine-status { display: none; }   /* the transport already says */
+  .mini-narration #engine-note { font-size: 0.8rem; -webkit-line-clamp: 3; }
+  .mini-run, .mini-open { font-size: 0.8rem !important; padding: 0.6rem 0.9rem !important; }
+  .mini-close { width: 40px; height: 40px; }
 }

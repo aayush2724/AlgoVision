@@ -48,7 +48,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
-    window.ALGOVISION_API = "http://localhost:8001";
+    // Same origin by default — both the Docker nginx and the Vercel rewrite
+    // proxy /api to the backend, so no absolute URL (and no CORS) is needed.
+    // Only start-dev.sh, which serves this on :5500 with the API on :8000,
+    // has to cross an origin.
+    window.ALGOVISION_API =
+      location.port === "5500" ? "http://localhost:8000" : "";
   </script>
   <script type="module" src="js/main.js"></script>
 </body>

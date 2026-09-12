@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from app import llm
+from app.config import settings
 
 log = logging.getLogger(__name__)
 
@@ -28,8 +29,13 @@ def _is_internal(host: str) -> bool:
 @app.middleware("http")
 async def internal_only(request: Request, call_next):
   client_host = request.client.host if request.client else ""
-  # Allow health checks from anywhere, restrict everything else
-  if request.url.path != "/health" and not _is_internal(client_host):
+  # Two ways in. A private-range caller is the Docker/local case. A matching
+  # shared secret is the split-host case (Render), where the backend reaches
+  # this service over the public internet and its source IP proves nothing.
+  token = settings.INTERNAL_TOKEN
+  authorised = _is_internal(client_host) or (
+    bool(token) and request.headers.get("x-internal-token") == token)
+  if request.url.path != "/health" and not authorised:
     log.warning("Blocked external request to ML service from %s", client_host)
     return JSONResponse(status_code=403, content={"detail": "Forbidden."})
   return await call_next(request)

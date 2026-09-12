@@ -954,6 +954,28 @@ export const PAGES = {
             let controller = null;
             let currentSceneStep = 0;
 
+            // The sheet carries language-basics rows and Pattern 1-22, which
+            // have no algorithm to trace. Say so plainly instead of mounting a
+            // scene that renders nothing.
+            if (prob.traceable === false) {
+              vizInner.innerHTML = `
+                <div class="viz-concept">
+                  <span class="eyebrow">No visualisation</span>
+                  <h3>${prob.title}</h3>
+                  <p>This one is groundwork rather than an algorithm — there is
+                     no trace to step through. Tick it off once you're
+                     comfortable with the idea, and carry on.</p>
+                  <a class="btn btn-ghost" href="#/explore">Find something to trace →</a>
+                </div>`;
+              view.querySelector('#scene-step-back')?.setAttribute('disabled', '');
+              view.querySelector('#scene-step-fwd')?.setAttribute('disabled', '');
+              const counter = view.querySelector('#scene-step-counter');
+              if (counter) counter.textContent = '—';
+              const narr = view.querySelector('#scene-narration');
+              if (narr) narr.textContent = prob.hook || '';
+              return;
+            }
+
             try {
               controller = mountScene(vizInner, prob.viz || 'default', prob);
             } catch (e) {

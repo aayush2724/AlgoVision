@@ -8,6 +8,10 @@ class Settings(BaseSettings):
   GROQ_API_KEY:    str = ""
   GEMINI_API_KEY:  str = ""
   ANTHROPIC_API_KEY: str = ""
+  # Shared secret with the backend. Required once the two services are on
+  # different hosts, where the IP allowlist below can no longer identify a
+  # legitimate caller. Empty = IP allowlist only (Docker / local).
+  INTERNAL_TOKEN:  str = ""
 
   model_config = {"env_file": ".env", "extra": "ignore"}
 

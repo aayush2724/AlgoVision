@@ -1,0 +1,48 @@
+# Render blueprint: the two Python services. The frontend is on Vercel, which
+# rewrites /api/* here (see vercel.json), so the browser only ever talks to
+# one origin and CORS never comes into it.
+services:
+  - type: web
+    name: algovision-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health-root
+    # Render injects $PORT and expects the process to bind it; the Dockerfile's
+    # hardcoded 8000 is only right for compose.
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENV
+        value: prod
+      - key: BACKEND_CORS_ORIGINS
+        sync: false          # set to your Vercel origin once it exists
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: algovision-ml
+          property: host
+      - key: INTERNAL_TOKEN
+        generateValue: true  # Render generates it and shares it below
+
+  - type: web
+    name: algovision-ml
+    runtime: docker
+    dockerfilePath: ./ml-service/Dockerfile
+    dockerContext: ./ml-service
+    plan: free
+    healthCheckPath: /health
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Must match algovision-api's value — this is what authorises the
+      # backend now that the two are on different hosts and the ML service's
+      # private-IP allowlist can no longer recognise it.
+      - key: INTERNAL_TOKEN
+        fromService:
+          type: web
+          name: algovision-api
+          envVarKey: INTERNAL_TOKEN
+      # Set whichever provider you use. Without one the service still runs and
+      # the backend falls back to offline narration.
+      - key: GROQ_API_KEY
+        sync: false

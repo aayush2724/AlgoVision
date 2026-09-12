@@ -6,6 +6,10 @@ services:
     environment:
       - ML_SERVICE_URL=http://ml-service:8500
       - BACKEND_CORS_ORIGINS=http://localhost:8080,http://localhost:5500
+      # Left empty on purpose: compose keeps the ML service unpublished and on
+      # a private network, so its IP allowlist is still the boundary here. The
+      # token only matters once the services are split across hosts (Render).
+      - INTERNAL_TOKEN=
     depends_on:
       - ml-service
 

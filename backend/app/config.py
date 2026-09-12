@@ -11,6 +11,9 @@ class Settings(BaseSettings):
   ENV:             str  = "dev"
   # Comma-separated list of allowed origins, or "*" for a public API.
   BACKEND_CORS_ORIGINS: str = "*"
+  # Shared secret proving to the ML service that a request came from here.
+  # Only needed when the two run on different hosts.
+  INTERNAL_TOKEN:  str  = ""
 
   model_config = {"env_file": ".env", "extra": "ignore"}
 

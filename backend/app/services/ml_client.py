@@ -14,7 +14,9 @@ async def _post(path: str, payload: dict) -> dict:
   url = settings.ML_SERVICE_URL.rstrip("/") + path
   try:
     async with httpx.AsyncClient(timeout=8.0) as client:
-      resp = await client.post(url, json=payload)
+      headers = ({"X-Internal-Token": settings.INTERNAL_TOKEN}
+                 if settings.INTERNAL_TOKEN else {})
+      resp = await client.post(url, json=payload, headers=headers)
       resp.raise_for_status()
       return resp.json()
   except httpx.TimeoutException:

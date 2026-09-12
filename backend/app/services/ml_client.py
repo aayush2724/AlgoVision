@@ -11,7 +11,7 @@ _SAFE_ERRORS = {
 }
 
 async def _post(path: str, payload: dict) -> dict:
-  url = settings.ML_SERVICE_URL.rstrip("/") + path
+  url = settings.ml_service_url + path
   try:
     async with httpx.AsyncClient(timeout=8.0) as client:
       headers = ({"X-Internal-Token": settings.INTERNAL_TOKEN}

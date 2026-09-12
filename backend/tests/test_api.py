@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -70,3 +71,21 @@ class TestAIEndpoint:
     def test_health(self):
         r = client.get("/api/health")
         assert r.status_code == 200
+
+
+class TestMLServiceURL:
+    """Render's `fromService: property: host` yields a bare hostname with no
+    scheme. httpx refuses to parse that, so every AI call fell through to the
+    offline fallback with no visible error."""
+
+    @pytest.mark.parametrize("raw,expected", [
+        ("algovision-ml-abc.onrender.com", "https://algovision-ml-abc.onrender.com"),
+        ("http://localhost:8500",          "http://localhost:8500"),
+        ("localhost:8500",                 "http://localhost:8500"),
+        ("https://x.onrender.com/",        "https://x.onrender.com"),
+        ("",                               ""),
+    ])
+    def test_scheme_is_normalised(self, raw, expected, monkeypatch):
+        monkeypatch.setenv("ML_SERVICE_URL", raw)
+        from app.config import Settings
+        assert Settings().ml_service_url == expected

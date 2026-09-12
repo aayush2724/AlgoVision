@@ -17,6 +17,8 @@ services:
         value: prod
       - key: BACKEND_CORS_ORIGINS
         sync: false          # set to your Vercel origin once it exists
+      # `host` is a bare hostname with no scheme; the backend normalises it
+      # (see config.ml_service_url) rather than us hardcoding the URL here.
       - key: ML_SERVICE_URL
         fromService:
           type: web

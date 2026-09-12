@@ -1,5 +1,5 @@
 import { NAV } from './data.js';
-import { initCursor, playLoader } from './animations.js';
+import { playLoader } from './animations.js';
 import { initRouter } from './router.js';
 
 function buildNav() {
@@ -42,22 +42,33 @@ function initMobileMenu() {
   const navLinks = document.getElementById('nav-links');
   const navToggle = document.getElementById('nav-toggle');
 
+  // Screen readers need the open/closed state, not just the visual X.
+  const setOpen = (open) => {
+    navToggle.classList.toggle('open', open);
+    navLinks.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', String(open));
+  };
+
   if (navToggle) {
     navToggle.addEventListener('click', (e) => {
       e.stopPropagation();
       if (window.innerWidth <= 860) {
-        navToggle.classList.toggle('open');
-        navLinks.classList.toggle('open');
+        setOpen(!navToggle.classList.contains('open'));
       }
     });
   }
 
   document.addEventListener('click', (e) => {
     if (e.target.closest('.nav-link') || e.target.closest('.btn')) {
-      if (window.innerWidth <= 860 && navToggle) {
-        navToggle.classList.remove('open');
-        navLinks.classList.remove('open');
-      }
+      if (window.innerWidth <= 860 && navToggle) setOpen(false);
+    }
+  });
+
+  // Escape closes the drawer and returns focus to the control that opened it.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navToggle?.classList.contains('open')) {
+      setOpen(false);
+      navToggle.focus();
     }
   });
 }
@@ -66,7 +77,6 @@ async function start() {
   try {
     buildNav();
     initMobileMenu();
-    initCursor();
     initVizzy();
 
     // Background stays intentionally calm — the 3D lives in the home

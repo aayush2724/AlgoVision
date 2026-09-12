@@ -322,11 +322,13 @@ const COUNT_LABELS = {
   unions: 'UNIONS', cycles_skipped: 'CYCLES SKIPPED',
 };
 
-function countChips(counts, fontSize = '7px') {
+// Value over label, right-aligned — the number is what changes each step,
+// so it reads first. `compact` is for the side-by-side compare panes.
+function countChips(counts, compact = false) {
   return Object.entries(counts || {}).map(([k, v]) =>
-    `<span style="font-family:var(--font-pixel); font-size:${fontSize}; color:var(--cDim);
-      border:1px solid var(--panel-border); padding:4px 8px; white-space:nowrap;">` +
-    `${COUNT_LABELS[k] || k.toUpperCase()} <span style="color:var(--c);">${v}</span></span>`
+    `<div class="counter${compact ? ' counter-compact' : ''}">` +
+    `<span class="counter-num">${v}</span>` +
+    `<span class="counter-label">${COUNT_LABELS[k] || k.replace(/_/g, ' ')}</span></div>`
   ).join('');
 }
 
@@ -463,7 +465,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     note.style.opacity = 0;
     explanationBox.classList.add('is-hidden');
     status.innerHTML = 'STATUS: IDLE';
-    status.className = 'eyebrow';
+    status.className = 'engine-status-pill';
     const counter = view.querySelector('#step-counter');
     if (counter) counter.textContent = '';
   }
@@ -514,7 +516,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
       hint.setAttribute("text-anchor", "middle");
       hint.setAttribute("fill", "var(--cDim)");
-      hint.setAttribute("font-family", "var(--font-pixel)");
+      hint.setAttribute("font-family", "var(--font-ui)");
       hint.setAttribute("font-size", "9");
       hint.textContent = "CLICK ANYWHERE TO ADD YOUR FIRST NODE";
       svg.appendChild(hint);
@@ -568,7 +570,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       idText.setAttribute("x", node.x); idText.setAttribute("y", node.y + 4);
       idText.setAttribute("text-anchor", "middle");
       idText.setAttribute("fill", "var(--cBright)");
-      idText.setAttribute("font-family", "var(--font-pixel)");
+      idText.setAttribute("font-family", "var(--font-ui)");
       idText.setAttribute("font-size", "9");
       idText.textContent = node.id;
       svg.appendChild(idText);
@@ -612,7 +614,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -628,7 +630,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -670,7 +672,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       pos.setAttribute("y", y + h + 16);
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
-      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-family", "var(--font-ui)");
       pos.setAttribute("font-size", "6");
       pos.textContent = idx;
       g.appendChild(pos);
@@ -1052,7 +1054,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -1089,7 +1091,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       pos.setAttribute("y", y + h + 16);
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
-      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-family", "var(--font-ui)");
       pos.setAttribute("font-size", "6");
       pos.textContent = `f(${idx})`;
       svg.appendChild(pos);
@@ -1130,7 +1132,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -1168,7 +1170,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       pos.setAttribute("y", y + h + 16);
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
-      pos.setAttribute("font-family", "var(--font-pixel)");
+      pos.setAttribute("font-family", "var(--font-ui)");
       pos.setAttribute("font-size", "6");
       pos.textContent = idx;
       svg.appendChild(pos);
@@ -1235,7 +1237,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       t.setAttribute('y', y + h + 46);
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', color);
-      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '8');
       t.textContent = label;
       g.appendChild(t);
@@ -1265,7 +1267,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -1281,7 +1283,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     rowLabel.setAttribute('x', '380'); rowLabel.setAttribute('y', '44');
     rowLabel.setAttribute('text-anchor', 'middle');
     rowLabel.setAttribute('fill', 'var(--cDim)');
-    rowLabel.setAttribute('font-family', 'var(--font-pixel)');
+    rowLabel.setAttribute('font-family', 'var(--font-ui)');
     rowLabel.setAttribute('font-size', '6');
     rowLabel.textContent = 'INPUT — LEFT TO RIGHT';
     svg.appendChild(rowLabel);
@@ -1310,7 +1312,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const stackLabel = makeSVG('text');
     stackLabel.setAttribute('x', '80'); stackLabel.setAttribute('y', '205');
     stackLabel.setAttribute('fill', 'var(--cDim)');
-    stackLabel.setAttribute('font-family', 'var(--font-pixel)');
+    stackLabel.setAttribute('font-family', 'var(--font-ui)');
     stackLabel.setAttribute('font-size', '6');
     stackLabel.textContent = 'STACK: BOTTOM → TOP';
     svg.appendChild(stackLabel);
@@ -1382,7 +1384,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       t.setAttribute('x', '680'); t.setAttribute('y', '235');
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', s.balanced ? '#4ade80' : '#f87171');
-      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '9');
       t.textContent = s.balanced ? 'BALANCED' : 'UNBALANCED';
       g.appendChild(t);
@@ -1400,7 +1402,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -1409,7 +1411,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
     hint.setAttribute("text-anchor", "middle");
     hint.setAttribute("fill", "var(--cDim)");
-    hint.setAttribute("font-family", "var(--font-pixel)");
+    hint.setAttribute("font-family", "var(--font-ui)");
     hint.setAttribute("font-size", "8");
     hint.setAttribute("id", "tree-hint");
     hint.textContent = "PRESS RUN TO GROW THE TREE";
@@ -1474,7 +1476,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       const t = makeSVG('text');
       t.setAttribute('x', '10'); t.setAttribute('y', '270');
       t.setAttribute('fill', 'var(--c)');
-      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '8');
       t.textContent = `INSERTING ${fmt(s.inserting)}`;
       g.appendChild(t);
@@ -1484,7 +1486,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       t.setAttribute('x', '700'); t.setAttribute('y', '270');
       t.setAttribute('text-anchor', 'end');
       t.setAttribute('fill', s.found ? '#4ade80' : '#f87171');
-      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '9');
       t.textContent = s.found ? 'FOUND' : 'NOT FOUND';
       g.appendChild(t);
@@ -1502,7 +1504,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const sceneLabel = makeSVG("text");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
-    sceneLabel.setAttribute("font-family", "var(--font-pixel)");
+    sceneLabel.setAttribute("font-family", "var(--font-ui)");
     sceneLabel.setAttribute("font-size", "8");
     sceneLabel.textContent = scene.label;
     svg.appendChild(sceneLabel);
@@ -1511,7 +1513,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     hint.setAttribute("x", "380"); hint.setAttribute("y", "145");
     hint.setAttribute("text-anchor", "middle");
     hint.setAttribute("fill", "var(--cDim)");
-    hint.setAttribute("font-family", "var(--font-pixel)");
+    hint.setAttribute("font-family", "var(--font-ui)");
     hint.setAttribute("font-size", "8");
     hint.setAttribute("id", "grid-hint");
     hint.textContent = "PRESS RUN TO FILL THE TABLE";
@@ -2681,7 +2683,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     runBtn.disabled = true;
     explanationBox.classList.add('is-hidden');
     status.innerHTML = 'STATUS: <span style="color:var(--c)">TRACING...</span>';
-    status.className = 'eyebrow running';
+    status.className = 'engine-status-pill running';
 
     try {
       let res;
@@ -2689,7 +2691,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         const parsed = parseArrayInput();
         if (parsed.error) {
           status.innerHTML = `STATUS: <span style="color:#ff5f5f">${escapeHTML(parsed.error).toUpperCase()}</span>`;
-          status.className = 'eyebrow';
+          status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
         }
@@ -2784,7 +2786,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       } else {
         if (!userGraph.nodes.length) {
           status.innerHTML = 'STATUS: <span style="color:#ff5f5f">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
-          status.className = 'eyebrow';
+          status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
         }
@@ -3037,7 +3039,7 @@ export function mountEngine(view, algo = 'dijkstra') {
   function renderCounters(step) {
     if (!counterPanel) return;
     const counts = step.structures?.counts;
-    counterPanel.innerHTML = counts ? countChips(counts, '7px') : '';
+    counterPanel.innerHTML = counts ? countChips(counts) : '';
   }
 
   function renderStep(i) {
@@ -3074,12 +3076,12 @@ export function mountEngine(view, algo = 'dijkstra') {
     status.innerHTML = isLast
       ? 'STATUS: <span style="color:var(--cBright)">DONE</span>'
       : 'STATUS: <span style="color:var(--c)">STEPPING</span>';
-    status.className = isLast ? 'eyebrow done' : 'eyebrow running';
+    status.className = isLast ? 'engine-status-pill done' : 'engine-status-pill running';
   }
 
   function stopPlay() {
     if (playTimer) { clearInterval(playTimer); playTimer = null; }
-    if (playBtn) playBtn.textContent = '▶ PLAY';
+    if (playBtn) { playBtn.classList.remove('is-playing'); playBtn.setAttribute('aria-label', 'Play'); }
   }
 
   function startPlay() {
@@ -3091,7 +3093,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (currentStepIdx >= currentSteps.length - 1) { stopPlay(); return; }
       renderStep(currentStepIdx + 1);
     }, 900 / speed);
-    if (playBtn) playBtn.textContent = '⏸ PAUSE';
+    if (playBtn) { playBtn.classList.add('is-playing'); playBtn.setAttribute('aria-label', 'Pause'); }
   }
 
   function initComplexityCard() {
@@ -3100,7 +3102,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     const rowsEl = view.querySelector('#complexity-rows');
     if (!card || !cardEl || !rowsEl) return;
     rowsEl.innerHTML = card.rows.map(([k, v]) =>
-      `<div><div style="font-family:var(--font-pixel); font-size:0.72rem; color:var(--cDim);
+      `<div><div style="font-family:var(--font-ui); font-size:0.72rem; color:var(--cDim);
         margin-bottom:0.3rem;">${k.toUpperCase()}</div>
         <div style="color:var(--cBright);">${v}</div></div>`
     ).join('');
@@ -3167,7 +3169,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       t.setAttribute('x', n.x); t.setAttribute('y', n.y + 4);
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', 'var(--cBright)');
-      t.setAttribute('font-family', 'var(--font-pixel)');
+      t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '8');
       t.textContent = n.id;
       svgEl.appendChild(t);
@@ -3199,7 +3201,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         noteEl.textContent = (steps[i2].note || '') + (done ? ' — FINISHED' : '');
       }
       const cEl = view.querySelector(`#compare-counts-${side}`);
-      if (cEl) cEl.innerHTML = countChips(steps[i2].structures?.counts, '6px');
+      if (cEl) cEl.innerHTML = countChips(steps[i2].structures?.counts, true);
     });
     if (compareSlider) compareSlider.value = compareIdx;
     const label = view.querySelector('#compare-step-label');
@@ -3492,7 +3494,7 @@ export function mountBugFinder(view) {
         if (detectResult) {
           detectResult.style.display = 'block';
           const conf = Math.round(res.confidence * 100);
-          detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${res.algorithm.toUpperCase().replace('_',' ')}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${res.realworld?.title || ''}</span>  <a href="#/experience?algo=${res.algorithm}" style="color:var(--c);font-family:var(--font-pixel);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
+          detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${res.algorithm.toUpperCase().replace('_',' ')}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${res.realworld?.title || ''}</span>  <a href="#/experience?algo=${res.algorithm}" style="color:var(--c);font-family:var(--font-ui);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
         }
       } catch { /* silent */ }
     }, 600);

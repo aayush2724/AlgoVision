@@ -4,15 +4,6 @@
 // elapsed time instead.
 if (typeof gsap !== 'undefined') gsap.ticker.lagSmoothing(0);
 
-export function initCursor() {
-  const cursor = document.getElementById('cursor');
-  if (!cursor || matchMedia('(pointer: coarse)').matches) return;
-
-  window.addEventListener('mousemove', (e) => {
-    gsap.to(cursor, { x: e.clientX - 20, y: e.clientY - 20, duration: 0.1 });
-  });
-}
-
 export function playLoader(callback) {
   const bar = document.getElementById('loader-bar');
   const count = document.getElementById('loader-count');

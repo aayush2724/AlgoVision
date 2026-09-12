@@ -27,17 +27,18 @@
     <div class="loader-brand">Algo<span>Vision</span></div>
   </div>
 
-  <div id="cursor" class="cursor"></div>
+  <a href="#app" class="skip-link">Skip to content</a>
 
   <header class="nav">
     <a href="#/" class="brand">Algo<span>Vision</span></a>
     <nav id="nav-links"></nav>
-    <button id="nav-toggle" class="nav-toggle" aria-label="Menu">
+    <button id="nav-toggle" class="nav-toggle" aria-label="Menu"
+            aria-expanded="false" aria-controls="nav-links">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <main id="app"></main>
+  <main id="app" tabindex="-1"></main>
 
   <footer class="footer">
     <a href="#/" class="brand footer-brand">Algo<span>Vision</span></a>

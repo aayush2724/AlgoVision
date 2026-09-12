@@ -224,18 +224,23 @@ export function initKeyboard(container, { onCount } = {}) {
   controls.minAzimuthAngle = -Math.PI / 5;
   controls.maxAzimuthAngle = Math.PI / 5;
 
-  // The stage fills the whole hero, so the wheel must not trap the page:
-  // once fully zoomed out (or when the page is mid-scroll), hand the wheel
-  // back to normal document scrolling instead of OrbitControls.
+  // The stage fills the entire hero, so a plain wheel MUST scroll the page —
+  // otherwise everything below the hero is unreachable. (The old gate only
+  // released the wheel once the camera reached maxDistance, which in practice
+  // it never did, trapping ~1400px of content.) Zoom is now an explicit
+  // gesture, the same modifier every map and 3D canvas uses.
+  controls.enableZoom = false;
+
   function wheelGate(e) {
-    const dist = camera.position.distanceTo(controls.target);
-    const zoomingOut = e.deltaY > 0;
-    if ((zoomingOut && dist >= controls.maxDistance - 0.01) ||
-        (!zoomingOut && window.scrollY > 0)) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.scrollBy(0, e.deltaY);
-    }
+    if (!(e.ctrlKey || e.metaKey)) return;   // plain wheel: let the page scroll
+    e.preventDefault();
+    e.stopPropagation();
+    const dir  = camera.position.clone().sub(controls.target);
+    const dist = dir.length();
+    const next = Math.min(controls.maxDistance,
+                 Math.max(controls.minDistance, dist * (1 + e.deltaY * 0.0015)));
+    camera.position.copy(controls.target).add(dir.normalize().multiplyScalar(next));
+    controls.update();
   }
   container.addEventListener('wheel', wheelGate, { capture: true, passive: false });
 

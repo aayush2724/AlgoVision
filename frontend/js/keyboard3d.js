@@ -45,6 +45,8 @@ const SHORT = {
   tree_traversal: 'WALK', trie_insert: 'TRIE', n_queens: 'NQ',
   unique_paths: 'PATH', sieve: 'PRIME',
   kmp_search: 'KMP', segment_tree: 'SEG', fenwick_tree: 'BIT',
+  hash_table: 'HASH', bst_delete: 'DEL', heap_extract: 'POP',
+  dsu: 'DSU', merge_intervals: 'IVAL', coin_change: 'COIN',
 };
 
 // Layout entries: a = algorithm key, g = glyph novelty, m = modifier.
@@ -55,16 +57,19 @@ const M = (label, w, c = 'cream')    => ({ t: 'm', label, c, w });
 
 const LAYOUT = [
   [ M('FN', 1, 'grey'), A('tree_traversal'), A('trie_insert'), G('F3'), A('n_queens'),
-    G('F5'), A('unique_paths'), G('F7'), A('sieve'), A('kmp_search'), G('F10'),
+    G('F5'), A('unique_paths'), A('hash_table'), A('sieve'), A('kmp_search'), G('F10'),
     A('segment_tree'), A('fenwick_tree'), M('DEL', 2, 'orange') ],
-  [ M('ESC', 1, 'orange'), A('edit_distance'), G('2'), A('fibonacci_dp'), G('4'), G('5'),
-    A('knapsack_01'), G('7'), G('8'), G('9', 'tan'), A('lcs'), G('-'), G('='), M('⌫', 2) ],
+  [ M('ESC', 1, 'orange'), A('edit_distance'), G('2'), A('fibonacci_dp'),
+    A('coin_change'), G('5'),
+    A('knapsack_01'), G('7'), A('merge_intervals'), G('9', 'tan'), A('lcs'),
+    G('-'), G('='), M('⌫', 2) ],
   [ M('TAB', 1.5), A('dijkstra'), G('λ'), A('bfs'), G('Σ'), A('dfs'),
-    A('topological_sort'), G('∞', 'tan'), A('prims_mst'), G('⊕'),
+    A('topological_sort'), G('∞', 'tan'), A('prims_mst'), A('dsu'),
     A('kruskals_mst'), G('√'), A('balanced_brackets'), G('∴', 'grey', 1.5) ],
   [ M('CAPS', 1.75), A('merge_sort'), A('counting_sort'), A('quick_sort'), G('Δ'),
-    A('bubble_sort'), G('θ'), A('insertion_sort'), G('μ'), A('selection_sort'),
-    G('Ω', 'tan'), A('bst_search'), M('ENTER', 2.25) ],
+    A('bubble_sort'), A('heap_extract'), A('insertion_sort'), G('μ'),
+    A('selection_sort'),
+    A('bst_delete'), A('bst_search'), M('ENTER', 2.25) ],
   [ M('SHIFT', 2.25), A('binary_search'), A('prefix_sums'), A('linked_list_reverse'),
     A('two_sum_sorted'), A('next_greater_element'), A('sliding_window'),
     A('bst_insert'), A('floyd_cycle'), A('kadanes'),
@@ -114,7 +119,7 @@ function capTexture(entry, algo) {
   return t;
 }
 
-export function initKeyboard(container, { onCount } = {}) {
+export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect } = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
@@ -155,6 +160,69 @@ export function initKeyboard(container, { onCount } = {}) {
   plate.position.y = -0.35;
   plate.receiveShadow = true;
   scene.add(plate);
+
+  // ── The desk monitor ────────────────────────────────────────────────────
+  // Clicking a keycap pans here instead of leaving the page. The screen is a
+  // plain dark plane; the live trace is an HTML panel the host aligns over it
+  // (see screenRect()), which keeps the real SVG engine in charge of drawing
+  // rather than reimplementing every view as a texture.
+  const MON_W = 11.6, MON_H = 6.6, MON_Y = 4.7, MON_Z = -6.6;
+  const SCREEN_W = MON_W - 0.72, SCREEN_H = MON_H - 0.72;
+
+  const caseMat = new THREE.MeshStandardMaterial({
+    color: 0x1c1814, roughness: 0.62, metalness: 0.3,
+  });
+  const monitor = new THREE.Group();
+  const bezel = new THREE.Mesh(
+    new RoundedBoxGeometry(MON_W, MON_H, 0.38, 4, 0.14), caseMat);
+  bezel.castShadow = true;
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(SCREEN_W, SCREEN_H),
+    new THREE.MeshBasicMaterial({ color: 0x0c0a08 }));
+  screen.position.z = 0.2;
+  const neck = new THREE.Mesh(
+    new RoundedBoxGeometry(0.8, 2.3, 0.55, 3, 0.1), caseMat);
+  neck.position.y = -MON_H / 2 - 1.05;
+  const foot = new THREE.Mesh(
+    new RoundedBoxGeometry(3.8, 0.3, 1.9, 3, 0.1), caseMat);
+  foot.position.set(0, -MON_H / 2 - 2.1, 0.35);
+  foot.receiveShadow = true;
+  monitor.add(bezel, screen, neck, foot);
+  monitor.position.set(0, MON_Y, MON_Z);
+  monitor.rotation.x = -0.05;
+  scene.add(monitor);
+
+  // Camera position that frames the whole screen with a little margin, at
+  // whatever aspect the window happens to be. A fixed distance only worked at
+  // one ratio — anything wider and the screen ran off the viewport.
+  function monitorViewPos() {
+    const halfFov = THREE.MathUtils.degToRad(camera.fov) / 2;
+    const margin = 1.16;
+    const dForH = (SCREEN_H * margin / 2) / Math.tan(halfFov);
+    const dForW = (SCREEN_W * margin / 2) / (Math.tan(halfFov) * camera.aspect);
+    const d = Math.max(dForH, dForW);
+    return new THREE.Vector3(0, MON_Y + 0.2, MON_Z + d);
+  }
+
+  // Where the monitor's screen lands on the canvas, in CSS pixels. The host
+  // overlay tracks this every frame so it stays glued through the pan.
+  const _corner = new THREE.Vector3();
+  function screenRect() {
+    const el = renderer.domElement;
+    const w = el.clientWidth, h = el.clientHeight;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+      _corner.set(sx * SCREEN_W / 2, sy * SCREEN_H / 2, 0);
+      screen.localToWorld(_corner).project(camera);
+      const px = (_corner.x * 0.5 + 0.5) * w;
+      const py = (-_corner.y * 0.5 + 0.5) * h;
+      if (px < minX) minX = px;
+      if (px > maxX) maxX = px;
+      if (py < minY) minY = py;
+      if (py > maxY) maxY = py;
+    }
+    return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+  }
 
   // Geometry per distinct cap width, side material per cap colour.
   const geoCache = new Map();
@@ -224,23 +292,31 @@ export function initKeyboard(container, { onCount } = {}) {
   controls.minAzimuthAngle = -Math.PI / 5;
   controls.maxAzimuthAngle = Math.PI / 5;
 
-  // The stage fills the entire hero, so a plain wheel MUST scroll the page —
-  // otherwise everything below the hero is unreachable. (The old gate only
-  // released the wheel once the camera reached maxDistance, which in practice
-  // it never did, trapping ~1400px of content.) Zoom is now an explicit
-  // gesture, the same modifier every map and 3D canvas uses.
-  controls.enableZoom = false;
+  // The wheel zooms the board — that is the whole feel of the hero — and then
+  // hands off to the page once there is nothing left to zoom.
+  //
+  // The handoff used to be `dist >= maxDistance - 0.01`, which almost never
+  // fired: damping eases the camera toward maxDistance asymptotically, so on
+  // any given wheel tick it is still short of the limit. The page stayed
+  // trapped and everything below the hero was unreachable. A tolerance scaled
+  // to the zoom range is forgiving enough to fire mid-ease.
+  controls.enableZoom = true;
 
   function wheelGate(e) {
-    if (!(e.ctrlKey || e.metaKey)) return;   // plain wheel: let the page scroll
-    e.preventDefault();
-    e.stopPropagation();
-    const dir  = camera.position.clone().sub(controls.target);
-    const dist = dir.length();
-    const next = Math.min(controls.maxDistance,
-                 Math.max(controls.minDistance, dist * (1 + e.deltaY * 0.0015)));
-    camera.position.copy(controls.target).add(dir.normalize().multiplyScalar(next));
-    controls.update();
+    const dist = camera.position.distanceTo(controls.target);
+    const scrollingDown = e.deltaY > 0;
+    const tol = Math.max(0.3, controls.maxDistance * 0.03);
+    const fullyZoomedOut = dist >= controls.maxDistance - tol;
+
+    // Zoomed all the way out and still pushing down → the page takes over.
+    // Scrolling up while the page has moved → put the page back first, so the
+    // board is always fully in view before it starts zooming in again.
+    if ((scrollingDown && fullyZoomedOut) || (!scrollingDown && window.scrollY > 0)) {
+      e.preventDefault();
+      e.stopPropagation();   // keep OrbitControls from also consuming it
+      window.scrollBy(0, e.deltaY);
+    }
+    // Otherwise fall through: OrbitControls zooms.
   }
   container.addEventListener('wheel', wheelGate, { capture: true, passive: false });
 
@@ -262,15 +338,37 @@ export function initKeyboard(container, { onCount } = {}) {
   renderer.domElement.addEventListener('pointerleave', () => { mouse.set(-2, -2); });
 
   let flying = null;
+  let focused = null;   // the algo currently on screen
+  // Where the camera was when the user clicked, so blur() puts them back
+  // exactly there rather than at some recomputed default framing.
+  const homePos = new THREE.Vector3();
+  const homeTarget = new THREE.Vector3();
+
   function launch(cap) {
     const algo = cap.userData.algo;
     visited.add(algo.id);
     if (onCount) onCount(visited.size, algoKeys.length);
-    const dest = cap.position.clone().add(new THREE.Vector3(0, 2.4, 2.6));
-    flying = { toPos: dest, toTarget: cap.position.clone(), t: 0, algo };
+    homePos.copy(camera.position);
+    homeTarget.copy(controls.target);
+    // Pan to the monitor rather than navigating away — the trace plays there.
+    flying = {
+      toPos:    monitorViewPos(),
+      toTarget: new THREE.Vector3(0, MON_Y, MON_Z),
+      t: 0, algo, mode: 'focus',
+    };
   }
-  function onClick() { if (hovered && !flying) launch(hovered); }
+  function onClick() { if (hovered && !flying && !focused) launch(hovered); }
   renderer.domElement.addEventListener('click', onClick);
+
+  // Fly back to the board and hand control to the user again.
+  function blur() {
+    if (!focused && !flying) return;
+    focused = null;
+    controls.enabled = true;
+    flying = { toPos: homePos.clone(), toTarget: homeTarget.clone(),
+               t: 0, mode: 'home' };
+    onBlur?.();
+  }
 
   // Distance at which the whole board spans the viewport width, so the
   // board is the hero at any window size instead of overflowing it.
@@ -315,6 +413,11 @@ export function initKeyboard(container, { onCount } = {}) {
     const d = fitDistance();
     controls.maxDistance = Math.max(17, d * 1.15);
     if (userMoved) camera.position.copy(home);
+    if (focused && !flying) {
+      // Re-fit: a resize changes the aspect, and with it the right distance.
+      camera.position.copy(monitorViewPos());
+      controls.target.set(0, MON_Y, MON_Z);
+    }
     controls.update();
   }
   const ro = new ResizeObserver(resize);
@@ -355,12 +458,32 @@ export function initKeyboard(container, { onCount } = {}) {
       flying.t += dt;
       camera.position.lerp(flying.toPos, Math.min(1, dt * 3.2));
       controls.target.lerp(flying.toTarget, Math.min(1, dt * 3.2));
-      if (flying.t > 0.9) {
-        const id = flying.algo.id;
+      if (flying.t > 0.85) {
+        const done = flying;
         flying = null;
-        location.hash = `#/experience?algo=${id}`;
+        if (done.mode === 'focus') {
+          // Settle exactly on the framing so the overlay can't drift, and
+          // lock the orbit controls while the screen is being read.
+          camera.position.copy(done.toPos);
+          controls.target.copy(done.toTarget);
+          controls.update();
+          focused = done.algo;
+          controls.enabled = false;
+          onFocus?.(done.algo, screenRect());
+        } else {
+          // Snap here too. The flight ends on a timer, not on convergence, so
+          // without this the camera settles slightly short of where it started
+          // and the board comes back subtly reframed — enough that clicking
+          // the same spot afterwards picks a different key.
+          camera.position.copy(done.toPos);
+          controls.target.copy(done.toTarget);
+          controls.update();
+          controls.enabled = true;
+        }
       }
     }
+
+    if (focused || flying?.mode === 'focus') onScreenRect?.(screenRect());
 
     controls.update();
     renderer.render(scene, camera);
@@ -374,6 +497,8 @@ export function initKeyboard(container, { onCount } = {}) {
   document.addEventListener('visibilitychange', onVis);
 
   return {
+    blur,
+    isFocused: () => !!focused,
     dispose() {
       alive = false;
       cancelAnimationFrame(raf);

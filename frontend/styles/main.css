@@ -1218,6 +1218,132 @@ input[type="range"]::-moz-range-thumb {
 .kbd-tip strong { font-size: 0.88rem; font-weight: 500; color: var(--ink); }
 .kbd-tip span { font-size: 0.7rem; color: var(--cDim); font-family: var(--font-mono); }
 
+/* ── THE DESK SCREEN ────────────────────────────────────────────────────
+   An HTML panel glued to the monitor's screen in the 3D scene. keyboard3d
+   projects the screen's corners every frame and sets the transform, so this
+   stays registered to the monitor through the whole pan. */
+.kbd-deck {
+  position: absolute;
+  top: 0; left: 0;
+  transform-origin: top left;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  overflow: hidden;
+}
+.kbd-deck.on { opacity: 1; pointer-events: auto; }
+
+/* Those corner labels describe drag/scroll/click gestures that are all
+   disabled while the screen has focus, and they read through the bezel. */
+.hero-kbd.focused .kbd-ml,
+.hero-kbd.focused .kbd-br,
+.hero-kbd.focused .kbd-tc {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mini-bezel {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.7rem 0.85rem;
+  background: #0c0a08;
+  color: var(--ink);
+  overflow: hidden;
+}
+.mini-off { display: none; }
+
+.mini-head { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.mini-spacer { flex: 1 1 auto; }
+.mini-title {
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-status { font-size: 0.6rem; padding: 0.15rem 0.45rem; }
+.mini-close {
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--inkDim);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.mini-close:hover { color: var(--ink); border-color: var(--panel-hi); }
+
+.mini-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: rgba(247, 243, 234, 0.02);
+  overflow: hidden;
+}
+.mini-stage > svg { width: 100%; height: 100%; display: block; }
+
+.mini-transport {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.mini-transport .transport-btn { width: 22px; height: 22px; }
+.mini-transport .transport-scrub { flex: 1 1 auto; min-width: 0; }
+.mini-transport .transport-count { font-size: 0.62rem; }
+.mini-run {
+  font-size: 0.66rem !important;
+  padding: 0.25rem 0.6rem !important;
+  margin-left: auto;
+}
+
+.mini-narration {
+  flex-shrink: 0;
+  min-height: 2.1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-left: 2px solid var(--c);
+  background: rgba(212, 96, 44, 0.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.mini-narration #engine-note {
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: opacity 0.3s;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mini-foot { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.mini-foot .counter-num { font-size: 0.66rem; }
+.mini-foot .counter-label { font-size: 0.42rem; }
+.mini-open {
+  font-size: 0.66rem !important;
+  padding: 0.28rem 0.65rem !important;
+  white-space: nowrap;
+}
+
+/* The screen is small; below this the panel stops being readable at all. */
+@media (max-width: 720px) {
+  .kbd-deck .mini-foot .counters,
+  .kbd-deck .mini-transport .transport-scrub { display: none !important; }
+  .mini-title { font-size: 0.72rem; }
+}
+
 @media (max-width: 980px) {
   .hero-kbd { height: calc(100svh - 62px); min-height: 420px; }
   .kbd-ml { display: none; }
@@ -1492,6 +1618,32 @@ input[type="range"]::-moz-range-thumb {
 }
 .stat-tile .stat-bar-bg { margin-top: 0.5rem; }
 .stat-tile-target { font-size: 0.72rem; color: var(--cDim); margin-top: 0.35rem; }
+
+/* ── NARROW SCREENS ─────────────────────────────────────────
+   Two things break below ~700px: a 760-wide trace scaled into a
+   phone makes the node labels unreadable, and the category control
+   wraps into a ragged second row. Both scroll sideways instead. */
+@media (max-width: 700px) {
+  #engine-view, #viz-inner {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #engine-svg { min-width: 560px; }
+
+  .segmented {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+  .segmented::-webkit-scrollbar { display: none; }
+  .segmented > button { flex-shrink: 0; }
+
+  .explore-search { flex-basis: 100%; }
+  .transport { gap: 0.75rem; }
+  .counters { gap: 0.875rem; }
+}
 
 /* ── 404 ── */
 .page-404 {
@@ -2110,6 +2262,19 @@ input[type="range"]::-moz-range-thumb {
 #prob-list { overflow-y: auto; max-height: 60vh; }
 #prob-list .prob-item { cursor: pointer; }
 .prob-dot.seen { border-color: var(--cDim); background: var(--cDim); }
+.prob-section {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.5rem 0.875rem 0.35rem;
+  background: var(--bg0);
+  border-bottom: 1px solid var(--panel-border);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cMag);
+}
 
 .prob-actions { padding: 1rem 1.125rem; }
 #prob-hook {

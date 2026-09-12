@@ -4,11 +4,12 @@ from pydantic import BaseModel, Field
 import re as _re
 
 from app.tracers import (
-    balanced_brackets, bfs, binary_search, bst_insert, bst_search,
-    bubble_sort, counting_sort, dfs, dijkstra, edit_distance, fenwick_tree,
-    fibonacci_dp, floyd_cycle, heap_insert, insertion_sort, kadanes,
-    kmp_search, knapsack_01, segment_tree,
-    kruskals_mst, lcs, linked_list_reverse, merge_sort, n_queens,
+    balanced_brackets, bfs, binary_search, bst_delete, bst_insert, bst_search,
+    bubble_sort, coin_change, counting_sort, dfs, dijkstra, dsu, edit_distance,
+    fenwick_tree, fibonacci_dp, floyd_cycle, hash_table, heap_extract,
+    heap_insert, insertion_sort, kadanes, kmp_search, knapsack_01,
+    segment_tree, kruskals_mst, lcs, linked_list_reverse, merge_intervals,
+    merge_sort, n_queens,
     next_greater_element, prefix_sums, prims_mst, quick_sort, selection_sort,
     sieve, sliding_window, topological_sort, tree_traversal, trie_insert,
     two_sum_sorted, unique_paths,
@@ -32,6 +33,7 @@ GRAPH_TRACERS = {
     "prims_mst": prims_mst.trace,
     "kruskals_mst": kruskals_mst.trace,
     "topological_sort": topological_sort.trace,
+    "dsu": dsu.trace,
 }
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
@@ -52,7 +54,11 @@ class TraceRequest(BaseModel):
     graph:     Graph | None = None
     array:     list[float] | None = Field(default=None, max_length=MAX_BSEARCH_LEN)
     target:    float | None = None
-    text:      str | None = Field(default=None, max_length=64)
+    # 64 was too tight once merge_intervals and hash_table started using this
+    # field: ten intervals with 3-digit bounds runs to ~89 chars, so valid
+    # input was being rejected by the model before its own validator ran.
+    # Each algorithm still enforces its own, stricter limit below.
+    text:      str | None = Field(default=None, max_length=128)
 
 @router.get("/algorithms")
 def algorithms():
@@ -94,6 +100,12 @@ def algorithms():
             {"id": "kmp_search",    "name": "KMP Substring Search",      "input": "text"},
             {"id": "segment_tree",  "name": "Segment Tree — Range Sum",  "input": "array"},
             {"id": "fenwick_tree",  "name": "Fenwick Tree (BIT)",        "input": "array"},
+            {"id": "hash_table",    "name": "Hash Table (Chaining)",     "input": "text"},
+            {"id": "bst_delete",    "name": "BST — Delete a Node",       "input": "array"},
+            {"id": "heap_extract",  "name": "Max-Heap — Extract",        "input": "array"},
+            {"id": "dsu",           "name": "Union-Find (DSU)",          "input": "graph"},
+            {"id": "merge_intervals", "name": "Merge Intervals",         "input": "text"},
+            {"id": "coin_change",   "name": "Coin Change (Fewest Coins)", "input": "array"},
         ]
     }
 
@@ -114,6 +126,68 @@ def _validated_array(array, max_len, algo):
             detail=f"Array values must be within ±{MAX_VALUE}.",
         )
     return array
+
+
+def _parse_intervals(text: str):
+    """'1-3, 2-6, 8-10' -> [[1,3], [2,6], [8,10]]. Server-side, so the error
+    messages are the ones the student actually sees."""
+    cleaned = text.replace(" ", "")
+    if not cleaned:
+        return []
+    parts = [p for p in cleaned.split(",") if p]
+    if len(parts) > merge_intervals.MAX_INTERVALS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"At most {merge_intervals.MAX_INTERVALS} intervals — the "
+                   f"trace has to stay readable.",
+        )
+    out = []
+    for p in parts:
+        if not _re.fullmatch(r"\d+-\d+", p):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Could not read {p!r} as an interval. Use whole-number "
+                       f"start-end pairs, e.g. 1-3, 2-6, 8-10",
+            )
+        a, b = (int(v) for v in p.split("-"))
+        if a > b:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Interval {p!r} ends before it starts.",
+            )
+        if b > merge_intervals.MAX_VALUE:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Interval bounds must be 0–{merge_intervals.MAX_VALUE}.",
+            )
+        out.append([a, b])
+    return out
+
+
+def _parse_keys(text: str):
+    """'CAT,DOG,OWL | DOG' -> (['CAT','DOG','OWL'], 'DOG')."""
+    head, sep, tail = text.partition("|")
+    keys = [k.strip().upper() for k in head.split(",") if k.strip()]
+    lookup = tail.strip().upper() or None if sep else None
+    if not keys:
+        raise HTTPException(
+            status_code=400,
+            detail="Give at least one key, e.g. CAT,DOG,OWL,FOX",
+        )
+    if len(keys) > hash_table.MAX_KEYS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"At most {hash_table.MAX_KEYS} keys — beyond that the "
+                   f"chains stop fitting on screen.",
+        )
+    for k in keys + ([lookup] if lookup else []):
+        if not _re.fullmatch(r"[A-Z0-9]{1,10}", k):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Key {k!r} must be 1–10 letters or digits.",
+            )
+    return keys, lookup
+
 
 # 30 traces per minute — tracer is CPU-bound
 @router.post("")
@@ -190,6 +264,72 @@ def run_trace(request: Request, req: TraceRequest):
       arr = _validated_array(req.array, bst_insert.MAX_TREE_LEN, req.algorithm)
       fn = bst_insert.trace if req.algorithm == "bst_insert" else heap_insert.trace
       return fn(arr)
+
+    if req.algorithm == "heap_extract":
+      arr = _validated_array(req.array, heap_extract.MAX_TREE_LEN,
+                             "heap_extract")
+      return heap_extract.trace(arr)
+
+    if req.algorithm == "bst_delete":
+      arr = _validated_array(req.array, bst_delete.MAX_TREE_LEN, "bst_delete")
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="bst_delete requires a 'target' — the value to remove."
+        )
+      if abs(req.target) > MAX_VALUE:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Target must be within ±{MAX_VALUE}."
+        )
+      return bst_delete.trace(arr, req.target)
+
+    if req.algorithm == "coin_change":
+      coins = _validated_array(req.array, coin_change.MAX_COINS, "coin_change")
+      if not coins:
+        raise HTTPException(
+          status_code=400,
+          detail="coin_change needs at least one coin denomination."
+        )
+      if any(c != int(c) or int(c) < 1 for c in coins):
+        raise HTTPException(
+          status_code=400,
+          detail="Coin denominations must be whole numbers of 1 or more."
+        )
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="coin_change requires a 'target' — the amount to make."
+        )
+      amount = req.target
+      if amount != int(amount) or not (0 <= int(amount) <= coin_change.MAX_AMOUNT):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Amount must be a whole number from 0 to "
+                 f"{coin_change.MAX_AMOUNT} — the table has to stay readable."
+        )
+      return coin_change.trace([int(c) for c in coins], int(amount))
+
+    if req.algorithm == "merge_intervals":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="merge_intervals requires 'text' — intervals as start-end "
+                 "pairs, e.g. 1-3, 2-6, 8-10, 15-18"
+        )
+      intervals = _parse_intervals(req.text)
+      return merge_intervals.trace(intervals)
+
+    if req.algorithm == "hash_table":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="hash_table requires 'text' — comma-separated keys, "
+                 "optionally followed by | and a key to look up, "
+                 "e.g. CAT,DOG,OWL,FOX | DOG"
+        )
+      keys, lookup = _parse_keys(req.text)
+      return hash_table.trace(keys, hash_table.DEFAULT_BUCKETS, lookup)
 
     if req.algorithm == "bst_search":
       arr = _validated_array(req.array, bst_insert.MAX_TREE_LEN, "bst_search")
@@ -526,6 +666,8 @@ def run_trace(request: Request, req: TraceRequest):
                 "floyd_cycle", "tree_traversal", "trie_insert", "n_queens",
                 "unique_paths", "sieve", "kmp_search", "segment_tree",
                 "fenwick_tree",
+                "hash_table", "bst_delete", "heap_extract",
+                "merge_intervals", "coin_change",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

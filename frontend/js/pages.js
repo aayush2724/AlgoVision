@@ -56,7 +56,7 @@ export const PAGES = {
         <div class="kbd-corner kbd-ml">
           <span class="kbd-tiny-label">NAVIGATION</span>
           <div class="kbd-legend"><span>DRAG</span><em>ROTATE</em></div>
-          <div class="kbd-legend"><span>⌘/CTRL +<br>SCROLL</span><em>ZOOM</em></div>
+          <div class="kbd-legend"><span>SCROLL</span><em>ZOOM</em></div>
           <div class="kbd-legend"><span>CLICK KEY</span><em>TRACE IT</em></div>
         </div>
         <div class="kbd-corner kbd-br">
@@ -125,14 +125,54 @@ export const PAGES = {
         import('./keyboard3d.js').then(({ initKeyboard }) => {
           // Guard: user may have navigated away while the module loaded
           if (!document.body.contains(stage)) return;
+          // The panel that sits on the monitor's screen once a key is clicked.
+          const deck = document.createElement('div');
+          deck.className = 'kbd-deck';
+          stage.appendChild(deck);
+          let deckCtl = null;
+
           const kbd = initKeyboard(stage, {
             onCount: (n, total) => {
               if (countEl) countEl.textContent = `${n} / ${total}`;
             },
+            // Keep the panel glued to the screen for the whole pan.
+            onScreenRect: (r) => {
+              deck.style.transform = `translate(${r.x}px, ${r.y}px)`;
+              deck.style.width  = `${r.w}px`;
+              deck.style.height = `${r.h}px`;
+            },
+            onFocus: (algo) => {
+              // The board's corner legend would otherwise show through the
+              // screen — it describes gestures that are disabled while focused.
+              stage.closest('.hero-kbd')?.classList.add('focused');
+              import('./miniEngine.js')
+                .then(m => { deckCtl = m.mountMiniEngine(deck, algo, () => kbd.blur()); })
+                .catch(e => {
+                  console.warn('Mini engine unavailable:', e);
+                  kbd.blur();
+                });
+            },
+            onBlur: () => {
+              stage.closest('.hero-kbd')?.classList.remove('focused');
+              deckCtl?.dispose();
+              deckCtl = null;
+              deck.classList.remove('on');
+              deck.innerHTML = '';
+            },
           });
+
+          // Escape backs out of the screen, like any other focused view.
+          const onEsc = (e) => { if (e.key === 'Escape' && kbd.isFocused()) kbd.blur(); };
+          document.addEventListener('keydown', onEsc);
+
           // Dispose with the page — hook into the router's DOM teardown
           const mo = new MutationObserver(() => {
-            if (!document.body.contains(stage)) { kbd.dispose(); mo.disconnect(); }
+            if (!document.body.contains(stage)) {
+              deckCtl?.dispose();
+              document.removeEventListener('keydown', onEsc);
+              kbd.dispose();
+              mo.disconnect();
+            }
           });
           mo.observe(document.getElementById('app'), { childList: true });
         }).catch(e => {
@@ -306,7 +346,12 @@ export const PAGES = {
     html: (params) => {
       // Whitelist chars — this comes from the URL and lands in innerHTML.
       const algo = (params.get('algo') || 'dijkstra').replace(/[^a-zA-Z0-9_-]/g, '') || 'dijkstra';
-      const displayName = algo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      // Prefer the catalog's real name ("Breadth-First Search") over a
+      // title-cased slug ("Bfs"), which reads wrong beside the switcher.
+      const entry = DATA.ALGORITHMS.find(a => a.id === algo);
+      const displayName = entry
+        ? entry.name
+        : algo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
       return `
       <section class="experience-section">
         <div class="toolbar">
@@ -560,7 +605,7 @@ export const PAGES = {
             <div class="page-head">
               <span class="eyebrow">Complete roadmap</span>
               <h1 class="page-title">A2Z mastery path</h1>
-              <p class="page-lede">Seven steps, in order. Each problem opens a metaphor scene you can step through — not a wall of links.</p>
+              <p class="page-lede">${DATA.A2Z_STEPS.length} steps, ${totalProblems} problems, in order. Each one opens a metaphor scene you can step through — not a wall of links.</p>
             </div>
 
             <div class="step-rail">
@@ -769,12 +814,20 @@ export const PAGES = {
           function renderStep(si) {
             const step = DATA.A2Z_STEPS[si];
             stepTitleEl.textContent = `${step.step} · ${step.title}`;
-            probListEl.innerHTML = (step.problems || []).map((p, pi) => `
+            // Steps run to 47 problems, so break the list on the sheet's own
+            // sub-sections rather than presenting one undifferentiated scroll.
+            let lastSection = null;
+            probListEl.innerHTML = (step.problems || []).map((p, pi) => {
+              const header = p.section && p.section !== lastSection
+                ? `<div class="prob-section">${p.section}</div>` : '';
+              lastSection = p.section || lastSection;
+              return header + `
               <div class="prob-item" data-pi="${pi}" role="button" tabindex="0">
                 ${statusMark(p.id)}
                 <span class="prob-item-name">${p.title}</span>
                 <span class="chip chip-${(p.difficulty || 'E').toLowerCase()}">${p.difficulty}</span>
-              </div>`).join('');
+              </div>`;
+            }).join('');
 
             probListEl.querySelectorAll('.prob-item').forEach(el => {
               const open = () => {

@@ -13,9 +13,26 @@ Each phase below is a self-contained prompt. Execute one phase per session/turn,
 verify its acceptance criteria, then stop so the phase can be committed before
 the next begins.
 
-**Status: Phases 0–5 DONE. Catalog batches 1–8 DONE — 36 algorithms live,
-323 backend tests passing. Every named topic in the Tier A/B/C plan below is
-covered.**
+**Status: Phases 0–5 DONE. Catalog batches 1–9 DONE — 42 algorithms live,
+514 backend tests passing.**
+
+**A2Z sheet FILLED.** `frontend/js/a2z.js` now carries the full 18-step sheet
+(431 problems, grouped by the sheet's own sub-sections) instead of the old
+7-step/72-problem stub. Every problem has a scene that actually renders — no
+`default` fallbacks left. Problem ids are APPEND-ONLY: `progress.js` keys off
+them, so renumbering silently reassigns a student's completed work.
+
+Caveat worth knowing: the problem titles were written from knowledge of the
+sheet, not scraped from takeuforward. The structure and the well-known
+problems are right, but spot-check before treating the list as authoritative,
+and expect minor drift from the official count.
+
+**UI redesign DONE.** The palette and the 3D keyboard hero are unchanged;
+everything else moved onto a shared component layer (`.page-head`, `.toolbar`,
+`.chip`, `.segmented`, `.stage`, `.transport`, `.narration`, `.workbench`,
+`.step-rail`). Inline `style=` in `pages.js` dropped 221 → 77, `!important`
+23 → 15, and the nine leftover navy values from the old Aurora Glass theme
+are gone.
 
 Batch log (each = tracer + view + metaphor + detect signature + tests):
 - Batches 1–5: the first 22 (graphs, all five sorts, searching, patterns,
@@ -25,6 +42,15 @@ Batch log (each = tracer + view + metaphor + detect signature + tests):
 - Batch 7: tree traversals (in/pre/post in one trace), trie insert, N-Queens,
   unique paths, sieve of Eratosthenes.
 - Batch 8: KMP substring search, segment tree, Fenwick tree (BIT).
+- Batch 9 (the college-core gaps the earlier "all covered" claim missed):
+  hash table with separate chaining, BST delete (all three cases), max-heap
+  extract / sift-down, standalone union-find with rank + path compression,
+  merge intervals, coin change.
+
+Batch 9 needed no new view archetypes either: hashing and coin change reuse
+the `grid` renderer (buckets × chain slots; coins × amounts), BST delete and
+heap extract reuse `tree`, DSU reuses `graph`, and merge intervals rides the
+`array` renderer's string cells as "2–6".
 
 No new view archetypes were needed for batches 6–8: the array and grid
 renderers now tolerate string cells (`fmtCell`), so KMP shows characters and
@@ -36,7 +62,19 @@ just another tracer):
 - LCA / binary lifting — needs a jump-pointer overlay to be worth watching.
 - Bitmask DP — the grid view can hold it, but the subset axis needs labels
   that read as bitmasks rather than integers.
-- A standalone DSU tracer — union-find is already visible inside Kruskal's.
+
+**Still open, and reusing existing views** (so each is a plain batch, not a
+new interaction model):
+- Graphs: Bellman–Ford, Floyd–Warshall, flood fill, connected components,
+  bipartite check, A*.
+- DP: LIS, subset sum, house robber, matrix chain.
+- Sorting: heap sort as its own entry (the mechanics already ship inside
+  `heap_extract`), radix sort.
+- Strings: Z-function, Rabin–Karp, Manacher / longest palindrome, anagram
+  frequency map.
+- Lists: merge two sorted lists, find middle; sliding-window maximum (deque).
+- Number theory beyond the sieve: GCD/Euclid, fast exponentiation, prime
+  factorisation.
 
 ---
 

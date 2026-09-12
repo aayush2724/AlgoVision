@@ -218,6 +218,8 @@ const VIEW_FOR = {
   tree_traversal: 'tree', trie_insert: 'tree',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
+  hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
+  dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
 };
 
 function resolveAlgoId(raw) {
@@ -862,6 +864,26 @@ export function mountEngine(view, algo = 'dijkstra') {
       target: '10',
       hint: 'Pick n (0–18) — watch the memo vault fill; cache hits glow green.',
     },
+    hash_table: {
+      array: 'CAT, DOG, OWL, FOX | DOG',
+      hint: 'Up to 8 keys, then | and a key to look up. Only 5 buckets, so collisions are the point.',
+    },
+    bst_delete: {
+      array: '8, 3, 10, 1, 6, 14, 4, 7, 13', target: '3',
+      hint: 'Delete a leaf (1), a node with one child (10), or one with two (3) — three different stories.',
+    },
+    heap_extract: {
+      array: '3, 9, 2, 1, 7, 5',
+      hint: 'Take the max, move the last leaf up, sift it down. Repeat and the output is sorted.',
+    },
+    merge_intervals: {
+      array: '1-3, 2-6, 8-10, 15-18',
+      hint: 'Up to 10 start-end pairs. Try them out of order — the sort is what makes one pass enough.',
+    },
+    coin_change: {
+      array: '1, 3, 4', target: '6',
+      hint: 'Coins then an amount (0–12). Try 1,3,4 for 6 — greedy says 3 coins, the table finds 2.',
+    },
   };
 
   // Algorithms whose only input is a single number, whatever their view.
@@ -909,6 +931,49 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'The pattern cannot be longer than the text.' };
       }
       return { text: raw, chars: hay.split('') };
+    }
+
+    if (algoId === 'hash_table') {
+      const raw = (arrayInput?.value || '').toUpperCase();
+      const [head, look] = raw.split('|');
+      const keys = head.split(',').map(k => k.trim()).filter(Boolean);
+      const lookup = (look || '').trim();
+      if (!keys.length) return { error: 'Type some keys — e.g. CAT, DOG, OWL' };
+      if (keys.length > 8) return { error: 'Max 8 keys — the chains stop fitting.' };
+      if (keys.concat(lookup ? [lookup] : []).some(k => !/^[A-Z0-9]{1,10}$/.test(k))) {
+        return { error: 'Keys are 1–10 letters or digits.' };
+      }
+      return { text: keys.join(',') + (lookup ? ` | ${lookup}` : '') };
+    }
+
+    if (algoId === 'merge_intervals') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      const parts = raw.split(',').filter(Boolean);
+      if (!parts.length) return { error: 'Type intervals — e.g. 1-3, 2-6, 8-10' };
+      if (parts.length > 10) return { error: 'Max 10 intervals.' };
+      for (const p of parts) {
+        if (!/^\d+-\d+$/.test(p)) {
+          return { error: `Could not read "${p}" — use start-end pairs like 2-6.` };
+        }
+        const [a, b] = p.split('-').map(Number);
+        if (a > b) return { error: `Interval "${p}" ends before it starts.` };
+        if (b > 100) return { error: 'Keep interval bounds between 0 and 100.' };
+      }
+      return { text: parts.join(','), chars: parts };
+    }
+
+    if (algoId === 'coin_change') {
+      const coins = (arrayInput?.value || '').split(',')
+        .map(s => Number(s.trim())).filter(s => s !== '' && !Number.isNaN(s));
+      if (!coins.length) return { error: 'Type coin values — e.g. 1, 3, 4' };
+      if (coins.length > 4) return { error: 'Max 4 coin denominations.' };
+      if (coins.some(c => !Number.isInteger(c) || c < 1)) {
+        return { error: 'Coins must be whole numbers of 1 or more.' };
+      }
+      const amount = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(amount)) return { error: 'Amount must be a whole number.' };
+      if (amount < 0 || amount > 12) return { error: 'Keep the amount between 0 and 12.' };
+      return { array: coins, target: amount };
     }
 
     if (algoId === 'trie_insert') {
@@ -998,6 +1063,14 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Counting sort needs whole numbers 0–20 — one bucket per value.' };
       }
       return { array: values };
+    }
+
+    if (algoId === 'bst_delete') {
+      const raw = (targetInput?.value || '').trim();
+      if (raw === '') return { error: 'Which value should be deleted?' };
+      const t = Number(raw);
+      if (!Number.isFinite(t)) return { error: 'The value to delete must be a number.' };
+      return { array: values, target: t };
     }
 
     if (algoId === 'floyd_cycle') {
@@ -2735,6 +2808,27 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+        } else if (algoId === 'hash_table') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'merge_intervals') {
+          renderArrayView(parsed.chars);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'coin_change') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+        } else if (algoId === 'bst_delete') {
+          currentArrayValues = parsed.array.slice();
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
         } else if (algoId === 'trie_insert') {
           renderTreeView();
           res = isOffline
@@ -3414,7 +3508,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       }
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
-        'unique_paths', 'segment_tree', 'fenwick_tree'].includes(algoId)
+        'unique_paths', 'segment_tree', 'fenwick_tree',
+        'bst_delete', 'coin_change'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -3426,6 +3521,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'unique_paths') targetLabel.textContent = 'GRID =';
         if (targetLabel && algoId === 'segment_tree') targetLabel.textContent = 'RANGE =';
         if (targetLabel && algoId === 'fenwick_tree') targetLabel.textContent = 'UP TO =';
+        if (targetLabel && algoId === 'bst_delete') targetLabel.textContent = 'DELETE =';
+        if (targetLabel && algoId === 'coin_change') targetLabel.textContent = 'AMOUNT =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

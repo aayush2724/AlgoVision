@@ -105,6 +105,20 @@ export const ALGORITHMS = [
     hook: "Range sums in log time, because every node summarises a block." },
   { id: "fenwick_tree", name: "Fenwick Tree (BIT)",         category: "Structures", emoji: "🪜", complexity: "O(log n)", input: "array",
     hook: "Prefix sums that stay cheap when the numbers change." },
+
+  // Batch 9 — the college-core gaps.
+  { id: "hash_table",   name: "Hash Table (Chaining)",      category: "Structures", emoji: "🗄️", complexity: "O(1) average", input: "text",
+    hook: "Where O(1) comes from — and what a collision costs." },
+  { id: "bst_delete",   name: "BST — Delete a Node",        category: "Structures", emoji: "✂️", complexity: "O(log n)", input: "array",
+    hook: "Three cases, and the third one needs a successor." },
+  { id: "heap_extract", name: "Max-Heap — Extract",         category: "Structures", emoji: "⛏️", complexity: "O(log n)", input: "array",
+    hook: "Take the top, sink the last leaf — that's heap sort." },
+  { id: "dsu",          name: "Union-Find (DSU)",           category: "Graphs", emoji: "🔗", complexity: "O(α(n)) ≈ O(1)", input: "graph",
+    hook: "Merge two circles; ask if they were already one." },
+  { id: "merge_intervals", name: "Merge Intervals",         category: "Patterns", emoji: "📆", complexity: "O(n log n)", input: "text",
+    hook: "Sort by start and the overlaps fall out in one pass." },
+  { id: "coin_change",  name: "Coin Change (Fewest Coins)", category: "DP", emoji: "🪙", complexity: "O(coins·amount)", input: "number",
+    hook: "Where grabbing the biggest coin first goes wrong." },
 ];
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -143,115 +157,9 @@ export const SAMPLE_GRAPH = {
   ]
 };
 
-export const A2Z_STEPS = [
-  {
-    step: "Step 1", title: "Learn the Basics", progress: 100,
-    problems: [
-      { id:"1-1",  title:"User Input / Output",             difficulty:"E", viz:"terminal",    world:"ATM Machine",             hook:"Every program starts with a conversation." },
-      { id:"1-2",  title:"Data Types",                      difficulty:"E", viz:"warehouse",   world:"Warehouse Shelves",        hook:"Every shelf holds a different kind of cargo." },
-      { id:"1-3",  title:"If-Else / Switch Statements",     difficulty:"E", viz:"traffic",     world:"Traffic Signal",           hook:"Rules decide who moves and who waits." },
-      { id:"1-4",  title:"Arrays",                          difficulty:"E", viz:"array",       world:"Train Carriages",          hook:"A line of boxes, each with an address." },
-      { id:"1-5",  title:"Strings",                         difficulty:"E", viz:"dna",         world:"DNA Strand",               hook:"Characters chained together like genetic code." },
-      { id:"1-6",  title:"For Loops",                       difficulty:"E", viz:"conveyor",    world:"Factory Conveyor Belt",    hook:"The machine that never gets tired." },
-      { id:"1-7",  title:"While Loops",                     difficulty:"E", viz:"watchman",    world:"Security Guard",           hook:"Keep checking until the condition is met." },
-      { id:"1-8",  title:"Functions (Pass by Value/Ref)",   difficulty:"E", viz:"courier",     world:"Courier Service",          hook:"Send a copy, or send the real thing?" },
-      { id:"1-9",  title:"Time Complexity",                 difficulty:"M", viz:"racetrack",   world:"Formula 1 Race",           hook:"How fast does your code cross the finish line?" },
-      { id:"1-10", title:"Space Complexity",                difficulty:"M", viz:"warehouse",   world:"RAM as Warehouse",         hook:"How much floor space does your solution rent?" },
-    ]
-  },
-  {
-    step: "Step 2", title: "Sorting Techniques", progress: 80,
-    problems: [
-      { id:"2-1",  title:"Selection Sort",    difficulty:"E", viz:"leaderboard", world:"Leaderboard Selection",  hook:"Find the champion, move them to the top. Repeat." },
-      { id:"2-2",  title:"Bubble Sort",       difficulty:"E", viz:"bubbles",     world:"Bubble Tea Queue",       hook:"Heavy bubbles sink; light ones rise." },
-      { id:"2-3",  title:"Insertion Sort",    difficulty:"E", viz:"cards",       world:"Sorting Playing Cards",  hook:"Pick a card, slide it into the right slot." },
-      { id:"2-4",  title:"Merge Sort",        difficulty:"M", viz:"mergesort",   world:"Merging Sorted Piles",   hook:"Divide the chaos. Merge into order." },
-      { id:"2-5",  title:"Quick Sort",        difficulty:"M", viz:"quicksort",   world:"Partition a Crowd",      hook:"Pick a pivot. The crowd splits around you." },
-      { id:"2-6",  title:"Counting Sort",     difficulty:"E", viz:"votes",       world:"Election Vote Count",    hook:"Tally marks never lie." },
-      { id:"2-7",  title:"Radix Sort",        difficulty:"M", viz:"postal",      world:"Postal Sorting Office",  hook:"Sort by zip code digit by digit." },
-    ]
-  },
-  {
-    step: "Step 3", title: "Arrays", progress: 60,
-    problems: [
-      { id:"3-1",  title:"Largest Element",                difficulty:"E", viz:"podium",      world:"Olympic Podium",          hook:"Who stands tallest on the stage?" },
-      { id:"3-2",  title:"Second Largest Element",         difficulty:"E", viz:"podium",      world:"Silver Medal Hunt",       hook:"The runner-up is harder to find than you think." },
-      { id:"3-3",  title:"Check if Array is Sorted",       difficulty:"E", viz:"conveyor",    world:"Quality Control Belt",    hook:"Is every package in the right order?" },
-      { id:"3-4",  title:"Remove Duplicates (Sorted)",     difficulty:"E", viz:"dedup",       world:"Guest List Cleanup",      hook:"One invite per guest. Cross the rest out." },
-      { id:"3-5",  title:"Left Rotate Array by One",       difficulty:"E", viz:"carousel",    world:"Carousel Ride",           hook:"The first rider moves to the back of the line." },
-      { id:"3-6",  title:"Left Rotate Array by D",         difficulty:"M", viz:"carousel",    world:"Ferris Wheel Rotation",   hook:"Spin the wheel D slots. Who's at the top?" },
-      { id:"3-7",  title:"Move Zeros to End",              difficulty:"E", viz:"particles",   world:"Centrifuge Separation",   hook:"Heavy particles drift to the edge." },
-      { id:"3-8",  title:"Linear Search",                  difficulty:"E", viz:"searchbeam",  world:"Flashlight in the Dark",  hook:"Check every corner until you find it." },
-      { id:"3-9",  title:"Union of Two Arrays",            difficulty:"M", viz:"venn",        world:"Venn Diagram Merge",      hook:"Two crowds become one, no duplicates." },
-      { id:"3-10", title:"Intersection of Two Arrays",     difficulty:"M", viz:"venn",        world:"Common Friends",          hook:"Who do we both know?" },
-      { id:"3-11", title:"Find Missing Number",            difficulty:"E", viz:"seats",       world:"Empty Theatre Seat",      hook:"One seat is empty. Which number is it?" },
-      { id:"3-12", title:"Max Consecutive Ones",           difficulty:"E", viz:"powerline",   world:"Power Grid Uptime",       hook:"Longest uninterrupted stretch of power." },
-      { id:"3-13", title:"Single Number (XOR)",            difficulty:"E", viz:"mirror",      world:"Spy Mirror Trick",        hook:"Everything cancels out. The odd one survives." },
-      { id:"3-14", title:"Longest Subarray with Sum K",    difficulty:"M", viz:"windowslide", world:"Budget Window Shopping",  hook:"Find the shopping stretch that exactly hits budget." },
-      { id:"3-15", title:"Two Sum",                        difficulty:"E", viz:"market",      world:"Supermarket Pairing",     hook:"Find two items that together hit the target price." },
-      { id:"3-16", title:"Sort 0s 1s 2s (Dutch Flag)",    difficulty:"M", viz:"flag",        world:"Dutch National Flag",     hook:"Three colours. One pass. No extra space." },
-      { id:"3-17", title:"Majority Element (>n/2)",        difficulty:"M", viz:"election",    world:"Majority Vote",           hook:"The candidate who dominates always reveals themselves." },
-      { id:"3-18", title:"Maximum Subarray (Kadane's)",    difficulty:"M", viz:"stockchart",  world:"Best Stock Run",          hook:"Find the best winning streak in the market." },
-      { id:"3-19", title:"Best Time to Buy & Sell Stock",  difficulty:"E", viz:"stockchart",  world:"Stock Trader",            hook:"Buy low. Sell high. One transaction." },
-      { id:"3-20", title:"Rearrange by Sign",              difficulty:"M", viz:"teams",       world:"Team Alternation",        hook:"Positive and negative players, perfectly alternated." },
-    ]
-  },
-  {
-    step: "Step 4", title: "Binary Search", progress: 40,
-    problems: [
-      { id:"4-1",  title:"Binary Search on 1D Array",       difficulty:"E", viz:"library",    world:"Library Catalog",         hook:"Halve the search space every time." },
-      { id:"4-2",  title:"Implement Lower Bound",           difficulty:"E", viz:"library",    world:"Bookshelf First Fit",     hook:"The first shelf where this book could live." },
-      { id:"4-3",  title:"Implement Upper Bound",           difficulty:"E", viz:"library",    world:"Last Possible Slot",      hook:"The last place this book could possibly go." },
-      { id:"4-4",  title:"Search Insert Position",          difficulty:"E", viz:"library",    world:"Insert Into Filing Cabinet",hook:"Where would this file naturally belong?" },
-      { id:"4-5",  title:"Floor & Ceil of a Number",        difficulty:"E", viz:"elevator",   world:"Elevator Floor",          hook:"Which floor do you land on? And which is just above?" },
-      { id:"4-6",  title:"First & Last Occurrence",         difficulty:"M", viz:"library",    world:"Archive Search",          hook:"When did this event first and last appear?" },
-      { id:"4-7",  title:"Count Occurrences",               difficulty:"E", viz:"votes",      world:"Vote Counter",            hook:"How many ballots carry this name?" },
-      { id:"4-8",  title:"Search in Rotated Array",         difficulty:"M", viz:"array",      world:"Rotated Carousel",        hook:"The ride spun. Find your seat anyway." },
-      { id:"4-9",  title:"Find Minimum in Rotated Array",   difficulty:"M", viz:"mountain",   world:"Valley in Rotated Terrain",hook:"The lowest point after the mountain spun." },
-      { id:"4-10", title:"Single Element in Sorted Array",  difficulty:"M", viz:"mirror",     world:"Odd Locker Out",          hook:"Every locker has a twin. Except one." },
-      { id:"4-11", title:"Find Peak Element",               difficulty:"M", viz:"mountain",   world:"Mountain Peak Hike",      hook:"Climb until you can't go higher." },
-      { id:"4-12", title:"Koko Eating Bananas",             difficulty:"M", viz:"conveyor",   world:"Factory Output Rate",     hook:"What's the minimum speed to finish in time?" },
-      { id:"4-13", title:"Capacity to Ship in D Days",      difficulty:"M", viz:"shipping",   world:"Shipping Container",      hook:"Minimum capacity to deliver all packages in time." },
-      { id:"4-14", title:"Median of Two Sorted Arrays",     difficulty:"H", viz:"balance",    world:"Median Salary Finder",    hook:"The middle ground between two payroll lists." },
-    ]
-  },
-  {
-    step: "Step 5", title: "Strings", progress: 20,
-    problems: [
-      { id:"5-1",  title:"Reverse Words in String",          difficulty:"E", viz:"dna",        world:"DNA Reversal",            hook:"Flip the sequence. The meaning survives." },
-      { id:"5-2",  title:"Longest Palindrome Substring",     difficulty:"M", viz:"mirror",     world:"Mirror Word",             hook:"The word that reads the same forwards and back." },
-      { id:"5-3",  title:"Roman to Integer",                 difficulty:"E", viz:"clock",      world:"Sundial Reading",         hook:"Ancient notation, modern conversion." },
-      { id:"5-4",  title:"String to Integer (atoi)",         difficulty:"M", viz:"terminal",   world:"Number Parser",           hook:"Raw text becomes a number. Handle the edge cases." },
-      { id:"5-5",  title:"Longest Common Prefix",            difficulty:"E", viz:"dna",        world:"Gene Prefix Alignment",   hook:"The shared start of every sequence." },
-      { id:"5-6",  title:"Anagram Check",                    difficulty:"E", viz:"shuffle",    world:"Anagram Puzzle",          hook:"Same letters, different arrangement." },
-      { id:"5-7",  title:"Isomorphic Strings",               difficulty:"E", viz:"mirror",     world:"Code Translation",        hook:"Every character maps to exactly one other." },
-      { id:"5-8",  title:"Implement strStr (KMP)",           difficulty:"H", viz:"searchbeam", world:"Genome Sequencer",        hook:"Find the pattern inside the text. No backtracking." },
-    ]
-  },
-  {
-    step: "Step 6", title: "Linked List", progress: 0,
-    problems: [
-      { id:"6-1",  title:"Linked List Intro & Traversal",   difficulty:"E", viz:"train",      world:"Train Carriages",         hook:"Each carriage knows only the next one." },
-      { id:"6-2",  title:"Insertion at Head/Tail/Position", difficulty:"E", viz:"train",      world:"Adding a Carriage",       hook:"Hook a new carriage onto the train." },
-      { id:"6-3",  title:"Deletion at Head/Tail/Position",  difficulty:"E", viz:"train",      world:"Detaching a Carriage",    hook:"Uncouple and reconnect around the gap." },
-      { id:"6-4",  title:"Reverse a Linked List",           difficulty:"E", viz:"train",      world:"Train Reversal",          hook:"The engine becomes the caboose." },
-      { id:"6-5",  title:"Find Middle of Linked List",      difficulty:"E", viz:"train",      world:"Midpoint of a Journey",   hook:"Fast and slow pointer. One reaches the end first." },
-      { id:"6-6",  title:"Detect Loop (Floyd's)",           difficulty:"M", viz:"circuit",    world:"Circular Track Detector", hook:"Slow and fast runners. If they meet, it's a loop." },
-      { id:"6-7",  title:"Merge Two Sorted Lists",          difficulty:"E", viz:"mergesort",  world:"Merging Two Train Routes",hook:"Two sorted timetables merged into one." },
-      { id:"6-8",  title:"Merge K Sorted Lists",            difficulty:"H", viz:"mergesort",  world:"K-Way Rail Merge",        hook:"Combine K lines into one master route." },
-    ]
-  },
-  {
-    step: "Step 7", title: "Recursion", progress: 0,
-    problems: [
-      { id:"7-1",  title:"Factorial",                       difficulty:"E", viz:"fractal",    world:"Fractal Branching",       hook:"N roads split into N-1. Then N-2. All the way down." },
-      { id:"7-2",  title:"Fibonacci",                       difficulty:"E", viz:"fractal",    world:"Rabbit Population",       hook:"Each generation is the sum of the last two." },
-      { id:"7-3",  title:"Power Function (Fast Expo)",      difficulty:"M", viz:"racetrack",  world:"Compound Interest",       hook:"Square the result, halve the steps." },
-      { id:"7-4",  title:"All Subsets of a String",         difficulty:"M", viz:"fractal",    world:"Power Set of Ingredients",hook:"Every possible combination of toppings." },
-      { id:"7-5",  title:"All Permutations of a String",    difficulty:"M", viz:"shuffle",    world:"Seating Arrangements",    hook:"Every possible seating order at the table." },
-    ]
-  },
-];
+// The full Striver A2Z sheet lives in its own module — 18 steps, and long
+// enough that inlining it here buried everything else in this file.
+export { A2Z_STEPS } from './a2z.js';
 
 export const COMPLEXITY = {
   dijkstra: {
@@ -494,6 +402,51 @@ export const COMPLEXITY = {
       `${c.nodes_visited ?? 0} of them and reused ${c.full_covers ?? 0} whole ` +
       `block(s). Summing the range directly would have read ` +
       `${c.elements_scanned_naively ?? 0} elements.`,
+  },
+  hash_table: {
+    rows: [["Average", "O(1)"], ["Worst", "O(n)"], ["Space", "O(n)"]],
+    reading: (c) =>
+      `${c.hashes ?? 0} hash${(c.hashes ?? 0) === 1 ? '' : 'es'} computed and ` +
+      `${c.collisions ?? 0} collision${(c.collisions ?? 0) === 1 ? '' : 's'}. ` +
+      `The hash is always one step — the cost you actually pay is walking the ` +
+      `chain it lands in, which is why a table that fills up stops being O(1).`,
+  },
+  bst_delete: {
+    rows: [["Average", "O(log n)"], ["Worst", "O(n)"], ["Space", "O(1)"]],
+    reading: (c) =>
+      `${c.comparisons ?? 0} comparison${(c.comparisons ?? 0) === 1 ? '' : 's'} ` +
+      `to find the node and its successor, then ${c.promotions ?? 0} value moved. ` +
+      `Delete costs the same as a search — finding the node is the work, ` +
+      `rewiring it is O(1).`,
+  },
+  heap_extract: {
+    rows: [["Extract", "O(log n)"], ["Peek", "O(1)"], ["Heap sort", "O(n log n)"]],
+    reading: (c) =>
+      `${c.extractions ?? 0} extraction${(c.extractions ?? 0) === 1 ? '' : 's'}, ` +
+      `${c.comparisons ?? 0} comparisons and ${c.swaps ?? 0} swaps. Each sift-down ` +
+      `walks at most the height of the tree — do it once per value and you have ` +
+      `sorted the array in O(n log n) without any extra memory.`,
+  },
+  dsu: {
+    rows: [["Find / Union", "O(α(n))"], ["Effectively", "O(1)"], ["Space", "O(n)"]],
+    reading: (c) =>
+      `${c.finds ?? 0} finds, ${c.unions ?? 0} merges and ${c.rejections ?? 0} ` +
+      `redundant link(s) rejected. α is the inverse-Ackermann function — it never ` +
+      `exceeds 4 for any input that fits in memory, so treat these as constant time.`,
+  },
+  merge_intervals: {
+    rows: [["Sort", "O(n log n)"], ["Merge pass", "O(n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `One pass, ${c.comparisons ?? 0} comparison${(c.comparisons ?? 0) === 1 ? '' : 's'}, ` +
+      `${c.merges ?? 0} merge(s). The pass is linear — the sort dominates, and ` +
+      `without it you would be comparing every pair at O(n²).`,
+  },
+  coin_change: {
+    rows: [["Time", "O(coins × amount)"], ["Space", "O(amount)"], ["Greedy", "wrong in general"]],
+    reading: (c) =>
+      `${c.cells ?? 0} cells filled — ${c.takes ?? 0} where spending the coin won, ` +
+      `${c.skips ?? 0} where skipping it did. Each cell reads exactly two ` +
+      `neighbours, which is why this beats trying every combination.`,
   },
   fenwick_tree: {
     rows: [["Update", "O(log n)"], ["Query", "O(log n)"], ["Space", "O(n)"]],

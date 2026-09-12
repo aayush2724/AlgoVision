@@ -44,7 +44,7 @@ SIGNATURES = {
     "topological_sort": ["topological_sort", "topological", "topo sort", "kahn", "in-degree", "indegree", "prerequisite", "course schedule", "dependency order"],
     "counting_sort": ["counting_sort", "counting sort", "countingsort", "bucket", "tally", "count array", "radix"],
     "prefix_sums": ["prefix_sums", "prefix sum", "prefix_sum", "cumulative sum", "running total", "range sum", "presum"],
-    "next_greater_element": ["next_greater_element", "next greater", "monotonic stack", "monotonic", "stack of indices", "nge"],
+    "next_greater_element": ["next_greater_element", "next greater", "monotonic stack", "monotonic", "stack of indices"],
     "edit_distance": ["edit_distance", "edit distance", "levenshtein", "spell check", "min edits", "insert delete substitute"],
     "floyd_cycle": ["floyd_cycle", "floyd", "tortoise", "hare", "cycle detect", "detect cycle", "slow fast", "linked list cycle", "has_cycle"],
     "tree_traversal": ["tree_traversal", "inorder", "preorder", "postorder", "in-order", "pre-order", "post-order", "traversal", "traverse tree"],
@@ -55,6 +55,12 @@ SIGNATURES = {
     "kmp_search": ["kmp", "kmp_search", "knuth", "morris", "pratt", "failure function", "lps", "substring search", "pattern match"],
     "segment_tree": ["segment_tree", "segment tree", "segtree", "range query", "range sum", "build(", "query(node"],
     "fenwick_tree": ["fenwick_tree", "fenwick", "binary indexed", "bit tree", "lowbit", "i & -i", "index tree"],
+    "hash_table": ["hash_table", "hashtable", "hash map", "hashmap", "separate chaining", "load factor", "buckets", "def hash(", "% len(buckets)"],
+    "bst_delete": ["bst_delete", "delete_node", "remove_node", "inorder successor", "in-order successor", "min_value_node", "two children"],
+    "heap_extract": ["heap_extract", "extract_max", "extract_min", "heappop", "sift_down", "siftdown", "heapify_down", "percolate_down"],
+    "dsu": ["disjoint_set", "disjoint set", "union_find", "union-find", "path compression", "union by rank", "parent[x] = find", "def union("],
+    "merge_intervals": ["merge_intervals", "merge intervals", "overlapping intervals", "intervals.sort", "key=lambda x: x[0]"],
+    "coin_change": ["coin_change", "coin change", "fewest coins", "min_coins", "mincoins", "dp[amount]"],
 }
 
 REALWORLD_META = {
@@ -533,6 +539,84 @@ REALWORLD_META = {
             "start": "An empty ledger",
             "done": "Prefix total read from a handful of slots."
         }
+    },
+    "hash_table": {
+        "scene": "library",
+        "title": "Coat Check",
+        "hook": "Your ticket number tells the attendant exactly which rail to walk to — until two coats get the same number.",
+        "metaphors": {
+            "node": "rail",
+            "edge": "hook",
+            "weight": "chain length",
+            "visit": "Walking a rail",
+            "start": "An empty cloakroom",
+            "done": "Every coat on the rail its ticket names."
+        }
+    },
+    "bst_delete": {
+        "scene": "files",
+        "title": "Filing Cabinet Reshuffle",
+        "hook": "Pull one folder out and something has to fill the gap — and only one folder keeps the drawer in order.",
+        "metaphors": {
+            "node": "folder",
+            "edge": "divider",
+            "weight": "label",
+            "visit": "Checking a folder",
+            "start": "The drawer front",
+            "done": "Gap filled, order intact."
+        }
+    },
+    "heap_extract": {
+        "scene": "scheduler",
+        "title": "Triage Queue",
+        "hook": "The most urgent patient is always at the front — take them and the queue has to re-settle around whoever is left.",
+        "metaphors": {
+            "node": "patient",
+            "edge": "priority link",
+            "weight": "urgency",
+            "visit": "Comparing urgency",
+            "start": "The most urgent case",
+            "done": "Everyone seen, worst first."
+        }
+    },
+    "dsu": {
+        "scene": "social",
+        "title": "Friend Circles",
+        "hook": "Introduce two people and their whole circles merge — asking whether two people already share a circle has to be instant.",
+        "metaphors": {
+            "node": "person",
+            "edge": "introduction",
+            "weight": "circle size",
+            "visit": "Finding someone's circle",
+            "start": "Everyone a stranger",
+            "done": "Circles settled."
+        }
+    },
+    "merge_intervals": {
+        "scene": "scheduler",
+        "title": "Calendar Merge",
+        "hook": "Overlapping meetings collapse into one block — but only if you read the day in order.",
+        "metaphors": {
+            "node": "booking",
+            "edge": "overlap",
+            "weight": "duration",
+            "visit": "Checking a booking",
+            "start": "The first booking of the day",
+            "done": "The day reduced to its real busy blocks."
+        }
+    },
+    "coin_change": {
+        "scene": "vault",
+        "title": "Cash Drawer",
+        "hook": "Grabbing the biggest note first feels right and is sometimes wrong — the table checks every option so you don't have to.",
+        "metaphors": {
+            "node": "amount",
+            "edge": "coin spent",
+            "weight": "coins used",
+            "visit": "Pricing an amount",
+            "start": "Owing nothing",
+            "done": "Fewest coins found."
+        }
     }
 }
 
@@ -541,6 +625,20 @@ REALWORLD_META = {
 @limiter.limit("60/minute")
 def detect(request: Request, req: DetectRequest):
     text = (req.code + " " + req.problem).lower()
+
+    # An exact algorithm id always wins. Callers are documented to pass an id
+    # as `problem` to fetch its real-world meta, and fuzzy scoring got that
+    # wrong whenever a newer algorithm tied with an older one: ties fall back
+    # to dict order, so 'bst_delete' resolved to bst_insert, 'dsu' to
+    # kruskals_mst and 'merge_intervals' to greedy.
+    probe = req.problem.strip().lower()
+    if probe in SIGNATURES:
+        return {
+            "algorithm": probe,
+            "confidence": 1.0,
+            "realworld": REALWORLD_META.get(probe, REALWORLD_META["dijkstra"]),
+        }
+
     scores = {}
     for algo, keywords in SIGNATURES.items():
         scores[algo] = sum(1 for kw in keywords if kw in text)

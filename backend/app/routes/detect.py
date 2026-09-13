@@ -61,6 +61,9 @@ SIGNATURES = {
     "dsu": ["disjoint_set", "disjoint set", "union_find", "union-find", "path compression", "union by rank", "parent[x] = find", "def union("],
     "merge_intervals": ["merge_intervals", "merge intervals", "overlapping intervals", "intervals.sort", "key=lambda x: x[0]"],
     "coin_change": ["coin_change", "coin change", "fewest coins", "min_coins", "mincoins", "dp[amount]"],
+    "connected_components": ["connected_components", "connected component", "count components", "number of components", "count islands", "islands", "island count", "reachable set"],
+    "bipartite_check": ["bipartite_check", "bipartite", "two color", "two colour", "2-color", "2-colour", "graph coloring", "graph colouring", "odd cycle", "two teams"],
+    "flood_fill": ["flood_fill", "flood fill", "paint bucket", "paint fill", "fill region", "num islands", "number of islands", "4-directional", "grid fill", "bucket fill"],
 }
 
 REALWORLD_META = {
@@ -616,6 +619,45 @@ REALWORLD_META = {
             "visit": "Pricing an amount",
             "start": "Owing nothing",
             "done": "Fewest coins found."
+        }
+    },
+    "connected_components": {
+        "scene": "social",
+        "title": "Friend Circles — Who Knows Whom",
+        "hook": "Start with one person and sweep outward — everyone you can reach is one circle; the next stranger opens another.",
+        "metaphors": {
+            "node": "person",
+            "edge": "friendship",
+            "weight": "—",
+            "visit": "Pulling someone into this circle",
+            "start": "The first person, alone",
+            "done": "Every separate circle counted."
+        }
+    },
+    "bipartite_check": {
+        "scene": "social",
+        "title": "Split Into Two Teams",
+        "hook": "Can everyone be split into two teams so every rivalry crosses between the teams and never sits inside one?",
+        "metaphors": {
+            "node": "player",
+            "edge": "rivalry",
+            "weight": "—",
+            "visit": "Assigning a team",
+            "start": "The first player on team A",
+            "done": "Two clean teams — or a rivalry that can't be split."
+        }
+    },
+    "flood_fill": {
+        "scene": "grid_power",
+        "title": "Paint Bucket Fill",
+        "hook": "Click one tile and the colour floods outward to every tile it can reach without crossing a wall.",
+        "metaphors": {
+            "node": "tile",
+            "edge": "shared border",
+            "weight": "—",
+            "visit": "Painting a tile",
+            "start": "Where the bucket was dropped",
+            "done": "The whole reachable region is one colour."
         }
     }
 }

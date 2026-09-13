@@ -220,6 +220,7 @@ const VIEW_FOR = {
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
   dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
+  connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
 };
 
 function resolveAlgoId(raw) {
@@ -824,6 +825,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '', target: '4',
       hint: 'Grid side 2–7. Optionally add walls as row:col pairs (e.g. 1:1, 2:0) and watch the count drop.',
     },
+    flood_fill: {
+      array: '', target: '5',
+      hint: 'Grid side 2–8, starting at 0:0. Add walls as row:col pairs (e.g. 1:1, 2:1) and watch the paint stop at them.',
+    },
     kmp_search: {
       array: 'ABABDABACDABABCABAB, ABABCABAB',
       hint: 'Text and pattern, comma-separated. Watch the failure table get built first — that is the real algorithm.',
@@ -917,6 +922,26 @@ export function mountEngine(view, algo = 'dijkstra') {
       }
       if (walls.some(([r, c]) => r === 0 && c === 0)) {
         return { error: 'The start square cannot be a wall.' };
+      }
+      return { target: side, text: raw };
+    }
+
+    if (algoId === 'flood_fill') {
+      const side = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(side) || side !== Math.floor(side) || side < 2 || side > 8) {
+        return { error: 'Grid side must be a whole number 2–8.' };
+      }
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw) return { target: side };
+      if (!/^\d+:\d+(,\d+:\d+)*$/.test(raw)) {
+        return { error: 'Walls are row:col pairs — e.g. 1:1, 2:1. Leave blank for an open canvas.' };
+      }
+      const walls = raw.split(',').map(p => p.split(':').map(Number));
+      if (walls.some(([r, c]) => r >= side || c >= side)) {
+        return { error: `Wall coordinates must be within 0–${side - 1}.` };
+      }
+      if (walls.some(([r, c]) => r === 0 && c === 0)) {
+        return { error: 'The start cell (0:0) cannot be a wall.' };
       }
       return { target: side, text: raw };
     }
@@ -2843,7 +2868,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { target: parsed.target });
-        } else if (algoId === 'unique_paths') {
+        } else if (algoId === 'unique_paths' || algoId === 'flood_fill') {
           renderGridView();
           const payload = parsed.text
             ? { target: parsed.target, text: parsed.text }
@@ -3508,7 +3533,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       }
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
-        'unique_paths', 'segment_tree', 'fenwick_tree',
+        'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
         'bst_delete', 'coin_change'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
@@ -3519,6 +3544,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'knapsack_01') targetLabel.textContent = 'CAP =';
         if (targetLabel && algoId === 'floyd_cycle') targetLabel.textContent = 'LOOPS TO =';
         if (targetLabel && algoId === 'unique_paths') targetLabel.textContent = 'GRID =';
+        if (targetLabel && algoId === 'flood_fill') targetLabel.textContent = 'GRID =';
         if (targetLabel && algoId === 'segment_tree') targetLabel.textContent = 'RANGE =';
         if (targetLabel && algoId === 'fenwick_tree') targetLabel.textContent = 'UP TO =';
         if (targetLabel && algoId === 'bst_delete') targetLabel.textContent = 'DELETE =';

@@ -4,12 +4,13 @@ from pydantic import BaseModel, Field
 import re as _re
 
 from app.tracers import (
-    balanced_brackets, bfs, binary_search, bst_delete, bst_insert, bst_search,
-    bubble_sort, coin_change, counting_sort, dfs, dijkstra, dsu, edit_distance,
-    fenwick_tree, fibonacci_dp, floyd_cycle, hash_table, heap_extract,
-    heap_insert, insertion_sort, kadanes, kmp_search, knapsack_01,
-    segment_tree, kruskals_mst, lcs, linked_list_reverse, merge_intervals,
-    merge_sort, n_queens,
+    balanced_brackets, bfs, binary_search, bipartite_check, bst_delete,
+    bst_insert, bst_search, bubble_sort, coin_change, connected_components,
+    counting_sort, dfs, dijkstra, dsu, edit_distance,
+    fenwick_tree, fibonacci_dp, flood_fill, floyd_cycle, hash_table,
+    heap_extract, heap_insert, insertion_sort, kadanes, kmp_search,
+    knapsack_01, segment_tree, kruskals_mst, lcs, linked_list_reverse,
+    merge_intervals, merge_sort, n_queens,
     next_greater_element, prefix_sums, prims_mst, quick_sort, selection_sort,
     sieve, sliding_window, topological_sort, tree_traversal, trie_insert,
     two_sum_sorted, unique_paths,
@@ -34,6 +35,8 @@ GRAPH_TRACERS = {
     "kruskals_mst": kruskals_mst.trace,
     "topological_sort": topological_sort.trace,
     "dsu": dsu.trace,
+    "connected_components": connected_components.trace,
+    "bipartite_check": bipartite_check.trace,
 }
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
@@ -106,6 +109,9 @@ def algorithms():
             {"id": "dsu",           "name": "Union-Find (DSU)",          "input": "graph"},
             {"id": "merge_intervals", "name": "Merge Intervals",         "input": "text"},
             {"id": "coin_change",   "name": "Coin Change (Fewest Coins)", "input": "array"},
+            {"id": "connected_components", "name": "Connected Components", "input": "graph"},
+            {"id": "bipartite_check", "name": "Bipartite Check (2-Colouring)", "input": "graph"},
+            {"id": "flood_fill",    "name": "Flood Fill (Paint Bucket)", "input": "number"},
         ]
     }
 
@@ -658,6 +664,59 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return fibonacci_dp.trace(int(n))
 
+    if req.algorithm == "flood_fill":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail=f"flood_fill requires 'target' — the grid side "
+                 f"(2-{flood_fill.MAX_SIDE})."
+        )
+      side = req.target
+      if side != int(side) or int(side) < 2 or int(side) > flood_fill.MAX_SIDE:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Grid side must be a whole number between 2 and "
+                 f"{flood_fill.MAX_SIDE}."
+        )
+      side = int(side)
+      # 'start' doubles as the start cell here — "r:c", defaulting to 0:0.
+      start_raw = (req.start or "").replace(" ", "")
+      if start_raw in ("", "A"):
+        sr, sc = 0, 0
+      elif _re.fullmatch(r"\d+:\d+", start_raw):
+        sr, sc = (int(x) for x in start_raw.split(":"))
+      else:
+        raise HTTPException(
+          status_code=400,
+          detail="Start cell is row:col — e.g. 0:0."
+        )
+      if sr >= side or sc >= side:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Start cell must be within 0..{side - 1}."
+        )
+      walls: list = []
+      if req.text:
+        cleaned = req.text.replace(" ", "")
+        if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", cleaned):
+          raise HTTPException(
+            status_code=400,
+            detail="Walls are row:col pairs — e.g. 1:1,2:0. Leave blank for "
+                   "an open canvas."
+          )
+        walls = [tuple(int(x) for x in p.split(":")) for p in cleaned.split(",")]
+        if any(r >= side or c >= side for r, c in walls):
+          raise HTTPException(
+            status_code=400,
+            detail=f"Wall coordinates must be within 0..{side - 1}."
+          )
+        if (sr, sc) in walls:
+          raise HTTPException(
+            status_code=400,
+            detail="The start cell cannot be a wall."
+          )
+      return flood_fill.trace(side, side, walls, (sr, sc))
+
     valid = (list(GRAPH_TRACERS.keys()) + sorted(ARRAY_ALGORITHMS)
              + ["bst_insert", "bst_search", "heap_insert",
                 "two_sum_sorted", "sliding_window", "kadanes",
@@ -667,7 +726,7 @@ def run_trace(request: Request, req: TraceRequest):
                 "unique_paths", "sieve", "kmp_search", "segment_tree",
                 "fenwick_tree",
                 "hash_table", "bst_delete", "heap_extract",
-                "merge_intervals", "coin_change",
+                "merge_intervals", "coin_change", "flood_fill",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

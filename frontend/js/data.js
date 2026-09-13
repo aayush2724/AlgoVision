@@ -119,6 +119,14 @@ export const ALGORITHMS = [
     hook: "Sort by start and the overlaps fall out in one pass." },
   { id: "coin_change",  name: "Coin Change (Fewest Coins)", category: "DP", emoji: "🪙", complexity: "O(coins·amount)", input: "number",
     hook: "Where grabbing the biggest coin first goes wrong." },
+
+  // Batch 10 — graph-family, reusing existing views.
+  { id: "connected_components", name: "Connected Components", category: "Graphs", emoji: "🧩", complexity: "O(V + E)", input: "graph",
+    hook: "Sweep the graph — every island you can't bridge is its own component." },
+  { id: "bipartite_check", name: "Bipartite Check", category: "Graphs", emoji: "🎨", complexity: "O(V + E)", input: "graph",
+    hook: "Two colours, no clash? Then it splits into two clean teams." },
+  { id: "flood_fill",   name: "Flood Fill (Paint Bucket)", category: "Graphs", emoji: "🪣", complexity: "O(rows·cols)", input: "number",
+    hook: "Drop the bucket; the colour spreads to everything a wall doesn't stop." },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
@@ -136,6 +144,7 @@ export const KEYCAP_LABEL = {
   kmp_search: 'KMP', segment_tree: 'SEG', fenwick_tree: 'BIT',
   hash_table: 'HASH', bst_delete: 'DEL', heap_extract: 'POP',
   dsu: 'DSU', merge_intervals: 'IVAL', coin_change: 'COIN',
+  connected_components: 'CC', bipartite_check: 'BIP', flood_fill: 'FILL',
 };
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -478,6 +487,28 @@ export const COMPLEXITY = {
       `${c.primes_found ?? 0} primes found with only ${c.crossings ?? 0} ` +
       `crossings. ${c.skipped_as_done ?? 0} primes were past √n, where no ` +
       `multiples remain to cross — that early stop is the optimisation.`,
+  },
+  connected_components: {
+    rows: [["Time", "O(V + E)"], ["Space", "O(V)"], ["Components", "as found"]],
+    reading: (c, s) =>
+      `${c.components ?? 0} component(s) found by touching ${c.nodes_seen ?? 0} ` +
+      `node(s) over ${c.edge_checks ?? 0} edge check(s) — each node and edge is ` +
+      `visited once, which is the V + E. One component means the graph is fully ` +
+      `connected.`,
+  },
+  bipartite_check: {
+    rows: [["Time", "O(V + E)"], ["Space", "O(V)"], ["Fails on", "odd cycles"]],
+    reading: (c, s) =>
+      `${c.colored ?? 0} node(s) painted over ${c.edge_checks ?? 0} edge check(s), ` +
+      `with ${c.conflicts ?? 0} clash(es). A single same-colour edge is enough to ` +
+      `prove no two-team split exists — that edge sits on an odd-length cycle.`,
+  },
+  flood_fill: {
+    rows: [["Time", "O(rows·cols)"], ["Space", "O(rows·cols)"], ["Connectivity", "4-way"]],
+    reading: (c, s) =>
+      `${c.filled ?? 0} cell(s) painted, ${c.edge_checks ?? 0} neighbour check(s), ` +
+      `stopped by ${c.blocked ?? 0} wall(s). Each cell is painted once; the region ` +
+      `it reaches is exactly the start's connected component on the grid.`,
   },
 };
 

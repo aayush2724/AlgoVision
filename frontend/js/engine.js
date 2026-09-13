@@ -227,6 +227,7 @@ const VIEW_FOR = {
   heap_sort: 'array', find_middle: 'list', merge_two_sorted_lists: 'list',
   anagram: 'grid', gcd_euclid: 'grid', fast_exponentiation: 'grid',
   prime_factorisation: 'grid',
+  bellman_ford: 'graph',
 };
 
 function resolveAlgoId(raw) {
@@ -2646,8 +2647,14 @@ export function mountEngine(view, algo = 'dijkstra') {
     const commit = () => {
       const w = Number(input.value);
       input.remove();
-      if (!Number.isFinite(w) || w < 0 || w > GRAPH_LIMITS.weight) {
-        showGraphError(`Weight must be between 0 and ${GRAPH_LIMITS.weight.toLocaleString()}.`);
+      // Bellman-Ford is the one algorithm that reads negative weights; every
+      // other graph algorithm requires them non-negative (the backend rejects
+      // a negative weight for those with a clear message).
+      const minW = algoId === 'bellman_ford' ? -GRAPH_LIMITS.weight : 0;
+      if (!Number.isFinite(w) || w < minW || w > GRAPH_LIMITS.weight) {
+        showGraphError(algoId === 'bellman_ford'
+          ? `Weight must be between ${(-GRAPH_LIMITS.weight).toLocaleString()} and ${GRAPH_LIMITS.weight.toLocaleString()}.`
+          : `Weight must be between 0 and ${GRAPH_LIMITS.weight.toLocaleString()}.`);
         return;
       }
       link.weight = w;

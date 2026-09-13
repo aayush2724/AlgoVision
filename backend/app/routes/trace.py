@@ -4,10 +4,10 @@ from pydantic import BaseModel, Field
 import re as _re
 
 from app.tracers import (
-    anagram, balanced_brackets, bfs, binary_search, bipartite_check,
-    bst_delete, bst_insert, bst_search, bubble_sort, coin_change,
-    connected_components, counting_sort, dfs, dijkstra, dsu, edit_distance,
-    fast_exponentiation, gcd_euclid, prime_factorisation,
+    anagram, balanced_brackets, bellman_ford, bfs, binary_search,
+    bipartite_check, bst_delete, bst_insert, bst_search, bubble_sort,
+    coin_change, connected_components, counting_sort, dfs, dijkstra, dsu,
+    edit_distance, fast_exponentiation, gcd_euclid, prime_factorisation,
     fenwick_tree, fibonacci_dp, find_middle, flood_fill, floyd_cycle,
     hash_table, heap_extract, heap_insert, heap_sort, house_robber,
     insertion_sort, kadanes,
@@ -41,7 +41,11 @@ GRAPH_TRACERS = {
     "dsu": dsu.trace,
     "connected_components": connected_components.trace,
     "bipartite_check": bipartite_check.trace,
+    "bellman_ford": bellman_ford.trace,
 }
+# These need non-negative weights to be correct; the shared Graph model now
+# allows negatives (for Bellman-Ford), so they reject them here instead.
+NONNEGATIVE_GRAPH = {"dijkstra", "prims_mst", "kruskals_mst"}
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
     "quick_sort": quick_sort.trace,
@@ -132,6 +136,7 @@ def algorithms():
             {"id": "gcd_euclid",    "name": "GCD (Euclid's Algorithm)",  "input": "array"},
             {"id": "fast_exponentiation", "name": "Fast Exponentiation", "input": "array"},
             {"id": "prime_factorisation", "name": "Prime Factorisation", "input": "number"},
+            {"id": "bellman_ford",  "name": "Bellman–Ford (Negative Edges)", "input": "graph"},
         ]
     }
 
@@ -236,6 +241,13 @@ def run_trace(request: Request, req: TraceRequest):
         raise HTTPException(
           status_code=400,
           detail=f"Start node '{req.start}' not found in graph nodes."
+        )
+      if req.algorithm in NONNEGATIVE_GRAPH and any(
+          len(e) > 2 and float(e[2]) < 0 for e in req.graph.edges):
+        raise HTTPException(
+          status_code=400,
+          detail=f"'{req.algorithm}' needs non-negative edge weights. For "
+                 f"negative weights, use Bellman-Ford."
         )
       return GRAPH_TRACERS[req.algorithm](req.graph, req.start)
 

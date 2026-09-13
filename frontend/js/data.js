@@ -169,6 +169,10 @@ export const ALGORITHMS = [
     hook: "Square your way to any power in a handful of steps." },
   { id: "prime_factorisation", name: "Prime Factorisation", category: "Math", emoji: "🧮", complexity: "O(√n)", input: "number",
     hook: "Divide out the smallest prime until only primes remain." },
+
+  // Batch 16 (Tier B) — shortest paths with negative edges.
+  { id: "bellman_ford", name: "Bellman–Ford (Negative Edges)", category: "Graphs", emoji: "🧭", complexity: "O(V·E)", input: "graph",
+    hook: "Shortest paths even with negative edges — and it spots impossible loops." },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
@@ -192,6 +196,7 @@ export const KEYCAP_LABEL = {
   radix_sort: 'RDX', sliding_window_maximum: 'WMAX', matrix_chain: 'MCM',
   heap_sort: 'HSRT', find_middle: 'MID', merge_two_sorted_lists: 'MRG2',
   anagram: 'ANAG', gcd_euclid: 'GCD', fast_exponentiation: 'POW', prime_factorisation: 'FCTR',
+  bellman_ford: 'BELF',
 };
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -672,6 +677,14 @@ export const COMPLEXITY = {
       `${c.trials ?? 0} trial divisor(s) tested, ${c.factors ?? 0} prime(s) pulled ` +
       `out. Testing only up to √n is the whole trick — any larger factor would have ` +
       `a matching smaller one already found.`,
+  },
+  bellman_ford: {
+    rows: [["Time", "O(V·E)"], ["Space", "O(V)"], ["vs. Dijkstra", "handles negatives"]],
+    reading: (c, s) =>
+      `${c.rounds ?? 0} round(s), ${c.relaxations ?? 0} relaxation(s) over ` +
+      `${c.edge_checks ?? 0} edge check(s). Sweeping every edge V−1 times is ` +
+      `slower than Dijkstra, but it is the price of surviving negative weights — ` +
+      `and one extra sweep is what exposes a negative cycle.`,
   },
 };
 

@@ -91,9 +91,15 @@ class TestGraphValidation:
         with pytest.raises(ValidationError):
             Graph(nodes=[{"id": "A"}], edges=[["A", "Z", 1]])
 
-    def test_rejects_negative_weight(self):
+    def test_accepts_negative_weight_in_range(self):
+        # Negative weights are allowed now (Bellman-Ford needs them); the
+        # non-negative algorithms reject them at the route layer instead.
+        g = Graph(nodes=[{"id": "A"}, {"id": "B"}], edges=[["A", "B", -1]])
+        assert g.edges == [["A", "B", -1]]
+
+    def test_rejects_out_of_range_weight(self):
         with pytest.raises(ValidationError):
-            Graph(nodes=[{"id": "A"}, {"id": "B"}], edges=[["A", "B", -1]])
+            Graph(nodes=[{"id": "A"}, {"id": "B"}], edges=[["A", "B", -2_000_000]])
 
     def test_rejects_too_many_nodes(self):
         nodes = [{"id": f"n{i}"} for i in range(MAX_NODES + 1)]

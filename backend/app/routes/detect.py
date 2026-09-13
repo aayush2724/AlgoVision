@@ -80,6 +80,7 @@ SIGNATURES = {
     "gcd_euclid": ["gcd_euclid", "gcd", "greatest common divisor", "euclid", "euclidean", "hcf", "common divisor"],
     "fast_exponentiation": ["fast_exponentiation", "fast exponentiation", "binary exponentiation", "exponentiation by squaring", "fast power", "pow(", "modular exponent"],
     "prime_factorisation": ["prime_factorisation", "prime factorization", "prime factorisation", "prime factors", "factorize", "factorise", "trial division"],
+    "bellman_ford": ["bellman_ford", "bellman ford", "bellman-ford", "negative weight", "negative edge", "negative cycle", "relax edges", "shortest path negative"],
 }
 
 REALWORLD_META = {
@@ -882,6 +883,19 @@ REALWORLD_META = {
             "visit": "Pulling out a prime",
             "start": "The whole number",
             "done": "A product of primes, nothing left to factor."
+        }
+    },
+    "bellman_ford": {
+        "scene": "gps",
+        "title": "Routing with Tolls and Rebates",
+        "hook": "Some one-way roads charge you, some pay you back — find the cheapest route, and know when a money-making loop makes 'cheapest' meaningless.",
+        "metaphors": {
+            "node": "junction",
+            "edge": "one-way road",
+            "weight": "toll (can be negative)",
+            "visit": "Relaxing a road",
+            "start": "Your starting junction",
+            "done": "Cheapest routes found — or a negative loop exposed."
         }
     }
 }

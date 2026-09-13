@@ -24,10 +24,13 @@ class Graph(BaseModel):
       if len(e) == 3:
         try:
           w = float(e[2])
-          if w < 0 or w > 1_000_000:
-            raise ValueError(f"Edge weight {w} out of range [0, 1000000]")
         except (TypeError, ValueError):
           raise ValueError(f"Edge weight must be a number, got: {e[2]!r}")
+        # Negative weights are allowed (Bellman-Ford / Floyd-Warshall need
+        # them); algorithms that require non-negative weights — Dijkstra, Prim,
+        # Kruskal — reject negatives themselves in the route layer.
+        if w < -1_000_000 or w > 1_000_000:
+          raise ValueError(f"Edge weight {w} out of range [-1000000, 1000000]")
     return self
 
 def adjacency(graph: Graph):
@@ -38,3 +41,23 @@ def adjacency(graph: Graph):
     adj[a].append((b, w))
     adj[b].append((a, w))
   return adj
+
+def directed_adjacency(graph: Graph):
+  """Edges read as directed a -> b — for algorithms whose whole point is
+  direction (Bellman-Ford, Floyd-Warshall), the way topological_sort already
+  reads them."""
+  adj: dict[str, list] = {n.id: [] for n in graph.nodes}
+  for e in graph.edges:
+    a, b = str(e[0]), str(e[1])
+    w = float(e[2]) if len(e) > 2 else 1.0
+    adj[a].append((b, w))
+  return adj
+
+def edge_list(graph: Graph):
+  """Directed edges as (a, b, w) triples — Bellman-Ford relaxes over these."""
+  out = []
+  for e in graph.edges:
+    a, b = str(e[0]), str(e[1])
+    w = float(e[2]) if len(e) > 2 else 1.0
+    out.append((a, b, w))
+  return out

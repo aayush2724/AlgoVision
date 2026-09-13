@@ -127,6 +127,14 @@ export const ALGORITHMS = [
     hook: "Two colours, no clash? Then it splits into two clean teams." },
   { id: "flood_fill",   name: "Flood Fill (Paint Bucket)", category: "Graphs", emoji: "🪣", complexity: "O(rows·cols)", input: "number",
     hook: "Drop the bucket; the colour spreads to everything a wall doesn't stop." },
+
+  // Batch 11 — DP classics, reusing the grid view.
+  { id: "house_robber", name: "House Robber", category: "DP", emoji: "🏠", complexity: "O(n)", input: "array",
+    hook: "Rob the street for the most loot — but never two houses in a row." },
+  { id: "lis",          name: "Longest Increasing Subsequence", category: "DP", emoji: "📈", complexity: "O(n²)", input: "array",
+    hook: "The longest run of ever-rising numbers, skips allowed." },
+  { id: "subset_sum",   name: "Subset Sum", category: "DP", emoji: "🎯", complexity: "O(n·target)", input: "number",
+    hook: "Can any handful hit the target exactly — without trying all 2ⁿ?" },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
@@ -145,6 +153,7 @@ export const KEYCAP_LABEL = {
   hash_table: 'HASH', bst_delete: 'DEL', heap_extract: 'POP',
   dsu: 'DSU', merge_intervals: 'IVAL', coin_change: 'COIN',
   connected_components: 'CC', bipartite_check: 'BIP', flood_fill: 'FILL',
+  house_robber: 'ROB', lis: 'LIS+', subset_sum: 'SUBS',
 };
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -509,6 +518,28 @@ export const COMPLEXITY = {
       `${c.filled ?? 0} cell(s) painted, ${c.edge_checks ?? 0} neighbour check(s), ` +
       `stopped by ${c.blocked ?? 0} wall(s). Each cell is painted once; the region ` +
       `it reaches is exactly the start's connected component on the grid.`,
+  },
+  house_robber: {
+    rows: [["Time", "O(n)"], ["Space", "O(n)"], ["Choice per house", "rob / skip"]],
+    reading: (c, s) =>
+      `${c.houses ?? 0} house(s) decided — robbed ${c.robs ?? 0}, skipped ` +
+      `${c.skips ?? 0}. Each house is one max() of two earlier answers, so the ` +
+      `whole street is linear — no need to try every legal combination.`,
+  },
+  lis: {
+    rows: [["Time", "O(n²)"], ["Space", "O(n)"], ["Best known", "O(n log n)"]],
+    reading: (c, s) =>
+      `${c.positions ?? 0} position(s) solved over ${c.comparisons ?? 0} ` +
+      `backward comparison(s), extending an earlier run ${c.extensions ?? 0} ` +
+      `time(s). Each position scans everything before it — that inner scan is ` +
+      `the n², and a patience-sorting trick can cut it to n log n.`,
+  },
+  subset_sum: {
+    rows: [["Time", "O(n·target)"], ["Space", "O(n·target)"], ["Brute force", "O(2ⁿ)"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cell(s) filled, ${c.reachable ?? 0} reachable, the new ` +
+      `number used in ${c.uses_item ?? 0}. Each cell reads just two cells above ` +
+      `it — pseudo-polynomial in the target, but far cheaper than 2ⁿ subsets.`,
   },
 };
 

@@ -64,6 +64,9 @@ SIGNATURES = {
     "connected_components": ["connected_components", "connected component", "count components", "number of components", "count islands", "islands", "island count", "reachable set"],
     "bipartite_check": ["bipartite_check", "bipartite", "two color", "two colour", "2-color", "2-colour", "graph coloring", "graph colouring", "odd cycle", "two teams"],
     "flood_fill": ["flood_fill", "flood fill", "paint bucket", "paint fill", "fill region", "num islands", "number of islands", "4-directional", "grid fill", "bucket fill"],
+    "house_robber": ["house_robber", "house robber", "rob houses", "adjacent houses", "non-adjacent", "rob(", "maximum loot", "cannot rob two"],
+    "lis": ["lis", "longest increasing subsequence", "increasing subsequence", "longest increasing", "length of lis", "patience sorting"],
+    "subset_sum": ["subset_sum", "subset sum", "partition equal", "target sum", "can partition", "sum to target", "dp[i][s]", "achievable sum"],
 }
 
 REALWORLD_META = {
@@ -658,6 +661,45 @@ REALWORLD_META = {
             "visit": "Painting a tile",
             "start": "Where the bucket was dropped",
             "done": "The whole reachable region is one colour."
+        }
+    },
+    "house_robber": {
+        "scene": "vault",
+        "title": "The Burglar's Street",
+        "hook": "Loot a street of houses for the biggest haul — but hit two houses next door and the alarms connect.",
+        "metaphors": {
+            "node": "house",
+            "edge": "adjacency",
+            "weight": "loot",
+            "visit": "Deciding rob vs skip",
+            "start": "An empty sack at the first house",
+            "done": "The biggest legal haul, with no two houses adjacent."
+        }
+    },
+    "lis": {
+        "scene": "stocks",
+        "title": "Longest Winning Streak",
+        "hook": "Pick the longest run of ever-rising numbers — skips allowed, but the order has to hold.",
+        "metaphors": {
+            "node": "day",
+            "edge": "extension",
+            "weight": "length",
+            "visit": "Extending a run",
+            "start": "Every day a run of one",
+            "done": "The longest strictly rising subsequence found."
+        }
+    },
+    "subset_sum": {
+        "scene": "vault",
+        "title": "Exact Change",
+        "hook": "Can any handful of these numbers add up to exactly the target — without trying all 2^n handfuls?",
+        "metaphors": {
+            "node": "sum",
+            "edge": "number used",
+            "weight": "reachable",
+            "visit": "Marking a sum reachable",
+            "start": "Only zero is reachable",
+            "done": "The target is proved reachable — or proved impossible."
         }
     }
 }

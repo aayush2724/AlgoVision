@@ -8,12 +8,12 @@ from app.tracers import (
     bst_insert, bst_search, bubble_sort, coin_change, connected_components,
     counting_sort, dfs, dijkstra, dsu, edit_distance,
     fenwick_tree, fibonacci_dp, flood_fill, floyd_cycle, hash_table,
-    heap_extract, heap_insert, insertion_sort, kadanes, kmp_search,
-    knapsack_01, segment_tree, kruskals_mst, lcs, linked_list_reverse,
-    merge_intervals, merge_sort, n_queens,
+    heap_extract, heap_insert, house_robber, insertion_sort, kadanes,
+    kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
+    linked_list_reverse, merge_intervals, merge_sort, n_queens,
     next_greater_element, prefix_sums, prims_mst, quick_sort, selection_sort,
-    sieve, sliding_window, topological_sort, tree_traversal, trie_insert,
-    two_sum_sorted, unique_paths,
+    sieve, sliding_window, subset_sum, topological_sort, tree_traversal,
+    trie_insert, two_sum_sorted, unique_paths,
 )
 from app.tracers.common import Graph
 import os
@@ -112,6 +112,9 @@ def algorithms():
             {"id": "connected_components", "name": "Connected Components", "input": "graph"},
             {"id": "bipartite_check", "name": "Bipartite Check (2-Colouring)", "input": "graph"},
             {"id": "flood_fill",    "name": "Flood Fill (Paint Bucket)", "input": "number"},
+            {"id": "house_robber",  "name": "House Robber (1-D DP)",     "input": "array"},
+            {"id": "lis",           "name": "Longest Increasing Subsequence", "input": "array"},
+            {"id": "subset_sum",    "name": "Subset Sum (DP Grid)",      "input": "number"},
         ]
     }
 
@@ -664,6 +667,51 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return fibonacci_dp.trace(int(n))
 
+    if req.algorithm == "house_robber":
+      arr = _validated_array(req.array, house_robber.MAX_HOUSES, "house_robber")
+      if any(v != int(v) or v < 0 for v in arr):
+        raise HTTPException(
+          status_code=400,
+          detail="House loot must be whole numbers of 0 or more."
+        )
+      return house_robber.trace([int(v) for v in arr])
+
+    if req.algorithm == "lis":
+      arr = _validated_array(req.array, lis.MAX_LEN, "lis")
+      if any(v != int(v) for v in arr):
+        raise HTTPException(
+          status_code=400,
+          detail="Longest increasing subsequence needs whole numbers."
+        )
+      return lis.trace([int(v) for v in arr])
+
+    if req.algorithm == "subset_sum":
+      arr = _validated_array(req.array, subset_sum.MAX_ITEMS, "subset_sum")
+      if not arr:
+        raise HTTPException(
+          status_code=400,
+          detail="subset_sum needs at least one number."
+        )
+      if any(v != int(v) or v < 1 or v > subset_sum.MAX_VALUE for v in arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Numbers must be whole values from 1 to "
+                 f"{subset_sum.MAX_VALUE} — the grid has to stay readable."
+        )
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="subset_sum requires a 'target' — the sum to hit."
+        )
+      t = req.target
+      if t != int(t) or int(t) < 0 or int(t) > subset_sum.MAX_TARGET:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Target sum must be a whole number from 0 to "
+                 f"{subset_sum.MAX_TARGET}."
+        )
+      return subset_sum.trace([int(v) for v in arr], int(t))
+
     if req.algorithm == "flood_fill":
       if req.target is None:
         raise HTTPException(
@@ -727,6 +775,7 @@ def run_trace(request: Request, req: TraceRequest):
                 "fenwick_tree",
                 "hash_table", "bst_delete", "heap_extract",
                 "merge_intervals", "coin_change", "flood_fill",
+                "house_robber", "lis", "subset_sum",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

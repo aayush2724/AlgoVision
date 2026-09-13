@@ -221,6 +221,7 @@ const VIEW_FOR = {
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
   dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
+  house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
 };
 
 function resolveAlgoId(raw) {
@@ -829,6 +830,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '', target: '5',
       hint: 'Grid side 2–8, starting at 0:0. Add walls as row:col pairs (e.g. 1:1, 2:1) and watch the paint stop at them.',
     },
+    house_robber: {
+      array: '2, 7, 9, 3, 1',
+      hint: 'Up to 10 houses of loot (0+). The best row fills left to right; the robbed houses light up green at the end.',
+    },
+    lis: {
+      array: '10, 9, 2, 5, 3, 7, 101, 18',
+      hint: 'Up to 10 numbers. Each position scans everyone before it — watch it link to the run it extends.',
+    },
+    subset_sum: {
+      array: '3, 4, 5', target: '9',
+      hint: 'Up to 6 numbers (1–12) and a target sum (0–12). Each cell asks: reachable with these numbers?',
+    },
     kmp_search: {
       array: 'ABABDABACDABABCABAB, ABABCABAB',
       hint: 'Text and pattern, comma-separated. Watch the failure table get built first — that is the real algorithm.',
@@ -924,6 +937,35 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'The start square cannot be a wall.' };
       }
       return { target: side, text: raw };
+    }
+
+    if (algoId === 'house_robber' || algoId === 'lis') {
+      const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
+      if (!parts.length) return { error: 'Enter some numbers — e.g. 2, 7, 9, 3, 1' };
+      const values = parts.map(Number);
+      if (values.some(v => !Number.isInteger(v))) {
+        return { error: 'Whole numbers only, separated by commas.' };
+      }
+      if (algoId === 'house_robber' && values.some(v => v < 0)) {
+        return { error: 'House loot must be 0 or more.' };
+      }
+      if (values.length > 10) return { error: 'Max 10 numbers — the grid has to stay readable.' };
+      return { array: values };
+    }
+
+    if (algoId === 'subset_sum') {
+      const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
+      if (!parts.length) return { error: 'Enter some numbers — e.g. 3, 4, 5' };
+      const values = parts.map(Number);
+      if (values.some(v => !Number.isInteger(v) || v < 1 || v > 12)) {
+        return { error: 'Numbers must be whole values 1–12.' };
+      }
+      if (values.length > 6) return { error: 'Max 6 numbers.' };
+      const target = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(target) || target < 0 || target > 12) {
+        return { error: 'Target sum must be a whole number 0–12.' };
+      }
+      return { array: values, target };
     }
 
     if (algoId === 'flood_fill') {
@@ -2876,6 +2918,16 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, payload);
+        } else if (algoId === 'house_robber' || algoId === 'lis') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array });
+        } else if (algoId === 'subset_sum') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
         } else if (traceView === 'tree') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
@@ -3534,7 +3586,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
-        'bst_delete', 'coin_change'].includes(algoId)
+        'bst_delete', 'coin_change', 'subset_sum'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -3549,6 +3601,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'fenwick_tree') targetLabel.textContent = 'UP TO =';
         if (targetLabel && algoId === 'bst_delete') targetLabel.textContent = 'DELETE =';
         if (targetLabel && algoId === 'coin_change') targetLabel.textContent = 'AMOUNT =';
+        if (targetLabel && algoId === 'subset_sum') targetLabel.textContent = 'SUM =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

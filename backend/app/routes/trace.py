@@ -4,15 +4,19 @@ from pydantic import BaseModel, Field
 import re as _re
 
 from app.tracers import (
-    balanced_brackets, bfs, binary_search, bipartite_check, bst_delete,
-    bst_insert, bst_search, bubble_sort, coin_change, connected_components,
-    counting_sort, dfs, dijkstra, dsu, edit_distance,
-    fenwick_tree, fibonacci_dp, flood_fill, floyd_cycle, hash_table,
-    heap_extract, heap_insert, house_robber, insertion_sort, kadanes,
+    anagram, balanced_brackets, bfs, binary_search, bipartite_check,
+    bst_delete, bst_insert, bst_search, bubble_sort, coin_change,
+    connected_components, counting_sort, dfs, dijkstra, dsu, edit_distance,
+    fast_exponentiation, gcd_euclid, prime_factorisation,
+    fenwick_tree, fibonacci_dp, find_middle, flood_fill, floyd_cycle,
+    hash_table, heap_extract, heap_insert, heap_sort, house_robber,
+    insertion_sort, kadanes,
     kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
-    linked_list_reverse, manacher, merge_intervals, merge_sort, n_queens,
-    next_greater_element, prefix_sums, prims_mst, quick_sort, rabin_karp,
-    selection_sort, sieve, sliding_window, subset_sum, topological_sort,
+    linked_list_reverse, manacher, matrix_chain, merge_intervals, merge_sort,
+    merge_two_sorted_lists, n_queens, next_greater_element, prefix_sums,
+    prims_mst, quick_sort,
+    rabin_karp, radix_sort, selection_sort, sieve, sliding_window,
+    sliding_window_maximum, subset_sum, topological_sort,
     tree_traversal, trie_insert, two_sum_sorted, unique_paths, z_function,
 )
 from app.tracers.common import Graph
@@ -118,6 +122,16 @@ def algorithms():
             {"id": "z_function",    "name": "Z-Function",                "input": "text"},
             {"id": "rabin_karp",    "name": "Rabin–Karp (Rolling Hash)", "input": "text"},
             {"id": "manacher",      "name": "Manacher's Longest Palindrome", "input": "text"},
+            {"id": "radix_sort",    "name": "Radix Sort (LSD)",          "input": "array"},
+            {"id": "sliding_window_maximum", "name": "Sliding Window Maximum (Deque)", "input": "array"},
+            {"id": "matrix_chain",  "name": "Matrix Chain Multiplication", "input": "array"},
+            {"id": "heap_sort",     "name": "Heap Sort (In-Place)",      "input": "array"},
+            {"id": "find_middle",   "name": "Find Middle of a List (Slow/Fast)", "input": "array"},
+            {"id": "merge_two_sorted_lists", "name": "Merge Two Sorted Lists", "input": "text"},
+            {"id": "anagram",       "name": "Anagram Check",             "input": "text"},
+            {"id": "gcd_euclid",    "name": "GCD (Euclid's Algorithm)",  "input": "array"},
+            {"id": "fast_exponentiation", "name": "Fast Exponentiation", "input": "array"},
+            {"id": "prime_factorisation", "name": "Prime Factorisation", "input": "number"},
         ]
     }
 
@@ -670,6 +684,185 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return fibonacci_dp.trace(int(n))
 
+    if req.algorithm == "anagram":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="anagram requires 'text' — two words separated by a comma, "
+                 "e.g. LISTEN,SILENT"
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{anagram.MAX_LEN}}},[A-Z0-9]{{1,{anagram.MAX_LEN}}}",
+                           cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Give two words (letters/digits, 1-{anagram.MAX_LEN} chars "
+                 f"each) separated by a comma — e.g. LISTEN,SILENT"
+        )
+      a, b = cleaned.split(",")
+      return anagram.trace(a, b)
+
+    if req.algorithm == "gcd_euclid":
+      pair = _validated_array(req.array, 2, "gcd_euclid")
+      if len(pair) != 2:
+        raise HTTPException(
+          status_code=400,
+          detail="gcd_euclid needs exactly two numbers, e.g. 48, 36."
+        )
+      if any(v != int(v) or v < 0 or v > gcd_euclid.MAX_VALUE for v in pair):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Both numbers must be whole values from 0 to "
+                 f"{gcd_euclid.MAX_VALUE}."
+        )
+      if pair[0] == 0 and pair[1] == 0:
+        raise HTTPException(
+          status_code=400,
+          detail="gcd(0, 0) is undefined — give at least one non-zero number."
+        )
+      return gcd_euclid.trace(int(pair[0]), int(pair[1]))
+
+    if req.algorithm == "fast_exponentiation":
+      pair = _validated_array(req.array, 2, "fast_exponentiation")
+      if len(pair) != 2:
+        raise HTTPException(
+          status_code=400,
+          detail="fast_exponentiation needs two numbers: base, exponent — "
+                 "e.g. 3, 13."
+        )
+      base, exp = pair
+      if base != int(base) or not (1 <= int(base) <= fast_exponentiation.MAX_BASE):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Base must be a whole number from 1 to "
+                 f"{fast_exponentiation.MAX_BASE}."
+        )
+      if exp != int(exp) or not (0 <= int(exp) <= fast_exponentiation.MAX_EXP):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Exponent must be a whole number from 0 to "
+                 f"{fast_exponentiation.MAX_EXP}."
+        )
+      return fast_exponentiation.trace(int(base), int(exp))
+
+    if req.algorithm == "prime_factorisation":
+      if req.target is None:
+        raise HTTPException(
+          status_code=400,
+          detail="prime_factorisation requires 'target' — the number to factor."
+        )
+      n = req.target
+      if n != int(n) or int(n) < 2 or int(n) > prime_factorisation.MAX_VALUE:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Give a whole number from 2 to {prime_factorisation.MAX_VALUE} "
+                 f"to factor."
+        )
+      return prime_factorisation.trace(int(n))
+
+    if req.algorithm == "heap_sort":
+      arr = _validated_array(req.array, heap_sort.MAX_ARRAY_LEN, "heap_sort")
+      return heap_sort.trace(arr)
+
+    if req.algorithm == "find_middle":
+      arr = _validated_array(req.array, find_middle.MAX_LIST_LEN, "find_middle")
+      if not arr:
+        raise HTTPException(
+          status_code=400,
+          detail="find_middle needs a non-empty list."
+        )
+      return find_middle.trace(arr)
+
+    if req.algorithm == "merge_two_sorted_lists":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="merge_two_sorted_lists requires 'text' — two sorted lists "
+                 "separated by '|', e.g. 1,3,5,7 | 2,4,6"
+        )
+      halves = req.text.split("|")
+      if len(halves) != 2:
+        raise HTTPException(
+          status_code=400,
+          detail="Give exactly two lists separated by a single '|', "
+                 "e.g. 1,3,5,7 | 2,4,6"
+        )
+      lists = []
+      for half in halves:
+        nums = []
+        for tok in half.replace(" ", "").split(","):
+          if tok == "":
+            continue
+          try:
+            nums.append(float(tok))
+          except ValueError:
+            raise HTTPException(
+              status_code=400,
+              detail=f"'{tok}' is not a number. Use comma-separated numbers, "
+                     f"e.g. 1,3,5,7 | 2,4,6"
+            )
+        if len(nums) > merge_two_sorted_lists.MAX_EACH:
+          raise HTTPException(
+            status_code=400,
+            detail=f"Each list holds at most {merge_two_sorted_lists.MAX_EACH} "
+                   f"values — the chains have to stay readable."
+          )
+        if any(nums[i] > nums[i + 1] for i in range(len(nums) - 1)):
+          raise HTTPException(
+            status_code=400,
+            detail="Each list must already be sorted ascending — merging "
+                   "relies on that. Sort your input first."
+          )
+        lists.append(nums)
+      if not lists[0] and not lists[1]:
+        raise HTTPException(
+          status_code=400,
+          detail="Both lists are empty — give at least one value to merge."
+        )
+      return merge_two_sorted_lists.trace(lists[0], lists[1])
+
+    if req.algorithm == "radix_sort":
+      arr = _validated_array(req.array, radix_sort.MAX_ARRAY_LEN, "radix_sort")
+      if any(v != int(v) or v < 0 or v > radix_sort.MAX_VALUE for v in arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Radix sort needs whole numbers from 0 to "
+                 f"{radix_sort.MAX_VALUE}."
+        )
+      return radix_sort.trace([int(v) for v in arr])
+
+    if req.algorithm == "sliding_window_maximum":
+      arr = _validated_array(req.array, sliding_window_maximum.MAX_ARRAY_LEN,
+                             "sliding_window_maximum")
+      k = req.target
+      if k is None:
+        raise HTTPException(
+          status_code=400,
+          detail="sliding_window_maximum requires 'target' — the window size k."
+        )
+      if k != int(k) or int(k) < 1 or int(k) > len(arr):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Window size k must be a whole number between 1 and {len(arr)}."
+        )
+      return sliding_window_maximum.trace(arr, int(k))
+
+    if req.algorithm == "matrix_chain":
+      dims = _validated_array(req.array, matrix_chain.MAX_MATRICES + 1,
+                              "matrix_chain")
+      if len(dims) < 2:
+        raise HTTPException(
+          status_code=400,
+          detail="matrix_chain needs at least 2 dimensions (one matrix) — "
+                 "e.g. 40, 20, 30 is two matrices 40×20 and 20×30."
+        )
+      if any(v != int(v) or v < 1 or v > 1000 for v in dims):
+        raise HTTPException(
+          status_code=400,
+          detail="Matrix dimensions must be whole numbers from 1 to 1000."
+        )
+      return matrix_chain.trace([int(v) for v in dims])
+
     if req.algorithm == "z_function":
       if req.text is None:
         raise HTTPException(
@@ -835,6 +1028,10 @@ def run_trace(request: Request, req: TraceRequest):
                 "merge_intervals", "coin_change", "flood_fill",
                 "house_robber", "lis", "subset_sum",
                 "z_function", "rabin_karp", "manacher",
+                "radix_sort", "sliding_window_maximum", "matrix_chain",
+                "heap_sort", "find_middle", "merge_two_sorted_lists",
+                "anagram", "gcd_euclid", "fast_exponentiation",
+                "prime_factorisation",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

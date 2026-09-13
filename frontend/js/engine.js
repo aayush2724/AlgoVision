@@ -223,6 +223,10 @@ const VIEW_FOR = {
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
   house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
   z_function: 'array', rabin_karp: 'array', manacher: 'array',
+  radix_sort: 'array', sliding_window_maximum: 'array', matrix_chain: 'grid',
+  heap_sort: 'array', find_middle: 'list', merge_two_sorted_lists: 'list',
+  anagram: 'grid', gcd_euclid: 'grid', fast_exponentiation: 'grid',
+  prime_factorisation: 'grid',
 };
 
 function resolveAlgoId(raw) {
@@ -859,6 +863,46 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: 'FORGEEKSSKEEGFOR',
       hint: 'One word, up to 18 letters/digits. The longest palindrome grows around each centre, reusing earlier mirrors.',
     },
+    radix_sort: {
+      array: '170, 45, 75, 90, 2, 802, 24, 66',
+      hint: 'Whole numbers 0–9999, up to 12. Sorted one digit at a time, least-significant first — no comparisons at all.',
+    },
+    sliding_window_maximum: {
+      array: '1, 3, -1, -3, 5, 3, 6, 7', target: '3',
+      hint: 'K is the window size. A deque keeps only values that could still win — its front is always the window max.',
+    },
+    matrix_chain: {
+      array: '40, 20, 30, 10, 30',
+      hint: 'Matrix dimensions (1–1000): n+1 numbers describe n matrices. The grid prices every way to parenthesise the chain.',
+    },
+    heap_sort: {
+      array: '5, 3, 8, 1, 9, 2, 7',
+      hint: 'Up to 12 numbers. Build a max-heap, then swap the max to the end and re-heap — the sorted suffix grows from the right.',
+    },
+    find_middle: {
+      array: '10, 20, 30, 40, 50',
+      hint: 'Up to 12 nodes. Slow moves one, fast moves two — when fast hits the end, slow is on the middle. One pass.',
+    },
+    merge_two_sorted_lists: {
+      array: '1, 3, 5, 7 | 2, 4, 6',
+      hint: 'Two sorted lists separated by "|". The smaller head is spliced on each step — watch the arrows rewire into one chain.',
+    },
+    anagram: {
+      array: 'LISTEN, SILENT',
+      hint: 'Two words, comma-separated. Both are sorted and compared letter by letter — same multiset means anagram.',
+    },
+    gcd_euclid: {
+      array: '48, 36',
+      hint: 'Two whole numbers. Each row replaces (a, b) with (b, a mod b); when the remainder hits 0, the gcd is found.',
+    },
+    fast_exponentiation: {
+      array: '3, 13',
+      hint: 'base, exponent. The exponent is read in binary — square each step, multiply in the base on a 1-bit.',
+    },
+    prime_factorisation: {
+      array: '', target: '360',
+      hint: 'A whole number 2–9999. Divide out the smallest prime repeatedly — each row is a prime pulled out and what remains.',
+    },
     segment_tree: {
       array: '3, 1, 4, 1, 5, 9, 2, 6', target: '',
       hint: 'Up to 8 values. Optionally set a query range as lo:hi in the range box — blank sums everything.',
@@ -918,7 +962,8 @@ export function mountEngine(view, algo = 'dijkstra') {
   };
 
   // Algorithms whose only input is a single number, whatever their view.
-  const NUMBER_ONLY = { sieve: [10, 50, 'N ='], n_queens: [4, 6, 'BOARD ='] };
+  const NUMBER_ONLY = { sieve: [10, 50, 'N ='], n_queens: [4, 6, 'BOARD ='],
+    prime_factorisation: [2, 9999, 'N ='] };
 
   function parseArrayInput() {
     const numOnly = NUMBER_ONLY[algoId];
@@ -979,6 +1024,70 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Target sum must be a whole number 0–12.' };
       }
       return { array: values, target };
+    }
+
+    if (algoId === 'anagram') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{1,12},[A-Z0-9]{1,12}$/.test(raw)) {
+        return { error: 'Two words (letters/digits, 1–12 each), comma-separated — e.g. LISTEN, SILENT' };
+      }
+      return { text: raw };
+    }
+
+    if (algoId === 'gcd_euclid') {
+      const nums = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean).map(Number);
+      if (nums.length !== 2 || nums.some(v => !Number.isInteger(v) || v < 0 || v > 100000)) {
+        return { error: 'Two whole numbers 0–100000 — e.g. 48, 36.' };
+      }
+      if (nums[0] === 0 && nums[1] === 0) return { error: 'gcd(0, 0) is undefined — give a non-zero number.' };
+      return { array: nums };
+    }
+
+    if (algoId === 'fast_exponentiation') {
+      const nums = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean).map(Number);
+      if (nums.length !== 2) return { error: 'Two numbers: base, exponent — e.g. 3, 13.' };
+      const [base, exp] = nums;
+      if (!Number.isInteger(base) || base < 1 || base > 12) return { error: 'Base must be a whole number 1–12.' };
+      if (!Number.isInteger(exp) || exp < 0 || exp > 20) return { error: 'Exponent must be a whole number 0–20.' };
+      return { array: nums };
+    }
+
+    if (algoId === 'merge_two_sorted_lists') {
+      const halves = (arrayInput?.value || '').split('|');
+      if (halves.length !== 2) {
+        return { error: 'Two lists separated by a single "|" — e.g. 1,3,5 | 2,4,6' };
+      }
+      const lists = [];
+      for (const half of halves) {
+        const toks = half.replace(/\s+/g, '').split(',').filter(Boolean);
+        const nums = toks.map(Number);
+        if (nums.some(v => !Number.isFinite(v))) {
+          return { error: 'Lists must be comma-separated numbers — e.g. 1,3,5 | 2,4,6' };
+        }
+        if (nums.length > 6) return { error: 'Each list holds at most 6 values.' };
+        if (nums.some((v, i) => i && v < nums[i - 1])) {
+          return { error: 'Each list must already be sorted ascending.' };
+        }
+        lists.push(nums);
+      }
+      if (!lists[0].length && !lists[1].length) {
+        return { error: 'Give at least one value to merge.' };
+      }
+      return { text: `${lists[0].join(',')}|${lists[1].join(',')}`,
+               array: lists[0].concat(lists[1]) };
+    }
+
+    if (algoId === 'matrix_chain') {
+      const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
+      const dims = parts.map(Number);
+      if (dims.length < 2) {
+        return { error: 'Give at least 2 dimensions (one matrix) — e.g. 40, 20, 30.' };
+      }
+      if (dims.length > 7) return { error: 'Max 7 dimensions (6 matrices).' };
+      if (dims.some(v => !Number.isInteger(v) || v < 1 || v > 1000)) {
+        return { error: 'Dimensions must be whole numbers 1–1000.' };
+      }
+      return { array: dims };
     }
 
     if (algoId === 'flood_fill') {
@@ -1164,6 +1273,20 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Counting sort needs whole numbers 0–20 — one bucket per value.' };
       }
       return { array: values };
+    }
+
+    if (algoId === 'radix_sort') {
+      if (values.some(v => v !== Math.floor(v) || v < 0 || v > 9999)) {
+        return { error: 'Radix sort needs whole numbers 0–9999.' };
+      }
+      return { array: values };
+    }
+
+    if (algoId === 'sliding_window_maximum') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t) || t !== Math.floor(t)) return { error: 'Window size k must be a whole number.' };
+      if (t < 1 || t > values.length) return { error: `Keep k between 1 and ${values.length}.` };
+      return { array: values, target: t };
     }
 
     if (algoId === 'bst_delete') {
@@ -2878,6 +3001,11 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { target: parsed.target });
+        } else if (algoId === 'merge_two_sorted_lists') {
+          renderListView(parsed.array);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
         } else if (traceView === 'list') {
           renderListView(parsed.array);
           const payload = algoId === 'floyd_cycle'
@@ -2963,6 +3091,26 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+        } else if (algoId === 'matrix_chain') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array });
+        } else if (algoId === 'anagram') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'gcd_euclid' || algoId === 'fast_exponentiation') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array });
+        } else if (algoId === 'prime_factorisation') {
+          renderGridView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { target: parsed.target });
         } else if (traceView === 'tree') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
@@ -2981,8 +3129,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           if (isOffline) {
             res = localArrayTrace(parsed);
           } else {
-            const needsTarget = ['binary_search', 'two_sum_sorted', 'sliding_window']
-              .includes(algoId);
+            const needsTarget = ['binary_search', 'two_sum_sorted', 'sliding_window',
+              'sliding_window_maximum'].includes(algoId);
             const payload = needsTarget
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
@@ -3621,13 +3769,15 @@ export function mountEngine(view, algo = 'dijkstra') {
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
-        'bst_delete', 'coin_change', 'subset_sum'].includes(algoId)
+        'bst_delete', 'coin_change', 'subset_sum',
+        'sliding_window_maximum'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
         if (targetInput && !targetInput.value) targetInput.value = defaults.target;
         const targetLabel = view.querySelector('#target-label');
         if (targetLabel && algoId === 'sliding_window') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'sliding_window_maximum') targetLabel.textContent = 'K =';
         if (targetLabel && algoId === 'knapsack_01') targetLabel.textContent = 'CAP =';
         if (targetLabel && algoId === 'floyd_cycle') targetLabel.textContent = 'LOOPS TO =';
         if (targetLabel && algoId === 'unique_paths') targetLabel.textContent = 'GRID =';

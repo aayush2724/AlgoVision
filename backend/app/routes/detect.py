@@ -70,6 +70,16 @@ SIGNATURES = {
     "z_function": ["z_function", "z function", "z-function", "z array", "z algorithm", "z-algorithm", "prefix match"],
     "rabin_karp": ["rabin_karp", "rabin karp", "rabin-karp", "rolling hash", "polynomial hash", "fingerprint", "string hash"],
     "manacher": ["manacher", "manachers", "longest palindrome", "longest palindromic", "palindromic substring", "palindrome substring"],
+    "radix_sort": ["radix_sort", "radix sort", "radixsort", "lsd", "digit sort", "bucket by digit"],
+    "sliding_window_maximum": ["sliding_window_maximum", "sliding window maximum", "window maximum", "max in window", "monotonic deque", "deque maximum"],
+    "matrix_chain": ["matrix_chain", "matrix chain", "matrix-chain", "chain multiplication", "parenthesization", "parenthesisation", "optimal parenthes"],
+    "heap_sort": ["heap_sort", "heap sort", "heapsort", "in-place heap", "sift down sort", "build heap sort"],
+    "find_middle": ["find_middle", "find middle", "middle of list", "middle node", "slow fast pointer", "slow and fast", "tortoise middle"],
+    "merge_two_sorted_lists": ["merge_two_sorted_lists", "merge two sorted", "merge sorted lists", "merge two lists", "merge linked lists", "splice sorted"],
+    "anagram": ["anagram", "anagrams", "rearrange letters", "same letters", "permutation of", "sorted letters match"],
+    "gcd_euclid": ["gcd_euclid", "gcd", "greatest common divisor", "euclid", "euclidean", "hcf", "common divisor"],
+    "fast_exponentiation": ["fast_exponentiation", "fast exponentiation", "binary exponentiation", "exponentiation by squaring", "fast power", "pow(", "modular exponent"],
+    "prime_factorisation": ["prime_factorisation", "prime factorization", "prime factorisation", "prime factors", "factorize", "factorise", "trial division"],
 }
 
 REALWORLD_META = {
@@ -742,6 +752,136 @@ REALWORLD_META = {
             "visit": "Growing a palindrome around a centre",
             "start": "Every centre a palindrome of one",
             "done": "The longest palindrome found in linear time."
+        }
+    },
+    "radix_sort": {
+        "scene": "leaderboard",
+        "title": "Sorting by Digit",
+        "hook": "Sort whole numbers without ever comparing two — one stable pass per digit, least significant first.",
+        "metaphors": {
+            "node": "number",
+            "edge": "bin",
+            "weight": "digit",
+            "visit": "Dropping a number in its digit bin",
+            "start": "Unsorted numbers",
+            "done": "Sorted after one pass per digit — no comparisons."
+        }
+    },
+    "sliding_window_maximum": {
+        "scene": "stocks",
+        "title": "Best in Every Window",
+        "hook": "The maximum of every window, tracked with a deque so no value is ever looked at twice.",
+        "metaphors": {
+            "node": "day",
+            "edge": "window",
+            "weight": "value",
+            "visit": "Sliding the window forward",
+            "start": "The first window",
+            "done": "Every window's maximum in one linear pass."
+        }
+    },
+    "matrix_chain": {
+        "scene": "vault",
+        "title": "Where to Parenthesise",
+        "hook": "Multiply a chain of matrices in the cheapest order — the grid prices every split so you don't have to guess.",
+        "metaphors": {
+            "node": "sub-chain",
+            "edge": "split",
+            "weight": "multiplications",
+            "visit": "Pricing a split",
+            "start": "Single matrices cost nothing",
+            "done": "The cheapest parenthesisation of the whole chain."
+        }
+    },
+    "heap_sort": {
+        "scene": "leaderboard",
+        "title": "Podium, Cleared One at a Time",
+        "hook": "Build a heap so the champion is on top, swap them to the end, and re-settle — the sorted list grows from the back.",
+        "metaphors": {
+            "node": "contender",
+            "edge": "comparison",
+            "weight": "score",
+            "visit": "Sifting a value down",
+            "start": "An unordered field",
+            "done": "Sorted in place, no extra memory."
+        }
+    },
+    "find_middle": {
+        "scene": "train",
+        "title": "Two Runners on the Track",
+        "hook": "One runner takes two steps for every one the other takes — when the fast one hits the end, the slow one is at the middle.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "position",
+            "visit": "Advancing the runners",
+            "start": "Both at the head",
+            "done": "Slow runner stops on the middle node."
+        }
+    },
+    "merge_two_sorted_lists": {
+        "scene": "train",
+        "title": "Coupling Two Trains",
+        "hook": "Two sorted trains become one — always couple on whichever front carriage is smaller, re-pointing rather than copying.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "value",
+            "visit": "Splicing the smaller head",
+            "start": "Two separate sorted trains",
+            "done": "One sorted train, built by re-pointing alone."
+        }
+    },
+    "anagram": {
+        "scene": "dna",
+        "title": "Same Letters, Shuffled",
+        "hook": "Two words are anagrams when they are built from exactly the same letters — sort both and they line up.",
+        "metaphors": {
+            "node": "letter",
+            "edge": "match",
+            "weight": "position",
+            "visit": "Comparing sorted letters",
+            "start": "Two words in their own order",
+            "done": "Same multiset of letters — or a mismatch that proves not."
+        }
+    },
+    "gcd_euclid": {
+        "scene": "vault",
+        "title": "Shrinking to the Common Divisor",
+        "hook": "Replace the pair with (smaller, remainder) over and over — the numbers collapse to their greatest common divisor.",
+        "metaphors": {
+            "node": "pair",
+            "edge": "remainder step",
+            "weight": "value",
+            "visit": "Taking a remainder",
+            "start": "The original two numbers",
+            "done": "Remainder hits 0 — the other number is the gcd."
+        }
+    },
+    "fast_exponentiation": {
+        "scene": "vault",
+        "title": "Powers by Squaring",
+        "hook": "Read the exponent in binary — square each step, multiply in the base on a 1-bit — and reach the full power in log steps.",
+        "metaphors": {
+            "node": "bit",
+            "edge": "square",
+            "weight": "running result",
+            "visit": "Squaring (and maybe multiplying)",
+            "start": "Result of 1",
+            "done": "The full power in log(exp) multiplications."
+        }
+    },
+    "prime_factorisation": {
+        "scene": "vault",
+        "title": "Breaking a Number into Primes",
+        "hook": "Divide out the smallest prime as often as it goes, then the next — what's left above 1 past the square root is prime.",
+        "metaphors": {
+            "node": "factor",
+            "edge": "division",
+            "weight": "remaining",
+            "visit": "Pulling out a prime",
+            "start": "The whole number",
+            "done": "A product of primes, nothing left to factor."
         }
     }
 }

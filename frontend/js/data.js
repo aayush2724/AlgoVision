@@ -25,7 +25,7 @@ export const CATEGORIES = ["All", "Foundations", "Structures", "Mastery"];
 // Every traceable algorithm, in one place. The Explore page, the engine's
 // quick-switcher and compare mode all read from this — add a tracer here and
 // it becomes discoverable everywhere.
-export const ALGO_CATEGORIES = ["All", "Graphs", "Sorting", "Searching", "Patterns", "Structures", "DP"];
+export const ALGO_CATEGORIES = ["All", "Graphs", "Sorting", "Searching", "Patterns", "Structures", "DP", "Math"];
 
 export const ALGORITHMS = [
   { id: "dijkstra",     name: "Dijkstra's Shortest Path", category: "Graphs", emoji: "📍", complexity: "O((V+E) log V)", input: "graph",
@@ -143,6 +143,32 @@ export const ALGORITHMS = [
     hook: "Compare cheap fingerprints first, characters only on a match." },
   { id: "manacher",     name: "Manacher's Longest Palindrome", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
     hook: "The longest mirror-sequence, found in one linear pass." },
+
+  // Batch 13 — sorting, windows, interval DP (existing views).
+  { id: "radix_sort",   name: "Radix Sort (LSD)", category: "Sorting", emoji: "🔢", complexity: "O(d·n)", input: "array",
+    hook: "Sort by one digit at a time — no comparisons ever." },
+  { id: "sliding_window_maximum", name: "Sliding Window Maximum", category: "Patterns", emoji: "🏔️", complexity: "O(n)", input: "array",
+    hook: "Every window's max, with a deque that looks at nothing twice." },
+  { id: "matrix_chain", name: "Matrix Chain Multiplication", category: "DP", emoji: "✖️", complexity: "O(n³)", input: "array",
+    hook: "Where to put the parentheses for the fewest multiplications." },
+
+  // Batch 14 — in-place heap sort and two linked-list classics.
+  { id: "heap_sort",    name: "Heap Sort (In-Place)", category: "Sorting", emoji: "⛰️", complexity: "O(n log n)", input: "array",
+    hook: "Build a heap, swap the max to the end, re-heap — no extra memory." },
+  { id: "find_middle",  name: "Find Middle of a List", category: "Structures", emoji: "🎯", complexity: "O(n)", input: "array",
+    hook: "Two runners, one twice as fast — it stops on the middle." },
+  { id: "merge_two_sorted_lists", name: "Merge Two Sorted Lists", category: "Structures", emoji: "🔗", complexity: "O(n + m)", input: "text",
+    hook: "Splice the smaller head each time — one chain, no copying." },
+
+  // Batch 15 — anagram + number theory (existing grid view).
+  { id: "anagram",      name: "Anagram Check", category: "Patterns", emoji: "🔀", complexity: "O(n log n)", input: "text",
+    hook: "Same letters, shuffled? Sort both and they line up." },
+  { id: "gcd_euclid",   name: "GCD (Euclid's Algorithm)", category: "Math", emoji: "➗", complexity: "O(log n)", input: "array",
+    hook: "Replace (a, b) with (b, a mod b) until the remainder is 0." },
+  { id: "fast_exponentiation", name: "Fast Exponentiation", category: "Math", emoji: "⚡", complexity: "O(log n)", input: "array",
+    hook: "Square your way to any power in a handful of steps." },
+  { id: "prime_factorisation", name: "Prime Factorisation", category: "Math", emoji: "🧮", complexity: "O(√n)", input: "number",
+    hook: "Divide out the smallest prime until only primes remain." },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
@@ -163,6 +189,9 @@ export const KEYCAP_LABEL = {
   connected_components: 'CC', bipartite_check: 'BIP', flood_fill: 'FILL',
   house_robber: 'ROB', lis: 'LIS+', subset_sum: 'SUBS',
   z_function: 'Z', rabin_karp: 'RK', manacher: 'PALI',
+  radix_sort: 'RDX', sliding_window_maximum: 'WMAX', matrix_chain: 'MCM',
+  heap_sort: 'HSRT', find_middle: 'MID', merge_two_sorted_lists: 'MRG2',
+  anagram: 'ANAG', gcd_euclid: 'GCD', fast_exponentiation: 'POW', prime_factorisation: 'FCTR',
 };
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -571,6 +600,78 @@ export const COMPLEXITY = {
       `${c.centres ?? 0} centre(s), ${c.expansions ?? 0} expansion step(s), and ` +
       `${c.mirror_reuses ?? 0} centre(s) that copied a mirror's radius first. ` +
       `The mirror is why the total expansion work stays linear instead of n².`,
+  },
+  radix_sort: {
+    rows: [["Time", "O(d·n)"], ["Space", "O(n + base)"], ["Comparisons", "0"]],
+    reading: (c, s) =>
+      `${c.passes ?? 0} pass(es) — one per digit — over ${c.placements ?? 0} ` +
+      `bucket placement(s), with ${c.collects ?? 0} collect step(s) and zero ` +
+      `comparisons. Linear in the count for a fixed digit width; the catch is d, ` +
+      `the number of digits.`,
+  },
+  sliding_window_maximum: {
+    rows: [["Time", "O(n)"], ["Space", "O(k)"], ["Naive", "O(n·k)"]],
+    reading: (c, s) =>
+      `${c.pushes ?? 0} push(es) and ${(c.pops_small ?? 0) + (c.pops_expired ?? 0)} ` +
+      `pop(s) across ${c.windows ?? 0} window(s). Every index enters and leaves ` +
+      `the deque at most once, so the whole scan is linear — re-scanning each ` +
+      `window would be O(n·k).`,
+  },
+  matrix_chain: {
+    rows: [["Time", "O(n³)"], ["Space", "O(n²)"], ["Brute force", "exponential"]],
+    reading: (c, s) =>
+      `${c.cells ?? 0} cell(s) filled over ${c.splits_tried ?? 0} split(s) tried. ` +
+      `Each interval reuses the shorter intervals already solved — far cheaper ` +
+      `than the Catalan-number explosion of ways to parenthesise by hand.`,
+  },
+  heap_sort: {
+    rows: [["Time", "O(n log n)"], ["Space", "O(1)"], ["Stable", "no"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparison(s) and ${c.swaps ?? 0} swap(s), all in ` +
+      `place. Build is O(n); each of the sift-downs is O(log n). The payoff over ` +
+      `merge sort is the O(1) space — it never allocates a second array.`,
+  },
+  find_middle: {
+    rows: [["Time", "O(n)"], ["Space", "O(1)"], ["Passes", "1"]],
+    reading: (c, s) =>
+      `Slow took ${c.slow_steps ?? 0} step(s) while fast took ${c.fast_steps ?? 0}. ` +
+      `Because fast moves twice as quickly, slow lands on the middle in a single ` +
+      `pass — no need to count the length first and walk it again.`,
+  },
+  merge_two_sorted_lists: {
+    rows: [["Time", "O(n + m)"], ["Space", "O(1)"], ["vs. arrays", "no copy"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} comparison(s), ${c.splices ?? 0} splice(s). Each node ` +
+      `is re-pointed exactly once and nothing is copied — the merge step of merge ` +
+      `sort, but on pointers, in constant extra space.`,
+  },
+  anagram: {
+    rows: [["Sort", "O(n log n)"], ["Count-map", "O(n)"], ["Space", "O(n)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} column comparison(s), ${c.mismatches ?? 0} mismatch(es). ` +
+      `Sorting both words and lining them up is O(n log n); tallying letter counts ` +
+      `instead would settle it in a single O(n) pass.`,
+  },
+  gcd_euclid: {
+    rows: [["Time", "O(log n)"], ["Space", "O(1)"], ["Naive", "O(n)"]],
+    reading: (c, s) =>
+      `${c.divisions ?? 0} division(s) to reach the answer. Each remainder step at ` +
+      `least halves the larger number every two rounds, so Euclid is logarithmic — ` +
+      `not the linear slog of testing every candidate divisor.`,
+  },
+  fast_exponentiation: {
+    rows: [["Time", "O(log n)"], ["Space", "O(1)"], ["Naive", "O(n)"]],
+    reading: (c, s) =>
+      `${c.squarings ?? 0} squaring(s) and ${c.multiplies ?? 0} multiply(ies) — one ` +
+      `per bit of the exponent. Squaring doubles the exponent reached each step, so ` +
+      `log(exp) operations replace exp of them.`,
+  },
+  prime_factorisation: {
+    rows: [["Time", "O(√n)"], ["Space", "O(1)"], ["Factors", "with multiplicity"]],
+    reading: (c, s) =>
+      `${c.trials ?? 0} trial divisor(s) tested, ${c.factors ?? 0} prime(s) pulled ` +
+      `out. Testing only up to √n is the whole trick — any larger factor would have ` +
+      `a matching smaller one already found.`,
   },
 };
 

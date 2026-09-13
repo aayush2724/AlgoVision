@@ -10,10 +10,10 @@ from app.tracers import (
     fenwick_tree, fibonacci_dp, flood_fill, floyd_cycle, hash_table,
     heap_extract, heap_insert, house_robber, insertion_sort, kadanes,
     kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
-    linked_list_reverse, merge_intervals, merge_sort, n_queens,
-    next_greater_element, prefix_sums, prims_mst, quick_sort, selection_sort,
-    sieve, sliding_window, subset_sum, topological_sort, tree_traversal,
-    trie_insert, two_sum_sorted, unique_paths,
+    linked_list_reverse, manacher, merge_intervals, merge_sort, n_queens,
+    next_greater_element, prefix_sums, prims_mst, quick_sort, rabin_karp,
+    selection_sort, sieve, sliding_window, subset_sum, topological_sort,
+    tree_traversal, trie_insert, two_sum_sorted, unique_paths, z_function,
 )
 from app.tracers.common import Graph
 import os
@@ -115,6 +115,9 @@ def algorithms():
             {"id": "house_robber",  "name": "House Robber (1-D DP)",     "input": "array"},
             {"id": "lis",           "name": "Longest Increasing Subsequence", "input": "array"},
             {"id": "subset_sum",    "name": "Subset Sum (DP Grid)",      "input": "number"},
+            {"id": "z_function",    "name": "Z-Function",                "input": "text"},
+            {"id": "rabin_karp",    "name": "Rabin–Karp (Rolling Hash)", "input": "text"},
+            {"id": "manacher",      "name": "Manacher's Longest Palindrome", "input": "text"},
         ]
     }
 
@@ -667,6 +670,61 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return fibonacci_dp.trace(int(n))
 
+    if req.algorithm == "z_function":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="z_function requires 'text' — a single word, e.g. AABAAB."
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{z_function.MAX_LEN}}}", cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Give one word of letters or digits, 1-{z_function.MAX_LEN} "
+                 f"characters — e.g. AABXAAB."
+        )
+      return z_function.trace(cleaned)
+
+    if req.algorithm == "manacher":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="manacher requires 'text' — a single word, e.g. BABAD."
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{manacher.MAX_LEN}}}", cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Give one word of letters or digits, 1-{manacher.MAX_LEN} "
+                 f"characters — e.g. FORGEEKSSKEEGFOR."
+        )
+      return manacher.trace(cleaned)
+
+    if req.algorithm == "rabin_karp":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="rabin_karp requires 'text' — the haystack and the pattern "
+                 "separated by a comma, e.g. ABRACADABRA,ABRA"
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(
+          rf"[A-Z0-9]{{1,{rabin_karp.MAX_TEXT}}},[A-Z0-9]{{1,{rabin_karp.MAX_PATTERN}}}",
+          cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Provide text (1-{rabin_karp.MAX_TEXT} chars) and a pattern "
+                 f"(1-{rabin_karp.MAX_PATTERN} chars), comma-separated — "
+                 f"e.g. ABRACADABRA,ABRA"
+        )
+      hay, needle = cleaned.split(",")
+      if len(needle) > len(hay):
+        raise HTTPException(
+          status_code=400,
+          detail="The pattern cannot be longer than the text."
+        )
+      return rabin_karp.trace(hay, needle)
+
     if req.algorithm == "house_robber":
       arr = _validated_array(req.array, house_robber.MAX_HOUSES, "house_robber")
       if any(v != int(v) or v < 0 for v in arr):
@@ -776,6 +834,7 @@ def run_trace(request: Request, req: TraceRequest):
                 "hash_table", "bst_delete", "heap_extract",
                 "merge_intervals", "coin_change", "flood_fill",
                 "house_robber", "lis", "subset_sum",
+                "z_function", "rabin_karp", "manacher",
                 "balanced_brackets", "fibonacci_dp"])
     raise HTTPException(
       status_code=400,

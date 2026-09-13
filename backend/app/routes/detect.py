@@ -67,6 +67,9 @@ SIGNATURES = {
     "house_robber": ["house_robber", "house robber", "rob houses", "adjacent houses", "non-adjacent", "rob(", "maximum loot", "cannot rob two"],
     "lis": ["lis", "longest increasing subsequence", "increasing subsequence", "longest increasing", "length of lis", "patience sorting"],
     "subset_sum": ["subset_sum", "subset sum", "partition equal", "target sum", "can partition", "sum to target", "dp[i][s]", "achievable sum"],
+    "z_function": ["z_function", "z function", "z-function", "z array", "z algorithm", "z-algorithm", "prefix match"],
+    "rabin_karp": ["rabin_karp", "rabin karp", "rabin-karp", "rolling hash", "polynomial hash", "fingerprint", "string hash"],
+    "manacher": ["manacher", "manachers", "longest palindrome", "longest palindromic", "palindromic substring", "palindrome substring"],
 }
 
 REALWORLD_META = {
@@ -700,6 +703,45 @@ REALWORLD_META = {
             "visit": "Marking a sum reachable",
             "start": "Only zero is reachable",
             "done": "The target is proved reachable — or proved impossible."
+        }
+    },
+    "z_function": {
+        "scene": "dna",
+        "title": "Where the Strand Repeats Itself",
+        "hook": "At each position, how much of the strand's own opening sequence starts again right here?",
+        "metaphors": {
+            "node": "base",
+            "edge": "match",
+            "weight": "match length",
+            "visit": "Measuring the prefix match",
+            "start": "The start of the strand",
+            "done": "Every position scored in one linear pass."
+        }
+    },
+    "rabin_karp": {
+        "scene": "dna",
+        "title": "Fingerprint Scan",
+        "hook": "Fingerprint every window of the strand and compare fingerprints — read the bases only when two match.",
+        "metaphors": {
+            "node": "base",
+            "edge": "window",
+            "weight": "hash",
+            "visit": "Rolling the fingerprint forward",
+            "start": "The first window fingerprinted",
+            "done": "Every occurrence located, most windows never read."
+        }
+    },
+    "manacher": {
+        "scene": "dna",
+        "title": "The Longest Mirror Sequence",
+        "hook": "Find the longest stretch that reads the same both ways — reusing earlier mirrors instead of re-checking.",
+        "metaphors": {
+            "node": "base",
+            "edge": "mirror",
+            "weight": "radius",
+            "visit": "Growing a palindrome around a centre",
+            "start": "Every centre a palindrome of one",
+            "done": "The longest palindrome found in linear time."
         }
     }
 }

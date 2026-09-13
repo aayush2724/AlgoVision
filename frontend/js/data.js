@@ -135,6 +135,14 @@ export const ALGORITHMS = [
     hook: "The longest run of ever-rising numbers, skips allowed." },
   { id: "subset_sum",   name: "Subset Sum", category: "DP", emoji: "🎯", complexity: "O(n·target)", input: "number",
     hook: "Can any handful hit the target exactly — without trying all 2ⁿ?" },
+
+  // Batch 12 — string algorithms, reusing the array view.
+  { id: "z_function",   name: "Z-Function", category: "Patterns", emoji: "🧬", complexity: "O(n)", input: "text",
+    hook: "Where does the string's own prefix start again?" },
+  { id: "rabin_karp",   name: "Rabin–Karp (Rolling Hash)", category: "Patterns", emoji: "🔖", complexity: "O(n + m)", input: "text",
+    hook: "Compare cheap fingerprints first, characters only on a match." },
+  { id: "manacher",     name: "Manacher's Longest Palindrome", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "The longest mirror-sequence, found in one linear pass." },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
@@ -154,6 +162,7 @@ export const KEYCAP_LABEL = {
   dsu: 'DSU', merge_intervals: 'IVAL', coin_change: 'COIN',
   connected_components: 'CC', bipartite_check: 'BIP', flood_fill: 'FILL',
   house_robber: 'ROB', lis: 'LIS+', subset_sum: 'SUBS',
+  z_function: 'Z', rabin_karp: 'RK', manacher: 'PALI',
 };
 
 export const GRAPH_ALGORITHMS = ALGORITHMS.filter(a => a.input === "graph");
@@ -540,6 +549,28 @@ export const COMPLEXITY = {
       `${c.cells ?? 0} cell(s) filled, ${c.reachable ?? 0} reachable, the new ` +
       `number used in ${c.uses_item ?? 0}. Each cell reads just two cells above ` +
       `it — pseudo-polynomial in the target, but far cheaper than 2ⁿ subsets.`,
+  },
+  z_function: {
+    rows: [["Time", "O(n)"], ["Space", "O(n)"], ["Naive", "O(n²)"]],
+    reading: (c, s) =>
+      `${c.comparisons ?? 0} character comparison(s), with ${c.box_reuses ?? 0} ` +
+      `position(s) copying a mirror inside the Z-box instead of re-comparing. ` +
+      `That reuse is what keeps the total comparisons linear in the length.`,
+  },
+  rabin_karp: {
+    rows: [["Average", "O(n + m)"], ["Worst", "O(n·m)"], ["Space", "O(1)"]],
+    reading: (c, s) =>
+      `${c.hashes ?? 0} rolling hash(es), ${c.hash_hits ?? 0} fingerprint hit(s), ` +
+      `${c.char_checks ?? 0} character check(s) (${c.collisions ?? 0} collision(s)). ` +
+      `Most windows were dismissed on their fingerprint alone — that is the win, ` +
+      `and the collisions are why a character check can never be skipped.`,
+  },
+  manacher: {
+    rows: [["Time", "O(n)"], ["Space", "O(n)"], ["Naive", "O(n²)"]],
+    reading: (c, s) =>
+      `${c.centres ?? 0} centre(s), ${c.expansions ?? 0} expansion step(s), and ` +
+      `${c.mirror_reuses ?? 0} centre(s) that copied a mirror's radius first. ` +
+      `The mirror is why the total expansion work stays linear instead of n².`,
   },
 };
 

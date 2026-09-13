@@ -222,6 +222,7 @@ const VIEW_FOR = {
   dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
   house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
+  z_function: 'array', rabin_karp: 'array', manacher: 'array',
 };
 
 function resolveAlgoId(raw) {
@@ -846,6 +847,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: 'ABABDABACDABABCABAB, ABABCABAB',
       hint: 'Text and pattern, comma-separated. Watch the failure table get built first — that is the real algorithm.',
     },
+    z_function: {
+      array: 'AABXAAB',
+      hint: 'One word, up to 22 letters/digits. Z[i] is how much of the prefix restarts at i — the Z-box copies mirrors for free.',
+    },
+    rabin_karp: {
+      array: 'ABRACADABRA, ABRA',
+      hint: 'Text and pattern, comma-separated. Windows are screened by a rolling fingerprint; characters are read only on a hash hit.',
+    },
+    manacher: {
+      array: 'FORGEEKSSKEEGFOR',
+      hint: 'One word, up to 18 letters/digits. The longest palindrome grows around each centre, reusing earlier mirrors.',
+    },
     segment_tree: {
       array: '3, 1, 4, 1, 5, 9, 2, 6', target: '',
       hint: 'Up to 8 values. Optionally set a query range as lo:hi in the range box — blank sums everything.',
@@ -998,6 +1011,27 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'The pattern cannot be longer than the text.' };
       }
       return { text: raw, chars: hay.split('') };
+    }
+
+    if (algoId === 'rabin_karp') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{1,24},[A-Z0-9]{1,12}$/.test(raw)) {
+        return { error: 'Text then pattern, comma-separated — e.g. ABRACADABRA, ABRA' };
+      }
+      const [hay, needle] = raw.split(',');
+      if (needle.length > hay.length) {
+        return { error: 'The pattern cannot be longer than the text.' };
+      }
+      return { text: raw, chars: hay.split('') };
+    }
+
+    if (algoId === 'z_function' || algoId === 'manacher') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      const max = algoId === 'manacher' ? 18 : 22;
+      if (!new RegExp(`^[A-Z0-9]{1,${max}}$`).test(raw)) {
+        return { error: `One word of letters or digits, 1–${max} characters.` };
+      }
+      return { text: raw, chars: raw.split('') };
     }
 
     if (algoId === 'hash_table') {
@@ -2857,7 +2891,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
-        } else if (algoId === 'kmp_search') {
+        } else if (algoId === 'kmp_search' || algoId === 'rabin_karp'
+                   || algoId === 'z_function' || algoId === 'manacher') {
           renderArrayView(parsed.chars);
           res = isOffline
             ? localArrayTrace(parsed)

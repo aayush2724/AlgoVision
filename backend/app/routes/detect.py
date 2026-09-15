@@ -52,6 +52,11 @@ SIGNATURES = {
     "huffman": ["huffman", "huffman coding", "prefix code", "prefix-free", "greedy encoding", "compression", "variable length code", "heapq.heappush"],
     "activity_selection": ["activity_selection", "activity selection", "n meetings", "n-meetings", "meetings in one room", "maximum meetings", "interval scheduling", "sort by finish", "earliest finish"],
     "fractional_knapsack": ["fractional_knapsack", "fractional knapsack", "value per weight", "value/weight", "greedy knapsack", "take a fraction", "ratio sort"],
+    "count_set_bits": ["count_set_bits", "count set bits", "hamming weight", "popcount", "number of 1 bits", "brian kernighan", "n & (n-1)"],
+    "power_of_two": ["power_of_two", "power of two", "power of 2", "is power of two", "single set bit"],
+    "single_number": ["single_number", "single number", "appears once", "xor all", "unpaired number", "x ^ x"],
+    "min_bit_flips": ["min_bit_flips", "minimum bit flips", "bit flips to convert", "hamming distance", "differing bits"],
+    "power_set": ["power_set", "power set", "all subsets", "subsets bitmask", "generate subsets", "1 << n"],
     "min_heap": ["min_heap", "min heap", "min-heap", "priority queue", "sift up", "bubble up", "heapify min"],
     "kth_largest": ["kth_largest", "kth largest", "k-th largest", "top k largest", "size-k min-heap"],
     "kth_smallest": ["kth_smallest", "kth smallest", "k-th smallest", "size-k max-heap"],
@@ -496,6 +501,46 @@ REALWORLD_META = {
             "start": "The empty prefix",
             "done": "Every word stored, prefixes shared."
         }
+    },
+    "count_set_bits": {
+        "scene": "vault",
+        "title": "Bit Counter",
+        "hook": "You are counting the 1s in a binary number, clearing the lowest one each step.",
+        "metaphors": {"node": "bit", "edge": "position", "weight": "value",
+                      "visit": "Clearing the lowest set bit", "start": "The full number",
+                      "done": "All set bits counted."}
+    },
+    "power_of_two": {
+        "scene": "vault",
+        "title": "Power-of-Two Detector",
+        "hook": "You are checking whether a number is a clean power of two — a single 1 in binary.",
+        "metaphors": {"node": "bit", "edge": "position", "weight": "value",
+                      "visit": "Testing n & (n-1)", "start": "The number in binary",
+                      "done": "One set bit means yes."}
+    },
+    "single_number": {
+        "scene": "vault",
+        "title": "The Lone Number",
+        "hook": "You are XOR-folding a list so every duplicate cancels and the unique value remains.",
+        "metaphors": {"node": "bit", "edge": "position", "weight": "parity",
+                      "visit": "XOR-ing in the next value", "start": "Zero",
+                      "done": "The survivor is the single number."}
+    },
+    "min_bit_flips": {
+        "scene": "vault",
+        "title": "Bit-Flip Distance",
+        "hook": "You are finding how many bits must flip to turn A into B — the differing positions.",
+        "metaphors": {"node": "bit", "edge": "position", "weight": "difference",
+                      "visit": "Marking a differing bit", "start": "A and B",
+                      "done": "Set bits of A XOR B = flips needed."}
+    },
+    "power_set": {
+        "scene": "vault",
+        "title": "Subset Enumerator",
+        "hook": "You are listing every subset by treating each as a binary on/off mask.",
+        "metaphors": {"node": "element", "edge": "mask bit", "weight": "chosen",
+                      "visit": "Reading a mask", "start": "The empty set",
+                      "done": "All 2ⁿ subsets listed."}
     },
     "min_heap": {
         "scene": "scheduler",

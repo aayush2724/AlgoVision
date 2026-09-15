@@ -143,11 +143,19 @@ Heaps (tree view, reuse heap_insert.serialize): `min_heap` (11-19), `kth_largest
 "numbers | k"; windows take a word or "seq | k". 10 tests vs reference impls;
 full suite 1370 passing. A2Z now 81 rows linked.
 
-  Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window →
-  [next] Bit Manipulation (Step 8 — needs a NEW bit/binary renderer) → Binary
-  Trees (13) → DP remainder (16) → Arrays/Binary Search/Recursion/Stack
-  (3,4,7,9) → Linked List DLL (6) + Tries (17). Floyd-Warshall etc. blocked
-  until the graph-model change.
+**Batch 22 (new tracers) — Bit Manipulation (Step 8).**
+No new renderer needed after all — a binary number renders naturally as a row of
+0/1 cells on the array view (set bits green, active bit highlighted).
+`count_set_bits` (8-22, Kernighan), `power_of_two` (8-21), `single_number` (8-26,
+XOR fold), `min_bit_flips` (8-25, popcount of A^B), `power_set` (8-27, bitmask
+subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
+"4,1,2,1,2", "10 | 7", "A,B,C"). 10 tests vs Python's own bit ops; full suite
+1380 passing. A2Z now 86 rows linked; category = Math.
+
+  Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
+  Bit Manipulation → [next] Binary Trees (13) → DP remainder (16) →
+  Arrays/Binary Search/Recursion/Stack (3,4,7,9) → Linked List DLL (6) +
+  Tries (17). Floyd-Warshall etc. blocked until the graph-model change.
 
 **UI redesign DONE.** The palette and the 3D keyboard hero are unchanged;
 everything else moved onto a shared component layer (`.page-head`, `.toolbar`,

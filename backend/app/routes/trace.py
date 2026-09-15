@@ -15,6 +15,7 @@ from app.tracers import (
     jump_game, jump_game_ii, candy, lemonade_change, assign_cookies,
     min_platforms, min_heap, kth_largest, kth_smallest,
     longest_substring_no_repeat, max_consecutive_ones_iii, longest_k_distinct,
+    count_set_bits, power_of_two, single_number, min_bit_flips, power_set,
     insertion_sort, kadanes,
     kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
     linked_list_reverse, manacher, matrix_chain, merge_intervals, merge_sort,
@@ -126,6 +127,11 @@ def algorithms():
             {"id": "longest_substring_no_repeat", "name": "Longest Substring w/o Repeats", "input": "text"},
             {"id": "max_consecutive_ones_iii", "name": "Max Consecutive Ones III", "input": "text"},
             {"id": "longest_k_distinct", "name": "Longest Substring, K Distinct", "input": "text"},
+            {"id": "count_set_bits", "name": "Count Set Bits (Kernighan)", "input": "text"},
+            {"id": "power_of_two",  "name": "Power of Two — Bit Test",    "input": "text"},
+            {"id": "single_number", "name": "Single Number (XOR)",        "input": "text"},
+            {"id": "min_bit_flips", "name": "Minimum Bit Flips",          "input": "text"},
+            {"id": "power_set",     "name": "Power Set (Bitmask)",        "input": "text"},
             {"id": "n_queens",      "name": "N-Queens (Backtracking)",   "input": "number"},
             {"id": "unique_paths",  "name": "Unique Paths (Grid DP)",    "input": "number"},
             {"id": "sieve",         "name": "Sieve of Eratosthenes",     "input": "number"},
@@ -557,6 +563,56 @@ def run_trace(request: Request, req: TraceRequest):
       if not _re.fullmatch(r"\d+", k_raw) or int(k_raw) < 1:
         raise HTTPException(status_code=400, detail="k must be a whole number ≥ 1.")
       return longest_k_distinct.trace(cleaned, int(k_raw))
+
+    if req.algorithm in ("count_set_bits", "power_of_two"):
+      if req.text is None or not _re.fullmatch(r"\d+", req.text.strip()):
+        raise HTTPException(status_code=400,
+          detail=f"{req.algorithm} requires 'text' — a whole number, e.g. 13.")
+      n = int(req.text.strip())
+      if n > count_set_bits.MAX_N:
+        raise HTTPException(status_code=400,
+          detail=f"Keep the number 0..{count_set_bits.MAX_N} (fits 12 bits).")
+      return (count_set_bits if req.algorithm == "count_set_bits"
+              else power_of_two).trace(n)
+
+    if req.algorithm == "single_number":
+      if req.text is None:
+        raise HTTPException(status_code=400,
+          detail="single_number requires 'text' — comma-separated numbers, e.g. 4,1,2,1,2.")
+      parts = [p for p in req.text.replace(" ", "").split(",") if p]
+      if not parts or not all(_re.fullmatch(r"\d+", p) for p in parts):
+        raise HTTPException(status_code=400, detail="Give comma-separated whole numbers.")
+      nums = [int(p) for p in parts]
+      if len(nums) > 15 or any(v > single_number.MAX_N for v in nums):
+        raise HTTPException(status_code=400,
+          detail=f"Up to 15 numbers, each 0..{single_number.MAX_N}.")
+      return single_number.trace(nums)
+
+    if req.algorithm == "min_bit_flips":
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(status_code=400,
+          detail="min_bit_flips requires 'text' — two numbers as 'a | b', e.g. 10 | 7.")
+      a_raw, b_raw = req.text.replace(" ", "").split("|", 1)
+      if not (_re.fullmatch(r"\d+", a_raw) and _re.fullmatch(r"\d+", b_raw)):
+        raise HTTPException(status_code=400, detail="Both A and B must be whole numbers.")
+      a, b = int(a_raw), int(b_raw)
+      if a > min_bit_flips.MAX_N or b > min_bit_flips.MAX_N:
+        raise HTTPException(status_code=400,
+          detail=f"Keep A and B 0..{min_bit_flips.MAX_N}.")
+      return min_bit_flips.trace(a, b)
+
+    if req.algorithm == "power_set":
+      if req.text is None:
+        raise HTTPException(status_code=400,
+          detail="power_set requires 'text' — 2-5 elements, e.g. A,B,C.")
+      raw = req.text.replace(" ", "").upper()
+      els = [p for p in raw.split(",") if p] if "," in raw else list(raw)
+      if not (1 <= len(els) <= power_set.MAX_ELEMENTS):
+        raise HTTPException(status_code=400,
+          detail=f"Give 1-{power_set.MAX_ELEMENTS} elements, e.g. A,B,C.")
+      if any(not _re.fullmatch(r"[A-Z0-9]", e) for e in els):
+        raise HTTPException(status_code=400, detail="Elements must be single letters or digits.")
+      return power_set.trace(els)
 
     if req.algorithm == "hash_table":
       if req.text is None:
@@ -1269,7 +1325,9 @@ def run_trace(request: Request, req: TraceRequest):
                 "jump_game", "jump_game_ii", "candy", "lemonade_change",
                 "assign_cookies", "min_platforms", "min_heap", "kth_largest",
                 "kth_smallest", "longest_substring_no_repeat",
-                "max_consecutive_ones_iii", "longest_k_distinct"])
+                "max_consecutive_ones_iii", "longest_k_distinct",
+                "count_set_bits", "power_of_two", "single_number",
+                "min_bit_flips", "power_set"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

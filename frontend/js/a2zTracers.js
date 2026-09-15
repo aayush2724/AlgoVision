@@ -156,7 +156,12 @@ export const A2Z_TRACER = {
   // ── Step 5 — Strings ──
   "5-14":  "manacher",               // Longest Palindromic Substring
 
-  // ── Step 8 — Maths ──
+  // ── Step 8 — Bit Manipulation & Maths ──
+  "8-21":  "power_of_two",           // Check if a Number is Power of 2
+  "8-22":  "count_set_bits",         // Count the Number of Set Bits
+  "8-25":  "min_bit_flips",          // Minimum Bit Flips to Convert Number
+  "8-26":  "single_number",          // Single Number - I
+  "8-27":  "power_set",              // Power Set (Bit Manipulation)
   "8-32":  "sieve",                  // Count primes in range (Sieve of Eratosthenes)
 
   // ── Step 14 — Binary Search Trees ──

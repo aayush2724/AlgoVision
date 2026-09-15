@@ -226,6 +226,8 @@ const VIEW_FOR = {
   min_heap: 'tree', kth_largest: 'tree', kth_smallest: 'tree',
   longest_substring_no_repeat: 'array', max_consecutive_ones_iii: 'array',
   longest_k_distinct: 'array',
+  count_set_bits: 'array', power_of_two: 'array', single_number: 'array',
+  min_bit_flips: 'array', power_set: 'array',
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
   house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
   z_function: 'array', rabin_karp: 'array', manacher: 'array',
@@ -1029,6 +1031,26 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: 'ECEBA | 2',
       hint: 'word | k. Longest window with at most k distinct characters — Fruit Into Baskets is k=2.',
     },
+    count_set_bits: {
+      array: '13',
+      hint: 'A number 0–4095. Kernighan clears the lowest set bit each step — the row is its 12-bit binary.',
+    },
+    power_of_two: {
+      array: '16',
+      hint: 'A number 0–4095. A power of two has exactly one set bit — try 18 to see it fail.',
+    },
+    single_number: {
+      array: '4, 1, 2, 1, 2',
+      hint: 'Numbers where every value appears twice except one. The row is the running XOR in binary.',
+    },
+    min_bit_flips: {
+      array: '10 | 7',
+      hint: 'a | b. The set bits of a XOR b are exactly the flips needed to turn a into b.',
+    },
+    power_set: {
+      array: 'A, B, C',
+      hint: '2–5 elements. Each subset is a bitmask 0…2ⁿ-1; a lit column means that element is chosen.',
+    },
     coin_change: {
       array: '1, 3, 4', target: '6',
       hint: 'Coins then an amount (0–12). Try 1,3,4 for 6 — greedy says 3 coins, the table finds 2.',
@@ -1381,6 +1403,39 @@ export function mountEngine(view, algo = 'dijkstra') {
       const k = Number((kr || '').trim());
       if (!Number.isInteger(k) || k < 1) return { error: 'k must be a whole number ≥ 1.' };
       return { text: `${cleaned}|${k}`, chars: cleaned.split('') };
+    }
+
+    if (algoId === 'count_set_bits' || algoId === 'power_of_two') {
+      const raw = (arrayInput?.value || '').trim();
+      if (!/^\d+$/.test(raw) || Number(raw) > 4095) {
+        return { error: 'A whole number 0–4095.' };
+      }
+      return { text: raw, chars: Array(12).fill('0') };
+    }
+
+    if (algoId === 'single_number') {
+      const parts = (arrayInput?.value || '').replace(/\s+/g, '').split(',').filter(Boolean);
+      if (!parts.length || parts.some(p => !/^\d+$/.test(p) || Number(p) > 4095)) {
+        return { error: 'Comma-separated whole numbers 0–4095 — e.g. 4,1,2,1,2.' };
+      }
+      if (parts.length > 15) return { error: 'Up to 15 numbers.' };
+      return { text: parts.join(','), chars: Array(12).fill('0') };
+    }
+
+    if (algoId === 'min_bit_flips') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!/^\d+\|\d+$/.test(raw)) return { error: 'Two numbers as "a | b" — e.g. 10 | 7.' };
+      const [a, b] = raw.split('|').map(Number);
+      if (a > 4095 || b > 4095) return { error: 'Keep A and B 0–4095.' };
+      return { text: raw, chars: Array(12).fill('0') };
+    }
+
+    if (algoId === 'power_set') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      const els = raw.includes(',') ? raw.split(',').filter(Boolean) : raw.split('');
+      if (els.length < 1 || els.length > 5) return { error: 'Give 1–5 elements — e.g. A,B,C.' };
+      if (els.some(e => !/^[A-Z0-9]$/.test(e))) return { error: 'Elements are single letters or digits.' };
+      return { text: els.join(','), chars: Array(els.length).fill('0') };
     }
 
     if (algoId === 'coin_change') {
@@ -3280,7 +3335,10 @@ export function mountEngine(view, algo = 'dijkstra') {
             : await api.postTrace(algoId, { text: parsed.text });
         } else if (algoId === 'longest_substring_no_repeat'
                    || algoId === 'max_consecutive_ones_iii'
-                   || algoId === 'longest_k_distinct') {
+                   || algoId === 'longest_k_distinct'
+                   || algoId === 'count_set_bits' || algoId === 'power_of_two'
+                   || algoId === 'single_number' || algoId === 'min_bit_flips'
+                   || algoId === 'power_set') {
           renderArrayView(parsed.chars);
           res = isOffline
             ? localArrayTrace(parsed)

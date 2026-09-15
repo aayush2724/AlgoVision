@@ -215,11 +215,12 @@ const VIEW_FOR = {
   topological_sort: 'graph',
   counting_sort: 'array', prefix_sums: 'array', next_greater_element: 'array',
   edit_distance: 'grid', floyd_cycle: 'list',
-  tree_traversal: 'tree', trie_insert: 'tree',
+  tree_traversal: 'tree', trie_insert: 'tree', huffman: 'tree',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
   dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
+  activity_selection: 'array',
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
   house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
   z_function: 'array', rabin_karp: 'array', manacher: 'array',
@@ -824,6 +825,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: 'CAT, CAR, DOG',
       hint: 'Up to 5 words, letters only. Words sharing a prefix reuse the same path — that is the whole idea.',
     },
+    huffman: {
+      array: 'ABRACADABRA',
+      hint: 'One word, letters/digits, 2–24 chars, at least two distinct. The two rarest nodes merge each step — rare letters sink deep and get the longest codes.',
+    },
     n_queens: {
       array: '', target: '6',
       hint: 'Board size 4–6. Watch queens get placed and then taken back off — that undo is backtracking.',
@@ -955,6 +960,10 @@ export function mountEngine(view, algo = 'dijkstra') {
     merge_intervals: {
       array: '1-3, 2-6, 8-10, 15-18',
       hint: 'Up to 10 start-end pairs. Try them out of order — the sort is what makes one pass enough.',
+    },
+    activity_selection: {
+      array: '1-2, 3-4, 0-6, 5-7, 8-9, 5-9',
+      hint: 'Up to 10 meetings as start-end pairs. Sorted by finish time — chosen meetings light up green, clashes are skipped.',
     },
     coin_change: {
       array: '1, 3, 4', target: '6',
@@ -1144,6 +1153,17 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { text: raw, chars: raw.split('') };
     }
 
+    if (algoId === 'huffman') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{2,24}$/.test(raw)) {
+        return { error: 'One word of letters or digits, 2–24 characters — e.g. ABRACADABRA.' };
+      }
+      if (new Set(raw.split('')).size < 2) {
+        return { error: 'Use at least two distinct characters — a tree needs something to merge.' };
+      }
+      return { text: raw, chars: raw.split('') };
+    }
+
     if (algoId === 'hash_table') {
       const raw = (arrayInput?.value || '').toUpperCase();
       const [head, look] = raw.split('|');
@@ -1157,18 +1177,19 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { text: keys.join(',') + (lookup ? ` | ${lookup}` : '') };
     }
 
-    if (algoId === 'merge_intervals') {
+    if (algoId === 'merge_intervals' || algoId === 'activity_selection') {
+      const noun = algoId === 'activity_selection' ? 'meetings' : 'intervals';
       const raw = (arrayInput?.value || '').replace(/\s+/g, '');
       const parts = raw.split(',').filter(Boolean);
-      if (!parts.length) return { error: 'Type intervals — e.g. 1-3, 2-6, 8-10' };
-      if (parts.length > 10) return { error: 'Max 10 intervals.' };
+      if (!parts.length) return { error: `Type ${noun} — e.g. 1-3, 2-6, 8-10` };
+      if (parts.length > 10) return { error: `Max 10 ${noun}.` };
       for (const p of parts) {
         if (!/^\d+-\d+$/.test(p)) {
           return { error: `Could not read "${p}" — use start-end pairs like 2-6.` };
         }
         const [a, b] = p.split('-').map(Number);
-        if (a > b) return { error: `Interval "${p}" ends before it starts.` };
-        if (b > 100) return { error: 'Keep interval bounds between 0 and 100.' };
+        if (a > b) return { error: `"${p}" ends before it starts.` };
+        if (b > 100) return { error: 'Keep bounds between 0 and 100.' };
       }
       return { text: parts.join(','), chars: parts };
     }
@@ -3050,7 +3071,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
-        } else if (algoId === 'merge_intervals') {
+        } else if (algoId === 'merge_intervals' || algoId === 'activity_selection') {
           renderArrayView(parsed.chars);
           res = isOffline
             ? localArrayTrace(parsed)
@@ -3066,7 +3087,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
-        } else if (algoId === 'trie_insert') {
+        } else if (algoId === 'trie_insert' || algoId === 'huffman') {
           renderTreeView();
           res = isOffline
             ? localArrayTrace(parsed)

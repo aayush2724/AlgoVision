@@ -1,5 +1,6 @@
 import * as DATA from './data.js';
 import * as P from './progress.js';
+import { A2Z_TRACER } from './a2zTracers.js';
 
 function clientDetect(text) {
   const t = text.toLowerCase();
@@ -973,6 +974,29 @@ export const PAGES = {
               if (counter) counter.textContent = '—';
               const narr = view.querySelector('#scene-narration');
               if (narr) narr.textContent = prob.hook || '';
+              return;
+            }
+
+            // Rows wired in a2zTracers.js play the REAL step-through trace on
+            // the student's own input (the same engine the Experience page
+            // runs), not the metaphor animation. The mini engine brings its
+            // own transport, so the sheet's step controls step aside.
+            const realAlgo = A2Z_TRACER[prob.id];
+            if (realAlgo) {
+              view.querySelector('#scene-step-back')?.setAttribute('disabled', '');
+              view.querySelector('#scene-step-fwd')?.setAttribute('disabled', '');
+              const counter = view.querySelector('#scene-step-counter');
+              if (counter) counter.textContent = 'live';
+              const narr = view.querySelector('#scene-narration');
+              if (narr) narr.textContent = 'Real trace — edit the input and run it on your own values.';
+              import('./miniEngine.js').then(({ mountMiniEngine }) => {
+                // Bail if the user has already navigated to another problem.
+                if (!document.body.contains(vizInner)) return;
+                const ctrl = mountMiniEngine(vizInner, { id: realAlgo }, () => {});
+                // Nothing to close back to inside the sheet — drop the X.
+                vizInner.querySelector('.mini-close')?.remove();
+                vizInner._vizDispose = ctrl.dispose;
+              }).catch(e => console.error('Real-trace mount failed:', e));
               return;
             }
 

@@ -4,12 +4,13 @@ from pydantic import BaseModel, Field
 import re as _re
 
 from app.tracers import (
+    activity_selection,
     anagram, balanced_brackets, bellman_ford, bfs, binary_search,
     bipartite_check, bst_delete, bst_insert, bst_search, bubble_sort,
     coin_change, connected_components, counting_sort, dfs, dijkstra, dsu,
     edit_distance, fast_exponentiation, gcd_euclid, prime_factorisation,
     fenwick_tree, fibonacci_dp, find_middle, flood_fill, floyd_cycle,
-    hash_table, heap_extract, heap_insert, heap_sort, house_robber,
+    hash_table, heap_extract, heap_insert, heap_sort, house_robber, huffman,
     insertion_sort, kadanes,
     kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
     linked_list_reverse, manacher, matrix_chain, merge_intervals, merge_sort,
@@ -105,6 +106,8 @@ def algorithms():
             {"id": "floyd_cycle",   "name": "Cycle Detection (Floyd's Tortoise & Hare)", "input": "array"},
             {"id": "tree_traversal", "name": "Tree Traversals (In/Pre/Post-order)", "input": "array"},
             {"id": "trie_insert",   "name": "Trie — Build a Prefix Tree", "input": "text"},
+            {"id": "huffman",       "name": "Huffman Coding (Greedy)",   "input": "text"},
+            {"id": "activity_selection", "name": "Activity Selection (Greedy)", "input": "text"},
             {"id": "n_queens",      "name": "N-Queens (Backtracking)",   "input": "number"},
             {"id": "unique_paths",  "name": "Unique Paths (Grid DP)",    "input": "number"},
             {"id": "sieve",         "name": "Sieve of Eratosthenes",     "input": "number"},
@@ -357,6 +360,21 @@ def run_trace(request: Request, req: TraceRequest):
         )
       intervals = _parse_intervals(req.text)
       return merge_intervals.trace(intervals)
+
+    if req.algorithm == "activity_selection":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="activity_selection requires 'text' — meetings as start-end "
+                 "pairs, e.g. 1-3, 2-6, 8-10, 15-18"
+        )
+      intervals = _parse_intervals(req.text)
+      if not intervals:
+        raise HTTPException(
+          status_code=400,
+          detail="Give at least one meeting — e.g. 1-3, 2-6, 8-10."
+        )
+      return activity_selection.trace(intervals)
 
     if req.algorithm == "hash_table":
       if req.text is None:
@@ -890,6 +908,26 @@ def run_trace(request: Request, req: TraceRequest):
         )
       return z_function.trace(cleaned)
 
+    if req.algorithm == "huffman":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="huffman requires 'text' — a word to encode, e.g. ABRACADABRA."
+        )
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{2,{huffman.MAX_LEN}}}", cleaned):
+        raise HTTPException(
+          status_code=400,
+          detail=f"Give a word of letters or digits, 2-{huffman.MAX_LEN} "
+                 f"characters — e.g. ABRACADABRA."
+        )
+      if len(set(cleaned)) < 2:
+        raise HTTPException(
+          status_code=400,
+          detail="huffman needs at least two distinct characters to build a tree."
+        )
+      return huffman.trace(cleaned)
+
     if req.algorithm == "manacher":
       if req.text is None:
         raise HTTPException(
@@ -1044,7 +1082,8 @@ def run_trace(request: Request, req: TraceRequest):
                 "heap_sort", "find_middle", "merge_two_sorted_lists",
                 "anagram", "gcd_euclid", "fast_exponentiation",
                 "prime_factorisation",
-                "balanced_brackets", "fibonacci_dp"])
+                "balanced_brackets", "fibonacci_dp", "huffman",
+                "activity_selection"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

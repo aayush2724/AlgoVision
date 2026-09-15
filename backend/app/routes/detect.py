@@ -49,6 +49,8 @@ SIGNATURES = {
     "floyd_cycle": ["floyd_cycle", "floyd", "tortoise", "hare", "cycle detect", "detect cycle", "slow fast", "linked list cycle", "has_cycle"],
     "tree_traversal": ["tree_traversal", "inorder", "preorder", "postorder", "in-order", "pre-order", "post-order", "traversal", "traverse tree"],
     "trie_insert": ["trie_insert", "trie", "prefix tree", "autocomplete", "children[", "startswith", "is_end"],
+    "huffman": ["huffman", "huffman coding", "prefix code", "prefix-free", "greedy encoding", "compression", "variable length code", "heapq.heappush"],
+    "activity_selection": ["activity_selection", "activity selection", "n meetings", "n-meetings", "meetings in one room", "maximum meetings", "interval scheduling", "sort by finish", "earliest finish"],
     "n_queens": ["n_queens", "n-queens", "queens", "backtracking", "chessboard", "is_safe", "place queen"],
     "unique_paths": ["unique_paths", "unique paths", "grid path", "robot grid", "count paths", "obstacle grid"],
     "sieve": ["sieve", "eratosthenes", "primes", "is_prime", "prime sieve", "composite"],
@@ -479,6 +481,32 @@ REALWORLD_META = {
             "visit": "Following a letter",
             "start": "The empty prefix",
             "done": "Every word stored, prefixes shared."
+        }
+    },
+    "activity_selection": {
+        "scene": "scheduler",
+        "title": "Meeting Room Scheduler",
+        "hook": "You are booking one meeting room to fit as many meetings as possible in a day.",
+        "metaphors": {
+            "node": "meeting",
+            "edge": "overlap",
+            "weight": "finish time",
+            "visit": "Considering a meeting",
+            "start": "An empty calendar",
+            "done": "The most meetings that fit in one room."
+        }
+    },
+    "huffman": {
+        "scene": "files",
+        "title": "File Compressor (ZIP)",
+        "hook": "You are a compressor giving the commonest characters the shortest codes so the packed file is as small as possible.",
+        "metaphors": {
+            "node": "symbol",
+            "edge": "bit (0 = left, 1 = right)",
+            "weight": "frequency",
+            "visit": "Merging the two rarest",
+            "start": "Every character on its own",
+            "done": "One tree — every character has a prefix-free code."
         }
     },
     "n_queens": {

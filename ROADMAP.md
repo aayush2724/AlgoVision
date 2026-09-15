@@ -38,6 +38,71 @@ which was scraped from takeuforward.org. Do not hand-edit it.
   Still to do: re-scrape step 3 and the ten short sections to replace the
   fallback titles.
 
+**A2Z → real traces STARTED (link mechanism + batch 1).**
+The long-standing goal — "every problem entry should eventually point at a
+real tracer, not a looping animation" — now has a mechanism. A2Z rows are
+linked to catalog tracers in a side-table, `frontend/js/a2zTracers.js`
+(`A2Z problem id → ALGORITHMS id`), which keeps the GENERATED `a2z.js`
+untouched and lets the map grow one honest batch at a time. In the problem
+viewer (`pages.js renderProblem`), a linked row mounts the real
+`mountMiniEngine` — the same `mountEngine` the Experience page runs, playing
+a genuine step-through trace on the student's own input — instead of the
+`vizScenes.js` metaphor animation. Unlinked rows still fall back to the
+animation.
+
+  Batch 1: 22 rows across every view family (sorts, binary search, Kadane's,
+  anagram, linked-list reverse/middle/cycle, N-Queens, prime factorisation,
+  next-greater-element, balanced brackets, BST search, topological sort, LCS,
+  edit distance). Rule: only link when the existing tracer tells the SAME
+  story the sheet asks for (e.g. singly-linked reverse ≠ doubly-linked).
+
+  Batch 2: +33 rows (55 linked total) across graphs (DFS, flood fill,
+  connected components/provinces, bipartite, Dijkstra, Bellman-Ford, Prim's,
+  disjoint set), binary-tree traversals, DP (house robber, unique paths I/II,
+  subset sum, min coins, LIS, matrix chain), strings (KMP, Rabin-Karp), fast
+  exponentiation, sliding-window maximum, merge intervals, and trie insert.
+  Same honesty rule held the line: grid "islands" ≠ single-region flood_fill,
+  fractional knapsack (greedy) ≠ knapsack_01 (0/1 DP), min-heap ≠ our max-heap.
+
+  Batch 3: +9 rows (64 linked total) — Fibonacci/Climbing Stairs (fibonacci_dp),
+  Basic Hashing (hash_table), Longest Palindromic Substring (manacher), Count
+  Primes (sieve), BST insert/delete, unit-weight shortest path (bfs), MST weight
+  (kruskals_mst). Held the honesty line again: Step 10 variable-window string
+  problems are NOT our fixed-window sliding_window, prefix-sum subarray-search
+  rows are not our range-query demo, Merge-K is not merge-two, min-heap is not
+  our max-heap.
+
+  Still to do: link the remaining ~290 traceable rows, building the missing
+  tracers as each batch reaches rows that need them.
+
+**Batch 17 (new tracer): Huffman Coding — first Greedy algorithm.**
+Fills the empty Greedy family in the Explore catalog (Striver's A2Z has no
+Huffman row, so this is catalog-only, not an A2Z link). Full recipe shipped:
+`backend/app/tracers/huffman.py` (greedy min-heap merge, emits the shared tree
+envelope), route dispatch + input validation (a word, 2–24 chars, ≥2 distinct),
+`detect.py` metaphor (File Compressor / ZIP, scene `files`), `data.js` catalog
+entry (category Patterns — ALGO_CATEGORIES has no Greedy bucket yet),
+`engine.js` (VIEW_FOR `huffman:'tree'`, input parsing, run dispatch — reuses
+the existing tree renderer with zero renderer changes, since Huffman's forest
+fits {id,value,depth,x,left,right}). 14 new tests; full suite 1325 passing.
+Verified live: ABRACADABRA → 12 steps, A shallow (code 0), rare letters deep,
+23 vs 33 bits (30% saved), prefix-free.
+
+**Batch 18 (new tracer): Activity Selection / N-meetings — greedy #2.**
+The exchange-argument greedy: sort by finish time, take earliest-finishing
+non-overlapping meetings. `backend/app/tracers/activity_selection.py` emits the
+array view (interval labels), reusing the existing renderer with zero changes —
+chosen meetings paint green via `sorted_ranges`, the candidate via `placed`.
+Route reuses `_parse_intervals` (≤10 meetings). detect metaphor (Meeting Room
+Scheduler, scene `scheduler`), `data.js` entry (Patterns, 📅), engine wiring
+folded into the merge_intervals branches. Linked to A2Z 12-6 (65 rows linked
+total). 11 tests checked against a brute-force optimum; full suite 1336 passing.
+
+  Next greedy tracers (Step 12 rows waiting): fractional knapsack, job
+  sequencing, lemonade change, candy. Add a "Greedy" entry to ALGO_CATEGORIES
+  now that two greedy algos exist (Huffman + Activity Selection) so they group
+  properly instead of sitting under Patterns.
+
 **UI redesign DONE.** The palette and the 3D keyboard hero are unchanged;
 everything else moved onto a shared component layer (`.page-head`, `.toolbar`,
 `.chip`, `.segmented`, `.stage`, `.transport`, `.narration`, `.workbench`,

@@ -28,7 +28,7 @@ const CAP_COLORS = {
 
 function capStyle(algo) {
   if (algo.id === 'dijkstra' || algo.id === 'lcs') return CAP_COLORS.orange;
-  if (algo.category === 'DP' || algo.category === 'Searching') return CAP_COLORS.cream;
+  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return CAP_COLORS.cream;
   if (algo.category === 'Structures') return CAP_COLORS.tan;
   return CAP_COLORS.grey;
 }

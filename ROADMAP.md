@@ -98,10 +98,56 @@ Scheduler, scene `scheduler`), `data.js` entry (Patterns, 📅), engine wiring
 folded into the merge_intervals branches. Linked to A2Z 12-6 (65 rows linked
 total). 11 tests checked against a brute-force optimum; full suite 1336 passing.
 
-  Next greedy tracers (Step 12 rows waiting): fractional knapsack, job
-  sequencing, lemonade change, candy. Add a "Greedy" entry to ALGO_CATEGORIES
-  now that two greedy algos exist (Huffman + Activity Selection) so they group
-  properly instead of sitting under Patterns.
+**Batch 19 (new tracers) + Greedy category — the greedy family is now real.**
+Added a "Greedy" entry to ALGO_CATEGORIES and re-filed Huffman + Activity
+Selection into it (cap colour reuses cap-cream in both pages.js and
+keyboard3d.js). Two new greedy tracers, both on the array view with zero
+renderer changes:
+  - `fractional_knapsack.py` — sort by value/weight, take greedily, split the
+    last item. Text input "w:v, w:v | capacity". A2Z 12-2.
+  - `job_sequencing.py` — richest-first into the latest free slot ≤ deadline;
+    renders the slot timeline (maxDeadline cells). Text input "d:p, d:p".
+    A2Z 12-10.
+Full recipe each: route dispatch + validation, detect metaphor (Market Stall
+Loot / Deadline Job Board), data.js catalog entry, engine wiring folded into
+the interval array-text branches. 13 tests (checked vs brute-force / greedy
+optima); full suite 1349 passing. Verified live: job_sequencing renders slots
+[27,100,15] = £142 from 3 jobs. A2Z now 67 rows linked; Greedy family = 4 algos
+(Huffman, Activity Selection, Fractional Knapsack, Job Sequencing).
+
+**Batch 20 (new tracers) — greedy family filled out (6 more).**
+All on the array view, zero renderer changes:
+  - `jump_game.py` (12-17) — reachability, farthest-reach greedy.
+  - `jump_game_ii.py` (12-8) — fewest jumps, window sweep.
+  - `candy.py` (12-11) — two-pass neighbour rule (cells show candy counts).
+  - `lemonade_change.py` (12-4) — give change largest-note-first.
+  - `assign_cookies.py` (12-1) — two-pointer, "greed | sizes" input.
+  - `min_platforms.py` (12-18) — sweep-line, "arrivals | departures" input.
+Each: route dispatch + validation, detect metaphor, data.js entry (Greedy),
+engine wiring (int-array group shares one parse+dispatch; the two "|"-split
+tracers fold into the interval text branch). 11 tests vs brute-force/reference
+optima; full suite 1360 passing. A2Z now 73 rows linked; Greedy family = 10
+algos.
+
+  Step 12 status: 10/15 rows linked. Deliberately NOT built: Shortest Job First
+  and Valid-Parenthesis-with-wildcards (niche), Insert Interval / Non-overlapping
+  Intervals (interval variants — could reuse merge_intervals/activity_selection
+  later), and LRU (a cache/data-structure, not greedy — belongs in Structures).
+
+**Batch 21 (new tracers) — the two empty steps filled (Heaps + Sliding Window).**
+Heaps (tree view, reuse heap_insert.serialize): `min_heap` (11-19), `kth_largest`
+(11-21, 11-27 stream), `kth_smallest` (11-22). Variable-size sliding windows
+(array view — extended the shared window renderer with the new ids):
+`longest_substring_no_repeat` (10-1), `max_consecutive_ones_iii` (10-2),
+`longest_k_distinct` (10-9, and 10-3 Fruit-into-Baskets = k≤2). Inputs: heaps take
+"numbers | k"; windows take a word or "seq | k". 10 tests vs reference impls;
+full suite 1370 passing. A2Z now 81 rows linked.
+
+  Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window →
+  [next] Bit Manipulation (Step 8 — needs a NEW bit/binary renderer) → Binary
+  Trees (13) → DP remainder (16) → Arrays/Binary Search/Recursion/Stack
+  (3,4,7,9) → Linked List DLL (6) + Tries (17). Floyd-Warshall etc. blocked
+  until the graph-model change.
 
 **UI redesign DONE.** The palette and the 3D keyboard hero are unchanged;
 everything else moved onto a shared component layer (`.page-head`, `.toolbar`,

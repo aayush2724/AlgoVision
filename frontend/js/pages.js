@@ -31,7 +31,7 @@ export const ROUTE_THEME = {
 // colourway as the 3D board. If one changes, change both.
 function capClass(algo) {
   if (algo.id === 'dijkstra' || algo.id === 'lcs') return 'cap-orange';
-  if (algo.category === 'DP' || algo.category === 'Searching') return 'cap-cream';
+  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return 'cap-cream';
   if (algo.category === 'Structures') return 'cap-tan';
   return '';
 }

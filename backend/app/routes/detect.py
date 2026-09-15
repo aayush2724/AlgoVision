@@ -51,6 +51,20 @@ SIGNATURES = {
     "trie_insert": ["trie_insert", "trie", "prefix tree", "autocomplete", "children[", "startswith", "is_end"],
     "huffman": ["huffman", "huffman coding", "prefix code", "prefix-free", "greedy encoding", "compression", "variable length code", "heapq.heappush"],
     "activity_selection": ["activity_selection", "activity selection", "n meetings", "n-meetings", "meetings in one room", "maximum meetings", "interval scheduling", "sort by finish", "earliest finish"],
+    "fractional_knapsack": ["fractional_knapsack", "fractional knapsack", "value per weight", "value/weight", "greedy knapsack", "take a fraction", "ratio sort"],
+    "min_heap": ["min_heap", "min heap", "min-heap", "priority queue", "sift up", "bubble up", "heapify min"],
+    "kth_largest": ["kth_largest", "kth largest", "k-th largest", "top k largest", "size-k min-heap"],
+    "kth_smallest": ["kth_smallest", "kth smallest", "k-th smallest", "size-k max-heap"],
+    "longest_substring_no_repeat": ["longest_substring_no_repeat", "longest substring without repeating", "no repeating characters", "unique window"],
+    "max_consecutive_ones_iii": ["max_consecutive_ones_iii", "max consecutive ones", "flip k zeros", "at most k zeros"],
+    "longest_k_distinct": ["longest_k_distinct", "at most k distinct", "k distinct characters", "fruit into baskets"],
+    "jump_game": ["jump_game", "jump game", "can jump", "reach last index", "farthest reach", "max reach"],
+    "jump_game_ii": ["jump_game_ii", "jump game ii", "jump game 2", "minimum jumps", "min jumps", "fewest jumps"],
+    "candy": ["candy", "candies", "distribute candy", "ratings neighbour", "two pass candy"],
+    "lemonade_change": ["lemonade_change", "lemonade change", "lemonade stand", "give change", "five ten twenty"],
+    "assign_cookies": ["assign_cookies", "assign cookies", "greed factor", "content children", "cookie size"],
+    "min_platforms": ["min_platforms", "minimum platforms", "railway platforms", "arrival departure", "train platform", "overlapping trains"],
+    "job_sequencing": ["job_sequencing", "job sequencing", "deadline", "job scheduling", "maximize profit", "sequence jobs", "profit deadline"],
     "n_queens": ["n_queens", "n-queens", "queens", "backtracking", "chessboard", "is_safe", "place queen"],
     "unique_paths": ["unique_paths", "unique paths", "grid path", "robot grid", "count paths", "obstacle grid"],
     "sieve": ["sieve", "eratosthenes", "primes", "is_prime", "prime sieve", "composite"],
@@ -481,6 +495,128 @@ REALWORLD_META = {
             "visit": "Following a letter",
             "start": "The empty prefix",
             "done": "Every word stored, prefixes shared."
+        }
+    },
+    "min_heap": {
+        "scene": "scheduler",
+        "title": "Priority Queue (Min-First)",
+        "hook": "You are a priority queue that always keeps the smallest item ready at the top.",
+        "metaphors": {"node": "item", "edge": "parent link", "weight": "priority",
+                      "visit": "Bubbling a value up", "start": "An empty heap",
+                      "done": "A valid min-heap — smallest at the root."}
+    },
+    "kth_largest": {
+        "scene": "scheduler",
+        "title": "Top-K Leaderboard",
+        "hook": "You are keeping only the top k scores as results stream in.",
+        "metaphors": {"node": "score", "edge": "parent link", "weight": "value",
+                      "visit": "Comparing against the weakest kept", "start": "An empty shortlist",
+                      "done": "The kth largest sits at the heap root."}
+    },
+    "kth_smallest": {
+        "scene": "scheduler",
+        "title": "Bottom-K Shortlist",
+        "hook": "You are keeping only the smallest k values as results stream in.",
+        "metaphors": {"node": "value", "edge": "parent link", "weight": "value",
+                      "visit": "Comparing against the largest kept", "start": "An empty shortlist",
+                      "done": "The kth smallest sits at the heap root."}
+    },
+    "longest_substring_no_repeat": {
+        "scene": "stocks",
+        "title": "Sliding Window Scanner",
+        "hook": "You are dragging a window across text, growing it while every character stays unique.",
+        "metaphors": {"node": "character", "edge": "window", "weight": "position",
+                      "visit": "Extending the right edge", "start": "An empty window",
+                      "done": "The longest run of unique characters."}
+    },
+    "max_consecutive_ones_iii": {
+        "scene": "stocks",
+        "title": "Flip-k-Zeros Window",
+        "hook": "You are finding the longest run of 1s you can make by flipping up to k zeros.",
+        "metaphors": {"node": "bit", "edge": "window", "weight": "position",
+                      "visit": "Extending the window", "start": "An empty window",
+                      "done": "The widest window with at most k zeros."}
+    },
+    "longest_k_distinct": {
+        "scene": "market",
+        "title": "K-Basket Fruit Picker",
+        "hook": "You are collecting the longest run of items using at most K basket types.",
+        "metaphors": {"node": "item", "edge": "window", "weight": "position",
+                      "visit": "Extending the window", "start": "An empty window",
+                      "done": "The widest window with at most K distinct items."}
+    },
+    "jump_game": {
+        "scene": "maze",
+        "title": "Stepping-Stone Crossing",
+        "hook": "You are hopping across stepping stones, each marked with how far you may leap, trying to reach the far bank.",
+        "metaphors": {"node": "stone", "edge": "leap", "weight": "max jump",
+                      "visit": "Standing on a stone", "start": "The near bank",
+                      "done": "The far bank is reachable (or not)."}
+    },
+    "jump_game_ii": {
+        "scene": "maze",
+        "title": "Fewest Leaps Across",
+        "hook": "You are crossing the same stepping stones in as few leaps as possible.",
+        "metaphors": {"node": "stone", "edge": "leap", "weight": "max jump",
+                      "visit": "Scanning the current leap's range", "start": "The near bank",
+                      "done": "Reached the far bank in the fewest leaps."}
+    },
+    "candy": {
+        "scene": "market",
+        "title": "Candy Distribution",
+        "hook": "You are handing out sweets so every child with a higher rating than a neighbour gets more.",
+        "metaphors": {"node": "child", "edge": "neighbour", "weight": "rating",
+                      "visit": "Adjusting a child's candy", "start": "One each",
+                      "done": "Fewest candies that keep every neighbour happy."}
+    },
+    "lemonade_change": {
+        "scene": "market",
+        "title": "Lemonade Stand Till",
+        "hook": "You are running a lemonade stand, giving each customer correct change from the notes you already hold.",
+        "metaphors": {"node": "customer", "edge": "payment", "weight": "note",
+                      "visit": "Serving a customer", "start": "An empty till",
+                      "done": "Everyone served, or change ran out."}
+    },
+    "assign_cookies": {
+        "scene": "market",
+        "title": "Cookie Sharing",
+        "hook": "You are handing cookies to children so as many as possible get one big enough for them.",
+        "metaphors": {"node": "child", "edge": "cookie", "weight": "size vs greed",
+                      "visit": "Offering a cookie", "start": "Sorted children and cookies",
+                      "done": "The most children made content."}
+    },
+    "min_platforms": {
+        "scene": "scheduler",
+        "title": "Station Platform Planner",
+        "hook": "You are working out how many platforms a station needs so no two overlapping trains wait for one.",
+        "metaphors": {"node": "train", "edge": "overlap", "weight": "time",
+                      "visit": "An arrival or departure", "start": "An empty station",
+                      "done": "The peak number of trains present at once."}
+    },
+    "fractional_knapsack": {
+        "scene": "market",
+        "title": "Market Stall Loot",
+        "hook": "You are filling a bag of fixed capacity with the most valuable goods, and you may take a slice of any item.",
+        "metaphors": {
+            "node": "item",
+            "edge": "choice",
+            "weight": "value per unit weight",
+            "visit": "Taking the best ratio next",
+            "start": "An empty bag",
+            "done": "The bag is full and worth the most it can be."
+        }
+    },
+    "job_sequencing": {
+        "scene": "scheduler",
+        "title": "Deadline Job Board",
+        "hook": "You are picking which paid jobs to run before their deadlines to earn the most.",
+        "metaphors": {
+            "node": "job",
+            "edge": "slot",
+            "weight": "profit",
+            "visit": "Placing the richest job",
+            "start": "An empty schedule",
+            "done": "The most profitable set of jobs that meet their deadlines."
         }
     },
     "activity_selection": {

@@ -81,9 +81,29 @@ export const A2Z_TRACER = {
   // ── Step 9 — Stacks & Queues (monotonic deque) ──
   "9-24":  "sliding_window_maximum", // Sliding Window Maximum
 
+  // ── Step 10 — Sliding Window & Two Pointer ──
+  "10-1":  "longest_substring_no_repeat", // Longest Substring Without Repeating Characters
+  "10-2":  "max_consecutive_ones_iii",    // Max Consecutive Ones III
+  "10-3":  "longest_k_distinct",          // Fruit Into Baskets (≤2 distinct)
+  "10-9":  "longest_k_distinct",          // Longest Substring With At Most K Distinct
+
+  // ── Step 11 — Heaps ──
+  "11-19": "min_heap",               // Implement Min Heap
+  "11-21": "kth_largest",            // K-th Largest element in an array
+  "11-22": "kth_smallest",           // Kth smallest element (priority queue)
+  "11-27": "kth_largest",            // Kth largest element in a stream
+
   // ── Step 12 — Greedy ──
+  "12-1":  "assign_cookies",         // Assign Cookies
+  "12-2":  "fractional_knapsack",    // Fractional Knapsack
+  "12-4":  "lemonade_change",        // Lemonade Change
   "12-6":  "activity_selection",     // N meetings in one room
+  "12-8":  "jump_game_ii",           // Jump Game II
+  "12-10": "job_sequencing",         // Job sequencing Problem
+  "12-11": "candy",                  // Candy
   "12-14": "merge_intervals",        // Merge Intervals
+  "12-17": "jump_game",              // Jump Game - I
+  "12-18": "min_platforms",          // Minimum number of platforms
 
   // ── Step 13 — Binary Tree traversals (one trace shows pre/in/post) ──
   "13-3":  "tree_traversal",         // Preorder Traversal

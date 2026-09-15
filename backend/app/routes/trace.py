@@ -11,6 +11,10 @@ from app.tracers import (
     edit_distance, fast_exponentiation, gcd_euclid, prime_factorisation,
     fenwick_tree, fibonacci_dp, find_middle, flood_fill, floyd_cycle,
     hash_table, heap_extract, heap_insert, heap_sort, house_robber, huffman,
+    fractional_knapsack, job_sequencing,
+    jump_game, jump_game_ii, candy, lemonade_change, assign_cookies,
+    min_platforms, min_heap, kth_largest, kth_smallest,
+    longest_substring_no_repeat, max_consecutive_ones_iii, longest_k_distinct,
     insertion_sort, kadanes,
     kmp_search, knapsack_01, segment_tree, kruskals_mst, lcs, lis,
     linked_list_reverse, manacher, matrix_chain, merge_intervals, merge_sort,
@@ -108,6 +112,20 @@ def algorithms():
             {"id": "trie_insert",   "name": "Trie — Build a Prefix Tree", "input": "text"},
             {"id": "huffman",       "name": "Huffman Coding (Greedy)",   "input": "text"},
             {"id": "activity_selection", "name": "Activity Selection (Greedy)", "input": "text"},
+            {"id": "fractional_knapsack", "name": "Fractional Knapsack (Greedy)", "input": "text"},
+            {"id": "job_sequencing", "name": "Job Sequencing (Greedy)",   "input": "text"},
+            {"id": "jump_game",     "name": "Jump Game I (Greedy)",      "input": "array"},
+            {"id": "jump_game_ii",  "name": "Jump Game II (Greedy)",     "input": "array"},
+            {"id": "candy",         "name": "Candy (Greedy)",            "input": "array"},
+            {"id": "lemonade_change", "name": "Lemonade Change (Greedy)", "input": "array"},
+            {"id": "assign_cookies", "name": "Assign Cookies (Greedy)",  "input": "text"},
+            {"id": "min_platforms", "name": "Minimum Platforms (Greedy)", "input": "text"},
+            {"id": "min_heap",      "name": "Min-Heap — Build",          "input": "array"},
+            {"id": "kth_largest",   "name": "Kth Largest (Min-Heap)",    "input": "text"},
+            {"id": "kth_smallest",  "name": "Kth Smallest (Max-Heap)",   "input": "text"},
+            {"id": "longest_substring_no_repeat", "name": "Longest Substring w/o Repeats", "input": "text"},
+            {"id": "max_consecutive_ones_iii", "name": "Max Consecutive Ones III", "input": "text"},
+            {"id": "longest_k_distinct", "name": "Longest Substring, K Distinct", "input": "text"},
             {"id": "n_queens",      "name": "N-Queens (Backtracking)",   "input": "number"},
             {"id": "unique_paths",  "name": "Unique Paths (Grid DP)",    "input": "number"},
             {"id": "sieve",         "name": "Sieve of Eratosthenes",     "input": "number"},
@@ -375,6 +393,170 @@ def run_trace(request: Request, req: TraceRequest):
           detail="Give at least one meeting — e.g. 1-3, 2-6, 8-10."
         )
       return activity_selection.trace(intervals)
+
+    if req.algorithm == "fractional_knapsack":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="fractional_knapsack requires 'text' — weight:value pairs then "
+                 "'| capacity', e.g. 10:60, 20:100, 30:120 | 50"
+        )
+      raw = req.text.replace(" ", "")
+      if "|" not in raw:
+        raise HTTPException(
+          status_code=400,
+          detail="Add the capacity after a '|' — e.g. 10:60, 20:100 | 50"
+        )
+      item_part, cap_part = raw.split("|", 1)
+      if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", item_part):
+        raise HTTPException(
+          status_code=400,
+          detail="Items must be weight:value pairs — e.g. 10:60,20:100"
+        )
+      items = [[int(x) for x in p.split(":")] for p in item_part.split(",")]
+      if len(items) > fractional_knapsack.MAX_ITEMS:
+        raise HTTPException(status_code=400,
+          detail=f"Max {fractional_knapsack.MAX_ITEMS} items.")
+      if any(w < 1 or w > fractional_knapsack.MAX_WEIGHT_VALUE
+             or v < 1 or v > fractional_knapsack.MAX_WEIGHT_VALUE for w, v in items):
+        raise HTTPException(status_code=400,
+          detail=f"Weights and values must be 1..{fractional_knapsack.MAX_WEIGHT_VALUE}.")
+      if not _re.fullmatch(r"\d+", cap_part):
+        raise HTTPException(status_code=400, detail="Capacity must be a whole number.")
+      cap = int(cap_part)
+      if cap < 1 or cap > fractional_knapsack.MAX_CAPACITY:
+        raise HTTPException(status_code=400,
+          detail=f"Capacity must be 1..{fractional_knapsack.MAX_CAPACITY}.")
+      return fractional_knapsack.trace(items, cap)
+
+    if req.algorithm == "job_sequencing":
+      if req.text is None:
+        raise HTTPException(
+          status_code=400,
+          detail="job_sequencing requires 'text' — deadline:profit pairs, "
+                 "e.g. 2:100, 1:19, 2:27, 1:25, 3:15"
+        )
+      raw = req.text.replace(" ", "")
+      if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", raw):
+        raise HTTPException(
+          status_code=400,
+          detail="Jobs must be deadline:profit pairs — e.g. 2:100,1:19,3:15"
+        )
+      jobs = [[int(x) for x in p.split(":")] for p in raw.split(",")]
+      if len(jobs) > job_sequencing.MAX_JOBS:
+        raise HTTPException(status_code=400,
+          detail=f"Max {job_sequencing.MAX_JOBS} jobs.")
+      if any(d < 1 or d > job_sequencing.MAX_DEADLINE for d, _ in jobs):
+        raise HTTPException(status_code=400,
+          detail=f"Deadlines must be 1..{job_sequencing.MAX_DEADLINE}.")
+      if any(p < 0 or p > job_sequencing.MAX_PROFIT for _, p in jobs):
+        raise HTTPException(status_code=400,
+          detail=f"Profits must be 0..{job_sequencing.MAX_PROFIT}.")
+      return job_sequencing.trace(jobs)
+
+    if req.algorithm in ("jump_game", "jump_game_ii", "candy", "lemonade_change"):
+      arr = _validated_array(req.array, 16, req.algorithm)
+      ints = [int(x) for x in arr]
+      if any(x != v for x, v in zip(arr, ints)):
+        raise HTTPException(status_code=400, detail="Values must be whole numbers.")
+      if req.algorithm in ("jump_game", "jump_game_ii") and any(v < 0 for v in ints):
+        raise HTTPException(status_code=400, detail="Jump lengths must be 0 or more.")
+      if req.algorithm == "candy" and any(v < 0 for v in ints):
+        raise HTTPException(status_code=400, detail="Ratings must be 0 or more.")
+      if req.algorithm == "lemonade_change" and any(v not in (5, 10, 20) for v in ints):
+        raise HTTPException(status_code=400, detail="Bills must each be 5, 10, or 20.")
+      tracer = {"jump_game": jump_game, "jump_game_ii": jump_game_ii,
+                "candy": candy, "lemonade_change": lemonade_change}[req.algorithm]
+      return tracer.trace(ints)
+
+    if req.algorithm in ("assign_cookies", "min_platforms"):
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(
+          status_code=400,
+          detail=f"{req.algorithm} requires 'text' — two number lists split by "
+                 f"'|', e.g. 1,2,3 | 1,1")
+      left_raw, right_raw = req.text.replace(" ", "").split("|", 1)
+      def _ints(s):
+        parts = [p for p in s.split(",") if p]
+        if not parts or not all(_re.fullmatch(r"\d+", p) for p in parts):
+          raise HTTPException(status_code=400,
+            detail="Both sides must be comma-separated whole numbers.")
+        return [int(p) for p in parts]
+      left, right = _ints(left_raw), _ints(right_raw)
+      if len(left) > 10 or len(right) > 10:
+        raise HTTPException(status_code=400, detail="Max 10 numbers per list.")
+      if req.algorithm == "assign_cookies":
+        return assign_cookies.trace(left, right)
+      if len(left) != len(right):
+        raise HTTPException(status_code=400,
+          detail="Give equal numbers of arrivals and departures.")
+      return min_platforms.trace(left, right)
+
+    if req.algorithm == "min_heap":
+      arr = _validated_array(req.array, min_heap.MAX_TREE_LEN, "min_heap")
+      ints = [int(x) for x in arr]
+      if any(x != v for x, v in zip(arr, ints)):
+        raise HTTPException(status_code=400, detail="Values must be whole numbers.")
+      return min_heap.trace(ints)
+
+    if req.algorithm in ("kth_largest", "kth_smallest"):
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(
+          status_code=400,
+          detail=f"{req.algorithm} requires 'text' — numbers then '| k', "
+                 f"e.g. 3,2,1,5,6,4 | 2")
+      seq_raw, k_raw = req.text.replace(" ", "").split("|", 1)
+      parts = [p for p in seq_raw.split(",") if p]
+      if not parts or not all(_re.fullmatch(r"-?\d+", p) for p in parts):
+        raise HTTPException(status_code=400, detail="Give comma-separated whole numbers.")
+      nums = [int(p) for p in parts]
+      if len(nums) > 14:
+        raise HTTPException(status_code=400, detail="Max 14 numbers.")
+      if not _re.fullmatch(r"\d+", k_raw):
+        raise HTTPException(status_code=400, detail="k must be a whole number.")
+      k = int(k_raw)
+      if k < 1 or k > len(nums):
+        raise HTTPException(status_code=400, detail=f"k must be between 1 and {len(nums)}.")
+      tracer = kth_largest if req.algorithm == "kth_largest" else kth_smallest
+      return tracer.trace(nums, k)
+
+    if req.algorithm == "longest_substring_no_repeat":
+      if req.text is None:
+        raise HTTPException(status_code=400,
+          detail="longest_substring_no_repeat requires 'text' — a word, e.g. ABCABCBB.")
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{longest_substring_no_repeat.MAX_LEN}}}", cleaned):
+        raise HTTPException(status_code=400,
+          detail=f"One word of letters/digits, 1-{longest_substring_no_repeat.MAX_LEN} chars.")
+      return longest_substring_no_repeat.trace(cleaned)
+
+    if req.algorithm == "max_consecutive_ones_iii":
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(status_code=400,
+          detail="max_consecutive_ones_iii requires 'text' — bits then '| k', e.g. 1,1,0,0,1 | 2")
+      bits_raw, k_raw = req.text.replace(" ", "").split("|", 1)
+      parts = [p for p in bits_raw.split(",") if p]
+      if not parts or any(p not in ("0", "1") for p in parts):
+        raise HTTPException(status_code=400, detail="Bits must each be 0 or 1.")
+      if len(parts) > 20:
+        raise HTTPException(status_code=400, detail="Max 20 bits.")
+      if not _re.fullmatch(r"\d+", k_raw):
+        raise HTTPException(status_code=400, detail="k must be a whole number.")
+      return max_consecutive_ones_iii.trace([int(p) for p in parts], int(k_raw))
+
+    if req.algorithm == "longest_k_distinct":
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(status_code=400,
+          detail="longest_k_distinct requires 'text' — a word then '| k', e.g. ECEBA | 2")
+      seq_raw, k_raw = req.text.split("|", 1)
+      cleaned = seq_raw.replace(" ", "").upper()
+      if not _re.fullmatch(rf"[A-Z0-9]{{1,{longest_k_distinct.MAX_LEN}}}", cleaned):
+        raise HTTPException(status_code=400,
+          detail=f"One word of letters/digits, 1-{longest_k_distinct.MAX_LEN} chars.")
+      k_raw = k_raw.strip()
+      if not _re.fullmatch(r"\d+", k_raw) or int(k_raw) < 1:
+        raise HTTPException(status_code=400, detail="k must be a whole number ≥ 1.")
+      return longest_k_distinct.trace(cleaned, int(k_raw))
 
     if req.algorithm == "hash_table":
       if req.text is None:
@@ -1083,7 +1265,11 @@ def run_trace(request: Request, req: TraceRequest):
                 "anagram", "gcd_euclid", "fast_exponentiation",
                 "prime_factorisation",
                 "balanced_brackets", "fibonacci_dp", "huffman",
-                "activity_selection"])
+                "activity_selection", "fractional_knapsack", "job_sequencing",
+                "jump_game", "jump_game_ii", "candy", "lemonade_change",
+                "assign_cookies", "min_platforms", "min_heap", "kth_largest",
+                "kth_smallest", "longest_substring_no_repeat",
+                "max_consecutive_ones_iii", "longest_k_distinct"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

@@ -220,7 +220,12 @@ const VIEW_FOR = {
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
   dsu: 'graph', merge_intervals: 'array', coin_change: 'grid',
-  activity_selection: 'array',
+  activity_selection: 'array', fractional_knapsack: 'array', job_sequencing: 'array',
+  jump_game: 'array', jump_game_ii: 'array', candy: 'array',
+  lemonade_change: 'array', assign_cookies: 'array', min_platforms: 'array',
+  min_heap: 'tree', kth_largest: 'tree', kth_smallest: 'tree',
+  longest_substring_no_repeat: 'array', max_consecutive_ones_iii: 'array',
+  longest_k_distinct: 'array',
   connected_components: 'graph', bipartite_check: 'graph', flood_fill: 'grid',
   house_robber: 'grid', lis: 'grid', subset_sum: 'grid',
   z_function: 'array', rabin_karp: 'array', manacher: 'array',
@@ -728,7 +733,10 @@ export function mountEngine(view, algo = 'dijkstra') {
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
-      } else if (algoId === 'sliding_window' || algoId === 'kadanes') {
+      } else if (algoId === 'sliding_window' || algoId === 'kadanes'
+                 || algoId === 'longest_substring_no_repeat'
+                 || algoId === 'max_consecutive_ones_iii'
+                 || algoId === 'longest_k_distinct') {
         const inBest = s.best_window && idx >= s.best_window[0] && idx <= s.best_window[1];
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
         if (inBest) cell.setAttribute("stroke", "#4ade80");
@@ -965,6 +973,62 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: '1-2, 3-4, 0-6, 5-7, 8-9, 5-9',
       hint: 'Up to 10 meetings as start-end pairs. Sorted by finish time — chosen meetings light up green, clashes are skipped.',
     },
+    fractional_knapsack: {
+      array: '10:60, 20:100, 30:120 | 50',
+      hint: 'weight:value items, then | capacity. Sorted by value-per-weight; the last item may be taken as a fraction.',
+    },
+    job_sequencing: {
+      array: '2:100, 1:19, 2:27, 1:25, 3:15',
+      hint: 'deadline:profit jobs. Richest first, each placed in the latest free slot by its deadline — the timeline fills in green.',
+    },
+    jump_game: {
+      array: '2, 3, 1, 1, 4',
+      hint: 'Each value is a max jump length. Track the farthest reachable index — try 3, 2, 1, 0, 4 to get stuck.',
+    },
+    jump_game_ii: {
+      array: '2, 3, 1, 1, 4',
+      hint: 'Fewest jumps to the end. The green window is the current jump’s reach; a jump is spent when you step past it.',
+    },
+    candy: {
+      array: '1, 0, 2',
+      hint: 'Ratings. Cells show candy counts after a left→right then right→left pass — higher-rated neighbours must get more.',
+    },
+    lemonade_change: {
+      array: '5, 5, 5, 10, 20',
+      hint: 'Bills of 5/10/20 for a £5 drink. Give change largest-first; try 5, 5, 10, 10, 20 to see it fail.',
+    },
+    assign_cookies: {
+      array: '1, 2, 3 | 1, 1',
+      hint: 'greed factors | cookie sizes. Both sorted; the smallest cookie goes to the least greedy child it satisfies.',
+    },
+    min_platforms: {
+      array: '900, 940, 950, 1100, 1500, 1800 | 910, 1200, 1120, 1130, 1900, 2000',
+      hint: 'arrivals | departures (equal counts). Sweep the timeline — the peak overlap is the platforms needed.',
+    },
+    min_heap: {
+      array: '5, 3, 8, 1, 12, 2',
+      hint: 'Up to 12 values. Every parent stays ≤ its children — new values bubble up to the root.',
+    },
+    kth_largest: {
+      array: '3, 2, 1, 5, 6, 4 | 2',
+      hint: 'numbers | k. A size-k min-heap keeps only the biggest k; its root is the kth largest.',
+    },
+    kth_smallest: {
+      array: '7, 10, 4, 3, 20, 15 | 3',
+      hint: 'numbers | k. A size-k max-heap keeps only the smallest k; its root is the kth smallest.',
+    },
+    longest_substring_no_repeat: {
+      array: 'ABCABCBB',
+      hint: 'One word. A variable window slides — the left edge jumps past any repeat. Best window glows green.',
+    },
+    max_consecutive_ones_iii: {
+      array: '1, 1, 0, 0, 1, 1, 1, 0 | 2',
+      hint: 'bits | k. Longest window with at most k zeros (the zeros you may flip to 1).',
+    },
+    longest_k_distinct: {
+      array: 'ECEBA | 2',
+      hint: 'word | k. Longest window with at most k distinct characters — Fruit Into Baskets is k=2.',
+    },
     coin_change: {
       array: '1, 3, 4', target: '6',
       hint: 'Coins then an amount (0–12). Try 1,3,4 for 6 — greedy says 3 coins, the table finds 2.',
@@ -1192,6 +1256,131 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (b > 100) return { error: 'Keep bounds between 0 and 100.' };
       }
       return { text: parts.join(','), chars: parts };
+    }
+
+    if (algoId === 'fractional_knapsack') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw.includes('|')) {
+        return { error: 'Add the capacity after "|" — e.g. 10:60, 20:100 | 50' };
+      }
+      const [itemPart, capPart] = raw.split('|');
+      const parts = (itemPart || '').split(',').filter(Boolean);
+      if (!parts.length) return { error: 'Type items — e.g. 10:60, 20:100' };
+      if (parts.length > 6) return { error: 'Max 6 items.' };
+      for (const p of parts) {
+        if (!/^\d+:\d+$/.test(p)) {
+          return { error: `Could not read "${p}" — use weight:value like 20:100.` };
+        }
+      }
+      if (!/^\d+$/.test(capPart || '')) {
+        return { error: 'Capacity must be a whole number — e.g. ... | 50' };
+      }
+      return { text: `${itemPart}|${capPart}`, chars: parts };
+    }
+
+    if (algoId === 'job_sequencing') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      const parts = raw.split(',').filter(Boolean);
+      if (!parts.length) return { error: 'Type jobs — e.g. 2:100, 1:19, 3:15' };
+      if (parts.length > 8) return { error: 'Max 8 jobs.' };
+      let maxD = 0;
+      for (const p of parts) {
+        if (!/^\d+:\d+$/.test(p)) {
+          return { error: `Could not read "${p}" — use deadline:profit like 2:100.` };
+        }
+        const d = Number(p.split(':')[0]);
+        if (d < 1 || d > 8) return { error: 'Deadlines must be 1–8.' };
+        maxD = Math.max(maxD, d);
+      }
+      return { text: parts.join(','), chars: Array.from({ length: maxD }, () => '·') };
+    }
+
+    if (algoId === 'jump_game' || algoId === 'jump_game_ii'
+        || algoId === 'candy' || algoId === 'lemonade_change') {
+      const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
+      if (!parts.length) return { error: 'Enter some numbers — e.g. 2, 3, 1, 1, 4' };
+      const values = parts.map(Number);
+      if (values.some(v => !Number.isInteger(v))) {
+        return { error: 'Whole numbers only, separated by commas.' };
+      }
+      if (values.length > 16) return { error: 'Max 16 numbers.' };
+      if ((algoId === 'jump_game' || algoId === 'jump_game_ii' || algoId === 'candy')
+          && values.some(v => v < 0)) {
+        return { error: 'Values must be 0 or more.' };
+      }
+      if (algoId === 'lemonade_change' && values.some(v => ![5, 10, 20].includes(v))) {
+        return { error: 'Bills must each be 5, 10, or 20.' };
+      }
+      return { array: values };
+    }
+
+    if (algoId === 'assign_cookies' || algoId === 'min_platforms') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw.includes('|')) {
+        return { error: 'Two lists split by "|" — e.g. 1,2,3 | 1,1' };
+      }
+      const [l, r] = raw.split('|');
+      const left = (l || '').split(',').filter(Boolean);
+      const right = (r || '').split(',').filter(Boolean);
+      const bad = a => !a.length || a.some(p => !/^\d+$/.test(p));
+      if (bad(left) || bad(right)) {
+        return { error: 'Both sides must be comma-separated whole numbers.' };
+      }
+      if (left.length > 10 || right.length > 10) return { error: 'Max 10 numbers per list.' };
+      if (algoId === 'min_platforms' && left.length !== right.length) {
+        return { error: 'Give equal numbers of arrivals and departures.' };
+      }
+      return { text: `${left.join(',')}|${right.join(',')}`, chars: left.map(Number) };
+    }
+
+    if (algoId === 'kth_largest' || algoId === 'kth_smallest') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw.includes('|')) return { error: 'Numbers then "| k" — e.g. 3,2,1,5,6,4 | 2' };
+      const [seq, kr] = raw.split('|');
+      const parts = (seq || '').split(',').filter(Boolean);
+      if (!parts.length || parts.some(p => !/^-?\d+$/.test(p))) {
+        return { error: 'Give comma-separated whole numbers.' };
+      }
+      if (parts.length > 14) return { error: 'Max 14 numbers.' };
+      const k = Number(kr);
+      if (!/^\d+$/.test(kr || '') || k < 1 || k > parts.length) {
+        return { error: `k must be a whole number between 1 and ${parts.length}.` };
+      }
+      return { text: `${parts.join(',')}|${k}` };
+    }
+
+    if (algoId === 'longest_substring_no_repeat') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{1,20}$/.test(raw)) {
+        return { error: 'One word of letters or digits, 1–20 characters.' };
+      }
+      return { text: raw, chars: raw.split('') };
+    }
+
+    if (algoId === 'max_consecutive_ones_iii') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw.includes('|')) return { error: 'Bits then "| k" — e.g. 1,1,0,0,1 | 2' };
+      const [seq, kr] = raw.split('|');
+      const parts = (seq || '').split(',').filter(Boolean);
+      if (!parts.length || parts.some(p => p !== '0' && p !== '1')) {
+        return { error: 'Bits must each be 0 or 1.' };
+      }
+      if (parts.length > 20) return { error: 'Max 20 bits.' };
+      if (!/^\d+$/.test(kr || '')) return { error: 'k must be a whole number.' };
+      return { text: `${parts.join(',')}|${kr}`, chars: parts.map(Number) };
+    }
+
+    if (algoId === 'longest_k_distinct') {
+      const raw = (arrayInput?.value || '');
+      if (!raw.includes('|')) return { error: 'A word then "| k" — e.g. ECEBA | 2' };
+      const [seq, kr] = raw.split('|');
+      const cleaned = (seq || '').replace(/\s+/g, '').toUpperCase();
+      if (!/^[A-Z0-9]{1,20}$/.test(cleaned)) {
+        return { error: 'One word of letters or digits, 1–20 characters.' };
+      }
+      const k = Number((kr || '').trim());
+      if (!Number.isInteger(k) || k < 1) return { error: 'k must be a whole number ≥ 1.' };
+      return { text: `${cleaned}|${k}`, chars: cleaned.split('') };
     }
 
     if (algoId === 'coin_change') {
@@ -3071,7 +3260,27 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
-        } else if (algoId === 'merge_intervals' || algoId === 'activity_selection') {
+        } else if (algoId === 'merge_intervals' || algoId === 'activity_selection'
+                   || algoId === 'fractional_knapsack' || algoId === 'job_sequencing'
+                   || algoId === 'assign_cookies' || algoId === 'min_platforms') {
+          renderArrayView(parsed.chars);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'jump_game' || algoId === 'jump_game_ii'
+                   || algoId === 'candy' || algoId === 'lemonade_change') {
+          renderArrayView(parsed.array);
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { array: parsed.array });
+        } else if (algoId === 'kth_largest' || algoId === 'kth_smallest') {
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'longest_substring_no_repeat'
+                   || algoId === 'max_consecutive_ones_iii'
+                   || algoId === 'longest_k_distinct') {
           renderArrayView(parsed.chars);
           res = isOffline
             ? localArrayTrace(parsed)

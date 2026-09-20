@@ -24,6 +24,8 @@ from app.tracers import (
     rabin_karp, radix_sort, selection_sort, sieve, sliding_window,
     sliding_window_maximum, subset_sum, topological_sort,
     tree_traversal, trie_insert, two_sum_sorted, unique_paths, z_function,
+    level_order, tree_max_depth, tree_diameter, lca_bt,
+    frog_jump, buy_sell_stock, coin_change_2, longest_common_substring,
 )
 from app.tracers.common import Graph
 import os
@@ -164,6 +166,14 @@ def algorithms():
             {"id": "fast_exponentiation", "name": "Fast Exponentiation", "input": "array"},
             {"id": "prime_factorisation", "name": "Prime Factorisation", "input": "number"},
             {"id": "bellman_ford",  "name": "Bellman–Ford (Negative Edges)", "input": "graph"},
+            {"id": "level_order",   "name": "Level-Order Traversal (BFS)", "input": "array"},
+            {"id": "tree_max_depth", "name": "Maximum Depth of a Binary Tree", "input": "array"},
+            {"id": "tree_diameter", "name": "Diameter of a Binary Tree",   "input": "array"},
+            {"id": "lca_bt",        "name": "Lowest Common Ancestor",      "input": "text"},
+            {"id": "frog_jump",     "name": "Frog Jump (1-D DP)",          "input": "array"},
+            {"id": "buy_sell_stock", "name": "Best Time to Buy & Sell Stock", "input": "array"},
+            {"id": "coin_change_2", "name": "Coin Change 2 (Count Ways)",  "input": "array"},
+            {"id": "longest_common_substring", "name": "Longest Common Substring", "input": "text"},
         ]
     }
 
@@ -773,6 +783,116 @@ def run_trace(request: Request, req: TraceRequest):
                              "tree_traversal")
       return tree_traversal.trace(arr)
 
+    if req.algorithm in ("level_order", "tree_max_depth", "tree_diameter"):
+      arr = _validated_array(req.array, tree_traversal.MAX_TREE_LEN,
+                             req.algorithm)
+      if not arr:
+        raise HTTPException(
+          status_code=400,
+          detail=f"{req.algorithm} needs at least one value to build a tree."
+        )
+      tracer = {"level_order": level_order, "tree_max_depth": tree_max_depth,
+                "tree_diameter": tree_diameter}[req.algorithm]
+      return tracer.trace(arr)
+
+    if req.algorithm == "lca_bt":
+      if req.text is None or "|" not in req.text:
+        raise HTTPException(
+          status_code=400,
+          detail="lca_bt requires 'text' — the tree values then '| a b', "
+                 "e.g. 8,3,10,1,6,14,4 | 1 6"
+        )
+      nums_raw, targets_raw = req.text.split("|", 1)
+      num_parts = [p for p in nums_raw.replace(" ", "").split(",") if p]
+      if not num_parts or not all(_re.fullmatch(r"-?\d+", p) for p in num_parts):
+        raise HTTPException(
+          status_code=400,
+          detail="Tree values must be comma-separated whole numbers."
+        )
+      nums = [int(p) for p in num_parts]
+      if len(nums) > tree_traversal.MAX_TREE_LEN:
+        raise HTTPException(
+          status_code=400,
+          detail=f"Max {tree_traversal.MAX_TREE_LEN} tree values."
+        )
+      if len(set(nums)) != len(nums):
+        raise HTTPException(
+          status_code=400,
+          detail="Give distinct tree values so each target is unambiguous."
+        )
+      tgt_parts = [p for p in targets_raw.replace(",", " ").split() if p]
+      if len(tgt_parts) != 2 or not all(_re.fullmatch(r"-?\d+", p) for p in tgt_parts):
+        raise HTTPException(
+          status_code=400,
+          detail="Give exactly two whole-number targets after '|' — e.g. | 1 6"
+        )
+      a, b = (int(p) for p in tgt_parts)
+      if a == b:
+        raise HTTPException(
+          status_code=400,
+          detail="The two targets must be different."
+        )
+      if a not in nums or b not in nums:
+        raise HTTPException(
+          status_code=400,
+          detail="Both targets must be values present in the tree."
+        )
+      return lca_bt.trace(nums, a, b)
+
+    if req.algorithm == "frog_jump":
+      arr = _validated_array(req.array, frog_jump.MAX_STONES, "frog_jump")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="frog_jump needs at least one stone height.")
+      if any(v != int(v) or v < 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Stone heights must be whole numbers of 0 or more.")
+      return frog_jump.trace([int(v) for v in arr])
+
+    if req.algorithm == "buy_sell_stock":
+      arr = _validated_array(req.array, buy_sell_stock.MAX_DAYS, "buy_sell_stock")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="buy_sell_stock needs at least one price.")
+      if any(v != int(v) or v < 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Prices must be whole numbers of 0 or more.")
+      return buy_sell_stock.trace([int(v) for v in arr])
+
+    if req.algorithm == "coin_change_2":
+      coins = _validated_array(req.array, coin_change_2.MAX_COINS, "coin_change_2")
+      if not coins:
+        raise HTTPException(status_code=400,
+          detail="coin_change_2 needs at least one coin denomination.")
+      if any(c != int(c) or int(c) < 1 for c in coins):
+        raise HTTPException(status_code=400,
+          detail="Coin denominations must be whole numbers of 1 or more.")
+      if req.target is None:
+        raise HTTPException(status_code=400,
+          detail="coin_change_2 requires a 'target' — the amount to make.")
+      amount = req.target
+      if amount != int(amount) or not (0 <= int(amount) <= coin_change_2.MAX_AMOUNT):
+        raise HTTPException(status_code=400,
+          detail=f"Amount must be a whole number from 0 to "
+                 f"{coin_change_2.MAX_AMOUNT} — the table has to stay readable.")
+      return coin_change_2.trace([int(c) for c in coins], int(amount))
+
+    if req.algorithm == "longest_common_substring":
+      if req.text is None:
+        raise HTTPException(status_code=400,
+          detail="longest_common_substring requires 'text' — two words "
+                 "separated by a comma, e.g. ABCDE,ZBCDF")
+      cleaned = req.text.replace(" ", "").upper()
+      if not _re.fullmatch(
+          rf"[A-Z0-9]{{1,{longest_common_substring.MAX_LEN}}},"
+          rf"[A-Z0-9]{{1,{longest_common_substring.MAX_LEN}}}", cleaned):
+        raise HTTPException(status_code=400,
+          detail=f"Provide two words (letters/digits, "
+                 f"1-{longest_common_substring.MAX_LEN} chars each) separated "
+                 f"by a comma — e.g. ABCDE,ZBCDF")
+      a, b = cleaned.split(",")
+      return longest_common_substring.trace(a, b)
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1327,7 +1447,10 @@ def run_trace(request: Request, req: TraceRequest):
                 "kth_smallest", "longest_substring_no_repeat",
                 "max_consecutive_ones_iii", "longest_k_distinct",
                 "count_set_bits", "power_of_two", "single_number",
-                "min_bit_flips", "power_set"])
+                "min_bit_flips", "power_set",
+                "level_order", "tree_max_depth", "tree_diameter", "lca_bt",
+                "frog_jump", "buy_sell_stock", "coin_change_2",
+                "longest_common_substring"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

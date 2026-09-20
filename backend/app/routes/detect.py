@@ -102,6 +102,14 @@ SIGNATURES = {
     "fast_exponentiation": ["fast_exponentiation", "fast exponentiation", "binary exponentiation", "exponentiation by squaring", "fast power", "pow(", "modular exponent"],
     "prime_factorisation": ["prime_factorisation", "prime factorization", "prime factorisation", "prime factors", "factorize", "factorise", "trial division"],
     "bellman_ford": ["bellman_ford", "bellman ford", "bellman-ford", "negative weight", "negative edge", "negative cycle", "relax edges", "shortest path negative"],
+    "level_order": ["level_order", "level order", "level-order", "breadth first tree", "bfs tree", "level by level", "queue traversal", "zigzag level"],
+    "tree_max_depth": ["tree_max_depth", "maximum depth", "max depth", "height of tree", "tree height", "depth of binary tree", "deepest leaf"],
+    "tree_diameter": ["tree_diameter", "diameter of binary tree", "diameter of tree", "longest path tree", "longest path between two nodes", "tree diameter"],
+    "lca_bt": ["lca_bt", "lowest common ancestor", "lca", "common ancestor", "lca in bt", "split point ancestor"],
+    "frog_jump": ["frog_jump", "frog jump", "frog leap", "minimum energy", "stones jump", "climbing stairs cost", "min cost stairs", "1d dp"],
+    "buy_sell_stock": ["buy_sell_stock", "buy and sell stock", "best time to buy", "stock profit", "max profit", "buy low sell high", "one transaction"],
+    "coin_change_2": ["coin_change_2", "coin change 2", "coin change ii", "number of ways coins", "count combinations coins", "ways to make amount", "combination sum coins"],
+    "longest_common_substring": ["longest_common_substring", "longest common substring", "common substring", "contiguous common", "longest shared block"],
 }
 
 REALWORLD_META = {
@@ -1105,6 +1113,111 @@ REALWORLD_META = {
             "visit": "Relaxing a road",
             "start": "Your starting junction",
             "done": "Cheapest routes found — or a negative loop exposed."
+        }
+    },
+    "level_order": {
+        "scene": "files",
+        "title": "Reading a Tree, Floor by Floor",
+        "hook": "You are reading an org chart top to bottom — everyone on one level before anyone below, using a queue to hold the next row.",
+        "metaphors": {
+            "node": "person",
+            "edge": "reports-to",
+            "weight": "level",
+            "visit": "Reading a person",
+            "enqueue": "Line up their reports for the next row",
+            "start": "The person at the top",
+            "done": "Every level read in order, top to bottom."
+        }
+    },
+    "tree_max_depth": {
+        "scene": "files",
+        "title": "How Deep Does It Go?",
+        "hook": "You are measuring the deepest nested folder — a folder's depth is one more than its deepest child.",
+        "metaphors": {
+            "node": "folder",
+            "edge": "subfolder link",
+            "weight": "depth",
+            "visit": "Measuring a folder",
+            "start": "The deepest leaves first",
+            "done": "The longest root-to-leaf chain, counted once."
+        }
+    },
+    "tree_diameter": {
+        "scene": "social",
+        "title": "The Longest Chain of Friends",
+        "hook": "You are finding the two people furthest apart in a family tree — the longest path may not even pass through the root.",
+        "metaphors": {
+            "node": "person",
+            "edge": "relation",
+            "weight": "path length",
+            "visit": "Checking the path bending here",
+            "start": "The leaves",
+            "done": "The two furthest-apart nodes found in one pass."
+        }
+    },
+    "lca_bt": {
+        "scene": "files",
+        "title": "The Nearest Shared Boss",
+        "hook": "You are finding the lowest manager both employees report up to — the deepest node with both of them beneath it.",
+        "metaphors": {
+            "node": "person",
+            "edge": "reports-to",
+            "weight": "depth",
+            "visit": "Asking a subtree if a target is inside",
+            "start": "The person at the top",
+            "done": "The split point — the lowest common ancestor."
+        }
+    },
+    "frog_jump": {
+        "scene": "maze",
+        "title": "The Frog and the Stones",
+        "hook": "A frog crosses a row of stones, hopping one or two at a time and paying the height difference — find the cheapest crossing.",
+        "metaphors": {
+            "node": "stone",
+            "edge": "hop",
+            "weight": "energy",
+            "visit": "Pricing the cheapest way here",
+            "start": "The first stone, free",
+            "done": "The least-energy crossing, each stone solved once."
+        }
+    },
+    "buy_sell_stock": {
+        "scene": "stocks",
+        "title": "One Buy, One Sell",
+        "hook": "You are a trader with a single buy and a single sell — track the lowest price seen and the best profit against it, in one pass.",
+        "metaphors": {
+            "node": "day",
+            "edge": "hold",
+            "weight": "price",
+            "visit": "Selling today against the low",
+            "start": "Day one — the first low",
+            "done": "The most profitable single trade."
+        }
+    },
+    "coin_change_2": {
+        "scene": "vault",
+        "title": "Counting Every Way to Pay",
+        "hook": "Not the fewest coins — the number of *distinct* combinations that make the amount, counted coin by coin so nothing is double-counted.",
+        "metaphors": {
+            "node": "amount",
+            "edge": "coin added",
+            "weight": "ways",
+            "visit": "Adding the ways with and without this coin",
+            "start": "One way to make nothing",
+            "done": "Every distinct combination counted."
+        }
+    },
+    "longest_common_substring": {
+        "scene": "dna",
+        "title": "The Longest Shared Run",
+        "hook": "Two strands — find the longest *unbroken* stretch they share. A single mismatch breaks the run back to zero.",
+        "metaphors": {
+            "node": "base",
+            "edge": "diagonal run",
+            "weight": "run length",
+            "visit": "Extending or resetting the run",
+            "start": "Two raw strands",
+            "done": "The longest contiguous shared block."
         }
     }
 }

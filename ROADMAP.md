@@ -153,9 +153,50 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
 1380 passing. A2Z now 86 rows linked; category = Math.
 
   Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
-  Bit Manipulation → [next] Binary Trees (13) → DP remainder (16) →
+  Bit Manipulation, Binary Trees (13), DP remainder (16) → [next]
   Arrays/Binary Search/Recursion/Stack (3,4,7,9) → Linked List DLL (6) +
   Tries (17). Floyd-Warshall etc. blocked until the graph-model change.
+
+**Batch 24 (new tracers) — DP remainder (Step 16).**
+Four DP tracers, all reusing existing views (no renderer changes):
+  - `frog_jump` (16-3) — the two-choice 1-D DP, grid view as a two-row table
+    (heights / cheapest energy), like house_robber; landed stones light green.
+  - `buy_sell_stock` (16-35) — one-pass min-so-far on the array view, reusing
+    kadanes' window/best_window highlighting (added to that renderer group).
+  - `coin_change_2` (16-65) — counts *ways* (not min coins) on the coin×amount
+    grid; the mirror of coin_change (adds instead of minimises, counts by row).
+  - `longest_common_substring` (16-27) — LCS's stricter cousin on the grid; a
+    mismatch resets the run to 0, answer is the largest cell, reuses the LCS
+    two-word text parser.
+Full recipe each: route dispatch + validation, detect metaphor, data.js entry
+(DP), engine wiring (VIEW_FOR, scene, input example/hint, parse + run dispatch,
+target label). Offline localArrayTrace parity intentionally omitted, matching
+the existing coin_change/house_robber/subset_sum precedent (online is the
+production path). 9 tests vs independent reference impls; full suite 1399
+passing. A2Z now 94 rows linked; Step 16 = 22 rows linked. Deferred DP (each
+needs new input/renderer work or is a near-duplicate of a shipped tracer):
+the DP-on-stocks variants (II–IV, cooldown, fee), partition/MCM DP
+(burst balloons, palindrome partitioning), and the string-DP family beyond
+LCS/edit-distance/common-substring.
+
+**Batch 23 (new tracers) — Binary Trees (Step 13).**
+Four tracers on the existing tree view, all building a BST from the student's
+numbers and reusing the tree renderer (one additive tweak: a `marked` node set
+now glows soft-green for visited/settled nodes, so traversals read clearly):
+  - `level_order` (13-6) — BFS level order with a queue; emits per-level lists.
+  - `tree_max_depth` (13-44) — post-order height, 1 + deeper subtree.
+  - `tree_diameter` (13-46) — the one-pass height + bending-path trick (edges).
+  - `lca_bt` (13-53) — the general (non-BST) LCA recursion; the node that hears
+    a target from both subtrees is the split point. Text input "vals | a b",
+    distinct values, both targets must be present.
+Full recipe each: route dispatch + validation, detect metaphor (org-chart /
+family-tree scenes), data.js entry (Structures), engine wiring (VIEW_FOR,
+input example/hint, run dispatch, offline localArrayTrace parity). 10 tests vs
+independent reference impls; full suite 1390 passing. A2Z now 90 rows linked;
+Step 13 = 9/38 rows (5 traversal + these 4). Deliberately deferred (need extra
+input/renderer work): the view problems (top/bottom/left/right, 13-49..51),
+boundary/vertical/zigzag traversals, path-sum and tree-construction (13-60/61),
+Morris traversals, and serialize/deserialize.
 
 **UI redesign DONE.** The palette and the 3D keyboard hero are unchanged;
 everything else moved onto a shared component layer (`.page-head`, `.toolbar`,

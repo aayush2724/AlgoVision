@@ -216,6 +216,9 @@ const VIEW_FOR = {
   counting_sort: 'array', prefix_sums: 'array', next_greater_element: 'array',
   edit_distance: 'grid', floyd_cycle: 'list',
   tree_traversal: 'tree', trie_insert: 'tree', huffman: 'tree',
+  level_order: 'tree', tree_max_depth: 'tree', tree_diameter: 'tree', lca_bt: 'tree',
+  frog_jump: 'grid', buy_sell_stock: 'array', coin_change_2: 'grid',
+  longest_common_substring: 'grid',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
@@ -512,6 +515,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       selection_sort: 'leaderboard',
       linked_list_reverse: 'train', balanced_brackets: 'plates',
       bst_insert: 'files', bst_search: 'files', heap_insert: 'scheduler',
+      level_order: 'files', tree_max_depth: 'files', tree_diameter: 'social',
+      lca_bt: 'files',
+      frog_jump: 'maze', buy_sell_stock: 'stocks', coin_change_2: 'vault',
+      longest_common_substring: 'dna',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
       prims_mst: 'grid_power', kruskals_mst: 'grid_power',
@@ -736,6 +743,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'sliding_window' || algoId === 'kadanes'
+                 || algoId === 'buy_sell_stock'
                  || algoId === 'longest_substring_no_repeat'
                  || algoId === 'max_consecutive_ones_iii'
                  || algoId === 'longest_k_distinct') {
@@ -830,6 +838,38 @@ export function mountEngine(view, algo = 'dijkstra') {
     tree_traversal: {
       array: '8, 3, 10, 1, 6, 14, 4',
       hint: 'Up to 12 values. The same tree is walked three ways — watch inorder come out sorted.',
+    },
+    level_order: {
+      array: '8, 3, 10, 1, 6, 14, 4',
+      hint: 'Up to 12 values. The queue reads the tree top to bottom, left to right — one level at a time.',
+    },
+    tree_max_depth: {
+      array: '8, 3, 10, 1, 6, 14, 4',
+      hint: 'Up to 12 values. Depth is measured bottom-up: a node is 1 + the deeper of its two subtrees.',
+    },
+    tree_diameter: {
+      array: '8, 3, 10, 1, 6, 14, 4',
+      hint: 'Up to 12 values. One post-order pass; the longest path may bend through a node without touching the root.',
+    },
+    lca_bt: {
+      array: '8, 3, 10, 1, 6, 14, 4 | 1 6',
+      hint: 'Tree values, then "|" and two of them. The lowest node with both targets beneath it is the answer.',
+    },
+    frog_jump: {
+      array: '30, 10, 60, 10, 60, 50',
+      hint: 'Up to 10 stone heights (0+). Row 1 fills with the cheapest energy to reach each stone; the frog’s route lights green.',
+    },
+    buy_sell_stock: {
+      array: '7, 1, 5, 3, 6, 4',
+      hint: 'Up to 16 prices (0+). One buy, one sell — carry the lowest price so far and the best profit against it.',
+    },
+    coin_change_2: {
+      array: '1, 2, 3', target: '4',
+      hint: 'Up to 4 coins and an amount (0–12). Each cell counts combinations — the answer is the bottom-right.',
+    },
+    longest_common_substring: {
+      array: 'ABCDE, ZBCDF',
+      hint: 'Two words (letters/digits, up to 8 each). A match extends the diagonal; a mismatch resets the run to 0.',
     },
     trie_insert: {
       array: 'CAT, CAR, DOG',
@@ -1107,6 +1147,33 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { array: values };
     }
 
+    if (algoId === 'frog_jump' || algoId === 'buy_sell_stock') {
+      const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
+      const label = algoId === 'frog_jump' ? 'stone heights' : 'prices';
+      if (!parts.length) return { error: `Enter some ${label} — e.g. 30, 10, 60` };
+      const values = parts.map(Number);
+      if (values.some(v => !Number.isInteger(v) || v < 0)) {
+        return { error: `${label[0].toUpperCase() + label.slice(1)} must be whole numbers of 0 or more.` };
+      }
+      const cap = algoId === 'frog_jump' ? 10 : 16;
+      if (values.length > cap) return { error: `Max ${cap} ${label}.` };
+      return { array: values };
+    }
+
+    if (algoId === 'coin_change_2') {
+      const coins = (arrayInput?.value || '').split(',')
+        .map(s => Number(s.trim())).filter(s => s !== '' && !Number.isNaN(s));
+      if (!coins.length) return { error: 'Type coin values — e.g. 1, 2, 3' };
+      if (coins.length > 4) return { error: 'Max 4 coin denominations.' };
+      if (coins.some(c => !Number.isInteger(c) || c < 1)) {
+        return { error: 'Coins must be whole numbers of 1 or more.' };
+      }
+      const amount = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(amount)) return { error: 'Amount must be a whole number.' };
+      if (amount < 0 || amount > 12) return { error: 'Keep the amount between 0 and 12.' };
+      return { array: coins, target: amount };
+    }
+
     if (algoId === 'subset_sum') {
       const parts = (arrayInput?.value || '').trim().split(/[\s,;]+/).filter(Boolean);
       if (!parts.length) return { error: 'Enter some numbers — e.g. 3, 4, 5' };
@@ -1128,6 +1195,31 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Two words (letters/digits, 1–12 each), comma-separated — e.g. LISTEN, SILENT' };
       }
       return { text: raw };
+    }
+
+    if (algoId === 'lca_bt') {
+      const raw = (arrayInput?.value || '').trim();
+      if (!raw.includes('|')) {
+        return { error: 'Add "| a b" — two values to find the ancestor of, e.g. 8,3,10,1,6 | 1 6' };
+      }
+      const [numsRaw, tgtRaw] = raw.split('|');
+      const numParts = numsRaw.replace(/\s+/g, '').split(',').filter(Boolean);
+      const nums = numParts.map(Number);
+      if (!nums.length || nums.some(v => !Number.isInteger(v))) {
+        return { error: 'Tree values must be comma-separated whole numbers.' };
+      }
+      if (nums.length > 12) return { error: 'Max 12 tree values.' };
+      if (new Set(nums).size !== nums.length) return { error: 'Give distinct tree values.' };
+      const tgts = tgtRaw.replace(/,/g, ' ').split(/\s+/).filter(Boolean).map(Number);
+      if (tgts.length !== 2 || tgts.some(v => !Number.isInteger(v))) {
+        return { error: 'Give exactly two whole-number targets after "|" — e.g. | 1 6' };
+      }
+      if (tgts[0] === tgts[1]) return { error: 'The two targets must be different.' };
+      if (!nums.includes(tgts[0]) || !nums.includes(tgts[1])) {
+        return { error: 'Both targets must be values present in the tree.' };
+      }
+      return { text: `${numParts.join(',')} | ${tgts[0]} ${tgts[1]}`,
+               array: nums, aVal: tgts[0], bVal: tgts[1] };
     }
 
     if (algoId === 'gcd_euclid') {
@@ -2010,19 +2102,23 @@ export function mountEngine(view, algo = 'dijkstra') {
       });
     });
 
+    // Nodes already visited/settled by traversals (level order, depth,
+    // diameter, LCA targets) glow a soft green; the active node stays orange.
+    const marked = new Set(s.marked || []);
     nodes.forEach(n => {
       const isCurrent = n.id === s.current;
+      const isMarked = marked.has(n.id);
       const circle = makeSVG('circle');
       circle.dataset.nodeId = n.id;
       circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
       circle.setAttribute('r', '15');
       circle.setAttribute('fill', isCurrent
         ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(212, 96, 44,0.2)')
-        : 'var(--cDeep)');
+        : (isMarked ? 'rgba(74,222,128,0.12)' : 'var(--cDeep)'));
       circle.setAttribute('stroke', isCurrent
         ? (s.found === true ? '#4ade80' : 'var(--c)')
-        : 'var(--cDim)');
-      circle.setAttribute('stroke-width', isCurrent ? '2' : '1');
+        : (isMarked ? 'rgba(74,222,128,0.6)' : 'var(--cDim)'));
+      circle.setAttribute('stroke-width', isCurrent ? '2' : (isMarked ? '1.5' : '1'));
       g.appendChild(circle);
 
       const t = makeSVG('text');
@@ -2300,6 +2396,93 @@ export function mountEngine(view, algo = 'dijkstra') {
             : `${fmt(v)} attached after ${comps} comparison(s).`, nid);
         }
         add('Tree built — an in-order walk reads sorted.');
+        return { steps };
+      }
+
+      if (algoId === 'level_order' || algoId === 'tree_max_depth'
+          || algoId === 'tree_diameter') {
+        values.forEach(bstAttach);
+        const snap = bstSerialize(nodes, root);
+        const marked = [];
+        const mk = (note2, current = null) => steps.push({
+          i: steps.length,
+          structures: { tree: snap, current, marked: [...marked],
+            found: null, counts: {} },
+          highlight: { index: current }, note: note2,
+        });
+        if (root === null) { mk('An empty tree.'); return { steps }; }
+
+        if (algoId === 'level_order') {
+          mk('Level order reads the tree top to bottom, left to right — using a queue.');
+          const q = [root], order = [];
+          while (q.length) {
+            const nid = q.shift();
+            marked.push(nid); order.push(fmt(nodes[nid].value));
+            mk(`Dequeue ${fmt(nodes[nid].value)} — visit it, then enqueue its children.`, nid);
+            for (const c of [nodes[nid].left, nodes[nid].right]) if (c !== null) q.push(c);
+          }
+          mk(`Level order: ${order.join(' → ')}.`);
+          return { steps };
+        }
+
+        if (algoId === 'tree_max_depth') {
+          mk('Depth of a node = 1 + the deeper subtree; measured bottom-up.');
+          const dfs = (nid) => {
+            if (nid === null) return 0;
+            const lh = dfs(nodes[nid].left), rh = dfs(nodes[nid].right);
+            const h = 1 + Math.max(lh, rh);
+            marked.push(nid);
+            mk(`${fmt(nodes[nid].value)}: left ${lh}, right ${rh} → depth ${h}.`, nid);
+            return h;
+          };
+          mk(`Maximum depth is ${dfs(root)}.`);
+          return { steps };
+        }
+
+        // tree_diameter
+        mk('One post-order pass tracks each height and the path bending through each node.');
+        let dia = 0;
+        const dfs = (nid) => {
+          if (nid === null) return 0;
+          const lh = dfs(nodes[nid].left), rh = dfs(nodes[nid].right);
+          const through = lh + rh;
+          marked.push(nid); dia = Math.max(dia, through);
+          mk(`${fmt(nodes[nid].value)}: heights L=${lh}, R=${rh} → path here ${through} edges. Best ${dia}.`, nid);
+          return 1 + Math.max(lh, rh);
+        };
+        dfs(root);
+        mk(`Diameter is ${dia} edges.`);
+        return { steps };
+      }
+
+      if (algoId === 'lca_bt') {
+        values.forEach(bstAttach);
+        const snap = bstSerialize(nodes, root);
+        const a = parsed.aVal, b = parsed.bVal;
+        const targets = Object.keys(nodes)
+          .filter(k => nodes[k].value === a || nodes[k].value === b).map(Number);
+        const mk = (note2, current = null, found = null) => steps.push({
+          i: steps.length,
+          structures: { tree: snap, current, marked: targets, found, counts: {} },
+          highlight: { index: current }, note: note2,
+        });
+        mk(`Find the lowest common ancestor of ${fmt(a)} and ${fmt(b)} (highlighted).`);
+        const dfs = (nid) => {
+          if (nid === null) return null;
+          if (nodes[nid].value === a || nodes[nid].value === b) {
+            mk(`${fmt(nodes[nid].value)} is one of the targets — report it up.`, nid);
+            return nid;
+          }
+          mk(`At ${fmt(nodes[nid].value)} — neither target. Ask both subtrees.`, nid);
+          const L = dfs(nodes[nid].left), R = dfs(nodes[nid].right);
+          if (L !== null && R !== null) {
+            mk(`${fmt(nodes[nid].value)} hears a target from BOTH sides — it is the LCA.`, nid, true);
+            return nid;
+          }
+          return L !== null ? L : R;
+        };
+        const r = dfs(root);
+        if (r !== null) mk(`LCA of ${fmt(a)} and ${fmt(b)} is ${fmt(nodes[r].value)}.`, r, true);
         return { steps };
       }
 
@@ -3343,7 +3526,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
-        } else if (algoId === 'coin_change') {
+        } else if (algoId === 'coin_change' || algoId === 'coin_change_2') {
           renderGridView();
           res = isOffline
             ? localArrayTrace(parsed)
@@ -3355,6 +3538,12 @@ export function mountEngine(view, algo = 'dijkstra') {
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
         } else if (algoId === 'trie_insert' || algoId === 'huffman') {
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'lca_bt') {
+          currentArrayValues = parsed.array.slice();
           renderTreeView();
           res = isOffline
             ? localArrayTrace(parsed)
@@ -3376,7 +3565,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, payload);
-        } else if (algoId === 'house_robber' || algoId === 'lis') {
+        } else if (algoId === 'house_robber' || algoId === 'lis'
+                   || algoId === 'frog_jump') {
           renderGridView();
           res = isOffline
             ? localArrayTrace(parsed)
@@ -4064,7 +4254,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
-        'bst_delete', 'coin_change', 'subset_sum',
+        'bst_delete', 'coin_change', 'coin_change_2', 'subset_sum',
         'sliding_window_maximum'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
@@ -4081,6 +4271,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'fenwick_tree') targetLabel.textContent = 'UP TO =';
         if (targetLabel && algoId === 'bst_delete') targetLabel.textContent = 'DELETE =';
         if (targetLabel && algoId === 'coin_change') targetLabel.textContent = 'AMOUNT =';
+        if (targetLabel && algoId === 'coin_change_2') targetLabel.textContent = 'AMOUNT =';
         if (targetLabel && algoId === 'subset_sum') targetLabel.textContent = 'SUM =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;

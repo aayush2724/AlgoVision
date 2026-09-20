@@ -111,6 +111,11 @@ export const A2Z_TRACER = {
   "13-5":  "tree_traversal",         // Postorder Traversal
   "13-37": "tree_traversal",         // Pre, Post, Inorder in one traversal
   "13-43": "tree_traversal",         // Preorder, Inorder, Postorder in one traversal
+  // Batch 23 — Binary Tree measures (BFS + recursive height family, LCA).
+  "13-6":  "level_order",            // Level Order Traversal
+  "13-44": "tree_max_depth",         // Maximum Depth in BT
+  "13-46": "tree_diameter",          // Diameter of Binary Tree
+  "13-53": "lca_bt",                 // LCA in BT
 
   // ── Step 15 — Graphs ──
   "15-3":  "connected_components",   // Connected Components
@@ -174,4 +179,10 @@ export const A2Z_TRACER = {
 
   // ── Step 16 — Dynamic Programming ──
   "16-2":  "fibonacci_dp",           // Climbing stairs (same recurrence as Fibonacci)
+
+  // ══ Batch 24 (2026-09-21): the DP remainder — 1D DP, stocks, counting, strings.
+  "16-3":  "frog_jump",              // Frog Jump
+  "16-35": "buy_sell_stock",         // Best time to buy and sell stock
+  "16-65": "coin_change_2",          // Coin Change 2 (count ways)
+  "16-27": "longest_common_substring", // Longest common substring
 };

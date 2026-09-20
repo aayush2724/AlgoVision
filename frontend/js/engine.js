@@ -4222,23 +4222,33 @@ export function mountEngine(view, algo = 'dijkstra') {
   // ── Init ──
   // Try to get realworld meta from backend detect endpoint
   async function init() {
+    // Paint immediately with local meta so the screen is never blank while the
+    // detect round-trip is in flight. The very first detect call can lag (cold
+    // backend / first request), and gating the render on it left the monitor
+    // empty on the first keycap click — it only worked from the second visit,
+    // once the backend was warm. Render first, then enrich the hook.
+    currentMeta = {
+      scene: resolveScene(algoId),
+      metaphors: { node: 'node', visit: 'Visiting', done: 'Complete.' }
+    };
+    setupAndRender();
+
+    // Enrich with backend detect meta (hook text, richer narration metaphors)
+    // without blocking that first paint. Failure just keeps the local meta.
     try {
       const detection = await api.detect("", algoId);
-      currentMeta = detection.realworld;
-      // Update page title/hook
-      const hookEl = view.querySelector('#scene-hook');
-      if (hookEl && currentMeta?.hook) {
-        hookEl.textContent = currentMeta.hook;
-        hookEl.style.display = 'block';
+      if (detection?.realworld) {
+        currentMeta = detection.realworld;
+        const hookEl = view.querySelector('#scene-hook');
+        if (hookEl && currentMeta?.hook) {
+          hookEl.textContent = currentMeta.hook;
+          hookEl.style.display = 'block';
+        }
       }
-    } catch {
-      // Use offline meta
-      currentMeta = {
-        scene: resolveScene(algoId),
-        metaphors: { node: 'node', visit: 'Visiting', done: 'Complete.' }
-      };
-    }
+    } catch { /* keep the local meta */ }
+  }
 
+  function setupAndRender() {
     if (traceView !== 'graph') {
       const defaults = ARRAY_DEFAULTS[algoId] || ARRAY_DEFAULTS.merge_sort;
       if (arrayControls) arrayControls.classList.remove('is-hidden');

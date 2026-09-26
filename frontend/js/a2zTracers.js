@@ -197,4 +197,12 @@ export const A2Z_TRACER = {
   "7-20":  "rat_in_maze",            // Rat in a Maze
   "9-25":  "stock_span",             // Stock span problem
   "9-39":  "largest_rectangle",      // Largest rectangle in a histogram
+
+  // ══ Batch 27 (2026-09-27): two more stack/two-pointer classics and two
+  // binary searches whose "sorted half" test isn't plain comparison to target.
+  "9-17":  "trapping_rainwater",     // Trapping Rainwater
+  "9-19":  "asteroid_collision",     // Asteroid Collision
+  "4-37":  "find_min_rotated",       // Find minimum in Rotated Sorted Array
+  "4-38":  "find_min_rotated",       // How many times rotated (= index of the min)
+  "4-13":  "find_peak",              // Find peak element
 };

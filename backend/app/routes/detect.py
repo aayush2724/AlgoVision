@@ -118,6 +118,10 @@ SIGNATURES = {
     "largest_rectangle": ["largest_rectangle", "largest rectangle", "histogram", "maximum rectangle area", "largest area histogram"],
     "rat_in_maze": ["rat_in_maze", "rat in a maze", "rat in maze", "all paths maze", "maze paths", "escape routes"],
     "word_search": ["word_search", "word search", "word in grid", "word exists grid", "letters grid backtracking"],
+    "trapping_rainwater": ["trapping_rainwater", "trapping rain water", "trapping rainwater", "trap rain", "water trapped between bars"],
+    "asteroid_collision": ["asteroid_collision", "asteroid collision", "asteroids collide", "colliding asteroids"],
+    "find_min_rotated": ["find_min_rotated", "minimum in rotated", "min rotated sorted", "how many times rotated", "rotation count", "find rotation"],
+    "find_peak": ["find_peak", "peak element", "find peak", "local maximum", "bigger than neighbours", "bigger than neighbors"],
 }
 
 REALWORLD_META = {
@@ -1330,6 +1334,58 @@ REALWORLD_META = {
             "visit": "Testing a neighbouring letter",
             "start": "Any tile with the first letter",
             "done": "The word traced tile by tile, or proven absent."
+        }
+    },
+    "trapping_rainwater": {
+        "scene": "leaderboard",
+        "title": "Rain Over the Skyline",
+        "hook": "Water over a rooftop rises to the lower of the two tallest walls around it. Walk in from both ends and always settle the side with the lower wall.",
+        "metaphors": {
+            "node": "rooftop",
+            "edge": "wall",
+            "weight": "height",
+            "visit": "Settling a rooftop",
+            "start": "A dry skyline",
+            "done": "Every pocket of water measured in one pass."
+        }
+    },
+    "asteroid_collision": {
+        "scene": "plates",
+        "title": "Asteroids on a Collision Course",
+        "hook": "Right-movers wait on a stack; a left-mover smashes into them one by one until it dies, ties, or clears the way.",
+        "metaphors": {
+            "node": "asteroid",
+            "edge": "collision",
+            "weight": "size",
+            "visit": "An asteroid arriving",
+            "start": "An empty sky",
+            "done": "Only the survivors remain, in order."
+        }
+    },
+    "find_min_rotated": {
+        "scene": "library",
+        "title": "Where Does the Shelf Wrap Around?",
+        "hook": "A sorted shelf was cut and swapped. Compare the middle book with the last: if it's bigger, the wrap-around point is to the right.",
+        "metaphors": {
+            "node": "book",
+            "edge": "shelf order",
+            "weight": "call number",
+            "visit": "Checking the middle book at position",
+            "start": "The whole rotated shelf",
+            "done": "The smallest book — and how far the shelf was rotated."
+        }
+    },
+    "find_peak": {
+        "scene": "stocks",
+        "title": "Find a Local High Without Sorting",
+        "hook": "Stand in the middle of the chart. Going uphill? A peak must lie ahead. Downhill? One is behind you. Halve and repeat.",
+        "metaphors": {
+            "node": "day",
+            "edge": "slope",
+            "weight": "price",
+            "visit": "Checking the slope at a day",
+            "start": "The whole chart",
+            "done": "A local high, found in log n."
         }
     }
 }

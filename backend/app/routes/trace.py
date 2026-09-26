@@ -28,6 +28,7 @@ from app.tracers import (
     frog_jump, buy_sell_stock, coin_change_2, longest_common_substring,
     search_rotated, dutch_flag, majority_element, next_permutation,
     stock_span, largest_rectangle, rat_in_maze, word_search,
+    trapping_rainwater, asteroid_collision, find_min_rotated, find_peak,
 )
 from app.tracers.common import Graph
 import os
@@ -184,6 +185,10 @@ def algorithms():
             {"id": "largest_rectangle", "name": "Largest Rectangle in Histogram", "input": "array"},
             {"id": "rat_in_maze",   "name": "Rat in a Maze (All Paths)",     "input": "number"},
             {"id": "word_search",   "name": "Word Search (Grid Backtracking)", "input": "text"},
+            {"id": "trapping_rainwater", "name": "Trapping Rainwater (Two Pointers)", "input": "array"},
+            {"id": "asteroid_collision", "name": "Asteroid Collision (Stack)", "input": "array"},
+            {"id": "find_min_rotated", "name": "Minimum in Rotated Sorted Array", "input": "array"},
+            {"id": "find_peak",     "name": "Find Peak Element",            "input": "array"},
         ]
     }
 
@@ -1007,6 +1012,51 @@ def run_trace(request: Request, req: TraceRequest):
           detail=f"Keep the word to {word_search.MAX_WORD} letters or fewer.")
       return word_search.trace(board, word)
 
+    if req.algorithm == "trapping_rainwater":
+      arr = _validated_array(req.array, trapping_rainwater.MAX_LEN,
+                             "trapping_rainwater")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="trapping_rainwater needs at least one bar height.")
+      if any(v < 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Bar heights must be 0 or more.")
+      return trapping_rainwater.trace(arr)
+
+    if req.algorithm == "asteroid_collision":
+      arr = _validated_array(req.array, asteroid_collision.MAX_LEN,
+                             "asteroid_collision")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="asteroid_collision needs at least one asteroid.")
+      if any(v == 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Asteroids can't be 0 — the sign is the direction.")
+      return asteroid_collision.trace(arr)
+
+    if req.algorithm == "find_min_rotated":
+      arr = _validated_array(req.array, find_min_rotated.MAX_LEN,
+                             "find_min_rotated")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="find_min_rotated needs a non-empty array.")
+      if not find_min_rotated.is_rotated_sorted(arr):
+        raise HTTPException(status_code=400,
+          detail="Give a sorted array of distinct values rotated at one "
+                 "point — e.g. 4, 5, 6, 7, 0, 1, 2.")
+      return find_min_rotated.trace(arr)
+
+    if req.algorithm == "find_peak":
+      arr = _validated_array(req.array, find_peak.MAX_LEN, "find_peak")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="find_peak needs a non-empty array.")
+      if any(a == b for a, b in zip(arr, arr[1:])):
+        raise HTTPException(status_code=400,
+          detail="Neighbouring values must differ — otherwise a flat stretch "
+                 "has no guaranteed peak.")
+      return find_peak.trace(arr)
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1566,7 +1616,9 @@ def run_trace(request: Request, req: TraceRequest):
                 "frog_jump", "buy_sell_stock", "coin_change_2",
                 "longest_common_substring", "search_rotated", "dutch_flag",
                 "majority_element", "next_permutation", "stock_span",
-                "largest_rectangle", "rat_in_maze", "word_search"])
+                "largest_rectangle", "rat_in_maze", "word_search",
+                "trapping_rainwater", "asteroid_collision",
+                "find_min_rotated", "find_peak"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

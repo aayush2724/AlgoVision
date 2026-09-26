@@ -226,6 +226,8 @@ const VIEW_FOR = {
   search_rotated: 'array', dutch_flag: 'array', majority_element: 'array',
   next_permutation: 'array', stock_span: 'array', largest_rectangle: 'array',
   rat_in_maze: 'grid', word_search: 'grid',
+  trapping_rainwater: 'array', asteroid_collision: 'array',
+  find_min_rotated: 'array', find_peak: 'array',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
@@ -530,6 +532,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       majority_element: 'social', next_permutation: 'leaderboard',
       stock_span: 'stocks', largest_rectangle: 'leaderboard',
       rat_in_maze: 'maze', word_search: 'library',
+      trapping_rainwater: 'leaderboard', asteroid_collision: 'plates',
+      find_min_rotated: 'library', find_peak: 'stocks',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
       prims_mst: 'grid_power', kruskals_mst: 'grid_power',
@@ -735,7 +739,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       cell.setAttribute("stroke-width", "1");
       if (g) g.setAttribute("opacity", "1");
 
-      if (algoId === 'binary_search' || algoId === 'search_rotated') {
+      if (algoId === 'binary_search' || algoId === 'search_rotated'
+          || algoId === 'find_min_rotated' || algoId === 'find_peak') {
         const inRange = s.low != null && idx >= s.low && idx <= s.high;
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (inRange) cell.setAttribute("stroke", "var(--c)");
@@ -913,6 +918,22 @@ export function mountEngine(view, algo = 'dijkstra') {
     word_search: {
       array: 'ABCE/SFCS/ADEE, ABCCED',
       hint: 'Grid rows separated by /, then the word (grid up to 5×5, word up to 8 letters). Try SEE, then ABCB.',
+    },
+    trapping_rainwater: {
+      array: '0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1',
+      hint: 'Up to 16 bar heights (0+). Settled bars turn green from both ends; the note keeps the running water total.',
+    },
+    asteroid_collision: {
+      array: '5, 10, -5, 8, -8, 2, -12',
+      hint: 'Up to 16 non-zero sizes: positive moves right, negative moves left. Survivors stay green.',
+    },
+    find_min_rotated: {
+      array: '4, 5, 6, 7, 0, 1, 2',
+      hint: 'A sorted array of distinct values, rotated at one point. The minimum\'s index is how many times it was rotated.',
+    },
+    find_peak: {
+      array: '1, 3, 2, 4, 6, 5, 2',
+      hint: 'Up to 16 numbers, no two equal neighbours. Not sorted — the slope at mid decides which half keeps a peak.',
     },
     trie_insert: {
       array: 'CAT, CAR, DOG',
@@ -1781,6 +1802,36 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (values.some(v => v !== 0 && v !== 1 && v !== 2)) {
         return { error: 'Dutch flag sorts only 0s, 1s and 2s — use those values.' };
       }
+      return { array: values };
+    }
+
+    if (algoId === 'trapping_rainwater') {
+      if (values.some(v => v < 0)) return { error: 'Bar heights must be 0 or more.' };
+      if (values.length > 16) return { error: 'Max 16 bars — the trace has to stay readable.' };
+      return { array: values };
+    }
+
+    if (algoId === 'asteroid_collision') {
+      if (values.some(v => v === 0)) return { error: 'Asteroids can\'t be 0 — the sign is the direction.' };
+      if (values.length > 16) return { error: 'Max 16 asteroids.' };
+      return { array: values };
+    }
+
+    if (algoId === 'find_min_rotated') {
+      const n = values.length;
+      const drops = values.filter((v, i) => v > values[(i + 1) % n]).length;
+      if (new Set(values).size !== n || drops > 1) {
+        return { error: 'Give a sorted array of distinct values rotated at one point — e.g. 4, 5, 6, 7, 0, 1, 2.' };
+      }
+      if (n > 16) return { error: 'Max 16 values.' };
+      return { array: values };
+    }
+
+    if (algoId === 'find_peak') {
+      if (values.some((v, i) => i > 0 && v === values[i - 1])) {
+        return { error: 'Neighbouring values must differ — a flat stretch has no guaranteed peak.' };
+      }
+      if (values.length > 16) return { error: 'Max 16 values.' };
       return { array: values };
     }
 

@@ -154,9 +154,26 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
 
   Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
   Bit Manipulation, Binary Trees (13), DP remainder (16), Arrays+Binary Search
-  first batch (3,4), Recursion/Stack first batch (7,9) → [next] more
-  Recursion/Stack + Arrays/Binary Search → Linked List DLL (6) + Tries (17).
+  first batch (3,4), Recursion/Stack first batch (7,9), Stack + Binary
+  Search second batch (4,9) → [next] Linked List DLL (6) + Tries (17), then
+  the view-bound leftovers (recursion tree for subsets/combination sum, token
+  stream for infix/postfix, "binary search on the answer" family).
   Floyd-Warshall etc. blocked until the graph-model change.
+
+**Batch 27 (new tracers) — Stack & Binary Search (Steps 4, 9).**
+Four tracers on the array view; the only renderer touch is adding the two
+binary searches to the existing low/high/mid highlight branch:
+  - `trapping_rainwater` (9-17) — two pointers + running maxima; bars settled
+    from either end turn green, the note carries the running water total.
+  - `asteroid_collision` (9-19) — survivor stack; live asteroids are green.
+  - `find_min_rotated` (4-37, and 4-38 — the rotation count *is* the min's
+    index) — compare mid with the right end. Input must be a rotated sorted
+    array of distinct values (validated both sides).
+  - `find_peak` (4-13) — binary search on the slope of an unsorted array; no
+    two equal neighbours (validated both sides).
+Tests vs brute force (literal collision simulation, O(n²) water, all
+rotations, peak property on random arrays); full suite 1434 passing. A2Z now
+107 rows linked.
 
 **Batch 26 (new tracers) — Recursion & Stack (Steps 7, 9).**
 Four tracers, all reusing existing views (no renderer changes):

@@ -122,6 +122,10 @@ SIGNATURES = {
     "asteroid_collision": ["asteroid_collision", "asteroid collision", "asteroids collide", "colliding asteroids"],
     "find_min_rotated": ["find_min_rotated", "minimum in rotated", "min rotated sorted", "how many times rotated", "rotation count", "find rotation"],
     "find_peak": ["find_peak", "peak element", "find peak", "local maximum", "bigger than neighbours", "bigger than neighbors"],
+    "dll_reverse": ["dll_reverse", "reverse a doubly linked list", "reverse doubly linked", "reverse dll"],
+    "dll_delete_key": ["dll_delete_key", "delete all occurrences", "delete key doubly linked", "remove key from dll", "delete occurrences of a key"],
+    "remove_nth_from_end": ["remove_nth_from_end", "remove nth node", "nth node from the end", "nth from end", "delete nth from back"],
+    "longest_complete_word": ["longest_complete_word", "complete string", "longest word with all prefixes", "all prefixes present", "longest word in dictionary"],
 }
 
 REALWORLD_META = {
@@ -1386,6 +1390,58 @@ REALWORLD_META = {
             "visit": "Checking the slope at a day",
             "start": "The whole chart",
             "done": "A local high, found in log n."
+        }
+    },
+    "dll_reverse": {
+        "scene": "train",
+        "title": "Turn the Whole Train Around",
+        "hook": "Every carriage is coupled both ways. To reverse the train, each carriage just swaps its front and back couplings — no one needs to remember the neighbours.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "cargo",
+            "visit": "Swapping a carriage's couplings",
+            "start": "The engine at the front",
+            "done": "The train now runs the other way."
+        }
+    },
+    "dll_delete_key": {
+        "scene": "train",
+        "title": "Uncouple Every Faulty Carriage",
+        "hook": "Walk the train once. At each faulty carriage, couple its neighbours straight to each other, front and back, and it drops out.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "cargo",
+            "visit": "Inspecting a carriage",
+            "start": "The front of the train",
+            "done": "Every faulty carriage uncoupled in one pass."
+        }
+    },
+    "remove_nth_from_end": {
+        "scene": "train",
+        "title": "Drop the Nth Carriage From the Back",
+        "hook": "You can't walk a train backwards. Send a scout N carriages ahead, then walk together — when the scout reaches the end, you're right before the one to drop.",
+        "metaphors": {
+            "node": "carriage",
+            "edge": "coupling",
+            "weight": "cargo",
+            "visit": "Walking the train",
+            "start": "Both walkers at the engine",
+            "done": "The carriage is gone, in a single pass."
+        }
+    },
+    "longest_complete_word": {
+        "scene": "library",
+        "title": "The Longest Word Built Letter by Letter",
+        "hook": "A word counts only if you could have spelled it one valid word at a time: n, ni, nin, ninj, ninja. In a trie, that means every letter on its path is a word end.",
+        "metaphors": {
+            "node": "letter",
+            "edge": "next letter",
+            "weight": "—",
+            "visit": "Checking a letter's end mark",
+            "start": "The empty root",
+            "done": "The longest word whose every prefix is a word."
         }
     }
 }

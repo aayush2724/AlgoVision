@@ -205,4 +205,11 @@ export const A2Z_TRACER = {
   "4-37":  "find_min_rotated",       // Find minimum in Rotated Sorted Array
   "4-38":  "find_min_rotated",       // How many times rotated (= index of the min)
   "4-13":  "find_peak",              // Find peak element
+
+  // ══ Batch 28 (2026-09-27): doubly linked lists (the list view now draws
+  // dashed back-pointers and struck-out deletions) + a trie query.
+  "6-9":   "dll_reverse",            // Reverse a Doubly Linked List
+  "6-52":  "dll_delete_key",         // Delete all occurrences of a key in DLL
+  "6-45":  "remove_nth_from_end",    // Remove Nth node from the back of the LL
+  "17-3":  "longest_complete_word",  // Longest Word with All Prefixes
 };

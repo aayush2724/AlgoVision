@@ -155,10 +155,28 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
   Bit Manipulation, Binary Trees (13), DP remainder (16), Arrays+Binary Search
   first batch (3,4), Recursion/Stack first batch (7,9), Stack + Binary
-  Search second batch (4,9) → [next] Linked List DLL (6) + Tries (17), then
-  the view-bound leftovers (recursion tree for subsets/combination sum, token
-  stream for infix/postfix, "binary search on the answer" family).
+  Search second batch (4,9), Linked List DLL + Tries (6,17) → [next] the
+  view-bound leftovers (recursion tree for subsets/combination sum, token
+  stream for infix/postfix, "binary search on the answer" family), plus the
+  plain-view list stragglers (palindrome LL, odd/even segregate, rotate LL,
+  add two numbers).
   Floyd-Warshall etc. blocked until the graph-model change.
+
+**Batch 28 (new tracers) — Linked List DLL + Tries (Steps 6, 17).**
+The list renderer gained two OPTIONAL step fields (absent = old behaviour,
+checked on floyd_cycle): `prev_links` (dashed back-pointer arrows in their
+own lanes + a legend) and `removed` (node dimmed and struck out, no arrows).
+Pointer labels sharing a node now stack vertically instead of overlapping.
+  - `dll_reverse` (6-9) — each node swaps next/prev; new head = last.prev.
+  - `dll_delete_key` (6-52) — unlink every match from both sides, KEY input.
+  - `remove_nth_from_end` (6-45) — fast gets an N-node head start; N input.
+  - `longest_complete_word` (17-3) — trie, then longest-first check that
+    every letter on the path is end-marked (ties → alphabetical).
+Also fixed: the `library` narrator prefixed tree steps with the internal
+node id ("Checking … 6.") — affected trie_insert too; array steps keep it.
+Tests: DLL next/prev consistency on every step, all (size, N) pairs, random
+word lists vs a set-based reference; full suite 1444 passing. A2Z now 111
+rows linked.
 
 **Batch 27 (new tracers) — Stack & Binary Search (Steps 4, 9).**
 Four tracers on the array view; the only renderer touch is adding the two

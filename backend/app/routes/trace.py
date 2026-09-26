@@ -29,6 +29,7 @@ from app.tracers import (
     search_rotated, dutch_flag, majority_element, next_permutation,
     stock_span, largest_rectangle, rat_in_maze, word_search,
     trapping_rainwater, asteroid_collision, find_min_rotated, find_peak,
+    dll_reverse, dll_delete_key, remove_nth_from_end, longest_complete_word,
 )
 from app.tracers.common import Graph
 import os
@@ -189,6 +190,10 @@ def algorithms():
             {"id": "asteroid_collision", "name": "Asteroid Collision (Stack)", "input": "array"},
             {"id": "find_min_rotated", "name": "Minimum in Rotated Sorted Array", "input": "array"},
             {"id": "find_peak",     "name": "Find Peak Element",            "input": "array"},
+            {"id": "dll_reverse",   "name": "Reverse a Doubly Linked List", "input": "array"},
+            {"id": "dll_delete_key", "name": "Delete Key from Doubly Linked List", "input": "array"},
+            {"id": "remove_nth_from_end", "name": "Remove Nth Node From End", "input": "array"},
+            {"id": "longest_complete_word", "name": "Longest Word With All Prefixes (Trie)", "input": "text"},
         ]
     }
 
@@ -1057,6 +1062,51 @@ def run_trace(request: Request, req: TraceRequest):
                  "has no guaranteed peak.")
       return find_peak.trace(arr)
 
+    if req.algorithm == "dll_reverse":
+      arr = _validated_array(req.array, dll_reverse.MAX_LIST_LEN, "dll_reverse")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="dll_reverse needs a non-empty list.")
+      return dll_reverse.trace(arr)
+
+    if req.algorithm == "dll_delete_key":
+      arr = _validated_array(req.array, dll_delete_key.MAX_LIST_LEN,
+                             "dll_delete_key")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="dll_delete_key needs a non-empty list.")
+      if req.target is None:
+        raise HTTPException(status_code=400,
+          detail="dll_delete_key requires 'target' — the value to delete.")
+      return dll_delete_key.trace(arr, req.target)
+
+    if req.algorithm == "remove_nth_from_end":
+      arr = _validated_array(req.array, remove_nth_from_end.MAX_LIST_LEN,
+                             "remove_nth_from_end")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="remove_nth_from_end needs a non-empty list.")
+      t = req.target
+      if t is None or t != int(t) or not (1 <= int(t) <= len(arr)):
+        raise HTTPException(status_code=400,
+          detail=f"N must be a whole number from 1 to {len(arr)}.")
+      return remove_nth_from_end.trace(arr, int(t))
+
+    if req.algorithm == "longest_complete_word":
+      words = [w for w in (req.text or "").replace(" ", "").upper().split(",") if w]
+      if not words:
+        raise HTTPException(status_code=400,
+          detail="Give comma-separated words — e.g. N,NI,NIN,NINJA")
+      if len(words) > longest_complete_word.MAX_WORDS:
+        raise HTTPException(status_code=400,
+          detail=f"Max {longest_complete_word.MAX_WORDS} words.")
+      if any(not _re.fullmatch(
+          rf"[A-Z]{{1,{longest_complete_word.MAX_WORD_LEN}}}", w) for w in words):
+        raise HTTPException(status_code=400,
+          detail=f"Letters only, 1-{longest_complete_word.MAX_WORD_LEN} "
+                 f"characters per word.")
+      return longest_complete_word.trace(words)
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1618,7 +1668,9 @@ def run_trace(request: Request, req: TraceRequest):
                 "majority_element", "next_permutation", "stock_span",
                 "largest_rectangle", "rat_in_maze", "word_search",
                 "trapping_rainwater", "asteroid_collision",
-                "find_min_rotated", "find_peak"])
+                "find_min_rotated", "find_peak", "dll_reverse",
+                "dll_delete_key", "remove_nth_from_end",
+                "longest_complete_word"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

@@ -58,7 +58,9 @@ const SCENES = {
     stepNarrate(step, meta) {
       const m = meta.metaphors || {};
       const idx = step.highlight?.index;
-      const prefix = (idx === null || idx === undefined)
+      // On tree steps (tries) the index is an internal node id — meaningful
+      // to challenge mode, meaningless read aloud — so only array steps get it.
+      const prefix = (idx === null || idx === undefined || step.structures?.tree)
         ? '' : `${m.visit || 'Checking'} ${idx}. `;
       return `${prefix}${step.note || "Searching catalog..."}`;
     }
@@ -228,6 +230,8 @@ const VIEW_FOR = {
   rat_in_maze: 'grid', word_search: 'grid',
   trapping_rainwater: 'array', asteroid_collision: 'array',
   find_min_rotated: 'array', find_peak: 'array',
+  dll_reverse: 'list', dll_delete_key: 'list', remove_nth_from_end: 'list',
+  longest_complete_word: 'tree',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
@@ -534,6 +538,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       rat_in_maze: 'maze', word_search: 'library',
       trapping_rainwater: 'leaderboard', asteroid_collision: 'plates',
       find_min_rotated: 'library', find_peak: 'stocks',
+      dll_reverse: 'train', dll_delete_key: 'train',
+      remove_nth_from_end: 'train', longest_complete_word: 'library',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
       prims_mst: 'grid_power', kruskals_mst: 'grid_power',
@@ -934,6 +940,22 @@ export function mountEngine(view, algo = 'dijkstra') {
     find_peak: {
       array: '1, 3, 2, 4, 6, 5, 2',
       hint: 'Up to 16 numbers, no two equal neighbours. Not sorted — the slope at mid decides which half keeps a peak.',
+    },
+    dll_reverse: {
+      array: '10, 20, 30, 40',
+      hint: 'Up to 10 nodes. Solid arrows are next, dashed are prev — each node just swaps the two.',
+    },
+    dll_delete_key: {
+      array: '2, 5, 2, 7, 2', target: '2',
+      hint: 'Up to 10 nodes and a key. Each match is unlinked from both sides; deleted nodes are struck out.',
+    },
+    remove_nth_from_end: {
+      array: '1, 2, 3, 4, 5', target: '2',
+      hint: 'Up to 10 nodes and N (1 to the length). Fast gets an N-node head start; then both move together.',
+    },
+    longest_complete_word: {
+      array: 'N, NI, NIN, NINJ, NINJA, NINGA',
+      hint: 'Up to 7 words, letters only. A word counts only if every prefix of it is also a word.',
     },
     trie_insert: {
       array: 'CAT, CAR, DOG',
@@ -1640,6 +1662,17 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { array: coins, target: amount };
     }
 
+    if (algoId === 'longest_complete_word') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      const words = raw.split(',').filter(Boolean);
+      if (!words.length) return { error: 'Type some words — e.g. N, NI, NIN, NINJA' };
+      if (words.length > 7) return { error: 'Max 7 words.' };
+      if (words.some(w => !/^[A-Z]{1,8}$/.test(w))) {
+        return { error: 'Letters only, 1–8 characters per word.' };
+      }
+      return { text: words.join(','), words };
+    }
+
     if (algoId === 'trie_insert') {
       const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
       const words = raw.split(',').filter(Boolean);
@@ -1695,7 +1728,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     const values = parts.map(Number);
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
-    const maxLen = (algoId === 'linked_list_reverse' || algoId === 'floyd_cycle') ? 10
+    const maxLen = ['linked_list_reverse', 'floyd_cycle', 'dll_reverse',
+      'dll_delete_key', 'remove_nth_from_end'].includes(algoId) ? 10
       : traceView === 'tree' ? 12
       : algoId === 'binary_search' ? 20 : 16;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
@@ -1748,6 +1782,22 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (raw === '') return { error: 'Which value should be deleted?' };
       const t = Number(raw);
       if (!Number.isFinite(t)) return { error: 'The value to delete must be a number.' };
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'dll_delete_key') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t) || (targetInput?.value || '').trim() === '') {
+        return { error: 'Which value should be deleted?' };
+      }
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'remove_nth_from_end') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(t) || t < 1 || t > values.length) {
+        return { error: `N must be a whole number from 1 to ${values.length}.` };
+      }
       return { array: values, target: t };
     }
 
@@ -1995,9 +2045,12 @@ export function mountEngine(view, algo = 'dijkstra') {
     g.setAttribute('id', 'list-decor');
 
     const cx = (idx) => x0 + idx * w + w / 2;
+    const removed = new Set(s.removed || []);
+    const hasPrev = Array.isArray(s.prev_links);
 
     // Arrows: rightward above the boxes, leftward below — they can't overlap
     (s.next || []).forEach((to, from) => {
+      if (removed.has(from)) return;
       if (to === null || to === undefined) {
         // end of chain marker
         const t = makeSVG('text');
@@ -2028,6 +2081,48 @@ export function mountEngine(view, algo = 'dijkstra') {
       g.appendChild(head);
     });
 
+    // Doubly linked lists: back-pointers dashed, each direction in its own
+    // lane (rightward above the next-lane, leftward just under the boxes).
+    if (hasPrev) {
+      s.prev_links.forEach((to, from) => {
+        if (to === null || to === undefined || removed.has(from)) return;
+        const right = to > from;
+        const yy = right ? y - 30 : y + h + 6;
+        const x1 = cx(from) + (right ? 4 : -4), x2 = cx(to) + (right ? -8 : 8);
+        const line = makeSVG('line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', yy);
+        line.setAttribute('x2', x2); line.setAttribute('y2', yy);
+        line.setAttribute('stroke', 'var(--cBright)');
+        line.setAttribute('stroke-width', '1.2');
+        line.setAttribute('stroke-dasharray', '3 3');
+        g.appendChild(line);
+        const dir = right ? 1 : -1;
+        const head = makeSVG('polygon');
+        head.setAttribute('points',
+          `${x2 + dir * 6},${yy} ${x2},${yy - 3} ${x2},${yy + 3}`);
+        head.setAttribute('fill', 'var(--cBright)');
+        g.appendChild(head);
+      });
+      const legend = makeSVG('text');
+      legend.setAttribute('x', '750'); legend.setAttribute('y', '20');
+      legend.setAttribute('text-anchor', 'end');
+      legend.setAttribute('fill', 'var(--cDim)');
+      legend.setAttribute('font-family', 'var(--font-ui)');
+      legend.setAttribute('font-size', '7');
+      legend.textContent = 'SOLID = NEXT · DASHED = PREV';
+      g.appendChild(legend);
+    }
+
+    // Deleted nodes stay in place (indices are stable) but are struck out.
+    removed.forEach((idx) => {
+      const strike = makeSVG('line');
+      strike.setAttribute('x1', x0 + idx * w + 8); strike.setAttribute('y1', y + h - 4);
+      strike.setAttribute('x2', x0 + (idx + 1) * w - 8); strike.setAttribute('y2', y + 4);
+      strike.setAttribute('stroke', '#f87171');
+      strike.setAttribute('stroke-width', '1.5');
+      g.appendChild(strike);
+    });
+
     // Pointer labels under the index row. A step may name its own pointers
     // (Floyd's slow/fast); otherwise fall back to the prev/curr/next trio.
     const palette = ['var(--c)', 'var(--cBright)', 'var(--cDim)'];
@@ -2042,8 +2137,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       // collision) — fan them out so neither label hides the other.
       const nth = seenAt[idx] = (seenAt[idx] ?? -1) + 1;
       const t = makeSVG('text');
-      t.setAttribute('x', cx(idx) + nth * 11);
-      t.setAttribute('y', y + h + 46);
+      // Stack vertically: word labels (head/last) are too wide to sit side
+      // by side under one node.
+      t.setAttribute('x', cx(idx));
+      t.setAttribute('y', y + h + (hasPrev ? 54 : 46) + nth * 9);
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', color);
       t.setAttribute('font-family', 'var(--font-ui)');
@@ -2058,6 +2155,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (!cell) return;
       cell.setAttribute('stroke', idx === s.curr ? 'var(--c)' : 'var(--cDim)');
       cell.setAttribute('stroke-width', idx === s.curr ? '2' : '1');
+      cell.setAttribute('opacity', removed.has(idx) ? '0.3' : '1');
     });
 
     svg.appendChild(g);
@@ -3617,7 +3715,7 @@ export function mountEngine(view, algo = 'dijkstra') {
             : await api.postTrace(algoId, { text: parsed.text });
         } else if (traceView === 'list') {
           renderListView(parsed.array);
-          const payload = algoId === 'floyd_cycle'
+          const payload = ['floyd_cycle', 'dll_delete_key', 'remove_nth_from_end'].includes(algoId)
             ? { array: parsed.array, target: parsed.target }
             : { array: parsed.array };
           res = isOffline
@@ -3691,7 +3789,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
-        } else if (algoId === 'trie_insert' || algoId === 'huffman') {
+        } else if (algoId === 'trie_insert' || algoId === 'huffman'
+                   || algoId === 'longest_complete_word') {
           renderTreeView();
           res = isOffline
             ? localArrayTrace(parsed)
@@ -4421,7 +4520,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         'sliding_window', 'knapsack_01', 'floyd_cycle',
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
         'bst_delete', 'coin_change', 'coin_change_2', 'subset_sum',
-        'sliding_window_maximum', 'rat_in_maze'].includes(algoId)
+        'sliding_window_maximum', 'rat_in_maze', 'dll_delete_key',
+        'remove_nth_from_end'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -4441,6 +4541,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'subset_sum') targetLabel.textContent = 'SUM =';
         if (targetLabel && algoId === 'search_rotated') targetLabel.textContent = 'FIND =';
         if (targetLabel && algoId === 'rat_in_maze') targetLabel.textContent = 'MAZE =';
+        if (targetLabel && algoId === 'dll_delete_key') targetLabel.textContent = 'KEY =';
+        if (targetLabel && algoId === 'remove_nth_from_end') targetLabel.textContent = 'N =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

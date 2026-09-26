@@ -110,6 +110,14 @@ SIGNATURES = {
     "buy_sell_stock": ["buy_sell_stock", "buy and sell stock", "best time to buy", "stock profit", "max profit", "buy low sell high", "one transaction"],
     "coin_change_2": ["coin_change_2", "coin change 2", "coin change ii", "number of ways coins", "count combinations coins", "ways to make amount", "combination sum coins"],
     "longest_common_substring": ["longest_common_substring", "longest common substring", "common substring", "contiguous common", "longest shared block"],
+    "search_rotated": ["search_rotated", "rotated sorted array", "search in rotated", "pivoted array", "rotated binary search"],
+    "dutch_flag": ["dutch_flag", "dutch national flag", "sort colors", "sort 0s 1s 2s", "sort zeros ones twos", "three way partition"],
+    "majority_element": ["majority_element", "majority element", "boyer moore", "boyer-moore", "moore voting", "more than n/2", "appears more than half"],
+    "next_permutation": ["next_permutation", "next permutation", "next larger arrangement", "next lexicographic", "rearrange next greater"],
+    "stock_span": ["stock_span", "stock span", "span of stock", "consecutive days price", "previous greater element", "online stock span"],
+    "largest_rectangle": ["largest_rectangle", "largest rectangle", "histogram", "maximum rectangle area", "largest area histogram"],
+    "rat_in_maze": ["rat_in_maze", "rat in a maze", "rat in maze", "all paths maze", "maze paths", "escape routes"],
+    "word_search": ["word_search", "word search", "word in grid", "word exists grid", "letters grid backtracking"],
 }
 
 REALWORLD_META = {
@@ -1218,6 +1226,110 @@ REALWORLD_META = {
             "visit": "Extending or resetting the run",
             "start": "Two raw strands",
             "done": "The longest contiguous shared block."
+        }
+    },
+    "search_rotated": {
+        "scene": "library",
+        "title": "Search a Shelf That Was Rotated",
+        "hook": "The catalog was cut and swapped at one point, so it isn't globally sorted — but one half around any midpoint always is. Search that half.",
+        "metaphors": {
+            "node": "book",
+            "edge": "shelf order",
+            "weight": "call number",
+            "visit": "Checking the middle book",
+            "start": "The whole rotated shelf",
+            "done": "Found in log n, or proven absent."
+        }
+    },
+    "dutch_flag": {
+        "scene": "leaderboard",
+        "title": "Sort the Flags in One Pass",
+        "hook": "Three colours, three pointers — sweep once, swapping each item down to the reds or up to the blues, no counting.",
+        "metaphors": {
+            "node": "tile",
+            "edge": "swap",
+            "weight": "colour",
+            "visit": "Placing the middle tile",
+            "start": "A jumble of 0s, 1s and 2s",
+            "done": "All 0s, then 1s, then 2s — sorted in place."
+        }
+    },
+    "majority_element": {
+        "scene": "social",
+        "title": "The Vote That Can't Be Cancelled",
+        "hook": "One candidate, one tally: matching votes add, opposing votes cancel. A true majority outnumbers everyone else combined, so it always survives.",
+        "metaphors": {
+            "node": "vote",
+            "edge": "tally",
+            "weight": "count",
+            "visit": "Casting a vote for or against",
+            "start": "No candidate yet",
+            "done": "The survivor, verified as the majority."
+        }
+    },
+    "next_permutation": {
+        "scene": "leaderboard",
+        "title": "The Next Arrangement Up",
+        "hook": "Find the smallest rearrangement larger than this one: spot the rightmost dip, bump it with the smallest bigger value in the tail, then reverse the tail.",
+        "metaphors": {
+            "node": "position",
+            "edge": "swap",
+            "weight": "value",
+            "visit": "Inspecting a position",
+            "start": "The current arrangement",
+            "done": "The very next permutation, in place."
+        }
+    },
+    "stock_span": {
+        "scene": "stocks",
+        "title": "How Long Has This Price Been the Top?",
+        "hook": "Each day, count how many days back the price stayed at or below today's. A stack keeps only the peaks that could still block a future day.",
+        "metaphors": {
+            "node": "trading day",
+            "edge": "look-back",
+            "weight": "price",
+            "visit": "Closing today's price",
+            "start": "The first trading day",
+            "done": "Every day's streak, in one pass."
+        }
+    },
+    "largest_rectangle": {
+        "scene": "leaderboard",
+        "title": "The Biggest Billboard on the Skyline",
+        "hook": "Every building could set the billboard's height; it stretches until a shorter building cuts it off. The stack tells each one exactly where it stops.",
+        "metaphors": {
+            "node": "building",
+            "edge": "stretch",
+            "weight": "height",
+            "visit": "Measuring a billboard",
+            "start": "An empty skyline",
+            "done": "The largest rectangle that fits under the skyline."
+        }
+    },
+    "rat_in_maze": {
+        "scene": "maze",
+        "title": "Every Way Out of the Maze",
+        "hook": "The rat tries down, left, right, up. At a dead end it walks back and un-marks the square, so a different route can use it later.",
+        "metaphors": {
+            "node": "square",
+            "edge": "step",
+            "weight": "—",
+            "visit": "Stepping into a square",
+            "start": "The top-left corner",
+            "done": "Every escape route, listed in order."
+        }
+    },
+    "word_search": {
+        "scene": "library",
+        "title": "Trace the Word Through the Letter Grid",
+        "hook": "Start on a matching letter, then feel for the next one among the neighbours. Wrong turn? Lift your finger off the last letter and try another way.",
+        "metaphors": {
+            "node": "letter tile",
+            "edge": "adjacent step",
+            "weight": "letter",
+            "visit": "Testing a neighbouring letter",
+            "start": "Any tile with the first letter",
+            "done": "The word traced tile by tile, or proven absent."
         }
     }
 }

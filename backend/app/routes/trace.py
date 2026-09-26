@@ -26,6 +26,8 @@ from app.tracers import (
     tree_traversal, trie_insert, two_sum_sorted, unique_paths, z_function,
     level_order, tree_max_depth, tree_diameter, lca_bt,
     frog_jump, buy_sell_stock, coin_change_2, longest_common_substring,
+    search_rotated, dutch_flag, majority_element, next_permutation,
+    stock_span, largest_rectangle, rat_in_maze, word_search,
 )
 from app.tracers.common import Graph
 import os
@@ -174,6 +176,14 @@ def algorithms():
             {"id": "buy_sell_stock", "name": "Best Time to Buy & Sell Stock", "input": "array"},
             {"id": "coin_change_2", "name": "Coin Change 2 (Count Ways)",  "input": "array"},
             {"id": "longest_common_substring", "name": "Longest Common Substring", "input": "text"},
+            {"id": "search_rotated", "name": "Search in Rotated Sorted Array", "input": "array"},
+            {"id": "dutch_flag",    "name": "Sort 0s, 1s, 2s (Dutch Flag)",  "input": "array"},
+            {"id": "majority_element", "name": "Majority Element (Boyer-Moore)", "input": "array"},
+            {"id": "next_permutation", "name": "Next Permutation",           "input": "array"},
+            {"id": "stock_span",    "name": "Stock Span (Monotonic Stack)",  "input": "array"},
+            {"id": "largest_rectangle", "name": "Largest Rectangle in Histogram", "input": "array"},
+            {"id": "rat_in_maze",   "name": "Rat in a Maze (All Paths)",     "input": "number"},
+            {"id": "word_search",   "name": "Word Search (Grid Backtracking)", "input": "text"},
         ]
     }
 
@@ -893,6 +903,110 @@ def run_trace(request: Request, req: TraceRequest):
       a, b = cleaned.split(",")
       return longest_common_substring.trace(a, b)
 
+    if req.algorithm == "search_rotated":
+      arr = _validated_array(req.array, search_rotated.MAX_LEN, "search_rotated")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="search_rotated needs a non-empty array.")
+      if req.target is None:
+        raise HTTPException(status_code=400,
+          detail="search_rotated requires a 'target' value to search for.")
+      if abs(req.target) > MAX_VALUE:
+        raise HTTPException(status_code=400,
+          detail=f"Target must be within ±{MAX_VALUE}.")
+      return search_rotated.trace(arr, req.target)
+
+    if req.algorithm == "dutch_flag":
+      arr = _validated_array(req.array, dutch_flag.MAX_LEN, "dutch_flag")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="dutch_flag needs a non-empty array.")
+      if any(v not in (0, 1, 2) for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Dutch flag sorts only 0s, 1s and 2s — use those values.")
+      return dutch_flag.trace([int(v) for v in arr])
+
+    if req.algorithm == "majority_element":
+      arr = _validated_array(req.array, majority_element.MAX_LEN,
+                             "majority_element")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="majority_element needs a non-empty array.")
+      return majority_element.trace(arr)
+
+    if req.algorithm == "next_permutation":
+      arr = _validated_array(req.array, next_permutation.MAX_LEN,
+                             "next_permutation")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="next_permutation needs a non-empty array.")
+      return next_permutation.trace(arr)
+
+    if req.algorithm == "stock_span":
+      arr = _validated_array(req.array, stock_span.MAX_LEN, "stock_span")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="stock_span needs at least one price.")
+      if any(v < 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Prices must be 0 or more.")
+      return stock_span.trace(arr)
+
+    if req.algorithm == "largest_rectangle":
+      arr = _validated_array(req.array, largest_rectangle.MAX_LEN,
+                             "largest_rectangle")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="largest_rectangle needs at least one bar height.")
+      if any(v < 0 for v in arr):
+        raise HTTPException(status_code=400,
+          detail="Bar heights must be 0 or more.")
+      return largest_rectangle.trace(arr)
+
+    if req.algorithm == "rat_in_maze":
+      side = req.target
+      if side is None or side != int(side) or not (
+          2 <= int(side) <= rat_in_maze.MAX_SIDE):
+        raise HTTPException(status_code=400,
+          detail=f"rat_in_maze needs 'target' — the maze side, a whole "
+                 f"number 2-{rat_in_maze.MAX_SIDE}.")
+      side = int(side)
+      walls: list = []
+      if req.text:
+        cleaned = req.text.replace(" ", "")
+        if not _re.fullmatch(r"\d+:\d+(,\d+:\d+)*", cleaned):
+          raise HTTPException(status_code=400,
+            detail="Walls are row:col pairs — e.g. 1:1,2:0. Leave blank for "
+                   "an open maze.")
+        walls = [tuple(int(x) for x in p.split(":")) for p in cleaned.split(",")]
+        if any(r >= side or c >= side for r, c in walls):
+          raise HTTPException(status_code=400,
+            detail=f"Wall coordinates must be within 0..{side - 1}.")
+        if (0, 0) in walls or (side - 1, side - 1) in walls:
+          raise HTTPException(status_code=400,
+            detail="The start (0:0) and the exit cannot be walls.")
+      return rat_in_maze.trace(side, walls)
+
+    if req.algorithm == "word_search":
+      cleaned = (req.text or "").replace(" ", "").upper()
+      m = _re.fullmatch(r"([A-Z/]+),([A-Z]+)", cleaned)
+      if not m:
+        raise HTTPException(status_code=400,
+          detail="Give grid rows separated by '/', then the word — e.g. "
+                 "ABCE/SFCS/ADEE, ABCCED.")
+      board = [r for r in m.group(1).split("/") if r]
+      word = m.group(2)
+      side_max = word_search.MAX_SIDE
+      if (not board or len(board) > side_max
+          or any(len(r) != len(board[0]) for r in board)
+          or len(board[0]) > side_max):
+        raise HTTPException(status_code=400,
+          detail=f"The grid must be rectangular, at most {side_max}×{side_max}.")
+      if len(word) > word_search.MAX_WORD:
+        raise HTTPException(status_code=400,
+          detail=f"Keep the word to {word_search.MAX_WORD} letters or fewer.")
+      return word_search.trace(board, word)
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1450,7 +1564,9 @@ def run_trace(request: Request, req: TraceRequest):
                 "min_bit_flips", "power_set",
                 "level_order", "tree_max_depth", "tree_diameter", "lca_bt",
                 "frog_jump", "buy_sell_stock", "coin_change_2",
-                "longest_common_substring"])
+                "longest_common_substring", "search_rotated", "dutch_flag",
+                "majority_element", "next_permutation", "stock_span",
+                "largest_rectangle", "rat_in_maze", "word_search"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

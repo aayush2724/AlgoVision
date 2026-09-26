@@ -30,6 +30,11 @@ export const A2Z_TRACER = {
 
   // ── Step 3 — Arrays ──
   "3-19": "kadanes",                 // Kadane's Algorithm (max subarray sum)
+  // Batch 25 (2026-09-21): array-scan classics + a binary-search variant.
+  "3-17": "dutch_flag",              // Sort an Array of 0s, 1s and 2s
+  "3-18": "majority_element",        // Majority Element (> n/2)
+  "3-23": "next_permutation",        // Next Permutation
+  "4-35": "search_rotated",          // Search in rotated sorted array-I
 
   // ── Step 4 — Binary Search ──
   "4-33": "binary_search",           // Search X in sorted array
@@ -185,4 +190,11 @@ export const A2Z_TRACER = {
   "16-35": "buy_sell_stock",         // Best time to buy and sell stock
   "16-65": "coin_change_2",          // Coin Change 2 (count ways)
   "16-27": "longest_common_substring", // Longest common substring
+
+  // ══ Batch 26 (2026-09-27): Recursion + Stack — grid backtracking and the
+  // two monotonic-stack classics that aren't next-greater in disguise.
+  "7-18":  "word_search",            // Word Search
+  "7-20":  "rat_in_maze",            // Rat in a Maze
+  "9-25":  "stock_span",             // Stock span problem
+  "9-39":  "largest_rectangle",      // Largest rectangle in a histogram
 };

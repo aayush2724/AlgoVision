@@ -153,9 +153,55 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
 1380 passing. A2Z now 86 rows linked; category = Math.
 
   Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
-  Bit Manipulation, Binary Trees (13), DP remainder (16) → [next]
-  Arrays/Binary Search/Recursion/Stack (3,4,7,9) → Linked List DLL (6) +
-  Tries (17). Floyd-Warshall etc. blocked until the graph-model change.
+  Bit Manipulation, Binary Trees (13), DP remainder (16), Arrays+Binary Search
+  first batch (3,4), Recursion/Stack first batch (7,9) → [next] more
+  Recursion/Stack + Arrays/Binary Search → Linked List DLL (6) + Tries (17).
+  Floyd-Warshall etc. blocked until the graph-model change.
+
+**Batch 26 (new tracers) — Recursion & Stack (Steps 7, 9).**
+Four tracers, all reusing existing views (no renderer changes):
+  - `stock_span` (9-25) — monotonic stack looking back; each day's span lights
+    green via `sorted_ranges`, beaten days are popped for good.
+  - `largest_rectangle` (9-39) — increasing stack + height-0 sentinel; the
+    rectangle being measured is the orange `merging` span, best is green.
+  - `rat_in_maze` (7-20) — all D/L/R/U routes on a walled grid (side 2-5,
+    same wall input as flood_fill); the current route is the green `path`,
+    un-marking on backtrack is narrated.
+  - `word_search` (7-18) — DFS from every matching start cell over a letter
+    grid ("ABCE/SFCS/ADEE, ABCCED", up to 5×5, word ≤ 8).
+The two backtracking tracers record at most 300 steps and then finish the
+search silently — an open 5×5 maze has 8512 routes — and the final step
+always states the true answer/count. Tests vs independent brute force
+(random mazes, random A/B boards, O(n²) span/rectangle); full suite 1424
+passing. A2Z now 102 rows linked. Deferred: Generate Parentheses /
+Subsets / Combination Sum (need a recursion-tree or list output view, not a
+grid), Sudoku and M-colouring (too many steps without a better pruning
+story), Next Smaller Element (a mirror of next_greater_element — link only
+once its tracer can run in "smaller" mode), infix/postfix conversions (need
+a token-stream view).
+
+**Batch 25 (new tracers) — Arrays & Binary Search (Steps 3-4).**
+Four tracers, all on the array view (no renderer changes beyond adding
+search_rotated to the existing binary-search low/high/mid highlight branch):
+  - `search_rotated` (4-35) — binary search on a rotated sorted array; detect
+    which half is sorted, then decide direction. Array input + target, not
+    sorted client-side (rotation is the point).
+  - `dutch_flag` (3-17) — sort 0s/1s/2s in one pass with three pointers;
+    settled 0s and 2s show green, mid is the active cell.
+  - `majority_element` (3-18) — Boyer-Moore voting (candidate + count),
+    then a verification pass; returns None when no majority exists.
+  - `next_permutation` (3-23) — find the rightmost dip, bump it with the
+    smallest bigger tail value, reverse the tail; wraps when already largest.
+Full recipe each: route dispatch + validation, detect metaphor, data.js entry
+(Searching/Sorting/Patterns), engine wiring (VIEW_FOR, scene, input
+example/hint, parse + run dispatch, FIND= label). Offline localArrayTrace
+parity omitted (online is the production path). 12 tests vs independent
+references (incl. all rotations, and itertools for next-permutation); full
+suite 1411 passing. A2Z now 98 rows linked. Deferred here (need new
+input/renderer or are answer-search binary-search variants): lower/upper bound
+& first/last occurrence (near-duplicates of binary_search), Koko/allocation
+"binary search on the answer" family, matrix search, and the 3-sum/4-sum and
+matrix-manipulation array problems.
 
 **Batch 24 (new tracers) — DP remainder (Step 16).**
 Four DP tracers, all reusing existing views (no renderer changes):

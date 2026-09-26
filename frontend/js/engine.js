@@ -71,9 +71,13 @@ const SCENES = {
     nodeLabel: (id) => `🚪 ${id}`,
     edgeLabel: (w) => `corridor`,
     stepNarrate(step, meta) {
-      const m = meta.metaphors;
-      if (step.note?.includes("backtrack") || step.note?.toLowerCase().includes("visited")) return `${m.backtrack}`;
-      return `${m.visit} ${step.node || step.highlight?.node}. ${step.note || "Exploring..."}`;
+      const m = meta.metaphors || {};
+      if (m.backtrack && (step.note?.includes("backtrack") || step.note?.toLowerCase().includes("visited"))) return `${m.backtrack}`;
+      // Grid tracers on this scene (rat in a maze, frog jump) have no graph
+      // node — their note already says where they are.
+      const node = step.node || step.highlight?.node;
+      if (node === undefined || node === null) return step.note || "Exploring...";
+      return `${m.visit} ${node}. ${step.note || "Exploring..."}`;
     }
   },
   leaderboard: {
@@ -219,6 +223,9 @@ const VIEW_FOR = {
   level_order: 'tree', tree_max_depth: 'tree', tree_diameter: 'tree', lca_bt: 'tree',
   frog_jump: 'grid', buy_sell_stock: 'array', coin_change_2: 'grid',
   longest_common_substring: 'grid',
+  search_rotated: 'array', dutch_flag: 'array', majority_element: 'array',
+  next_permutation: 'array', stock_span: 'array', largest_rectangle: 'array',
+  rat_in_maze: 'grid', word_search: 'grid',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
@@ -519,6 +526,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       lca_bt: 'files',
       frog_jump: 'maze', buy_sell_stock: 'stocks', coin_change_2: 'vault',
       longest_common_substring: 'dna',
+      search_rotated: 'library', dutch_flag: 'leaderboard',
+      majority_element: 'social', next_permutation: 'leaderboard',
+      stock_span: 'stocks', largest_rectangle: 'leaderboard',
+      rat_in_maze: 'maze', word_search: 'library',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
       prims_mst: 'grid_power', kruskals_mst: 'grid_power',
@@ -724,7 +735,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       cell.setAttribute("stroke-width", "1");
       if (g) g.setAttribute("opacity", "1");
 
-      if (algoId === 'binary_search') {
+      if (algoId === 'binary_search' || algoId === 'search_rotated') {
         const inRange = s.low != null && idx >= s.low && idx <= s.high;
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (inRange) cell.setAttribute("stroke", "var(--c)");
@@ -870,6 +881,38 @@ export function mountEngine(view, algo = 'dijkstra') {
     longest_common_substring: {
       array: 'ABCDE, ZBCDF',
       hint: 'Two words (letters/digits, up to 8 each). A match extends the diagonal; a mismatch resets the run to 0.',
+    },
+    search_rotated: {
+      array: '4, 5, 6, 7, 0, 1, 2', target: '0',
+      hint: 'A sorted array rotated at one point. Not globally sorted, but one half around mid always is — search that half.',
+    },
+    dutch_flag: {
+      array: '2, 0, 2, 1, 1, 0',
+      hint: 'Only 0s, 1s and 2s. Three pointers sort them in one pass — settled 0s and 2s turn green.',
+    },
+    majority_element: {
+      array: '2, 2, 1, 1, 1, 2, 2',
+      hint: 'Boyer-Moore voting: one candidate, one count. Matching votes add, opposing votes cancel; a second pass confirms.',
+    },
+    next_permutation: {
+      array: '1, 5, 8, 4, 7, 6, 5, 3, 1',
+      hint: 'Up to 12 numbers. Finds the rightmost dip, bumps it with the smallest bigger value in the tail, then reverses the tail.',
+    },
+    stock_span: {
+      array: '100, 80, 60, 70, 60, 75, 85',
+      hint: 'Up to 16 prices (0+). Each day\'s span lights green; days beaten by today get popped for good.',
+    },
+    largest_rectangle: {
+      array: '2, 1, 5, 6, 2, 3',
+      hint: 'Up to 16 bar heights (0+). Orange = the rectangle being measured, green = the best so far.',
+    },
+    rat_in_maze: {
+      array: '0:1, 0:2, 0:3, 1:2, 2:2, 2:3, 3:0', target: '4',
+      hint: 'Maze side 2–5, rat at 0:0, exit bottom-right. Walls as row:col pairs — an open maze has thousands of routes, so add walls.',
+    },
+    word_search: {
+      array: 'ABCE/SFCS/ADEE, ABCCED',
+      hint: 'Grid rows separated by /, then the word (grid up to 5×5, word up to 8 letters). Try SEE, then ABCB.',
     },
     trie_insert: {
       array: 'CAT, CAR, DOG',
@@ -1131,6 +1174,38 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'The start square cannot be a wall.' };
       }
       return { target: side, text: raw };
+    }
+
+    if (algoId === 'rat_in_maze') {
+      const side = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(side) || side !== Math.floor(side) || side < 2 || side > 5) {
+        return { error: 'Maze side must be a whole number 2–5.' };
+      }
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!raw) return { target: side };
+      if (!/^\d+:\d+(,\d+:\d+)*$/.test(raw)) {
+        return { error: 'Walls are row:col pairs — e.g. 0:1, 1:1. Leave blank for an open maze.' };
+      }
+      const walls = raw.split(',').map(p => p.split(':').map(Number));
+      if (walls.some(([r, c]) => r >= side || c >= side)) {
+        return { error: `Wall coordinates must be within 0–${side - 1}.` };
+      }
+      if (walls.some(([r, c]) => (r === 0 && c === 0) || (r === side - 1 && c === side - 1))) {
+        return { error: 'The start (0:0) and the exit cannot be walls.' };
+      }
+      return { target: side, text: raw };
+    }
+
+    if (algoId === 'word_search') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '').toUpperCase();
+      const m = raw.match(/^([A-Z/]+),([A-Z]{1,8})$/);
+      if (!m) return { error: 'Grid rows split by /, then the word — e.g. ABCE/SFCS/ADEE, ABCCED (word ≤ 8 letters).' };
+      const rows = m[1].split('/').filter(Boolean);
+      if (!rows.length || rows.length > 5 || rows[0].length > 5
+          || rows.some(r => r.length !== rows[0].length)) {
+        return { error: 'The grid must be rectangular, at most 5×5.' };
+      }
+      return { text: raw };
     }
 
     if (algoId === 'house_robber' || algoId === 'lis') {
@@ -1693,6 +1768,34 @@ export function mountEngine(view, algo = 'dijkstra') {
       const sorted = values.slice().sort((a, b) => a - b);
       const sortedForYou = sorted.some((v, i) => v !== values[i]);
       return { array: sorted, target: t, sortedForYou };
+    }
+
+    if (algoId === 'search_rotated') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isFinite(t)) return { error: 'Enter a numeric target to search for.' };
+      // Do NOT sort — the rotation is the whole point of this variant.
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'dutch_flag') {
+      if (values.some(v => v !== 0 && v !== 1 && v !== 2)) {
+        return { error: 'Dutch flag sorts only 0s, 1s and 2s — use those values.' };
+      }
+      return { array: values };
+    }
+
+    if (algoId === 'stock_span' || algoId === 'largest_rectangle') {
+      if (values.some(v => v < 0)) {
+        return { error: algoId === 'stock_span' ? 'Prices must be 0 or more.' : 'Bar heights must be 0 or more.' };
+      }
+      if (values.length > 16) return { error: 'Max 16 values — the trace has to stay readable.' };
+      return { array: values };
+    }
+
+    if (algoId === 'next_permutation') {
+      if (values.some(v => !Number.isInteger(v))) return { error: 'Whole numbers only.' };
+      if (values.length > 12) return { error: 'Max 12 numbers — the trace has to stay readable.' };
+      return { array: values };
     }
     return { array: values };
   }
@@ -3557,7 +3660,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { target: parsed.target });
-        } else if (algoId === 'unique_paths' || algoId === 'flood_fill') {
+        } else if (algoId === 'unique_paths' || algoId === 'flood_fill'
+                   || algoId === 'rat_in_maze') {
           renderGridView();
           const payload = parsed.text
             ? { target: parsed.target, text: parsed.text }
@@ -3614,8 +3718,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           if (isOffline) {
             res = localArrayTrace(parsed);
           } else {
-            const needsTarget = ['binary_search', 'two_sum_sorted', 'sliding_window',
-              'sliding_window_maximum'].includes(algoId);
+            const needsTarget = ['binary_search', 'search_rotated', 'two_sum_sorted',
+              'sliding_window', 'sliding_window_maximum'].includes(algoId);
             const payload = needsTarget
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
@@ -4261,11 +4365,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       } else if (arrayInput && !arrayInput.value) {
         arrayInput.value = defaults.array;
       }
-      const wantsTarget = ['binary_search', 'bst_search', 'two_sum_sorted',
+      const wantsTarget = ['binary_search', 'search_rotated', 'bst_search',
+        'two_sum_sorted',
         'sliding_window', 'knapsack_01', 'floyd_cycle',
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
         'bst_delete', 'coin_change', 'coin_change_2', 'subset_sum',
-        'sliding_window_maximum'].includes(algoId)
+        'sliding_window_maximum', 'rat_in_maze'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -4283,6 +4388,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'coin_change') targetLabel.textContent = 'AMOUNT =';
         if (targetLabel && algoId === 'coin_change_2') targetLabel.textContent = 'AMOUNT =';
         if (targetLabel && algoId === 'subset_sum') targetLabel.textContent = 'SUM =';
+        if (targetLabel && algoId === 'search_rotated') targetLabel.textContent = 'FIND =';
+        if (targetLabel && algoId === 'rat_in_maze') targetLabel.textContent = 'MAZE =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

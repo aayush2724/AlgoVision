@@ -222,14 +222,14 @@ const STACK_MORE = ['next_smaller', 'nge_circular', 'remove_k_digits', 'sum_suba
 const ARRAY_BASICS = ['remove_duplicates_sorted', 'rotate_array_k', 'move_zeros', 'leaders', 'longest_subarray_sum_k', 'second_largest'];
 
 // Batches 40–44: level-order binary trees and more table DP.
-const TREE_SHAPE = ['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes'];
+const TREE_SHAPE = ['floor_ceil_bst', 'kth_bst', 'lca_bst', 'successor_predecessor', 'two_sum_bst', 'bst_from_preorder', 'validate_bst', 'recover_bst', 'largest_bst', 'connect_sticks', 'is_min_heap', 'min_to_max_heap', 'word_ladder', 'word_ladder_ii'].concat(['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes']);
 const DP_MORE = ['frog_jump_k', 'ninja_training', 'min_falling_path', 'triangle_path', 'partition_equal_subset', 'count_subsets_sum_k', 'unbounded_knapsack', 'rod_cutting'];
 const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palindrome', 'min_ins_del', 'shortest_supersequence', 'distinct_subsequences', 'wildcard_match'];
 
 // Batches 45–49: text-input grid problems and drawn-graph problems.
-const TEXT_GRID = ['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis'];
+const TEXT_GRID = ['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']));
 // Edges of these algorithms are read a → b, so the graph draws arrowheads.
-const DIRECTED_ALGOS = ['topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
+const DIRECTED_ALGOS = ['network_delay', 'topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
 
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
@@ -261,6 +261,9 @@ const VIEW_FOR = {
   subsets_recursion: 'tree', generate_parentheses: 'tree',
   subsets_ii: 'tree', combination_sum_ii: 'tree', combination_sum_iii: 'tree',
   palindrome_partition: 'tree', letter_combinations: 'tree',
+  floor_ceil_bst: 'tree', kth_bst: 'tree', lca_bst: 'tree', successor_predecessor: 'tree', two_sum_bst: 'tree', bst_from_preorder: 'tree', validate_bst: 'tree', recover_bst: 'tree', largest_bst: 'tree', connect_sticks: 'tree', is_min_heap: 'tree', min_to_max_heap: 'tree', word_ladder: 'tree', word_ladder_ii: 'tree',
+  rank_replace: 'grid', top_k_frequent: 'grid', hand_of_straights: 'grid', task_scheduler: 'grid', median_stream: 'grid', remove_outer_parens: 'grid', reverse_words: 'grid', largest_odd_number: 'grid', longest_common_prefix: 'grid', isomorphic_strings: 'grid', rotate_string: 'grid', sort_by_frequency: 'grid', max_nesting_depth: 'grid', roman_to_integer: 'grid', string_to_integer: 'grid', sum_of_beauty: 'grid', char_replacement: 'grid', binary_subarray_sum: 'grid', nice_subarrays: 'grid', substrings_all_three: 'grid', max_card_points: 'grid', subarrays_k_distinct: 'grid', min_window_substring: 'grid', min_window_subsequence: 'grid', alien_dictionary: 'grid', cheapest_flight_k: 'grid', ways_to_arrive: 'grid', min_multiplications: 'grid', most_stones: 'grid', network_delay: 'graph',
+  cut_stick: 'grid', burst_balloons: 'grid', boolean_evaluation: 'grid', palindrome_partition_ii: 'grid', partition_array_max_sum: 'grid', min_subset_diff: 'grid', count_partitions_diff: 'grid', target_sum: 'grid', max_rectangle_ones: 'grid', largest_element: 'grid', check_sorted: 'grid', linear_search: 'grid', union_sorted: 'grid', intersection_sorted: 'grid', missing_number: 'grid', max_consecutive_ones: 'grid', rearrange_by_sign: 'grid', max_product_subarray: 'grid', longest_sum_k_any: 'grid', count_sum_k: 'grid', largest_zero_sum: 'grid', count_xor_k: 'grid', longest_consecutive: 'grid', majority_n3: 'grid', repeating_missing: 'grid', three_sum: 'grid', four_sum: 'grid', set_matrix_zeros: 'grid', rotate_matrix: 'grid', spiral_order: 'grid', pascal_triangle: 'grid', merge_no_space: 'grid', count_inversions: 'grid', reverse_pairs: 'grid', count_digits: 'grid', reverse_number: 'grid', palindrome_number: 'grid', armstrong_number: 'grid', print_divisors: 'grid', check_prime: 'grid', factorial: 'grid', sum_first_n: 'grid', reverse_array: 'grid', palindrome_string: 'grid', frequency_count: 'grid', check_ith_bit: 'grid', check_odd: 'grid', swap_xor: 'grid', divide_bits: 'grid', xor_range: 'grid', single_number_iii: 'grid',
   number_of_islands: 'grid', rotten_oranges: 'grid', nearest_one_distance: 'grid', surrounded_regions: 'grid', number_of_enclaves: 'grid', binary_maze_path: 'grid', min_effort_path: 'grid', swim_rising_water: 'grid', largest_island: 'grid', islands_ii: 'grid', floyd_warshall: 'grid', city_fewest_neighbours: 'grid', stock_ii: 'grid', stock_iii: 'grid', stock_iv: 'grid', stock_cooldown: 'grid', stock_fee: 'grid', print_lis: 'grid', largest_divisible_subset: 'grid', longest_string_chain: 'grid', longest_bitonic: 'grid', number_of_lis: 'grid',
   cycle_undirected_bfs: 'graph', cycle_undirected_dfs: 'graph', bridges: 'graph', articulation_points: 'graph', connect_network_ops: 'graph', cycle_directed: 'graph', safe_states: 'graph', kosaraju: 'graph', shortest_path_dag: 'graph',
   iter_preorder: 'tree', iter_inorder: 'tree', postorder_two_stacks: 'tree', postorder_one_stack: 'tree', zigzag_traversal: 'tree', right_view: 'tree', top_view: 'tree', bottom_view: 'tree', vertical_order: 'tree', boundary_traversal: 'tree', max_width: 'tree', balanced_tree: 'tree', symmetric_tree: 'tree', max_path_sum: 'tree', root_to_leaf_paths: 'tree', children_sum: 'tree', nodes_at_distance_k: 'tree', burn_tree: 'tree', count_complete_nodes: 'tree',
@@ -585,6 +588,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       subsets_recursion: 'files', generate_parentheses: 'plates',
       subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
       palindrome_partition: 'dna', letter_combinations: 'files',
+      floor_ceil_bst: 'files', kth_bst: 'files', lca_bst: 'files', successor_predecessor: 'files', two_sum_bst: 'files', bst_from_preorder: 'files', validate_bst: 'files', recover_bst: 'files', largest_bst: 'files', connect_sticks: 'scheduler', is_min_heap: 'scheduler', min_to_max_heap: 'scheduler', word_ladder: 'vault', word_ladder_ii: 'vault', rank_replace: 'scheduler', top_k_frequent: 'scheduler', hand_of_straights: 'scheduler', task_scheduler: 'scheduler', median_stream: 'scheduler', remove_outer_parens: 'dna', reverse_words: 'dna', largest_odd_number: 'dna', longest_common_prefix: 'dna', isomorphic_strings: 'dna', rotate_string: 'dna', sort_by_frequency: 'dna', max_nesting_depth: 'dna', roman_to_integer: 'dna', string_to_integer: 'dna', sum_of_beauty: 'dna', char_replacement: 'stocks', binary_subarray_sum: 'stocks', nice_subarrays: 'stocks', substrings_all_three: 'stocks', max_card_points: 'stocks', subarrays_k_distinct: 'stocks', min_window_substring: 'stocks', min_window_subsequence: 'stocks', alien_dictionary: 'vault', cheapest_flight_k: 'vault', ways_to_arrive: 'vault', min_multiplications: 'vault', most_stones: 'vault', network_delay: 'scheduler',
+      cut_stick: 'grid_power', burst_balloons: 'grid_power', boolean_evaluation: 'grid_power', palindrome_partition_ii: 'dna', partition_array_max_sum: 'grid_power', min_subset_diff: 'grid_power', count_partitions_diff: 'grid_power', target_sum: 'grid_power', max_rectangle_ones: 'grid_power', largest_element: 'leaderboard', check_sorted: 'leaderboard', linear_search: 'leaderboard', union_sorted: 'leaderboard', intersection_sorted: 'leaderboard', missing_number: 'vault', max_consecutive_ones: 'leaderboard', rearrange_by_sign: 'leaderboard', max_product_subarray: 'stocks', longest_sum_k_any: 'vault', count_sum_k: 'vault', largest_zero_sum: 'vault', count_xor_k: 'vault', longest_consecutive: 'vault', majority_n3: 'leaderboard', repeating_missing: 'vault', three_sum: 'leaderboard', four_sum: 'leaderboard', set_matrix_zeros: 'grid_power', rotate_matrix: 'grid_power', spiral_order: 'grid_power', pascal_triangle: 'grid_power', merge_no_space: 'leaderboard', count_inversions: 'leaderboard', reverse_pairs: 'leaderboard', count_digits: 'vault', reverse_number: 'vault', palindrome_number: 'vault', armstrong_number: 'vault', print_divisors: 'vault', check_prime: 'vault', factorial: 'vault', sum_first_n: 'vault', reverse_array: 'leaderboard', palindrome_string: 'dna', frequency_count: 'leaderboard', check_ith_bit: 'vault', check_odd: 'vault', swap_xor: 'vault', divide_bits: 'vault', xor_range: 'vault', single_number_iii: 'vault',
       number_of_islands: 'grid_power', rotten_oranges: 'grid_power', nearest_one_distance: 'grid_power', surrounded_regions: 'grid_power', number_of_enclaves: 'grid_power', binary_maze_path: 'maze', min_effort_path: 'maze', swim_rising_water: 'maze', largest_island: 'maze', islands_ii: 'maze', floyd_warshall: 'vault', city_fewest_neighbours: 'vault', stock_ii: 'stocks', stock_iii: 'stocks', stock_iv: 'stocks', stock_cooldown: 'stocks', stock_fee: 'stocks', print_lis: 'vault', largest_divisible_subset: 'vault', longest_string_chain: 'vault', longest_bitonic: 'vault', number_of_lis: 'vault', cycle_undirected_bfs: 'grid_power', cycle_undirected_dfs: 'grid_power', bridges: 'grid_power', articulation_points: 'grid_power', connect_network_ops: 'grid_power', cycle_directed: 'scheduler', safe_states: 'scheduler', kosaraju: 'scheduler', shortest_path_dag: 'scheduler',
       iter_preorder: 'files', iter_inorder: 'files', postorder_two_stacks: 'files', postorder_one_stack: 'files', zigzag_traversal: 'files', right_view: 'files', top_view: 'files', bottom_view: 'files', vertical_order: 'files', boundary_traversal: 'files', max_width: 'files', balanced_tree: 'files', symmetric_tree: 'files', max_path_sum: 'files', root_to_leaf_paths: 'files', children_sum: 'files', nodes_at_distance_k: 'files', burn_tree: 'files', count_complete_nodes: 'files',
       frog_jump_k: 'vault', ninja_training: 'vault', min_falling_path: 'vault', triangle_path: 'vault', partition_equal_subset: 'vault', count_subsets_sum_k: 'vault', unbounded_knapsack: 'vault', rod_cutting: 'vault',
@@ -1352,6 +1357,382 @@ export function mountEngine(view, algo = 'dijkstra') {
     number_of_lis: {
       array: '1, 3, 5, 4, 7',
       hint: 'Up to 8 numbers. Track the best length and how many ways reach it.',
+    },
+    floor_ceil_bst: {
+      array: '10,5,15,2,6,13,22 | 12',
+      hint: 'Values inserted into a BST, then | x. One walk down for the floor, one for the ceil.',
+    },
+    kth_bst: {
+      array: '5,3,6,2,4,1 | 3',
+      hint: 'Values inserted into a BST, then | k. Inorder visits in sorted order.',
+    },
+    lca_bst: {
+      array: '6,2,8,0,4,7,9,3,5 | 3 5',
+      hint: 'Values inserted into a BST, then | a b. Go the way both lie until they split.',
+    },
+    successor_predecessor: {
+      array: '20,8,22,4,12,10,14 | 10',
+      hint: 'Values inserted into a BST, then | x. Smallest above x, largest below x.',
+    },
+    two_sum_bst: {
+      array: '5,3,6,2,4,7 | 9',
+      hint: 'Values inserted into a BST, then | k. Sorted inorder plus two pointers.',
+    },
+    bst_from_preorder: {
+      array: '8,5,1,7,10,12',
+      hint: 'A preorder listing; each value is placed by walking down from the root.',
+    },
+    validate_bst: {
+      array: '5,1,4,null,null,3,6',
+      hint: 'Any tree in level order. Each node must fit the window its ancestors set.',
+    },
+    recover_bst: {
+      array: '3,1,4,null,null,2',
+      hint: 'A BST with two values swapped, in level order. Inorder reveals the pair.',
+    },
+    largest_bst: {
+      array: '10,5,15,1,8,null,7',
+      hint: 'Any tree in level order. Subtrees report (is BST, size, min, max) upward.',
+    },
+    is_min_heap: {
+      array: '10,20,30,21,23',
+      hint: 'Up to 12 numbers read as a complete tree. Every parent must be ≤ its children.',
+    },
+    min_to_max_heap: {
+      array: '3,5,9,6,8,20,10,12,18,9',
+      hint: 'A min-heap array. Bottom-up heapify turns it into a max-heap.',
+    },
+    connect_sticks: {
+      array: '2,4,3',
+      hint: 'Stick lengths (1–999). Always join the two cheapest — the heap tree shrinks each round.',
+    },
+    rank_replace: {
+      array: '40,10,20,30',
+      hint: 'Up to 12 numbers. Each becomes its rank among the distinct values.',
+    },
+    top_k_frequent: {
+      array: '1,1,1,2,2,3', target: '2',
+      hint: 'Up to 12 numbers and k. Count, then keep a size-k min-heap.',
+    },
+    hand_of_straights: {
+      array: '1,2,3,6,2,3,4,7,8', target: '3',
+      hint: 'Cards and the group size. Start each group at the smallest card left.',
+    },
+    task_scheduler: {
+      array: 'A,A,A,B,B,B', target: '2',
+      hint: 'Tasks as letters and the cooldown n. Idle only when nothing can run.',
+    },
+    median_stream: {
+      array: '5,15,1,3',
+      hint: 'Numbers arriving one by one. Two heaps keep the median on top.',
+    },
+    remove_outer_parens: {
+      array: '(()())(())',
+      hint: 'A balanced string of ( and ) (up to 12). Drop each group\'s outer pair.',
+    },
+    reverse_words: {
+      array: '  the sky is  blue ',
+      hint: 'A sentence (up to 24 chars). Extra spaces vanish; word order reverses.',
+    },
+    largest_odd_number: {
+      array: '35427',
+      hint: 'Digits (up to 12). Cut after the rightmost odd digit.',
+    },
+    longest_common_prefix: {
+      array: 'flower, flow, flight',
+      hint: '2–5 words. Compare one column at a time.',
+    },
+    isomorphic_strings: {
+      array: 'egg, add',
+      hint: 'Two words. A consistent one-to-one letter mapping, both ways.',
+    },
+    rotate_string: {
+      array: 'abcde, cdeab',
+      hint: 'Two words. The second is a rotation iff it appears in first + first.',
+    },
+    sort_by_frequency: {
+      array: 'tree',
+      hint: 'Up to 12 letters/digits. Most frequent characters first.',
+    },
+    max_nesting_depth: {
+      array: '(1+(2*3))+1',
+      hint: 'Up to 12 characters with balanced parentheses.',
+    },
+    roman_to_integer: {
+      array: 'MCMXCIV',
+      hint: 'Roman numerals (up to 12). Subtract when a smaller one precedes a bigger one.',
+    },
+    string_to_integer: {
+      array: '   -042abc',
+      hint: 'Any text (up to 24). Spaces, one sign, digits, stop, clamp.',
+    },
+    sum_of_beauty: {
+      array: 'aabcb',
+      hint: 'Up to 8 letters. Cell (i, j) is the beauty of s[i..j].',
+    },
+    cut_stick: {
+      array: '7 | 1,3,4,5',
+      hint: 'Length | cuts. Cell (i, j) = cheapest way to make every cut between cut i and cut j.',
+    },
+    burst_balloons: {
+      array: '3,1,5,8',
+      hint: 'Up to 6 digits. Pick the LAST balloon to burst in each range.',
+    },
+    boolean_evaluation: {
+      array: 'T|F&T^F',
+      hint: 'Alternate T/F with & | ^. Count the ways each range can be True / False.',
+    },
+    palindrome_partition_ii: {
+      array: 'aabbc',
+      hint: 'Up to 10 letters. Fewest cuts so every piece is a palindrome.',
+    },
+    partition_array_max_sum: {
+      array: '1,15,7,9,2,5,10', target: '3',
+      hint: 'Values 0–99 and k. Each piece becomes its max; maximise the total.',
+    },
+    min_subset_diff: {
+      array: '1,6,11,5',
+      hint: 'Up to 6 values 0–12. Reachable subset sums → closest split.',
+    },
+    count_partitions_diff: {
+      array: '5,2,6,4', target: '3',
+      hint: 'Values and difference d. Count subsets summing to (total − d)/2.',
+    },
+    target_sum: {
+      array: '1,1,1,1,1', target: '3',
+      hint: 'Values and target. Signs split the array into two subsets.',
+    },
+    max_rectangle_ones: {
+      array: '1,0,1,0,0/1,0,1,1,1/1,1,1,1,1/1,0,0,1,0',
+      hint: "0/1 rows split by '/'. Each row becomes a histogram of heights.",
+    },
+    largest_element: {
+      array: '3,9,2,7,5',
+      hint: 'Up to 12 numbers. One pass keeps the biggest so far.',
+    },
+    check_sorted: {
+      array: '1,2,2,5,8',
+      hint: 'Up to 12 numbers. Every neighbour pair must be in order.',
+    },
+    linear_search: {
+      array: '4,7,1,9,3', target: '9',
+      hint: 'Numbers and x. Check each position in turn.',
+    },
+    union_sorted: {
+      array: '1,2,3,4,5 | 2,3,4,4,5,6',
+      hint: 'Two sorted arrays split by '|'. Take the smaller, skip repeats.',
+    },
+    intersection_sorted: {
+      array: '1,2,2,3,3,4 | 2,2,3,3,5',
+      hint: 'Two sorted arrays split by '|'. Advance the smaller side.',
+    },
+    missing_number: {
+      array: '3,0,1,4,5',
+      hint: 'Distinct 0..n with one missing. XOR cancels every pair.',
+    },
+    max_consecutive_ones: {
+      array: '1,1,0,1,1,1,0,1',
+      hint: '0/1 values. Count the run; anything else resets it.',
+    },
+    rearrange_by_sign: {
+      array: '3,1,-2,-5,2,-4',
+      hint: 'Equal positives and negatives. + to even slots, − to odd slots.',
+    },
+    max_product_subarray: {
+      array: '2,3,-2,4,-1',
+      hint: 'Up to 12 numbers. Track max AND min — a negative swaps them.',
+    },
+    longest_sum_k_any: {
+      array: '1,-1,5,-2,3', target: '3',
+      hint: 'Any signs and k. Map each prefix sum to where it first appeared.',
+    },
+    count_sum_k: {
+      array: '1,2,3,-3,1,1,1,4,2,-3', target: '3',
+      hint: 'Any signs and k. Count earlier prefixes equal to prefix − k.',
+    },
+    largest_zero_sum: {
+      array: '15,-2,2,-8,1,7,10,23',
+      hint: 'Any signs. A repeated prefix sum means a zero-sum stretch between.',
+    },
+    count_xor_k: {
+      array: '4,2,2,6,4', target: '6',
+      hint: 'Numbers and k. Count earlier prefix XORs equal to prefix ⊕ k.',
+    },
+    longest_consecutive: {
+      array: '100,4,200,1,3,2',
+      hint: "Up to 12 numbers. Only count from a run's first value.",
+    },
+    majority_n3: {
+      array: '1,1,1,3,3,2,2,2',
+      hint: 'Up to 12 numbers. Two candidates, then verify their counts.',
+    },
+    repeating_missing: {
+      array: '3,1,2,5,3',
+      hint: '1..n with one value repeated. Sum and sum-of-squares give two equations.',
+    },
+    three_sum: {
+      array: '-1,0,1,2,-1,-4',
+      hint: 'Up to 12 numbers. Sort, fix one, two pointers for the rest.',
+    },
+    four_sum: {
+      array: '1,0,-1,0,-2,2', target: '0',
+      hint: 'Numbers and target. Fix two, two pointers for the rest.',
+    },
+    set_matrix_zeros: {
+      array: '1,1,1/1,0,1/1,1,1',
+      hint: "Rows split by '/'. Mark rows and columns first, then clear.",
+    },
+    rotate_matrix: {
+      array: '1,2,3/4,5,6/7,8,9',
+      hint: 'A square matrix. Transpose, then reverse each row.',
+    },
+    spiral_order: {
+      array: '1,2,3,4/5,6,7,8/9,10,11,12',
+      hint: "Rows split by '/'. Walk the ring, then shrink the bounds.",
+    },
+    pascal_triangle: {
+      array: 'rows', target: '5',
+      hint: 'Set ROWS (1–8). Each inner value = the two above it.',
+    },
+    merge_no_space: {
+      array: '1,4,8,10 | 2,3,9',
+      hint: 'Two sorted arrays split by '|'. Gap method, halving each round.',
+    },
+    count_inversions: {
+      array: '5,3,2,4,1',
+      hint: 'Up to 12 numbers. Count pairs across halves during merge sort.',
+    },
+    reverse_pairs: {
+      array: '1,3,2,3,1',
+      hint: 'Up to 12 numbers. Count a[i] > 2·a[j] across halves during merge sort.',
+    },
+    count_digits: {
+      array: '12345',
+      hint: 'A whole number. Each ÷10 removes one digit.',
+    },
+    reverse_number: {
+      array: '1234',
+      hint: 'A whole number. Peel n % 10 onto the reversed number.',
+    },
+    palindrome_number: {
+      array: '12321',
+      hint: 'A whole number. Reverse it and compare.',
+    },
+    armstrong_number: {
+      array: '153',
+      hint: 'A whole number. Sum of digits^(digit count).',
+    },
+    print_divisors: {
+      array: '36',
+      hint: '1–999. Divisors pair up, so stop at √n.',
+    },
+    check_prime: {
+      array: '97',
+      hint: '0–9999. Trial-divide up to √n.',
+    },
+    factorial: {
+      array: '5',
+      hint: '0–12. Multiply 1 × 2 × … × n.',
+    },
+    sum_first_n: {
+      array: '10',
+      hint: '0–1000. Pair the ends: n(n + 1)/2.',
+    },
+    reverse_array: {
+      array: '1,2,3,4,5',
+      hint: 'Up to 12 numbers. Swap the ends, move inward.',
+    },
+    palindrome_string: {
+      array: 'racecar',
+      hint: 'Up to 16 characters. Ignore case and symbols; compare the ends.',
+    },
+    frequency_count: {
+      array: '10,5,10,15,10,5',
+      hint: 'Up to 12 numbers. One pass with value → count.',
+    },
+    check_ith_bit: {
+      array: '13', target: '2',
+      hint: '0–255 and bit i (0–7). AND with 1 << i.',
+    },
+    check_odd: {
+      array: '7',
+      hint: '0–255. The lowest bit decides parity.',
+    },
+    swap_xor: {
+      array: '13, 4',
+      hint: 'Two numbers 0–255. Three XORs, no temp.',
+    },
+    divide_bits: {
+      array: '22, 3',
+      hint: 'Dividend, divisor (0–255). Subtract shifted divisors.',
+    },
+    xor_range: {
+      array: '3, 9',
+      hint: 'N, or L, R (0–999). f(n) repeats every 4.',
+    },
+    single_number_iii: {
+      array: '1,2,1,3,2,5',
+      hint: 'Pairs plus two singletons. Split by the lowest differing bit.',
+    },
+    char_replacement: {
+      array: 'AABABBA', target: '1',
+      hint: 'Letters and k. Window length − top count must stay ≤ k.',
+    },
+    binary_subarray_sum: {
+      array: '1,0,1,0,1', target: '2',
+      hint: '0/1 values and the goal. Exactly = at-most(goal) − at-most(goal−1).',
+    },
+    nice_subarrays: {
+      array: '1,1,2,1,1', target: '3',
+      hint: 'Numbers and k. Count windows with exactly k odd numbers.',
+    },
+    substrings_all_three: {
+      array: 'abcabc',
+      hint: 'Letters a/b/c only. Track where each was last seen.',
+    },
+    max_card_points: {
+      array: '1,2,3,4,5,6,1', target: '3',
+      hint: 'Card points and k. Take k from the ends — trade left cards for right ones.',
+    },
+    subarrays_k_distinct: {
+      array: '1,2,1,2,3', target: '2',
+      hint: 'Numbers and k. Exactly k distinct = at-most(k) − at-most(k−1).',
+    },
+    min_window_substring: {
+      array: 'ADOBECODEBANC, ABC',
+      hint: 'Text (≤ 16) and pattern (≤ 6). Grow to cover, shrink while covered.',
+    },
+    min_window_subsequence: {
+      array: 'abcdebdde, bde',
+      hint: 'Text (≤ 16) and pattern (≤ 6). Forward scan, then tighten backward.',
+    },
+    word_ladder: {
+      array: 'hit, cog | hot,dot,dog,lot,log,cog',
+      hint: 'begin,end | dictionary. BFS: one letter changes per level.',
+    },
+    word_ladder_ii: {
+      array: 'hit, cog | hot,dot,dog,lot,log,cog',
+      hint: 'begin,end | dictionary. Every shortest sequence is read back from BFS parents.',
+    },
+    alien_dictionary: {
+      array: 'baa, abcd, abca, cab, cad',
+      hint: 'Words in alien sorted order. Each adjacent pair gives one letter rule.',
+    },
+    cheapest_flight_k: {
+      array: '0>1:100, 1>2:100, 2>0:100, 1>3:600, 2>3:200 | 0 3 1',
+      hint: 'Flights a>b:price, then | src dst k. k+1 Bellman-Ford rounds.',
+    },
+    ways_to_arrive: {
+      array: '0-6:7,0-1:2,1-2:3,1-3:3,6-3:3,3-5:1,6-5:1,2-5:1,0-4:5,4-6:2 | 0 6',
+      hint: 'Roads a-b:time, then | src dst. Dijkstra that counts ties.',
+    },
+    min_multiplications: {
+      array: '3 30 | 2,5,7',
+      hint: 'start end | factors. BFS over values mod 100000.',
+    },
+    most_stones: {
+      array: '0:0,0:1,1:0,1:2,2:1,2:2',
+      hint: 'Stones as r:c. Same row or column = connected; answer = stones − groups.',
     },
     sqrt_search: {
       array: '28',
@@ -2267,7 +2648,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (!raw) return { error: 'Type an input first — see the hint below.' };
       if (raw.length > 120) return { error: 'That input is too long.' };
       const needsT = ['frog_jump_k', 'count_subsets_sum_k', 'unbounded_knapsack',
-        'city_fewest_neighbours', 'stock_iv', 'stock_fee'].includes(algoId);
+        'city_fewest_neighbours', 'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit'].includes(algoId);
       if (!needsT) return { text: raw };   // the server validates and explains
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isInteger(t)) return { error: 'Enter a whole number.' };
@@ -5314,7 +5695,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
         'rotate_array_k', 'longest_subarray_sum_k', 'frog_jump_k',
         'count_subsets_sum_k', 'unbounded_knapsack', 'city_fewest_neighbours',
-        'stock_iv', 'stock_fee'].includes(algoId)
+        'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -5354,6 +5735,24 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'city_fewest_neighbours') targetLabel.textContent = 'MAX DIST =';
         if (targetLabel && algoId === 'stock_iv') targetLabel.textContent = 'K =';
         if (targetLabel && algoId === 'stock_fee') targetLabel.textContent = 'FEE =';
+        if (targetLabel && algoId === 'top_k_frequent') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'hand_of_straights') targetLabel.textContent = 'GROUP =';
+        if (targetLabel && algoId === 'task_scheduler') targetLabel.textContent = 'COOLDOWN =';
+        if (targetLabel && algoId === 'char_replacement') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'binary_subarray_sum') targetLabel.textContent = 'GOAL =';
+        if (targetLabel && algoId === 'nice_subarrays') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'max_card_points') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'subarrays_k_distinct') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'partition_array_max_sum') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'count_partitions_diff') targetLabel.textContent = 'D =';
+        if (targetLabel && algoId === 'target_sum') targetLabel.textContent = 'TARGET =';
+        if (targetLabel && algoId === 'linear_search') targetLabel.textContent = 'X =';
+        if (targetLabel && algoId === 'longest_sum_k_any') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'count_sum_k') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'count_xor_k') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'four_sum') targetLabel.textContent = 'TARGET =';
+        if (targetLabel && algoId === 'pascal_triangle') targetLabel.textContent = 'ROWS =';
+        if (targetLabel && algoId === 'check_ith_bit') targetLabel.textContent = 'I =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

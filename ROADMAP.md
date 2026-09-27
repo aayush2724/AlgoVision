@@ -159,16 +159,63 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   stragglers (6), binary search on the answer (4), recursion trees (7),
   expression conversions (9), loop-style recursion trees (7), binary-search
   boundary variants (4), batches 35–39, batches 40–44 (trees + DP),
-  batches 45–49 (graphs + DP, see below) → [next] BST (Step 14), Heaps
-  (Step 11), interval DP (MCM-style: burst balloons, cut stick, boolean
-  evaluation, palindrome partitioning II, partition array for max sum),
-  remaining graph items (word ladder, alien dictionary, cheapest flight /
-  network delay / ways to arrive, accounts merge, most stones); after that,
+  batches 45–49 (graphs + DP), batches 50–54 (BST, heaps, strings, windows,
+  text graphs — see below) → [next] interval DP (burst balloons, cut stick,
+  boolean evaluation, palindrome partitioning II, partition array for max
+  sum), Step 3 array remainder, Step 1 basics, Step 8 bits; after that,
   what is left
   needs genuinely new views: DLL pair-sum / intersection of Y lists (two
   pointer lists), clone with random pointers, flattening, LRU/LFU caches,
   min stack / queue-via-stacks (operation-sequence input), matrix median /
   2-D peak, and the Step 3 matrix problems (set zeros, rotate, spiral).
+
+**Batches 55–59 (new tracers) — three modules, 51 ids, 56 A2Z rows.** All
+grid view via `RUN_MODULES`; engine.js prepends ids to TEXT_GRID. No renderer
+changes.
+  - 55 `dp_interval.py`: cut stick, burst balloons, boolean evaluation
+    (interval tables); palindrome partition II, partition-array max sum;
+    min subset diff, count partitions by difference, target sum; maximal
+    rectangle (row histograms).
+  - 56 `arrays_more.py` scans: largest, sorted check, linear search,
+    union/intersection of sorted arrays, missing number (XOR), max
+    consecutive ones, rearrange by sign, max product subarray.
+  - 57 `arrays_more.py` hashing/prefix: longest sum-k (any sign), count
+    sum-k, largest zero-sum, count XOR-k, longest consecutive, majority
+    n/3, repeating & missing, 3-sum, 4-sum.
+  - 58 `arrays_more.py` matrix & merge: set zeros, rotate 90°, spiral,
+    Pascal, merge without space (gap), count inversions, reverse pairs.
+  - 59 `basics.py`: digits/reverse/palindrome/Armstrong, divisors, prime,
+    factorial, sum 1..n, reverse array, string palindrome, frequencies;
+    bits: i-th bit, odd, XOR swap, shift division, XOR of L..R, single
+    number III.
+Also linked existing tracers to 1-71, 8-31, 3-13 (single_number), 3-20
+(kadanes), 16-80 (assign_cookies). Full suite 1569. A2Z now 339 linked.
+Still open: two-list/random-pointer lists, LRU/LFU, stack/queue
+implementations, Morris traversal, tree-from-traversals, recursive
+bubble/insertion sort, print 1..N recursion, sudoku/M-colouring/word break,
+trie max-XOR, ninja's training (3-D DP), Step 4 hard BS (median of two
+arrays, kth of two arrays, gas stations, peak II, matrix median).
+
+**Batches 50–54 (new tracers) — five modules (+1 id in graph_directed),
+46 ids, 46 A2Z rows.** All go through `RUN_MODULES` / the generic text paths;
+engine.js just prepends ids to TREE_SHAPE / TEXT_GRID (and network_delay to
+DIRECTED_ALGOS). No renderer changes.
+  - 50 `bst_ops.py` (tree): floor/ceil, kth, LCA, successor/predecessor, two
+    sum, build from preorder (insertion-built, "vals | x"); validate,
+    recover, largest BST (level-order shapes).
+  - 51 `heaps_more.py`: is-min-heap, min→max heapify, connect sticks (tree);
+    rank replace, top-k frequent, hand of straights, task scheduler, median
+    stream (grid).
+  - 52 `strings_basic.py` (grid): outer parens, reverse words, largest odd,
+    LCP, isomorphic, rotate, sort by frequency, nesting depth, roman, atoi,
+    sum of beauty.
+  - 53 `window_more.py` (grid): char replacement, binary/nice subarrays
+    (at-most trick), all-three substrings, card points, k-distinct, min
+    window substring/subsequence.
+  - 54 `graph_text.py`: word ladder I/II (BFS tree view), alien dictionary,
+    cheapest flight within k stops (round table), ways to arrive, min
+    multiplications, most stones (grid); `network_delay` on the drawn graph.
+Tests vs direct/brute-force references. Full suite 1546. A2Z now 283 linked.
 
 **Batches 45–49 (new tracers) — six modules, 32 ids, 35 A2Z rows.**
 Shared `grid_common.py` (Grid step collector + matrix parser). The graph view

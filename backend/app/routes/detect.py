@@ -237,6 +237,101 @@ SIGNATURES = {
     "safe_states": ["safe_states", "eventual safe states", "safe states"],
     "kosaraju": ["kosaraju", "kosaraju", "strongly connected components", "scc"],
     "shortest_path_dag": ["shortest_path_dag", "shortest path in dag", "dag shortest path"],
+    "floor_ceil_bst": ["floor_ceil_bst", "floor and ceil in bst", "floor in bst", "ceil in bst"],
+    "kth_bst": ["kth_bst", "kth smallest in bst", "kth largest in bst"],
+    "lca_bst": ["lca_bst", "lca in bst", "lowest common ancestor bst"],
+    "successor_predecessor": ["successor_predecessor", "inorder successor", "inorder predecessor"],
+    "two_sum_bst": ["two_sum_bst", "two sum in bst", "pair with sum k bst"],
+    "bst_from_preorder": ["bst_from_preorder", "bst from preorder", "construct bst preorder"],
+    "validate_bst": ["validate_bst", "validate bst", "check if bst"],
+    "recover_bst": ["recover_bst", "recover bst", "two nodes swapped"],
+    "largest_bst": ["largest_bst", "largest bst"],
+    "is_min_heap": ["is_min_heap", "check min heap", "array represents min heap"],
+    "min_to_max_heap": ["min_to_max_heap", "min heap to max heap"],
+    "connect_sticks": ["connect_sticks", "connect sticks", "connect ropes"],
+    "rank_replace": ["rank_replace", "replace elements by rank", "array rank transform"],
+    "top_k_frequent": ["top_k_frequent", "top k frequent"],
+    "hand_of_straights": ["hand_of_straights", "hand of straights"],
+    "task_scheduler": ["task_scheduler", "task scheduler"],
+    "median_stream": ["median_stream", "median from data stream", "running median"],
+    "remove_outer_parens": ["remove_outer_parens", "remove outermost parentheses"],
+    "reverse_words": ["reverse_words", "reverse words in a string", "reverse every word"],
+    "largest_odd_number": ["largest_odd_number", "largest odd number in string"],
+    "longest_common_prefix": ["longest_common_prefix", "longest common prefix"],
+    "isomorphic_strings": ["isomorphic_strings", "isomorphic strings"],
+    "rotate_string": ["rotate_string", "rotate string"],
+    "sort_by_frequency": ["sort_by_frequency", "sort characters by frequency"],
+    "max_nesting_depth": ["max_nesting_depth", "maximum nesting depth"],
+    "roman_to_integer": ["roman_to_integer", "roman to integer"],
+    "string_to_integer": ["string_to_integer", "atoi", "string to integer"],
+    "sum_of_beauty": ["sum_of_beauty", "sum of beauty of all substrings"],
+    "char_replacement": ["char_replacement", "longest repeating character replacement"],
+    "binary_subarray_sum": ["binary_subarray_sum", "binary subarrays with sum"],
+    "nice_subarrays": ["nice_subarrays", "nice subarrays"],
+    "substrings_all_three": ["substrings_all_three", "substrings containing all three characters"],
+    "max_card_points": ["max_card_points", "maximum points you can obtain from cards"],
+    "subarrays_k_distinct": ["subarrays_k_distinct", "subarrays with k different integers"],
+    "min_window_substring": ["min_window_substring", "minimum window substring"],
+    "min_window_subsequence": ["min_window_subsequence", "minimum window subsequence"],
+    "word_ladder": ["word_ladder", "word ladder"],
+    "word_ladder_ii": ["word_ladder_ii", "word ladder ii"],
+    "alien_dictionary": ["alien_dictionary", "alien dictionary"],
+    "cheapest_flight_k": ["cheapest_flight_k", "cheapest flights within k stops"],
+    "ways_to_arrive": ["ways_to_arrive", "number of ways to arrive at destination"],
+    "min_multiplications": ["min_multiplications", "minimum multiplications to reach end"],
+    "most_stones": ["most_stones", "most stones removed"],
+    "network_delay": ["network_delay", "network delay time"],
+    "cut_stick": ["cut_stick", "minimum cost to cut a stick"],
+    "burst_balloons": ["burst_balloons", "burst balloons"],
+    "boolean_evaluation": ["boolean_evaluation", "evaluate boolean expression to true"],
+    "palindrome_partition_ii": ["palindrome_partition_ii", "palindrome partitioning ii (min cuts)"],
+    "partition_array_max_sum": ["partition_array_max_sum", "partition array for maximum sum"],
+    "min_subset_diff": ["min_subset_diff", "partition into two subsets with minimum difference"],
+    "count_partitions_diff": ["count_partitions_diff", "count partitions with given difference"],
+    "target_sum": ["target_sum", "target sum"],
+    "max_rectangle_ones": ["max_rectangle_ones", "maximal rectangle of 1s"],
+    "largest_element": ["largest_element", "largest element in an array"],
+    "check_sorted": ["check_sorted", "check if an array is sorted"],
+    "linear_search": ["linear_search", "linear search"],
+    "union_sorted": ["union_sorted", "union of two sorted arrays"],
+    "intersection_sorted": ["intersection_sorted", "intersection of two sorted arrays"],
+    "missing_number": ["missing_number", "find the missing number"],
+    "max_consecutive_ones": ["max_consecutive_ones", "maximum consecutive ones"],
+    "rearrange_by_sign": ["rearrange_by_sign", "rearrange array elements by sign"],
+    "max_product_subarray": ["max_product_subarray", "maximum product subarray"],
+    "longest_sum_k_any": ["longest_sum_k_any", "longest subarray with sum k (any sign)"],
+    "count_sum_k": ["count_sum_k", "count subarrays with sum k"],
+    "largest_zero_sum": ["largest_zero_sum", "largest subarray with sum 0"],
+    "count_xor_k": ["count_xor_k", "count subarrays with xor k"],
+    "longest_consecutive": ["longest_consecutive", "longest consecutive sequence"],
+    "majority_n3": ["majority_n3", "majority elements (> n/3)"],
+    "repeating_missing": ["repeating_missing", "find the repeating and missing numbers"],
+    "three_sum": ["three_sum", "3 sum"],
+    "four_sum": ["four_sum", "4 sum"],
+    "set_matrix_zeros": ["set_matrix_zeros", "set matrix zeros"],
+    "rotate_matrix": ["rotate_matrix", "rotate a matrix by 90°"],
+    "spiral_order": ["spiral_order", "spiral traversal of a matrix"],
+    "pascal_triangle": ["pascal_triangle", "pascal's triangle"],
+    "merge_no_space": ["merge_no_space", "merge two sorted arrays without extra space"],
+    "count_inversions": ["count_inversions", "count inversions"],
+    "reverse_pairs": ["reverse_pairs", "reverse pairs"],
+    "count_digits": ["count_digits", "count digits of a number"],
+    "reverse_number": ["reverse_number", "reverse a number"],
+    "palindrome_number": ["palindrome_number", "palindrome number"],
+    "armstrong_number": ["armstrong_number", "armstrong number"],
+    "print_divisors": ["print_divisors", "print all divisors"],
+    "check_prime": ["check_prime", "check for a prime number"],
+    "factorial": ["factorial", "factorial of a number"],
+    "sum_first_n": ["sum_first_n", "sum of the first n numbers"],
+    "reverse_array": ["reverse_array", "reverse an array (two pointers)"],
+    "palindrome_string": ["palindrome_string", "check if a string is a palindrome"],
+    "frequency_count": ["frequency_count", "count frequencies / highest occurring element"],
+    "check_ith_bit": ["check_ith_bit", "check if the i-th bit is set"],
+    "check_odd": ["check_odd", "check if a number is odd (bitwise)"],
+    "swap_xor": ["swap_xor", "swap two numbers with xor"],
+    "divide_bits": ["divide_bits", "divide without * or /"],
+    "xor_range": ["xor_range", "xor of numbers in a range"],
+    "single_number_iii": ["single_number_iii", "single number iii (two uniques)"],
 }
 
 REALWORLD_META = {
@@ -2439,6 +2534,766 @@ REALWORLD_META = {
         "scene": "scheduler",
         "title": "Shortest Path in a DAG",
         "hook": "With no loops, relaxing edges in topological order settles every distance in one pass.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "floor_ceil_bst": {
+        "scene": "files",
+        "title": "Floor and Ceil in a BST",
+        "hook": "Values inserted into a BST, then | x. One walk down for the floor, one for the ceil.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "kth_bst": {
+        "scene": "files",
+        "title": "Kth Smallest and Largest in a BST",
+        "hook": "Values inserted into a BST, then | k. Inorder visits in sorted order.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lca_bst": {
+        "scene": "files",
+        "title": "LCA in a BST",
+        "hook": "Values inserted into a BST, then | a b. Go the way both lie until they split.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "successor_predecessor": {
+        "scene": "files",
+        "title": "Inorder Successor / Predecessor in a BST",
+        "hook": "Values inserted into a BST, then | x. Smallest above x, largest below x.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "two_sum_bst": {
+        "scene": "files",
+        "title": "Two Sum in a BST",
+        "hook": "Values inserted into a BST, then | k. Sorted inorder plus two pointers.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bst_from_preorder": {
+        "scene": "files",
+        "title": "Construct a BST From Preorder",
+        "hook": "A preorder listing; each value is placed by walking down from the root.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "validate_bst": {
+        "scene": "files",
+        "title": "Check if a Tree is a BST",
+        "hook": "Any tree in level order. Each node must fit the window its ancestors set.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "recover_bst": {
+        "scene": "files",
+        "title": "Recover a BST With Two Swapped Nodes",
+        "hook": "A BST with two values swapped, in level order. Inorder reveals the pair.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_bst": {
+        "scene": "files",
+        "title": "Largest BST in a Binary Tree",
+        "hook": "Any tree in level order. Subtrees report (is BST, size, min, max) upward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "is_min_heap": {
+        "scene": "scheduler",
+        "title": "Check if an Array is a Min-Heap",
+        "hook": "Up to 12 numbers read as a complete tree. Every parent must be ≤ its children.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_to_max_heap": {
+        "scene": "scheduler",
+        "title": "Convert a Min-Heap to a Max-Heap",
+        "hook": "A min-heap array. Bottom-up heapify turns it into a max-heap.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "connect_sticks": {
+        "scene": "scheduler",
+        "title": "Minimum Cost to Connect Sticks",
+        "hook": "Stick lengths (1–999). Always join the two cheapest — the heap tree shrinks each round.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "rank_replace": {
+        "scene": "scheduler",
+        "title": "Replace Elements by Their Rank",
+        "hook": "Up to 12 numbers. Each becomes its rank among the distinct values.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "top_k_frequent": {
+        "scene": "scheduler",
+        "title": "Top K Frequent Elements",
+        "hook": "Up to 12 numbers and k. Count, then keep a size-k min-heap.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "hand_of_straights": {
+        "scene": "scheduler",
+        "title": "Hand of Straights",
+        "hook": "Cards and the group size. Start each group at the smallest card left.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "task_scheduler": {
+        "scene": "scheduler",
+        "title": "Task Scheduler",
+        "hook": "Tasks as letters and the cooldown n. Idle only when nothing can run.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "median_stream": {
+        "scene": "scheduler",
+        "title": "Find Median From a Data Stream",
+        "hook": "Numbers arriving one by one. Two heaps keep the median on top.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "remove_outer_parens": {
+        "scene": "dna",
+        "title": "Remove Outermost Parentheses",
+        "hook": "A balanced string of ( and ) (up to 12). Drop each group's outer pair.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_words": {
+        "scene": "dna",
+        "title": "Reverse Words in a String",
+        "hook": "A sentence (up to 24 chars). Extra spaces vanish; word order reverses.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_odd_number": {
+        "scene": "dna",
+        "title": "Largest Odd Number in a String",
+        "hook": "Digits (up to 12). Cut after the rightmost odd digit.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_common_prefix": {
+        "scene": "dna",
+        "title": "Longest Common Prefix",
+        "hook": "2–5 words. Compare one column at a time.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "isomorphic_strings": {
+        "scene": "dna",
+        "title": "Isomorphic Strings",
+        "hook": "Two words. A consistent one-to-one letter mapping, both ways.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "rotate_string": {
+        "scene": "dna",
+        "title": "Rotate String",
+        "hook": "Two words. The second is a rotation iff it appears in first + first.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sort_by_frequency": {
+        "scene": "dna",
+        "title": "Sort Characters by Frequency",
+        "hook": "Up to 12 letters/digits. Most frequent characters first.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_nesting_depth": {
+        "scene": "dna",
+        "title": "Maximum Nesting Depth of Parentheses",
+        "hook": "Up to 12 characters with balanced parentheses.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "roman_to_integer": {
+        "scene": "dna",
+        "title": "Roman to Integer",
+        "hook": "Roman numerals (up to 12). Subtract when a smaller one precedes a bigger one.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "string_to_integer": {
+        "scene": "dna",
+        "title": "String to Integer (atoi)",
+        "hook": "Any text (up to 24). Spaces, one sign, digits, stop, clamp.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_of_beauty": {
+        "scene": "dna",
+        "title": "Sum of Beauty of All Substrings",
+        "hook": "Up to 8 letters. Cell (i, j) is the beauty of s[i..j].",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "char_replacement": {
+        "scene": "stocks",
+        "title": "Longest Repeating Character Replacement",
+        "hook": "Letters and k. Window length − top count must stay ≤ k.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "binary_subarray_sum": {
+        "scene": "stocks",
+        "title": "Binary Subarrays With Sum",
+        "hook": "0/1 values and the goal. Exactly = at-most(goal) − at-most(goal−1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "nice_subarrays": {
+        "scene": "stocks",
+        "title": "Count Number of Nice Subarrays",
+        "hook": "Numbers and k. Count windows with exactly k odd numbers.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "substrings_all_three": {
+        "scene": "stocks",
+        "title": "Substrings Containing All Three Characters",
+        "hook": "Letters a/b/c only. Track where each was last seen.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_card_points": {
+        "scene": "stocks",
+        "title": "Maximum Points From Cards",
+        "hook": "Card points and k. Take k from the ends — trade left cards for right ones.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "subarrays_k_distinct": {
+        "scene": "stocks",
+        "title": "Subarrays With K Different Integers",
+        "hook": "Numbers and k. Exactly k distinct = at-most(k) − at-most(k−1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_window_substring": {
+        "scene": "stocks",
+        "title": "Minimum Window Substring",
+        "hook": "Text (≤ 16) and pattern (≤ 6). Grow to cover, shrink while covered.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_window_subsequence": {
+        "scene": "stocks",
+        "title": "Minimum Window Subsequence",
+        "hook": "Text (≤ 16) and pattern (≤ 6). Forward scan, then tighten backward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "word_ladder": {
+        "scene": "vault",
+        "title": "Word Ladder I",
+        "hook": "begin,end | dictionary. BFS: one letter changes per level.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "word_ladder_ii": {
+        "scene": "vault",
+        "title": "Word Ladder II (All Shortest Sequences)",
+        "hook": "begin,end | dictionary. Every shortest sequence is read back from BFS parents.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "alien_dictionary": {
+        "scene": "vault",
+        "title": "Alien Dictionary",
+        "hook": "Words in alien sorted order. Each adjacent pair gives one letter rule.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "cheapest_flight_k": {
+        "scene": "vault",
+        "title": "Cheapest Flights Within K Stops",
+        "hook": "Flights a>b:price, then | src dst k. k+1 Bellman-Ford rounds.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ways_to_arrive": {
+        "scene": "vault",
+        "title": "Number of Ways to Arrive at Destination",
+        "hook": "Roads a-b:time, then | src dst. Dijkstra that counts ties.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_multiplications": {
+        "scene": "vault",
+        "title": "Minimum Multiplications to Reach End",
+        "hook": "start end | factors. BFS over values mod 100000.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "most_stones": {
+        "scene": "vault",
+        "title": "Most Stones Removed With Same Row or Column",
+        "hook": "Stones as r:c. Same row or column = connected; answer = stones − groups.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "network_delay": {
+        "scene": "scheduler",
+        "title": "Network Delay Time",
+        "hook": "Dijkstra from the source on one-way links; the delay is when the farthest node hears the signal.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "cut_stick": {
+        "scene": "grid_power",
+        "title": "Minimum Cost to Cut a Stick",
+        "hook": "Length | cuts. Cell (i, j) = cheapest way to make every cut between cut i and cut j.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "burst_balloons": {
+        "scene": "grid_power",
+        "title": "Burst Balloons",
+        "hook": "Up to 6 digits. Pick the LAST balloon to burst in each range.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "boolean_evaluation": {
+        "scene": "grid_power",
+        "title": "Evaluate Boolean Expression to True",
+        "hook": "Alternate T/F with & | ^. Count the ways each range can be True / False.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "palindrome_partition_ii": {
+        "scene": "dna",
+        "title": "Palindrome Partitioning II (Min Cuts)",
+        "hook": "Up to 10 letters. Fewest cuts so every piece is a palindrome.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "partition_array_max_sum": {
+        "scene": "grid_power",
+        "title": "Partition Array for Maximum Sum",
+        "hook": "Values 0–99 and k. Each piece becomes its max; maximise the total.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_subset_diff": {
+        "scene": "grid_power",
+        "title": "Partition Into Two Subsets With Minimum Difference",
+        "hook": "Up to 6 values 0–12. Reachable subset sums → closest split.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_partitions_diff": {
+        "scene": "grid_power",
+        "title": "Count Partitions With Given Difference",
+        "hook": "Values and difference d. Count subsets summing to (total − d)/2.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "target_sum": {
+        "scene": "grid_power",
+        "title": "Target Sum",
+        "hook": "Values and target. Signs split the array into two subsets.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_rectangle_ones": {
+        "scene": "grid_power",
+        "title": "Maximal Rectangle of 1s",
+        "hook": "0/1 rows split by '/'. Each row becomes a histogram of heights.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_element": {
+        "scene": "leaderboard",
+        "title": "Largest Element in an Array",
+        "hook": "Up to 12 numbers. One pass keeps the biggest so far.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "check_sorted": {
+        "scene": "leaderboard",
+        "title": "Check if an Array is Sorted",
+        "hook": "Up to 12 numbers. Every neighbour pair must be in order.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "linear_search": {
+        "scene": "leaderboard",
+        "title": "Linear Search",
+        "hook": "Numbers and x. Check each position in turn.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "union_sorted": {
+        "scene": "leaderboard",
+        "title": "Union of Two Sorted Arrays",
+        "hook": "Two sorted arrays split by '|'. Take the smaller, skip repeats.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "intersection_sorted": {
+        "scene": "leaderboard",
+        "title": "Intersection of Two Sorted Arrays",
+        "hook": "Two sorted arrays split by '|'. Advance the smaller side.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "missing_number": {
+        "scene": "vault",
+        "title": "Find the Missing Number",
+        "hook": "Distinct 0..n with one missing. XOR cancels every pair.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_consecutive_ones": {
+        "scene": "leaderboard",
+        "title": "Maximum Consecutive Ones",
+        "hook": "0/1 values. Count the run; anything else resets it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "rearrange_by_sign": {
+        "scene": "leaderboard",
+        "title": "Rearrange Array Elements by Sign",
+        "hook": "Equal positives and negatives. + to even slots, − to odd slots.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_product_subarray": {
+        "scene": "stocks",
+        "title": "Maximum Product Subarray",
+        "hook": "Up to 12 numbers. Track max AND min — a negative swaps them.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_sum_k_any": {
+        "scene": "vault",
+        "title": "Longest Subarray With Sum K (any sign)",
+        "hook": "Any signs and k. Map each prefix sum to where it first appeared.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_sum_k": {
+        "scene": "vault",
+        "title": "Count Subarrays With Sum K",
+        "hook": "Any signs and k. Count earlier prefixes equal to prefix − k.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_zero_sum": {
+        "scene": "vault",
+        "title": "Largest Subarray With Sum 0",
+        "hook": "Any signs. A repeated prefix sum means a zero-sum stretch between.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_xor_k": {
+        "scene": "vault",
+        "title": "Count Subarrays With XOR K",
+        "hook": "Numbers and k. Count earlier prefix XORs equal to prefix ⊕ k.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_consecutive": {
+        "scene": "vault",
+        "title": "Longest Consecutive Sequence",
+        "hook": "Up to 12 numbers. Only count from a run's first value.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "majority_n3": {
+        "scene": "leaderboard",
+        "title": "Majority Elements (> n/3)",
+        "hook": "Up to 12 numbers. Two candidates, then verify their counts.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "repeating_missing": {
+        "scene": "vault",
+        "title": "Find the Repeating and Missing Numbers",
+        "hook": "1..n with one value repeated. Sum and sum-of-squares give two equations.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "three_sum": {
+        "scene": "leaderboard",
+        "title": "3 Sum",
+        "hook": "Up to 12 numbers. Sort, fix one, two pointers for the rest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "four_sum": {
+        "scene": "leaderboard",
+        "title": "4 Sum",
+        "hook": "Numbers and target. Fix two, two pointers for the rest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "set_matrix_zeros": {
+        "scene": "grid_power",
+        "title": "Set Matrix Zeros",
+        "hook": "Rows split by '/'. Mark rows and columns first, then clear.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "rotate_matrix": {
+        "scene": "grid_power",
+        "title": "Rotate a Matrix by 90°",
+        "hook": "A square matrix. Transpose, then reverse each row.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "spiral_order": {
+        "scene": "grid_power",
+        "title": "Spiral Traversal of a Matrix",
+        "hook": "Rows split by '/'. Walk the ring, then shrink the bounds.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "pascal_triangle": {
+        "scene": "grid_power",
+        "title": "Pascal's Triangle",
+        "hook": "Set ROWS (1–8). Each inner value = the two above it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "merge_no_space": {
+        "scene": "leaderboard",
+        "title": "Merge Two Sorted Arrays Without Extra Space",
+        "hook": "Two sorted arrays split by '|'. Gap method, halving each round.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_inversions": {
+        "scene": "leaderboard",
+        "title": "Count Inversions",
+        "hook": "Up to 12 numbers. Count pairs across halves during merge sort.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_pairs": {
+        "scene": "leaderboard",
+        "title": "Reverse Pairs",
+        "hook": "Up to 12 numbers. Count a[i] > 2·a[j] across halves during merge sort.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_digits": {
+        "scene": "vault",
+        "title": "Count Digits of a Number",
+        "hook": "A whole number. Each ÷10 removes one digit.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_number": {
+        "scene": "vault",
+        "title": "Reverse a Number",
+        "hook": "A whole number. Peel n % 10 onto the reversed number.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "palindrome_number": {
+        "scene": "vault",
+        "title": "Palindrome Number",
+        "hook": "A whole number. Reverse it and compare.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "armstrong_number": {
+        "scene": "vault",
+        "title": "Armstrong Number",
+        "hook": "A whole number. Sum of digits^(digit count).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "print_divisors": {
+        "scene": "vault",
+        "title": "Print All Divisors",
+        "hook": "1–999. Divisors pair up, so stop at √n.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "check_prime": {
+        "scene": "vault",
+        "title": "Check for a Prime Number",
+        "hook": "0–9999. Trial-divide up to √n.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "factorial": {
+        "scene": "vault",
+        "title": "Factorial of a Number",
+        "hook": "0–12. Multiply 1 × 2 × … × n.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_first_n": {
+        "scene": "vault",
+        "title": "Sum of the First N Numbers",
+        "hook": "0–1000. Pair the ends: n(n + 1)/2.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_array": {
+        "scene": "leaderboard",
+        "title": "Reverse an Array (Two Pointers)",
+        "hook": "Up to 12 numbers. Swap the ends, move inward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "palindrome_string": {
+        "scene": "dna",
+        "title": "Check if a String is a Palindrome",
+        "hook": "Up to 16 characters. Ignore case and symbols; compare the ends.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "frequency_count": {
+        "scene": "leaderboard",
+        "title": "Count Frequencies / Highest Occurring Element",
+        "hook": "Up to 12 numbers. One pass with value → count.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "check_ith_bit": {
+        "scene": "vault",
+        "title": "Check if the i-th Bit is Set",
+        "hook": "0–255 and bit i (0–7). AND with 1 << i.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "check_odd": {
+        "scene": "vault",
+        "title": "Check if a Number is Odd (Bitwise)",
+        "hook": "0–255. The lowest bit decides parity.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "swap_xor": {
+        "scene": "vault",
+        "title": "Swap Two Numbers With XOR",
+        "hook": "Two numbers 0–255. Three XORs, no temp.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "divide_bits": {
+        "scene": "vault",
+        "title": "Divide Without * or /",
+        "hook": "Dividend, divisor (0–255). Subtract shifted divisors.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "xor_range": {
+        "scene": "vault",
+        "title": "XOR of Numbers in a Range",
+        "hook": "N, or L, R (0–999). f(n) repeats every 4.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "single_number_iii": {
+        "scene": "vault",
+        "title": "Single Number III (Two Uniques)",
+        "hook": "Pairs plus two singletons. Split by the lowest differing bit.",
         "metaphors": {"node": "node", "edge": "link", "weight": "cost",
                       "visit": "Visiting", "start": "The start",
                       "done": "The answer."}

@@ -38,11 +38,14 @@ from app.tracers import (
     answer_numeric, matrix_search, list_arith, stack_more, array_basics,
     tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
     grid_graphs, grid_paths, graph_undirected, graph_directed, floyd,
-    dp_stocks_lis,
+    dp_stocks_lis, bst_ops, heaps_more, strings_basic, window_more, graph_text,
+    dp_interval, arrays_more, basics,
 )
 # Modules whose run(algo, text, target) validates (ValueError → 400) and traces.
 RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
-               grid_graphs, grid_paths, floyd, dp_stocks_lis)
+               grid_graphs, grid_paths, floyd, dp_stocks_lis, bst_ops,
+               heaps_more, strings_basic, window_more, graph_text,
+               dp_interval, arrays_more, basics)
 from app.tracers.common import Graph
 import os
 

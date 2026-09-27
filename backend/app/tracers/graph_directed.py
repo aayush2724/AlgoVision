@@ -25,6 +25,7 @@ TITLES = {
     "safe_states": "Find Eventual Safe States",
     "kosaraju": "Strongly Connected Components (Kosaraju)",
     "shortest_path_dag": "Shortest Path in a DAG",
+    "network_delay": "Network Delay Time",
 }
 
 
@@ -240,6 +241,50 @@ def _dag_shortest(graph: Graph, start: str):
     return {"meta": _meta("shortest_path_dag", dict(dist)), "steps": S.steps}
 
 
+def _network_delay(graph: Graph, start: str):
+    """Dijkstra from the source; the signal reaches everyone when the
+    farthest node hears it, so the answer is the largest distance."""
+    import heapq
+    adj = directed_adjacency(graph)
+    S = _Steps()
+    S.counts = {"settled": 0}
+    dist = {u: None for u in adj}
+    dist[start] = 0
+    prev: dict = {}
+    pq = [(0, start)]
+    done: set = set()
+    S.add(f"A signal leaves {start}. It reaches each node along the fastest "
+          f"route (Dijkstra, edges one-way); the delay is when the LAST node "
+          f"hears it.", [start], start, dist=dist)
+    while pq:
+        d, u = heapq.heappop(pq)
+        if u in done:
+            continue
+        done.add(u)
+        S.counts["settled"] += 1
+        S.add(f"Settle {u}: the signal arrives at time {d:g}.", sorted(done), u,
+              green=[(prev[x], x) for x in prev], dist=dist)
+        for v, w in sorted(adj[u]):
+            if w < 0:
+                continue
+            if dist[v] is None or d + w < dist[v]:
+                dist[v] = d + w
+                prev[v] = u
+                heapq.heappush(pq, (dist[v], v))
+                S.add(f"{u} → {v}: arrives at {d:g} + {w:g} = {dist[v]:g}.",
+                      sorted(done), v, (u, v), [(prev[x], x) for x in prev], dist)
+    if any(d is None for d in dist.values()):
+        res = -1
+        S.add("Some node is never reached — the answer is −1.", sorted(done),
+              green=[(prev[x], x) for x in prev], dist=dist)
+    else:
+        res = max(dist.values())
+        S.add(f"Everyone has the signal by time {res:g} — the largest distance.",
+              sorted(done), green=[(prev[x], x) for x in prev], dist=dist)
+    return {"meta": _meta("network_delay", res), "steps": S.steps}
+
+
 def trace_for(algo):
     return {"cycle_directed": _cycle, "safe_states": _safe,
-            "kosaraju": _kosaraju, "shortest_path_dag": _dag_shortest}[algo]
+            "kosaraju": _kosaraju, "shortest_path_dag": _dag_shortest,
+            "network_delay": _network_delay}[algo]

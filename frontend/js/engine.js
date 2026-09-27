@@ -58,9 +58,11 @@ const SCENES = {
     stepNarrate(step, meta) {
       const m = meta.metaphors || {};
       const idx = step.highlight?.index;
-      // On tree steps (tries) the index is an internal node id — meaningful
-      // to challenge mode, meaningless read aloud — so only array steps get it.
-      const prefix = (idx === null || idx === undefined || step.structures?.tree)
+      // On tree steps (tries) the index is an internal node id, and on grid
+      // steps it is just a column — meaningless read aloud — so only array
+      // steps get it.
+      const prefix = (idx === null || idx === undefined || step.structures?.tree
+                      || step.structures?.grid)
         ? '' : `${m.visit || 'Checking'} ${idx}. `;
       return `${prefix}${step.note || "Searching catalog..."}`;
     }
@@ -212,6 +214,13 @@ function escapeHTML(str) {
 const BS_VARIANTS = ['lower_bound', 'upper_bound', 'first_last_occurrence',
   'floor_ceil', 'kth_missing', 'single_element_sorted'];
 
+// Batches 35–39: one backend module each, several catalog ids per module.
+const ANSWER_NUMERIC = ['sqrt_search', 'nth_root', 'min_bouquets'];
+const MATRIX_SEARCH = ['search_2d_matrix', 'search_2d_matrix_ii', 'row_max_ones'];
+const LIST_ARITH = ['add_two_numbers', 'add_one_list'];
+const STACK_MORE = ['next_smaller', 'nge_circular', 'remove_k_digits', 'sum_subarray_mins'];
+const ARRAY_BASICS = ['remove_duplicates_sorted', 'rotate_array_k', 'move_zeros', 'leaders', 'longest_subarray_sum_k', 'second_largest'];
+
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   prims_mst: 'graph', kruskals_mst: 'graph',
@@ -242,6 +251,8 @@ const VIEW_FOR = {
   subsets_recursion: 'tree', generate_parentheses: 'tree',
   subsets_ii: 'tree', combination_sum_ii: 'tree', combination_sum_iii: 'tree',
   palindrome_partition: 'tree', letter_combinations: 'tree',
+  sqrt_search: 'array', nth_root: 'array', min_bouquets: 'array', next_smaller: 'array', nge_circular: 'array', remove_k_digits: 'array', sum_subarray_mins: 'array', remove_duplicates_sorted: 'array', rotate_array_k: 'array', move_zeros: 'array', leaders: 'array', longest_subarray_sum_k: 'array', second_largest: 'array',
+  search_2d_matrix: 'grid', search_2d_matrix_ii: 'grid', row_max_ones: 'grid', add_two_numbers: 'grid', add_one_list: 'grid',
   lower_bound: 'array', upper_bound: 'array', first_last_occurrence: 'array', floor_ceil: 'array', kth_missing: 'array', single_element_sorted: 'array',
   infix_to_postfix: 'stack', infix_to_prefix: 'stack', postfix_to_infix: 'stack', postfix_to_prefix: 'stack', prefix_to_infix: 'stack', prefix_to_postfix: 'stack',
   binary_strings: 'tree', combination_sum: 'tree',
@@ -560,6 +571,14 @@ export function mountEngine(view, algo = 'dijkstra') {
       subsets_recursion: 'files', generate_parentheses: 'plates',
       subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
       palindrome_partition: 'dna', letter_combinations: 'files',
+      sqrt_search: 'vault', nth_root: 'vault', min_bouquets: 'market',
+      search_2d_matrix: 'library', search_2d_matrix_ii: 'library', row_max_ones: 'grid_power',
+      add_two_numbers: 'train', add_one_list: 'train',
+      next_smaller: 'stocks', nge_circular: 'stocks', remove_k_digits: 'plates',
+      sum_subarray_mins: 'stocks',
+      remove_duplicates_sorted: 'leaderboard', rotate_array_k: 'leaderboard',
+      move_zeros: 'leaderboard', leaders: 'leaderboard', longest_subarray_sum_k: 'stocks',
+      second_largest: 'leaderboard',
       lower_bound: 'library', upper_bound: 'library', first_last_occurrence: 'library', floor_ceil: 'library', kth_missing: 'library', single_element_sorted: 'library',
       infix_to_postfix: 'plates', infix_to_prefix: 'plates', postfix_to_infix: 'plates', postfix_to_prefix: 'plates', prefix_to_infix: 'plates', prefix_to_postfix: 'plates',
       binary_strings: 'files', combination_sum: 'vault',
@@ -798,7 +817,8 @@ export function mountEngine(view, algo = 'dijkstra') {
                  || algoId === 'buy_sell_stock'
                  || algoId === 'longest_substring_no_repeat'
                  || algoId === 'max_consecutive_ones_iii'
-                 || algoId === 'longest_k_distinct') {
+                 || algoId === 'longest_k_distinct'
+                 || algoId === 'longest_subarray_sum_k') {
         const inBest = s.best_window && idx >= s.best_window[0] && idx <= s.best_window[1];
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
         if (inBest) cell.setAttribute("stroke", "#4ade80");
@@ -1063,6 +1083,78 @@ export function mountEngine(view, algo = 'dijkstra') {
     prefix_to_postfix: {
       array: '/-AK-/BL*CD',
       hint: 'A valid prefix expression, scanned right to left. Each operator pushes left + right + operator.',
+    },
+    sqrt_search: {
+      array: '28',
+      hint: 'One whole number n (1–1,000,000). The line above searches x — the largest with x·x ≤ n.',
+    },
+    nth_root: {
+      array: '3, 27',
+      hint: 'Two numbers: n, m — find x with xⁿ = m exactly (or -1). n 1–10, m up to 1,000,000.',
+    },
+    min_bouquets: {
+      array: '7, 7, 7, 7, 13, 11, 12, 7', target: '2, 3',
+      hint: 'Bloom day of each flower (up to 12), then M, K: M bouquets of K adjacent flowers. The line above searches the day.',
+    },
+    search_2d_matrix: {
+      array: '1,3,5,7 / 10,11,16,20 / 23,30,34,60', target: '16',
+      hint: 'Rows separated by /, up to 6×6. Read row by row it must never decrease — then it is one sorted list.',
+    },
+    search_2d_matrix_ii: {
+      array: '1,4,7,11 / 2,5,8,12 / 3,6,9,16 / 10,13,14,17', target: '5',
+      hint: 'Every row and column sorted. Start top-right: too big → step left, too small → step down.',
+    },
+    row_max_ones: {
+      array: '0,0,1,1 / 0,1,1,1 / 0,0,0,1',
+      hint: 'Rows of 0s then 1s (up to 6×6). Each row gets a binary search for its first 1.',
+    },
+    add_two_numbers: {
+      array: '2,4,3 / 5,6,4',
+      hint: 'Two digit lists, least-significant digit first (2,4,3 is 342). Up to 8 digits each.',
+    },
+    add_one_list: {
+      array: '1, 9, 9',
+      hint: 'Digits, most-significant first (up to 8). The +1 enters at the tail and the carry ripples back.',
+    },
+    next_smaller: {
+      array: '4, 8, 5, 2, 25',
+      hint: 'Up to 12 numbers. The mirror of next-greater: pop while the waiting value is bigger than the new one.',
+    },
+    nge_circular: {
+      array: '5, 4, 3, 2, 1',
+      hint: 'Up to 12 numbers, and the array wraps around. Two laps — the second only resolves, never pushes.',
+    },
+    remove_k_digits: {
+      array: '1, 4, 3, 2, 2, 1, 9', target: '3',
+      hint: 'Up to 12 digits and K. A bigger kept digit before a smaller one should be deleted first.',
+    },
+    sum_subarray_mins: {
+      array: '3, 1, 2, 4',
+      hint: 'Up to 12 whole numbers 0–100. Orange = the span where the current value is the minimum.',
+    },
+    remove_duplicates_sorted: {
+      array: '1, 1, 2, 2, 2, 3, 3',
+      hint: 'Up to 12 numbers (sorted for you). Green = the unique prefix, grown by copying new values forward.',
+    },
+    rotate_array_k: {
+      array: '1, 2, 3, 4, 5, 6, 7', target: '2',
+      hint: 'Up to 12 numbers and K (0–100). Three reversals rotate left in place — try K = 1 too.',
+    },
+    move_zeros: {
+      array: '1, 0, 2, 3, 0, 4, 0, 1',
+      hint: 'Up to 12 numbers. Non-zeros swap down to the first zero, keeping their order.',
+    },
+    leaders: {
+      array: '10, 22, 12, 3, 0, 6',
+      hint: 'Up to 12 numbers. Scan from the right with a running max — leaders turn green.',
+    },
+    longest_subarray_sum_k: {
+      array: '2, 3, 5, 1, 9', target: '10',
+      hint: 'Up to 12 non-negative numbers and K. The window grows right and shrinks left while its sum is too big.',
+    },
+    second_largest: {
+      array: '1, 2, 4, 7, 7, 5',
+      hint: 'Up to 12 numbers. One pass with two trackers — no sorting.',
     },
     lower_bound: {
       array: '1, 2, 2, 3, 5', target: '2',
@@ -1890,6 +1982,29 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (t < 0 || t > 18) return { error: 'Keep n between 0 and 18.' };
       return { target: t };
     }
+    if (algoId === 'palindrome_partition' || algoId === 'letter_combinations') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (algoId === 'palindrome_partition') {
+        if (!/^[a-z]{1,6}$/.test(raw.toLowerCase())) return { error: '1–6 letters only.' };
+        return { text: raw.toLowerCase() };
+      }
+      if (!/^[2-9]{1,2}$/.test(raw)) return { error: 'One or two digits from 2–9.' };
+      return { text: raw };
+    }
+
+    if (MATRIX_SEARCH.includes(algoId) || LIST_ARITH.includes(algoId)) {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (!/^-?\d+(,-?\d+)*(\/-?\d+(,-?\d+)*)*$/.test(raw)) {
+        return { error: 'Numbers separated by commas, rows (or lists) by / — e.g. 1,3,5/7,9,11' };
+      }
+      if (algoId === 'row_max_ones' || LIST_ARITH.includes(algoId)) return { text: raw };
+      const t = Number((targetInput?.value || '').trim());
+      if ((targetInput?.value || '').trim() === '' || !Number.isFinite(t)) {
+        return { error: 'Enter a number X to search for.' };
+      }
+      return { text: raw, target: t };  // the server checks the matrix shape
+    }
+
     if (algoId.includes('fix_to_')) {
       const raw = (arrayInput?.value || '').replace(/\s+/g, '');
       const kind = algoId.split('_to_')[0];
@@ -2075,6 +2190,27 @@ export function mountEngine(view, algo = 'dijkstra') {
       return { array: values };
     }
 
+    if (ANSWER_NUMERIC.includes(algoId) || STACK_MORE.includes(algoId)
+        || ARRAY_BASICS.includes(algoId)) {
+      if (values.length > 12) return { error: 'Max 12 numbers.' };
+      if (algoId === 'min_bouquets') {
+        const mk = (targetInput?.value || '').replace(/\s+/g, '');
+        if (!/^\d+,\d+$/.test(mk)) return { error: 'Give M and K as "M, K" — e.g. 3, 1' };
+        return { array: values, text: mk };
+      }
+      const needsK = ['remove_k_digits', 'rotate_array_k', 'longest_subarray_sum_k'].includes(algoId);
+      if (!needsK) {
+        if (algoId === 'remove_duplicates_sorted') {
+          const sorted = values.slice().sort((a, b) => a - b);
+          return { array: sorted, sortedForYou: sorted.some((v, i) => v !== values[i]) };
+        }
+        return { array: values };
+      }
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(t)) return { error: 'K must be a whole number.' };
+      return { array: values, target: t };  // the server explains range limits
+    }
+
     if (BS_VARIANTS.includes(algoId)) {
       if (values.length > 16) return { error: 'Max 16 numbers.' };
       if (algoId === 'single_element_sorted') return { array: values };
@@ -2085,16 +2221,6 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (algoId === 'kth_missing') return { array: values, target: t };
       const sorted = values.slice().sort((a, b) => a - b);
       return { array: sorted, target: t, sortedForYou: sorted.some((v, i) => v !== values[i]) };
-    }
-
-    if (algoId === 'palindrome_partition' || algoId === 'letter_combinations') {
-      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
-      if (algoId === 'palindrome_partition') {
-        if (!/^[a-z]{1,6}$/.test(raw.toLowerCase())) return { error: '1–6 letters only.' };
-        return { text: raw.toLowerCase() };
-      }
-      if (!/^[2-9]{1,2}$/.test(raw)) return { error: 'One or two digits from 2–9.' };
-      return { text: raw };
     }
 
     if (algoId === 'subsets_ii' || algoId === 'combination_sum_ii'
@@ -4228,7 +4354,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
         } else if (traceView === 'grid') {
           renderGridView();
-          const payload = algoId === 'knapsack_01'
+          const payload = parsed.target !== undefined
             ? { text: parsed.text, target: parsed.target }
             : { text: parsed.text };
           res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
@@ -4241,9 +4367,11 @@ export function mountEngine(view, algo = 'dijkstra') {
               'sliding_window', 'sliding_window_maximum', 'koko_bananas',
               'min_max_partition', 'aggressive_cows', 'lower_bound', 'upper_bound',
               'first_last_occurrence', 'floor_ceil', 'kth_missing'].includes(algoId);
-            const payload = needsTarget
-              ? { array: parsed.array, target: parsed.target }
-              : { array: parsed.array };
+            const payload = algoId === 'min_bouquets'
+              ? { array: parsed.array, text: parsed.text }
+              : (needsTarget || parsed.target !== undefined)
+                ? { array: parsed.array, target: parsed.target }
+                : { array: parsed.array };
             res = await api.postTrace(algoId, payload);
           }
         }
@@ -4895,7 +5023,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         'remove_nth_from_end', 'rotate_list', 'koko_bananas',
         'min_max_partition', 'aggressive_cows', 'subsets_recursion',
         'combination_sum', 'combination_sum_ii', 'lower_bound', 'upper_bound',
-        'first_last_occurrence', 'floor_ceil', 'kth_missing'].includes(algoId)
+        'first_last_occurrence', 'floor_ceil', 'kth_missing', 'min_bouquets',
+        'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
+        'rotate_array_k', 'longest_subarray_sum_k'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -4927,6 +5057,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && ['lower_bound', 'upper_bound', 'first_last_occurrence',
           'floor_ceil'].includes(algoId)) targetLabel.textContent = 'X =';
         if (targetLabel && algoId === 'kth_missing') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'min_bouquets') targetLabel.textContent = 'M, K =';
+        if (targetLabel && ['search_2d_matrix', 'search_2d_matrix_ii'].includes(algoId)) targetLabel.textContent = 'X =';
+        if (targetLabel && ['remove_k_digits', 'rotate_array_k', 'longest_subarray_sum_k'].includes(algoId)) targetLabel.textContent = 'K =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

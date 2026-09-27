@@ -158,10 +158,34 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Search second batch (4,9), Linked List DLL + Tries (6,17), list
   stragglers (6), binary search on the answer (4), recursion trees (7),
   expression conversions (9), loop-style recursion trees (7), binary-search
-  boundary variants (4) → [next] add-two-numbers (needs a two-list view),
-  minimum bouquets (needs a second scalar input), sqrt / nth root (answer
-  search over a number-only input), 2-D matrix binary searches (4-29, 4-47,
-  4-48 — grid view).
+  boundary variants (4), batches 35–39 (see below) → [next] what is left
+  needs genuinely new views: DLL pair-sum / intersection of Y lists (two
+  pointer lists), clone with random pointers, flattening, LRU/LFU caches,
+  min stack / queue-via-stacks (operation-sequence input), matrix median /
+  2-D peak, and the Step 3 matrix problems (set zeros, rotate, spiral).
+
+**Batches 35–39 (new tracers) — five modules, 20 ids, 19 A2Z rows.**
+  - 35 `answer_numeric.py`: `sqrt_search` (4-40), `nth_root` (4-41),
+    `min_bouquets` (4-17; target box takes "M, K", sent as `text`). Reuse
+    the batch-30 answer number line.
+  - 36 `matrix_search.py` (grid view, input "1,3,5/7,9,11"): flat-index
+    `search_2d_matrix` (4-29), staircase `search_2d_matrix_ii` (4-48),
+    per-row lower bound `row_max_ones` (4-47). Live region tinted via `deps`.
+  - 37 `list_arith.py` (grid view as column addition): `add_two_numbers`
+    (6-51, lists LSB-first), `add_one_list` (6-50, recursive carry, spare
+    "new" column for a new head).
+  - 38 `stack_more.py`: `next_smaller` (9-15), `nge_circular` (9-37, two
+    laps), `remove_k_digits` (9-21), `sum_subarray_mins` (9-18, PSE/NSE).
+  - 39 `array_basics.py`: `second_largest` (3-2), `remove_duplicates_sorted`
+    (3-4), `rotate_array_k` (3-5 with K=1, 3-6; three reversals),
+    `move_zeros` (3-7), `longest_subarray_sum_k` (3-14, sliding window),
+    `leaders` (3-24).
+Fixes found by browser checks: batch 33's palindrome/letter text inputs were
+parsed after the generic numeric parse (letters were rejected) — all
+text-shaped parsers now run first; the library narrator no longer prefixes
+grid steps with a column number, and the root searches moved to the plain
+`vault` scene. Tests vs brute force for every id; full suite 1505 passing.
+A2Z now 168 rows linked.
 
 **Batch 34 (new tracers) — Binary-search boundary variants (Step 4).**
 One module `bs_variants.py`, six ids on the existing low/high/mid window;

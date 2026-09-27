@@ -35,6 +35,7 @@ from app.tracers import (
     subsets_recursion, generate_parentheses, binary_strings, combination_sum,
     expr_convert, subsets_ii, combination_sum_ii, combination_sum_iii,
     palindrome_partition, letter_combinations, bs_variants,
+    answer_numeric, matrix_search, list_arith, stack_more, array_basics,
 )
 from app.tracers.common import Graph
 import os
@@ -223,6 +224,12 @@ def algorithms():
             {"id": "letter_combinations", "name": "Letter Combinations of a Phone Number", "input": "text"},
             *({"id": k, "name": v, "input": "array"}
               for k, v in bs_variants.TITLES.items()),
+            *({"id": k, "name": v, "input": "array"}
+              for mod in (answer_numeric, stack_more, array_basics)
+              for k, v in mod.TITLES.items()),
+            *({"id": k, "name": v, "input": "text"}
+              for mod in (matrix_search, list_arith)
+              for k, v in mod.TITLES.items()),
         ]
     }
 
@@ -1287,6 +1294,38 @@ def run_trace(request: Request, req: TraceRequest):
         raise HTTPException(status_code=400, detail=problem)
       return expr_convert.trace(text, req.algorithm)
 
+    if req.algorithm in answer_numeric.TITLES:
+      arr = req.array or []
+      problem = answer_numeric.validate(req.algorithm, arr, req.text)
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      return answer_numeric.trace(req.algorithm, arr, req.text)
+
+    if req.algorithm in matrix_search.TITLES:
+      grid = matrix_search.parse(req.text)
+      problem = (matrix_search.validate(req.algorithm, grid, req.target)
+                 if grid is not None else "Only whole numbers, e.g. 1,3,5/7,9,11.")
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      return matrix_search.trace(req.algorithm, grid, req.target)
+
+    if req.algorithm in list_arith.TITLES:
+      lists = list_arith.parse(req.text)
+      problem = (list_arith.validate(req.algorithm, lists)
+                 if lists is not None else "Only digits, e.g. 2,4,3/5,6,4.")
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      return list_arith.trace(req.algorithm, lists)
+
+    if req.algorithm in stack_more.TITLES or req.algorithm in array_basics.TITLES:
+      mod = stack_more if req.algorithm in stack_more.TITLES else array_basics
+      arr = req.array or []
+      problem = mod.validate(req.algorithm, arr, req.target)
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      _validated_array(arr, mod.MAX_LEN, req.algorithm)
+      return mod.trace(req.algorithm, arr, req.target)
+
     if req.algorithm in bs_variants.TITLES:
       arr = req.array or []
       problem = bs_variants.validate(req.algorithm, arr, req.target)
@@ -1877,7 +1916,9 @@ def run_trace(request: Request, req: TraceRequest):
                 "generate_parentheses", "binary_strings", "combination_sum",
                 *expr_convert.MODES, "subsets_ii", "combination_sum_ii",
                 "combination_sum_iii", "palindrome_partition",
-                "letter_combinations", *bs_variants.TITLES])
+                "letter_combinations", *bs_variants.TITLES,
+                *answer_numeric.TITLES, *matrix_search.TITLES,
+                *list_arith.TITLES, *stack_more.TITLES, *array_basics.TITLES])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

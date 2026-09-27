@@ -154,6 +154,24 @@ SIGNATURES = {
     "floor_ceil": ["floor_ceil", "floor and ceil", "floor in sorted array", "ceil in sorted array"],
     "kth_missing": ["kth_missing", "kth missing positive", "k-th missing", "missing positive number"],
     "single_element_sorted": ["single_element_sorted", "single element in a sorted array", "single non-duplicate", "appears once sorted"],
+    "sqrt_search": ["sqrt_search", "square root", "floor sqrt", "integer square root"],
+    "nth_root": ["nth_root", "nth root", "n-th root"],
+    "min_bouquets": ["min_bouquets", "minimum days to make m bouquets", "bouquets", "bloom day"],
+    "search_2d_matrix": ["search_2d_matrix", "search a 2d matrix", "search in a 2d matrix", "sorted matrix search"],
+    "search_2d_matrix_ii": ["search_2d_matrix_ii", "search a 2d matrix ii", "row and column sorted", "staircase search"],
+    "row_max_ones": ["row_max_ones", "row with maximum 1s", "row with max ones", "maximum number of 1s"],
+    "add_two_numbers": ["add_two_numbers", "add two numbers", "sum of two linked lists"],
+    "add_one_list": ["add_one_list", "add one to linked list", "add 1 to a number represented", "plus one linked list"],
+    "next_smaller": ["next_smaller", "next smaller element", "nse"],
+    "nge_circular": ["nge_circular", "next greater element ii", "next greater element 2", "circular next greater"],
+    "remove_k_digits": ["remove_k_digits", "remove k digits", "smallest number after removing"],
+    "sum_subarray_mins": ["sum_subarray_mins", "sum of subarray minimums", "subarray minimums"],
+    "remove_duplicates_sorted": ["remove_duplicates_sorted", "remove duplicates from sorted array", "remove duplicates"],
+    "rotate_array_k": ["rotate_array_k", "rotate array", "left rotate", "rotate by k"],
+    "move_zeros": ["move_zeros", "move zeroes", "move zeros to end"],
+    "leaders": ["leaders", "leaders in an array", "array leaders"],
+    "longest_subarray_sum_k": ["longest_subarray_sum_k", "longest subarray with sum k", "longest subarray sum"],
+    "second_largest": ["second_largest", "second largest element", "second largest"],
 }
 
 REALWORLD_META = {
@@ -1695,6 +1713,150 @@ REALWORLD_META = {
         "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
                       "visit": "Checking the middle book at position", "start": "The whole shelf",
                       "done": "The boundary, found in log n."}
+    },
+    "sqrt_search": {
+        "scene": "vault",
+        "title": "Guess the Square Root",
+        "hook": "Too big squared means go lower, small enough means try higher — halving the range of guesses each time.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "nth_root": {
+        "scene": "vault",
+        "title": "Is There an Exact nth Root?",
+        "hook": "Raise the guess to the nth power and compare — binary search over the candidates.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "min_bouquets": {
+        "scene": "market",
+        "title": "When Can the Florist Open?",
+        "hook": "Guess a day; walk the flowers counting adjacent bloomed runs. Enough bouquets? Try earlier.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "search_2d_matrix": {
+        "scene": "library",
+        "title": "A Shelf of Shelves",
+        "hook": "Read shelf after shelf and it's one sorted run — binary-search the position, then work out the shelf.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "search_2d_matrix_ii": {
+        "scene": "library",
+        "title": "The Staircase Walk",
+        "hook": "From the top-right corner every step rules out a whole row or column.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "row_max_ones": {
+        "scene": "grid_power",
+        "title": "Which Row Lights Up Most?",
+        "hook": "Each row is off-then-on; binary-search where it switches on.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "add_two_numbers": {
+        "scene": "train",
+        "title": "Adding Column by Column",
+        "hook": "Digit plus digit plus carry, one carriage at a time — the way you add on paper.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "add_one_list": {
+        "scene": "train",
+        "title": "The Carry That Walks Back",
+        "hook": "The +1 lands on the last carriage; recursion lets the carry ripple back to the front.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "next_smaller": {
+        "scene": "stocks",
+        "title": "The Next Cheaper Day",
+        "hook": "Waiting days leave the stack the moment a cheaper price arrives.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "nge_circular": {
+        "scene": "stocks",
+        "title": "Next Higher Price, Round the Clock",
+        "hook": "The chart wraps around, so sweep it twice; the second lap only settles who's still waiting.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "remove_k_digits": {
+        "scene": "plates",
+        "title": "Shrink the Number",
+        "hook": "A bigger digit sitting before a smaller one costs the most — remove it first.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "sum_subarray_mins": {
+        "scene": "stocks",
+        "title": "How Often Is Each Day the Low?",
+        "hook": "Each price is the low of every window that stretches until a cheaper day — count those windows.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "remove_duplicates_sorted": {
+        "scene": "leaderboard",
+        "title": "Keep One of Each",
+        "hook": "Walk the sorted list; copy each new value forward into the unique prefix.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "rotate_array_k": {
+        "scene": "leaderboard",
+        "title": "Rotate With Three Flips",
+        "hook": "Flip the front, flip the back, flip the whole — the order ends up rotated.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "move_zeros": {
+        "scene": "leaderboard",
+        "title": "Sink the Zeros",
+        "hook": "Swap every non-zero down to the first empty slot; zeros drift to the end.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "leaders": {
+        "scene": "leaderboard",
+        "title": "Who Towers Over Everyone Behind?",
+        "hook": "Walk in from the right keeping the tallest so far — anyone taller is a leader.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "longest_subarray_sum_k": {
+        "scene": "stocks",
+        "title": "The Longest Run That Adds Up",
+        "hook": "Stretch the window right; if the sum overshoots, shrink it from the left.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "second_largest": {
+        "scene": "leaderboard",
+        "title": "The Runner-Up",
+        "hook": "Keep a champion and a runner-up as you scan — no sorting needed.",
+        "metaphors": {"node": "item", "edge": "—", "weight": "value",
+                      "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
     }
 }
 

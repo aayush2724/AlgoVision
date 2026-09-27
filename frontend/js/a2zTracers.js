@@ -266,4 +266,30 @@ export const A2Z_TRACER = {
   "4-34":  "first_last_occurrence",  // Count occurrences (last − first + 1)
   "4-20":  "kth_missing",            // Kth Missing Positive Number
   "4-39":  "single_element_sorted",  // Single element in a Sorted Array
+
+  // ══ Batches 35–39 (2026-09-27).
+  // 35 — answer search on numbers
+  "4-40":  "sqrt_search",            // Find square root of a number
+  "4-41":  "nth_root",               // Find Nth root of a number
+  "4-17":  "min_bouquets",           // Minimum days to make M bouquets
+  // 36 — 2-D matrix searches (grid view)
+  "4-29":  "search_2d_matrix",       // Search in a 2D matrix
+  "4-48":  "search_2d_matrix_ii",    // Search in 2D matrix - II
+  "4-47":  "row_max_ones",           // Find row with maximum 1's
+  // 37 — list arithmetic (grid view as column addition)
+  "6-51":  "add_two_numbers",        // Add two numbers in Linked List
+  "6-50":  "add_one_list",           // Add one to a number represented by LL
+  // 38 — more monotonic stack
+  "9-15":  "next_smaller",           // Next Smaller Element
+  "9-37":  "nge_circular",           // Next Greater Element - 2
+  "9-21":  "remove_k_digits",        // Remove K Digits
+  "9-18":  "sum_subarray_mins",      // Sum of Subarray Minimums
+  // 39 — array fundamentals
+  "3-2":   "second_largest",         // Second Largest Without Sorting
+  "3-4":   "remove_duplicates_sorted", // Remove Duplicates from Sorted Array
+  "3-5":   "rotate_array_k",         // Left Rotate Array by One (K = 1)
+  "3-6":   "rotate_array_k",         // Left Rotate Array by K Places
+  "3-7":   "move_zeros",             // Move Zeros to End
+  "3-14":  "longest_subarray_sum_k", // Longest Subarray with Sum K (positives)
+  "3-24":  "leaders",                // Leaders in an Array
 };

@@ -533,6 +533,17 @@ export const PAGES = {
           </div>
         </div>
 
+        <!-- Pseudocode, right under the trace: the line the current step
+             executes is lit. Filled from data/pseudocode.json; hidden for
+             algorithms that have no pseudocode yet. -->
+        <div id="pseudo-card" class="rail-panel pseudo-panel is-hidden">
+          <div class="rail-panel-head">
+            <span class="eyebrow">Pseudocode</span>
+            <span class="eyebrow rail-panel-aside">Where are we?</span>
+          </div>
+          <ol id="pseudo-lines" class="pseudo-lines" aria-label="Pseudocode, current line highlighted"></ol>
+        </div>
+
         <div id="compare-panel" class="panel is-hidden" style="margin-bottom:1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">

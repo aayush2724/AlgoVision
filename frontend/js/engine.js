@@ -222,14 +222,14 @@ const STACK_MORE = ['next_smaller', 'nge_circular', 'remove_k_digits', 'sum_suba
 const ARRAY_BASICS = ['remove_duplicates_sorted', 'rotate_array_k', 'move_zeros', 'leaders', 'longest_subarray_sum_k', 'second_largest'];
 
 // Batches 40–44: level-order binary trees and more table DP.
-const TREE_SHAPE = ['build_pre_in', 'build_post_in', 'serialize_tree', 'morris_inorder', 'morris_preorder', 'flatten_tree', 'identical_trees', 'merge_two_bsts', 'trie_advanced'].concat(['floor_ceil_bst', 'kth_bst', 'lca_bst', 'successor_predecessor', 'two_sum_bst', 'bst_from_preorder', 'validate_bst', 'recover_bst', 'largest_bst', 'connect_sticks', 'is_min_heap', 'min_to_max_heap', 'word_ladder', 'word_ladder_ii'].concat(['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes']));
+const TREE_SHAPE = ['aho_corasick', 'tree_robber', 'sum_distances_tree'].concat(['lca_lifting', 'kth_ancestor'].concat(['build_pre_in', 'build_post_in', 'serialize_tree', 'morris_inorder', 'morris_preorder', 'flatten_tree', 'identical_trees', 'merge_two_bsts', 'trie_advanced'].concat(['floor_ceil_bst', 'kth_bst', 'lca_bst', 'successor_predecessor', 'two_sum_bst', 'bst_from_preorder', 'validate_bst', 'recover_bst', 'largest_bst', 'connect_sticks', 'is_min_heap', 'min_to_max_heap', 'word_ladder', 'word_ladder_ii'].concat(['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes']))));
 const DP_MORE = ['frog_jump_k', 'ninja_training', 'min_falling_path', 'triangle_path', 'partition_equal_subset', 'count_subsets_sum_k', 'unbounded_knapsack', 'rod_cutting'];
 const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palindrome', 'min_ins_del', 'shortest_supersequence', 'distinct_subsequences', 'wildcard_match'];
 
 // Batches 45–49: text-input grid problems and drawn-graph problems.
 // Linked-list tracers that take text input (run modules) on the list view.
 const LIST_TEXT = ['stack_linkedlist', 'queue_linkedlist', 'clone_random_list', 'flatten_list', 'merge_k_lists', 'll_insert_head', 'll_delete_head', 'll_length', 'll_search', 'dll_insert_head', 'dll_delete_head', 'dll_pairs_sum', 'dll_remove_duplicates', 'll_reverse_recursive', 'loop_length', 'sort_012_list', 'sort_list', 'y_intersection', 'reverse_k_group'];
-const TEXT_GRID = ['stack_array', 'queue_array', 'stack_using_queue', 'queue_using_stacks', 'min_stack', 'lru_cache', 'lfu_cache', 'design_twitter', 'bracket_reversals', 'count_and_say', 'longest_happy_prefix', 'count_palindromic_subseq', 'distinct_substrings', 'max_xor_pair', 'max_xor_queries', 'ninja_friends', 'max_sum_combination', 'accounts_merge'].concat(['search_rotated_ii', 'median_two_sorted', 'kth_two_sorted', 'gas_station', 'peak_element_ii', 'matrix_median', 'print_1_to_n', 'print_n_to_1', 'recursive_bubble_sort', 'recursive_insertion_sort', 'count_good_numbers', 'sort_stack', 'reverse_stack', 'recursive_atoi', 'word_break', 'm_coloring', 'sudoku_solver', 'expression_add_operators', 'valid_paren_star', 'shortest_job_first', 'lru_page_faults', 'insert_interval', 'non_overlapping_intervals', 'greater_to_right', 'sum_subarray_ranges', 'celebrity'].concat(['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']))));
+const TEXT_GRID = ['substring_hash', 'tarjan_scc', 'two_sat', 'lexicographic_topo', 'convex_hull', 'polygon_area', 'closest_pair', 'digit_dp', 'sos_dp', 'bit_kth', 'inversions_bit', 'prefix_sum_2d'].concat(['a_star_grid', 'best_first_grid', 'zero_one_bfs', 'max_flow', 'min_cut', 'bipartite_matching', 'tsp_bitmask', 'assignment_bitmask', 'sparse_table', 'sqrt_decomposition', 'lazy_segment_tree', 'extended_gcd', 'mod_inverse', 'ncr_mod', 'euler_totient', 'spf_sieve', 'crt', 'suffix_array', 'lcp_kasai', 'longest_repeated_substring', 'euler_path', 'longest_path_dag', 'count_paths_dag', 'matrix_exponentiation', 'ternary_search', 'meet_in_middle', 'nim', 'grundy_numbers', 'optimal_game'].concat(['stack_array', 'queue_array', 'stack_using_queue', 'queue_using_stacks', 'min_stack', 'lru_cache', 'lfu_cache', 'design_twitter', 'bracket_reversals', 'count_and_say', 'longest_happy_prefix', 'count_palindromic_subseq', 'distinct_substrings', 'max_xor_pair', 'max_xor_queries', 'ninja_friends', 'max_sum_combination', 'accounts_merge'].concat(['search_rotated_ii', 'median_two_sorted', 'kth_two_sorted', 'gas_station', 'peak_element_ii', 'matrix_median', 'print_1_to_n', 'print_n_to_1', 'recursive_bubble_sort', 'recursive_insertion_sort', 'count_good_numbers', 'sort_stack', 'reverse_stack', 'recursive_atoi', 'word_break', 'm_coloring', 'sudoku_solver', 'expression_add_operators', 'valid_paren_star', 'shortest_job_first', 'lru_page_faults', 'insert_interval', 'non_overlapping_intervals', 'greater_to_right', 'sum_subarray_ranges', 'celebrity'].concat(['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']))))));
 // Edges of these algorithms are read a → b, so the graph draws arrowheads.
 const DIRECTED_ALGOS = ['network_delay', 'topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
 
@@ -265,6 +265,8 @@ const VIEW_FOR = {
   palindrome_partition: 'tree', letter_combinations: 'tree',
   floor_ceil_bst: 'tree', kth_bst: 'tree', lca_bst: 'tree', successor_predecessor: 'tree', two_sum_bst: 'tree', bst_from_preorder: 'tree', validate_bst: 'tree', recover_bst: 'tree', largest_bst: 'tree', connect_sticks: 'tree', is_min_heap: 'tree', min_to_max_heap: 'tree', word_ladder: 'tree', word_ladder_ii: 'tree',
   rank_replace: 'grid', top_k_frequent: 'grid', hand_of_straights: 'grid', task_scheduler: 'grid', median_stream: 'grid', remove_outer_parens: 'grid', reverse_words: 'grid', largest_odd_number: 'grid', longest_common_prefix: 'grid', isomorphic_strings: 'grid', rotate_string: 'grid', sort_by_frequency: 'grid', max_nesting_depth: 'grid', roman_to_integer: 'grid', string_to_integer: 'grid', sum_of_beauty: 'grid', char_replacement: 'grid', binary_subarray_sum: 'grid', nice_subarrays: 'grid', substrings_all_three: 'grid', max_card_points: 'grid', subarrays_k_distinct: 'grid', min_window_substring: 'grid', min_window_subsequence: 'grid', alien_dictionary: 'grid', cheapest_flight_k: 'grid', ways_to_arrive: 'grid', min_multiplications: 'grid', most_stones: 'grid', network_delay: 'graph',
+  aho_corasick: 'tree', substring_hash: 'grid', tarjan_scc: 'grid', two_sat: 'grid', lexicographic_topo: 'grid', convex_hull: 'grid', polygon_area: 'grid', closest_pair: 'grid', digit_dp: 'grid', tree_robber: 'tree', sos_dp: 'grid', sum_distances_tree: 'tree', bit_kth: 'grid', inversions_bit: 'grid', prefix_sum_2d: 'grid',
+  a_star_grid: 'grid', best_first_grid: 'grid', zero_one_bfs: 'grid', max_flow: 'grid', min_cut: 'grid', bipartite_matching: 'grid', lca_lifting: 'tree', kth_ancestor: 'tree', tsp_bitmask: 'grid', assignment_bitmask: 'grid', sparse_table: 'grid', sqrt_decomposition: 'grid', lazy_segment_tree: 'grid', extended_gcd: 'grid', mod_inverse: 'grid', ncr_mod: 'grid', euler_totient: 'grid', spf_sieve: 'grid', crt: 'grid', suffix_array: 'grid', lcp_kasai: 'grid', longest_repeated_substring: 'grid', euler_path: 'grid', longest_path_dag: 'grid', count_paths_dag: 'grid', matrix_exponentiation: 'grid', ternary_search: 'grid', meet_in_middle: 'grid', nim: 'grid', grundy_numbers: 'grid', optimal_game: 'grid',
   build_pre_in: 'tree', build_post_in: 'tree', serialize_tree: 'tree', morris_inorder: 'tree', morris_preorder: 'tree', flatten_tree: 'tree', identical_trees: 'tree', merge_two_bsts: 'tree', stack_array: 'grid', queue_array: 'grid', stack_using_queue: 'grid', queue_using_stacks: 'grid', stack_linkedlist: 'list', queue_linkedlist: 'list', min_stack: 'grid', lru_cache: 'grid', lfu_cache: 'grid', design_twitter: 'grid', clone_random_list: 'list', flatten_list: 'list', merge_k_lists: 'list', bracket_reversals: 'grid', count_and_say: 'grid', longest_happy_prefix: 'grid', count_palindromic_subseq: 'grid', distinct_substrings: 'grid', max_xor_pair: 'grid', max_xor_queries: 'grid', trie_advanced: 'tree', ninja_friends: 'grid', max_sum_combination: 'grid', accounts_merge: 'grid',
   ll_insert_head: 'list', ll_delete_head: 'list', ll_length: 'list', ll_search: 'list', dll_insert_head: 'list', dll_delete_head: 'list', dll_pairs_sum: 'list', dll_remove_duplicates: 'list', ll_reverse_recursive: 'list', loop_length: 'list', sort_012_list: 'list', sort_list: 'list', y_intersection: 'list', reverse_k_group: 'list', search_rotated_ii: 'grid', median_two_sorted: 'grid', kth_two_sorted: 'grid', gas_station: 'grid', peak_element_ii: 'grid', matrix_median: 'grid', print_1_to_n: 'grid', print_n_to_1: 'grid', recursive_bubble_sort: 'grid', recursive_insertion_sort: 'grid', count_good_numbers: 'grid', sort_stack: 'grid', reverse_stack: 'grid', recursive_atoi: 'grid', word_break: 'grid', m_coloring: 'grid', sudoku_solver: 'grid', expression_add_operators: 'grid', valid_paren_star: 'grid', shortest_job_first: 'grid', lru_page_faults: 'grid', insert_interval: 'grid', non_overlapping_intervals: 'grid', greater_to_right: 'grid', sum_subarray_ranges: 'grid', celebrity: 'grid',
   cut_stick: 'grid', burst_balloons: 'grid', boolean_evaluation: 'grid', palindrome_partition_ii: 'grid', partition_array_max_sum: 'grid', min_subset_diff: 'grid', count_partitions_diff: 'grid', target_sum: 'grid', max_rectangle_ones: 'grid', largest_element: 'grid', check_sorted: 'grid', linear_search: 'grid', union_sorted: 'grid', intersection_sorted: 'grid', missing_number: 'grid', max_consecutive_ones: 'grid', rearrange_by_sign: 'grid', max_product_subarray: 'grid', longest_sum_k_any: 'grid', count_sum_k: 'grid', largest_zero_sum: 'grid', count_xor_k: 'grid', longest_consecutive: 'grid', majority_n3: 'grid', repeating_missing: 'grid', three_sum: 'grid', four_sum: 'grid', set_matrix_zeros: 'grid', rotate_matrix: 'grid', spiral_order: 'grid', pascal_triangle: 'grid', merge_no_space: 'grid', count_inversions: 'grid', reverse_pairs: 'grid', count_digits: 'grid', reverse_number: 'grid', palindrome_number: 'grid', armstrong_number: 'grid', print_divisors: 'grid', check_prime: 'grid', factorial: 'grid', sum_first_n: 'grid', reverse_array: 'grid', palindrome_string: 'grid', frequency_count: 'grid', check_ith_bit: 'grid', check_odd: 'grid', swap_xor: 'grid', divide_bits: 'grid', xor_range: 'grid', single_number_iii: 'grid',
@@ -413,6 +415,13 @@ function countChips(counts, compact = false) {
 
 // ── MAIN ENGINE MOUNT ────────────────────────────────────────────────────────
 
+// Pseudocode for the rail panel (data/pseudocode.json), fetched once and
+// shared by every engine on the page. Missing file → no panel, never an error.
+let pseudoData = null;
+const loadPseudocode = () => (pseudoData ??= fetch('/data/pseudocode.json')
+  .then(r => (r.ok ? r.json() : {}))
+  .catch(() => ({})));
+
 export function mountEngine(view, algo = 'dijkstra') {
   const svg = view.querySelector('#engine-svg');
   const status = view.querySelector('#engine-status');
@@ -422,6 +431,45 @@ export function mountEngine(view, algo = 'dijkstra') {
   const resetBtn = view.querySelector('#reset-btn');
   const explainBtn = view.querySelector('#explain-btn');
   const explanationBox = view.querySelector('#explanation-box');
+
+  // ── Pseudocode panel: the line whose `when` pattern matches the step's
+  // note is lit. Only algorithms listed in data/pseudocode.json get a panel.
+  const pseudoCard = view.querySelector('#pseudo-card');
+  const pseudoList = view.querySelector('#pseudo-lines');
+  let pseudoLines = null;     // [{ el, when: RegExp | null }]
+  if (pseudoCard && pseudoList) {
+    loadPseudocode().then(data => {
+      const lines = data[algoId];   // runs after mount, so algoId is set
+      if (!Array.isArray(lines) || !lines.length) return;
+      pseudoList.innerHTML = '';
+      pseudoLines = lines.map(line => {
+        const el = document.createElement('li');
+        el.textContent = line.code;
+        pseudoList.appendChild(el);
+        let when = null;
+        try { when = line.when ? new RegExp(line.when, 'i') : null; } catch { when = null; }
+        return { el, when };
+      });
+      pseudoCard.classList.remove('is-hidden');
+    });
+  }
+  function renderPseudo(step) {
+    if (!pseudoLines) return;
+    const text = step?.note || '';
+    const hit = step ? pseudoLines.find(l => l.when && l.when.test(text)) : null;
+    pseudoLines.forEach(l => {
+      const on = l === hit;
+      l.el.classList.toggle('is-current', on);
+      if (on) l.el.setAttribute('aria-current', 'step');
+      else l.el.removeAttribute('aria-current');
+    });
+    if (hit) {                // keep the lit line in view without moving the page
+      const top = hit.el.offsetTop, h = hit.el.offsetHeight;
+      if (top < pseudoList.scrollTop || top + h > pseudoList.scrollTop + pseudoList.clientHeight) {
+        pseudoList.scrollTop = top - pseudoList.clientHeight / 2;
+      }
+    }
+  }
   const arrayControls = view.querySelector('#array-controls');
   const arrayInput    = view.querySelector('#array-input');
   const targetWrap    = view.querySelector('#target-wrap');
@@ -443,6 +491,33 @@ export function mountEngine(view, algo = 'dijkstra') {
   let currentSteps = [];
   let currentStepIdx = -1;
   let isOffline = false;
+  // Offline, only these have an in-browser emulator that traces the student's
+  // OWN input (localArrayTrace / localTrace). Every other algorithm replays its
+  // built-in sample trace — frontend/offline/<id>.json, the real backend trace
+  // of the default input (tools/build_offline_traces.py). Never substitute a
+  // different algorithm's emulator: a wrong trace is worse than none.
+  const EMULATED = new Set(['fibonacci_dp', 'heap_insert', 'bst_insert', 'bst_search',
+    'level_order', 'tree_max_depth', 'tree_diameter', 'lca_bt', 'knapsack_01', 'lcs',
+    'two_sum_sorted', 'sliding_window', 'kadanes', 'bubble_sort', 'insertion_sort',
+    'selection_sort', 'linked_list_reverse', 'balanced_brackets', 'binary_search',
+    'quick_sort', 'merge_sort', 'bfs', 'dijkstra']);
+  const canEmulate = (id = algoId) => EMULATED.has(id);
+  let offlineSampleShown = false;
+  async function offlineSample() {
+    const r = await fetch(`/offline/${encodeURIComponent(algoId)}.json`);
+    if (!r.ok) throw new Error(`No offline sample for ${algoId}`);
+    offlineSampleShown = true;
+    return r.json();
+  }
+  // Online → the API; offline → the sample trace.
+  const traceRequest = (payload) => (isOffline ? offlineSample() : api.postTrace(algoId, payload));
+  // The sample trace belongs to the default input, so show that input.
+  function resetToSampleInput() {
+    const d = ARRAY_DEFAULTS[algoId];
+    if (!d || traceView === 'graph') return;
+    if (arrayInput) arrayInput.value = d.array ?? '';
+    if (targetInput && d.target !== undefined) targetInput.value = d.target;
+  }
   let currentMeta = null;  // stores realworld_meta for current algo
   let currentScene = null; // stores scene renderer
   let currentArrayValues = [];
@@ -530,6 +605,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   function resetTraceState() {
     stopPlay();
+    renderPseudo(null);
     currentStepIdx = -1;
     currentSteps = [];
     traceSummary = '';
@@ -593,6 +669,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
       palindrome_partition: 'dna', letter_combinations: 'files',
       floor_ceil_bst: 'files', kth_bst: 'files', lca_bst: 'files', successor_predecessor: 'files', two_sum_bst: 'files', bst_from_preorder: 'files', validate_bst: 'files', recover_bst: 'files', largest_bst: 'files', connect_sticks: 'scheduler', is_min_heap: 'scheduler', min_to_max_heap: 'scheduler', word_ladder: 'vault', word_ladder_ii: 'vault', rank_replace: 'scheduler', top_k_frequent: 'scheduler', hand_of_straights: 'scheduler', task_scheduler: 'scheduler', median_stream: 'scheduler', remove_outer_parens: 'dna', reverse_words: 'dna', largest_odd_number: 'dna', longest_common_prefix: 'dna', isomorphic_strings: 'dna', rotate_string: 'dna', sort_by_frequency: 'dna', max_nesting_depth: 'dna', roman_to_integer: 'dna', string_to_integer: 'dna', sum_of_beauty: 'dna', char_replacement: 'stocks', binary_subarray_sum: 'stocks', nice_subarrays: 'stocks', substrings_all_three: 'stocks', max_card_points: 'stocks', subarrays_k_distinct: 'stocks', min_window_substring: 'stocks', min_window_subsequence: 'stocks', alien_dictionary: 'vault', cheapest_flight_k: 'vault', ways_to_arrive: 'vault', min_multiplications: 'vault', most_stones: 'vault', network_delay: 'scheduler',
+      aho_corasick: 'files', substring_hash: 'dna', tarjan_scc: 'vault', two_sat: 'vault', lexicographic_topo: 'vault', convex_hull: 'grid_power', polygon_area: 'grid_power', closest_pair: 'grid_power', digit_dp: 'grid_power', tree_robber: 'files', sos_dp: 'grid_power', sum_distances_tree: 'files', bit_kth: 'leaderboard', inversions_bit: 'leaderboard', prefix_sum_2d: 'grid_power',
+      a_star_grid: 'grid_power', best_first_grid: 'grid_power', zero_one_bfs: 'grid_power', max_flow: 'vault', min_cut: 'vault', bipartite_matching: 'vault', lca_lifting: 'files', kth_ancestor: 'files', tsp_bitmask: 'grid_power', assignment_bitmask: 'grid_power', sparse_table: 'leaderboard', sqrt_decomposition: 'leaderboard', lazy_segment_tree: 'leaderboard', extended_gcd: 'vault', mod_inverse: 'vault', ncr_mod: 'vault', euler_totient: 'vault', spf_sieve: 'vault', crt: 'vault', suffix_array: 'dna', lcp_kasai: 'dna', longest_repeated_substring: 'dna', euler_path: 'vault', longest_path_dag: 'vault', count_paths_dag: 'vault', matrix_exponentiation: 'vault', ternary_search: 'vault', meet_in_middle: 'vault', nim: 'vault', grundy_numbers: 'vault', optimal_game: 'grid_power',
       build_pre_in: 'files', build_post_in: 'files', serialize_tree: 'files', morris_inorder: 'files', morris_preorder: 'files', flatten_tree: 'files', identical_trees: 'files', merge_two_bsts: 'files', stack_array: 'plates', queue_array: 'scheduler', stack_using_queue: 'plates', queue_using_stacks: 'scheduler', stack_linkedlist: 'train', queue_linkedlist: 'train', min_stack: 'plates', lru_cache: 'scheduler', lfu_cache: 'scheduler', design_twitter: 'scheduler', clone_random_list: 'train', flatten_list: 'train', merge_k_lists: 'train', bracket_reversals: 'dna', count_and_say: 'dna', longest_happy_prefix: 'dna', count_palindromic_subseq: 'dna', distinct_substrings: 'vault', max_xor_pair: 'vault', max_xor_queries: 'vault', trie_advanced: 'files', ninja_friends: 'grid_power', max_sum_combination: 'leaderboard', accounts_merge: 'vault',
       ll_insert_head: 'train', ll_delete_head: 'train', ll_length: 'train', ll_search: 'train', dll_insert_head: 'train', dll_delete_head: 'train', dll_pairs_sum: 'train', dll_remove_duplicates: 'train', ll_reverse_recursive: 'train', loop_length: 'train', sort_012_list: 'train', sort_list: 'train', y_intersection: 'train', reverse_k_group: 'train', search_rotated_ii: 'vault', median_two_sorted: 'vault', kth_two_sorted: 'vault', gas_station: 'vault', peak_element_ii: 'vault', matrix_median: 'vault', print_1_to_n: 'vault', print_n_to_1: 'vault', recursive_bubble_sort: 'leaderboard', recursive_insertion_sort: 'leaderboard', count_good_numbers: 'vault', sort_stack: 'plates', reverse_stack: 'plates', recursive_atoi: 'dna', word_break: 'dna', m_coloring: 'vault', sudoku_solver: 'grid_power', expression_add_operators: 'vault', valid_paren_star: 'vault', shortest_job_first: 'scheduler', lru_page_faults: 'scheduler', insert_interval: 'scheduler', non_overlapping_intervals: 'scheduler', greater_to_right: 'leaderboard', sum_subarray_ranges: 'stocks', celebrity: 'vault',
       cut_stick: 'grid_power', burst_balloons: 'grid_power', boolean_evaluation: 'grid_power', palindrome_partition_ii: 'dna', partition_array_max_sum: 'grid_power', min_subset_diff: 'grid_power', count_partitions_diff: 'grid_power', target_sum: 'grid_power', max_rectangle_ones: 'grid_power', largest_element: 'leaderboard', check_sorted: 'leaderboard', linear_search: 'leaderboard', union_sorted: 'leaderboard', intersection_sorted: 'leaderboard', missing_number: 'vault', max_consecutive_ones: 'leaderboard', rearrange_by_sign: 'leaderboard', max_product_subarray: 'stocks', longest_sum_k_any: 'vault', count_sum_k: 'vault', largest_zero_sum: 'vault', count_xor_k: 'vault', longest_consecutive: 'vault', majority_n3: 'leaderboard', repeating_missing: 'vault', three_sum: 'leaderboard', four_sum: 'leaderboard', set_matrix_zeros: 'grid_power', rotate_matrix: 'grid_power', spiral_order: 'grid_power', pascal_triangle: 'grid_power', merge_no_space: 'leaderboard', count_inversions: 'leaderboard', reverse_pairs: 'leaderboard', count_digits: 'vault', reverse_number: 'vault', palindrome_number: 'vault', armstrong_number: 'vault', print_divisors: 'vault', check_prime: 'vault', factorial: 'vault', sum_first_n: 'vault', reverse_array: 'leaderboard', palindrome_string: 'dna', frequency_count: 'leaderboard', check_ith_bit: 'vault', check_odd: 'vault', swap_xor: 'vault', divide_bits: 'vault', xor_range: 'vault', single_number_iii: 'vault',
@@ -1968,6 +2046,190 @@ export function mountEngine(view, algo = 'dijkstra') {
       array: "John j1 j2; John j1 j3; Mary m1; John j4",
       hint: "Accounts 'Name email …' split by ';'. Union accounts sharing an email.",
     },
+    a_star_grid: {
+      array: "S....#/.###.#/.#...#/.#.#../...#.G",
+      hint: "Rows of S . # G split by '/'. Expand the smallest f = g + h.",
+    },
+    best_first_grid: {
+      array: "S....#/.###.#/.#...#/.#.#../...#.G",
+      hint: "Rows of S . # G. Expand the smallest h only — fast, not always shortest.",
+    },
+    zero_one_bfs: {
+      array: "0,1,1/0,0,1/1,0,0",
+      hint: "0/1 costs, rows split by '/'. Deque: 0-cost to the front.",
+    },
+    max_flow: {
+      array: "S>A:10, S>C:10, A>B:4, A>C:2, A>D:8, C>D:9, B>T:10, D>B:6, D>T:10",
+      hint: "Edges from>to:capacity with source S and sink T. Augment along BFS paths.",
+    },
+    min_cut: {
+      array: "S>A:3, S>B:2, A>B:1, A>T:2, B>T:3",
+      hint: "Edges from>to:capacity (S, T). Max flow, then what S can still reach.",
+    },
+    bipartite_matching: {
+      array: "a: x y; b: x; c: y z",
+      hint: "Left: allowed rights, separated by ';'. Kuhn's augmenting paths.",
+    },
+    lca_lifting: {
+      array: "1,2,3,4,5,6,7,8,9 | 8 5",
+      hint: "Level-order tree | two node values. Jump pointers are dashed.",
+    },
+    kth_ancestor: {
+      array: "1,2,3,4,5,6,7,8 | 8 2",
+      hint: "Level-order tree | node k. Hop by the bits of k.",
+    },
+    tsp_bitmask: {
+      array: "0,10,15,20/10,0,35,25/15,35,0,30/20,25,30,0",
+      hint: "Distance matrix (≤ 5 cities). Rows are visited-sets as bitmasks.",
+    },
+    assignment_bitmask: {
+      array: "9,2,7,8/6,4,3,7/5,8,1,8/7,6,9,4",
+      hint: "cost[person][job] (≤ 4×4). Rows are job-sets as bitmasks.",
+    },
+    sparse_table: {
+      array: "5,2,4,7,1,3 | min 1 4, min 0 2, min 3 3",
+      hint: "Array | min l r, … Two overlapping power-of-two blocks.",
+    },
+    sqrt_decomposition: {
+      array: "1,2,3,4,5,6,7 | sum 1 5, set 3 10, sum 0 6",
+      hint: "Array | sum l r, set i v. Whole blocks by their sum.",
+    },
+    lazy_segment_tree: {
+      array: "1,2,3,4,5 | add 1 3 2, sum 0 4, sum 2 3",
+      hint: "Array | add l r v, sum l r. Pending adds wait as 'lazy'.",
+    },
+    extended_gcd: {
+      array: "240, 46",
+      hint: "a, b. Euclid down, then x, y back up: a·x + b·y = gcd.",
+    },
+    mod_inverse: {
+      array: "3, 11",
+      hint: "a, m. The x of extended Euclid when gcd = 1.",
+    },
+    ncr_mod: {
+      array: "10, 3",
+      hint: "n, r (≤ 20). Factorials mod p, Fermat inverse for the division.",
+    },
+    euler_totient: {
+      array: "36",
+      hint: "n. φ = n·Π(1 − 1/p) over its distinct primes.",
+    },
+    spf_sieve: {
+      array: "30", target: "24",
+      hint: "n (≤ 60) and x to factorise. Sieve smallest prime factors.",
+    },
+    crt: {
+      array: "2 3, 3 5, 2 7",
+      hint: "Congruences 'r m', comma-separated. Merge them pairwise.",
+    },
+    suffix_array: {
+      array: "banana",
+      hint: "2–10 letters. Rank by 1, 2, 4, … characters.",
+    },
+    lcp_kasai: {
+      array: "banana",
+      hint: "2–10 letters. Walk suffixes in text order; h drops by ≤ 1.",
+    },
+    longest_repeated_substring: {
+      array: "banana",
+      hint: "2–10 letters. The biggest LCP between sorted neighbours.",
+    },
+    euler_path: {
+      array: "A-B, B-C, C-A, C-D",
+      hint: "Undirected edges A-B, … 0 or 2 odd-degree vertices needed.",
+    },
+    longest_path_dag: {
+      array: "S>A:5, S>B:3, A>C:6, B>C:7, A>B:2, C>T:1",
+      hint: "Directed edges from>to:weight, start S. Topo order, relax with max.",
+    },
+    count_paths_dag: {
+      array: "S>A, S>B, A>B, A>T, B>T",
+      hint: "Directed edges with S and T. ways[v] = Σ ways[u].",
+    },
+    matrix_exponentiation: {
+      array: "10",
+      hint: "n (0–90). F(n) from [[1,1],[1,0]]ⁿ by square-and-multiply.",
+    },
+    ternary_search: {
+      array: "1,3,8,12,9,4,2",
+      hint: "Rises strictly, then falls strictly. Keep two thirds each round.",
+    },
+    meet_in_middle: {
+      array: "2,3,5,7,1", target: "10",
+      hint: "Up to 8 numbers and S. Half sums + binary search.",
+    },
+    nim: {
+      array: "3,4,5",
+      hint: "Pile sizes (≤ 63). XOR ≠ 0 means the player to move wins.",
+    },
+    grundy_numbers: {
+      array: "10 | 1,3,4",
+      hint: "n | allowed removals. g(n) = mex of reachable Grundy numbers.",
+    },
+    optimal_game: {
+      array: "5,3,7,10",
+      hint: "Coin values (≤ 8). Take an end; the opponent plays perfectly too.",
+    },
+    aho_corasick: {
+      array: "ushers | he, she, his, hers",
+      hint: "Text | patterns. Trie + dashed failure links; scan the text once.",
+    },
+    substring_hash: {
+      array: "abcabcab | 0 3 3, 1 4 4, 0 1 2",
+      hint: "Text | queries 'i j len'. Prefix hashes compare any two substrings in O(1).",
+    },
+    tarjan_scc: {
+      array: "A>B, B>C, C>A, B>D, D>E, E>F, F>D, G>F, G>H, H>G",
+      hint: "Directed edges A>B, … One DFS with disc/low and a stack.",
+    },
+    two_sat: {
+      array: "a|b, !a|c, !b|!c, a|!c",
+      hint: "Clauses like a|!b (! = not). Implication graph, then SCCs.",
+    },
+    lexicographic_topo: {
+      array: "E>B, C>A, B>A, D>A, C>D",
+      hint: "Directed edges. Kahn with a min-heap: always the smallest ready vertex.",
+    },
+    convex_hull: {
+      array: "0 0; 1 1; 2 2; 2 0; 2 4; 3 3; 0 3; 1 2",
+      hint: "Points 'x y' (0–9) separated by ';'. Lower + upper chains with a stack.",
+    },
+    polygon_area: {
+      array: "0 0; 4 0; 4 3; 0 3",
+      hint: "Vertices 'x y' in order, separated by ';'. Shoelace formula.",
+    },
+    closest_pair: {
+      array: "2 3; 9 9; 4 5; 5 1; 1 0; 3 4",
+      hint: "Points 'x y' separated by ';'. Split, solve halves, check the strip.",
+    },
+    digit_dp: {
+      array: "100", target: "10",
+      hint: "N (≤ 99999) and the digit sum S. Stay tight along N's digits.",
+    },
+    tree_robber: {
+      array: "3,4,5,1,3,null,1",
+      hint: "Level-order tree of house values. Each node keeps take/skip.",
+    },
+    sos_dp: {
+      array: "1,2,3,4,5,6,7,8",
+      hint: "2, 4, 8 or 16 values (one per mask). Add one bit at a time.",
+    },
+    sum_distances_tree: {
+      array: "1,2,3,4,5",
+      hint: "Level-order tree. Sizes bottom-up, then reroot top-down.",
+    },
+    bit_kth: {
+      array: "add 5, add 2, add 9, kth 1, kth 3, remove 2, kth 1",
+      hint: "Ops: add v, remove v, kth k (values 1–16). Binary lifting on the tree.",
+    },
+    inversions_bit: {
+      array: "8,4,2,1",
+      hint: "Values 1–16. Scan right to left; count smaller values already seen.",
+    },
+    prefix_sum_2d: {
+      array: "3,0,1,4/5,6,3,2/1,2,0,1 | 1 1 2 2, 0 0 2 3",
+      hint: "Matrix | 'r1 c1 r2 c2' queries. Four lookups per rectangle.",
+    },
     char_replacement: {
       array: 'AABABBA', target: '1',
       hint: 'Letters and k. Window length − top count must stay ≤ k.',
@@ -2955,7 +3217,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (!raw) return { error: 'Type an input first — see the hint below.' };
       if (raw.length > 120) return { error: 'That input is too long.' };
       const needsT = ['frog_jump_k', 'count_subsets_sum_k', 'unbounded_knapsack',
-        'city_fewest_neighbours', 'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination'].includes(algoId);
+        'city_fewest_neighbours', 'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination', 'spf_sieve', 'meet_in_middle', 'digit_dp'].includes(algoId);
       if (!needsT) return { text: raw };   // the server validates and explains
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isInteger(t)) return { error: 'Enter a whole number.' };
@@ -5156,6 +5418,9 @@ export function mountEngine(view, algo = 'dijkstra') {
   async function run() {
     runBtn.disabled = true;
     explanationBox.classList.add('is-hidden');
+    if (isOffline) await checkBackend();   // the API may have woken up since
+    offlineSampleShown = false;
+    if (isOffline && !canEmulate()) resetToSampleInput();
     status.innerHTML = 'STATUS: <span style="color:var(--c)">TRACING...</span>';
     status.className = 'engine-status-pill running';
 
@@ -5175,14 +5440,14 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
         if (traceView === 'table') {
           renderTableView(parsed.target);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { target: parsed.target });
+            : await traceRequest({ target: parsed.target });
         } else if (algoId === 'merge_two_sorted_lists') {
           renderListView(parsed.array);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (traceView === 'list') {
           renderListView(parsed.array);
           const payload = LIST_TEXT.includes(algoId)
@@ -5191,56 +5456,56 @@ export function mountEngine(view, algo = 'dijkstra') {
               'rotate_list'].includes(algoId)
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, payload);
+            : await traceRequest(payload);
         } else if (traceView === 'stack') {
           renderStackView(parsed.text);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'kmp_search' || algoId === 'rabin_karp'
                    || algoId === 'z_function' || algoId === 'manacher') {
           renderArrayView(parsed.chars);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'segment_tree') {
           renderTreeView();
           const payload = parsed.text
             ? { array: parsed.array, text: parsed.text }
             : { array: parsed.array };
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, payload);
+            : await traceRequest(payload);
         } else if (algoId === 'fenwick_tree') {
           renderArrayView(parsed.array);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+            : await traceRequest({ array: parsed.array, target: parsed.target });
         } else if (algoId === 'hash_table') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'merge_intervals' || algoId === 'activity_selection'
                    || algoId === 'fractional_knapsack' || algoId === 'job_sequencing'
                    || algoId === 'assign_cookies' || algoId === 'min_platforms') {
           renderArrayView(parsed.chars);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'jump_game' || algoId === 'jump_game_ii'
                    || algoId === 'candy' || algoId === 'lemonade_change') {
           renderArrayView(parsed.array);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array });
+            : await traceRequest({ array: parsed.array });
         } else if (algoId === 'kth_largest' || algoId === 'kth_smallest') {
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'longest_substring_no_repeat'
                    || algoId === 'max_consecutive_ones_iii'
                    || algoId === 'longest_k_distinct'
@@ -5248,117 +5513,117 @@ export function mountEngine(view, algo = 'dijkstra') {
                    || algoId === 'single_number' || algoId === 'min_bit_flips'
                    || algoId === 'power_set') {
           renderArrayView(parsed.chars);
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'coin_change' || algoId === 'coin_change_2') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+            : await traceRequest({ array: parsed.array, target: parsed.target });
         } else if (algoId === 'bst_delete') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+            : await traceRequest({ array: parsed.array, target: parsed.target });
         } else if (algoId === 'trie_insert' || algoId === 'huffman'
                    || algoId === 'longest_complete_word'
                    || algoId === 'palindrome_partition'
                    || algoId === 'letter_combinations') {
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'lca_bt') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (TREE_SHAPE.includes(algoId)) {
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'generate_parentheses' || algoId === 'binary_strings') {
           renderTreeView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { target: parsed.target });
+            : await traceRequest({ target: parsed.target });
         } else if (['subsets_recursion', 'combination_sum', 'subsets_ii',
                     'combination_sum_ii', 'combination_sum_iii'].includes(algoId)) {
           renderTreeView();
           const payload = parsed.target === undefined
             ? { array: parsed.array } : { array: parsed.array, target: parsed.target };
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, payload);
+            : await traceRequest(payload);
         } else if (algoId === 'n_queens' || algoId === 'sieve') {
           if (algoId === 'sieve') {
             renderArrayView(Array.from({ length: parsed.target + 1 }, (_, i) => i));
           } else {
             renderGridView();
           }
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { target: parsed.target });
+            : await traceRequest({ target: parsed.target });
         } else if (algoId === 'unique_paths' || algoId === 'flood_fill'
                    || algoId === 'rat_in_maze') {
           renderGridView();
           const payload = parsed.text
             ? { target: parsed.target, text: parsed.text }
             : { target: parsed.target };
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, payload);
+            : await traceRequest(payload);
         } else if (algoId === 'house_robber' || algoId === 'lis'
                    || algoId === 'frog_jump') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array });
+            : await traceRequest({ array: parsed.array });
         } else if (algoId === 'subset_sum') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
+            : await traceRequest({ array: parsed.array, target: parsed.target });
         } else if (algoId === 'matrix_chain') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array });
+            : await traceRequest({ array: parsed.array });
         } else if (algoId === 'anagram') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { text: parsed.text });
+            : await traceRequest({ text: parsed.text });
         } else if (algoId === 'gcd_euclid' || algoId === 'fast_exponentiation') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { array: parsed.array });
+            : await traceRequest({ array: parsed.array });
         } else if (algoId === 'prime_factorisation') {
           renderGridView();
-          res = isOffline
+          res = isOffline && canEmulate()
             ? localArrayTrace(parsed)
-            : await api.postTrace(algoId, { target: parsed.target });
+            : await traceRequest({ target: parsed.target });
         } else if (traceView === 'tree') {
           currentArrayValues = parsed.array.slice();
           renderTreeView();
           const payload = algoId === 'bst_search'
             ? { array: parsed.array, target: parsed.target }
             : { array: parsed.array };
-          res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
+          res = isOffline && canEmulate() ? localArrayTrace(parsed) : await traceRequest(payload);
         } else if (traceView === 'grid') {
           renderGridView();
           const payload = parsed.target !== undefined
             ? { text: parsed.text, target: parsed.target }
             : { text: parsed.text };
-          res = isOffline ? localArrayTrace(parsed) : await api.postTrace(algoId, payload);
+          res = isOffline && canEmulate() ? localArrayTrace(parsed) : await traceRequest(payload);
         } else {
           renderArrayView(parsed.array);
-          if (isOffline) {
+          if (isOffline && canEmulate()) {
             res = localArrayTrace(parsed);
           } else {
             const needsTarget = ['binary_search', 'search_rotated', 'two_sum_sorted',
@@ -5370,7 +5635,7 @@ export function mountEngine(view, algo = 'dijkstra') {
               : (needsTarget || parsed.target !== undefined)
                 ? { array: parsed.array, target: parsed.target }
                 : { array: parsed.array };
-            res = await api.postTrace(algoId, payload);
+            res = await traceRequest(payload);
           }
         }
       } else {
@@ -5381,8 +5646,17 @@ export function mountEngine(view, algo = 'dijkstra') {
           return;
         }
         if (!startNodeId) startNodeId = userGraph.nodes[0].id;
-        if (isOffline) {
+        if (isOffline && canEmulate()) {
           res = localTrace(algoId, startNodeId);
+        } else if (isOffline) {
+          res = await offlineSample();
+          const g = res.request.graph;
+          userGraph = {
+            nodes: g.nodes.map(n => ({ ...n })),
+            links: g.edges.map(([source, target, weight]) => ({ source, target, weight })),
+          };
+          startNodeId = res.request.start;
+          graphChanged();
         } else {
           const graph = {
             nodes: userGraph.nodes,
@@ -5392,9 +5666,18 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
       }
       loadTrace(res.steps, res.meta);
+      if (offlineSampleShown) {
+        status.innerHTML = 'STATUS: <span style="color:#ffb454">OFFLINE — SAMPLE TRACE</span>';
+        if (arrayHint) {
+          arrayHint.textContent = 'The server can\'t be reached, so this is the built-in trace '
+            + 'of the sample input. Your own input will trace once the server is back.';
+        }
+      }
     } catch (e) {
       console.error(e);
-      status.innerHTML = 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
+      status.innerHTML = isOffline
+        ? 'STATUS: <span style="color:#ff5f5f">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
+        : 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
       runBtn.disabled = false;
       checkBackend();
     }
@@ -5655,6 +5938,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     note.style.opacity = 1;
 
     renderCounters(step);
+    renderPseudo(step);
 
     if (stepSlider) stepSlider.value = currentStepIdx;
     const counter = view.querySelector('#step-counter');
@@ -5861,7 +6145,10 @@ export function mountEngine(view, algo = 'dijkstra') {
     const idB = pickB?.value || 'dijkstra';
 
     const get = async (alg) => {
-      if (isOffline) return localTrace(alg, startNodeId).steps;
+      if (isOffline) {
+        if (!canEmulate(alg)) throw new Error(`Comparing ${alg} needs the server.`);
+        return localTrace(alg, startNodeId).steps;
+      }
       const graph = {
         nodes: userGraph.nodes,
         edges: userGraph.links.map(l => [l.source, l.target, l.weight]),
@@ -6025,7 +6312,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
         'rotate_array_k', 'longest_subarray_sum_k', 'frog_jump_k',
         'count_subsets_sum_k', 'unbounded_knapsack', 'city_fewest_neighbours',
-        'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination'].includes(algoId)
+        'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination', 'spf_sieve', 'meet_in_middle', 'digit_dp'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -6100,6 +6387,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'lru_cache') targetLabel.textContent = 'CAPACITY =';
         if (targetLabel && algoId === 'lfu_cache') targetLabel.textContent = 'CAPACITY =';
         if (targetLabel && algoId === 'max_sum_combination') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'spf_sieve') targetLabel.textContent = 'X =';
+        if (targetLabel && algoId === 'meet_in_middle') targetLabel.textContent = 'S =';
+        if (targetLabel && algoId === 'digit_dp') targetLabel.textContent = 'S =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

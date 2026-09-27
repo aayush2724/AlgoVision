@@ -13,10 +13,87 @@ Each phase below is a self-contained prompt. Execute one phase per session/turn,
 verify its acceptance criteria, then stop so the phase can be committed before
 the next begins.
 
-**Status: Phases 0–5 DONE. Catalog batches 1–16 DONE — 62 algorithms live,
-1311 backend tests passing. Tier A COMPLETE; Tier B started — Bellman–Ford
-(batch 16) shipped, which lifts the negative-weight half of the graph-model
-constraint. Remaining Tier B: Floyd–Warshall, A*, max-flow, LCA, bitmask DP.**
+**Status (2026-09-27): Phases 0–5 DONE. 431 algorithms live, 1650 backend
+tests passing. A2Z complete (411 rows traced; only the 6 theory rows are
+unlinked). Tier B complete: Floyd–Warshall (batch 49), A* (70), max-flow
+(71), LCA / binary lifting (72) and bitmask DP (73) have all shipped, on
+existing views rather than the new renderers once planned.**
+
+**Offline fallback FIXED (2026-09-27).** Offline mode (API unreachable —
+e.g. a Render cold start) used to emulate ~21 classic algorithms and silently
+fall through to a MERGE SORT trace for everything else (and a Dijkstra trace
+for any other graph algorithm). Now:
+  - `EMULATED` in engine.js lists the ids whose in-browser emulator really
+    traces the student's own input; only those run locally.
+  - Every other algorithm replays `frontend/offline/<id>.json` — the real
+    backend trace of its default input — after resetting the inputs (and,
+    for graph algorithms, the graph) to that sample. The status pill reads
+    "OFFLINE — SAMPLE TRACE" and the hint explains why.
+  - Each Run while offline re-checks the API first, so a cold start recovers
+    by itself. The compare panel refuses non-emulated pairs offline.
+  - Tooling: `tools/capture_offline_payloads.js` records the exact request
+    the engine sends for each default input (devtools snippet);
+    `tools/offline_payloads.json` stores them; `python
+    tools/build_offline_traces.py` rebuilds the 431 samples (~2 MB, fetched
+    one at a time). `tests/test_offline_traces.py` fails if a sample goes
+    stale or an algorithm has none.
+
+**Pseudocode panel (2026-09-27) — first 30 algorithms.** Under the trace, a
+numbered pseudocode listing with the line the current step executes lit.
+Data lives in `frontend/data/pseudocode.json`: per algorithm, lines of
+`code` with an optional `when` regex matched (case-insensitively) against
+the step's backend note; the first match is lit. Tracers didn't need to
+change — only bfs/binary_search/dijkstra ever emitted `line` numbers.
+`tests/test_pseudocode.py` replays every step of each offline sample and
+requires each to land on a line (and bans Python-only regex syntax).
+Covered: the sorts, binary search, BFS/DFS/Dijkstra/Prim/Kruskal/topo/
+Bellman-Ford, Kadane, two pointers, sliding window, Fibonacci/knapsack/LCS/
+coin change, N-Queens, brackets, next greater, list reverse, Floyd cycle,
+BST insert/search, level order, KMP, sieve. Next: extend in batches — the
+note-shape dump (distinct notes with digits collapsed) makes each entry quick
+to write, and the test proves it.
+
+**Batches 80–84 (new tracers, beyond A2Z) — five modules, 15 ids.**
+  - 80 `string_auto.py`: Aho–Corasick on the tree view (trie + dashed failure
+    links, then one pass over the text); substring equality by prefix hashes.
+  - 81 `graph_scc.py`: Tarjan SCC (disc/low table), 2-SAT (implication graph
+    + Tarjan; assignment read off SCC order), lexicographically smallest
+    topological order (Kahn + min-heap).
+  - 82 `geometry.py`: the grid doubles as a coordinate plane (row = y, drawn
+    upward): monotone-chain convex hull, shoelace area, closest pair (D&C).
+  - 83 `dp_adv.py`: digit DP (free-digit table + tight walk), house robber
+    on a tree and sum of distances by rerooting (tree view, labels carry the
+    DP values), SOS DP (rows are masks).
+  - 84 `bit_more.py`: Fenwick k-th smallest by binary lifting, inversions
+    via Fenwick, 2-D prefix sums.
+
+**Batches 70–79 (new tracers, beyond A2Z) — ten modules, 31 ids.** All on
+the grid view, except binary lifting on the tree view (jump pointers are
+drawn as the dashed `threads` from batch 65).
+  - 70 `search_heuristic.py`: A* (f = g + h, Manhattan), greedy best-first
+    (contrast: not always shortest), 0-1 BFS with a deque.
+  - 71 `flow.py`: Edmonds–Karp max flow (flow/capacity matrix), min cut
+    (residual reachability), Kuhn bipartite matching.
+  - 72 `lifting.py` (tree): LCA and k-th ancestor by binary lifting.
+  - 73 `bitmask_dp.py`: Held–Karp TSP and job assignment; rows are labelled
+    by their bitmasks (the "subset axis" the roadmap asked for).
+  - 74 `range_queries.py`: sparse table RMQ, sqrt decomposition, lazy
+    segment tree (range add / range sum; nodes as columns).
+  - 75 `number_theory.py`: extended Euclid, modular inverse, nCr mod p
+    (Fermat), Euler's totient, SPF sieve + factorisation, CRT (non-coprime
+    moduli handled).
+  - 76 `suffix_structs.py`: suffix array (prefix doubling), Kasai LCP,
+    longest repeated substring.
+  - 77 `graph_more.py`: Hierholzer Euler path/circuit, longest path in a
+    DAG, counting S→T paths in a DAG.
+  - 78 `algebra.py`: matrix exponentiation (Fibonacci), ternary search,
+    meet in the middle.
+  - 79 `games.py`: Nim, Grundy numbers (subtraction game), optimal coin game.
+**Catalog fix:** Explore and the home keyboard group cards only by
+`ALGO_CATEGORIES`, so 133 algorithms from batches 23+ in categories such as
+"Linked Lists", "Strings" or "Trees" were invisible there. Every entry is now
+mapped onto one of the 9 families, and a test guards it
+(`test_every_catalog_category_is_a_family`).
 
 **A2Z sheet FILLED — and reconciled against the real sheet.**
 `frontend/js/a2z.js` is GENERATED by `build_a2z.py` from `a2z-source.json`,

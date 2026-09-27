@@ -1,0 +1,242 @@
+{
+  "_about": "Pseudocode per algorithm id. Each line may carry \"when\", a case-insensitive regex tested against the step note; the first line whose \"when\" matches is highlighted. tests/test_pseudocode.py checks every step of each offline sample trace lands on a line.",
+  "bubble_sort": [
+    {"code": "for pass in 0 .. n-2:", "when": "^start with"},
+    {"code": "    swapped = false"},
+    {"code": "    for j in 0 .. n-2-pass:"},
+    {"code": "        if a[j] > a[j+1]:", "when": "already in order"},
+    {"code": "            swap(a[j], a[j+1]); swapped = true", "when": "swap them"},
+    {"code": "    # a[n-1-pass] is now in its final place", "when": "^pass \\d+ done"},
+    {"code": "    if not swapped: stop early", "when": "no swaps in that pass"}
+  ],
+  "selection_sort": [
+    {"code": "for i in 0 .. n-2:", "when": "^start with"},
+    {"code": "    min = i", "when": "assume .* smallest"},
+    {"code": "    for j in i+1 .. n-1:"},
+    {"code": "        if a[j] < a[min]: min = j", "when": "new champion|champion unchanged"},
+    {"code": "    swap(a[i], a[min])      # a[i] is final", "when": "moves to position .* locked"},
+    {"code": "return a", "when": "last value stands|sorted\\.$"}
+  ],
+  "insertion_sort": [
+    {"code": "for i in 1 .. n-1:", "when": "^start with"},
+    {"code": "    key = a[i]; j = i - 1", "when": "^pick up"},
+    {"code": "    while j >= 0 and a[j] > key:"},
+    {"code": "        a[j+1] = a[j]; j -= 1", "when": "shift it right"},
+    {"code": "    a[j+1] = key", "when": "settles at position"},
+    {"code": "return a", "when": "fully sorted"}
+  ],
+  "merge_sort": [
+    {"code": "merge_sort(lo, hi):", "when": "^start with"},
+    {"code": "    if lo >= hi: return"},
+    {"code": "    mid = (lo + hi) / 2", "when": "^split positions"},
+    {"code": "    merge_sort(lo, mid); merge_sort(mid+1, hi)"},
+    {"code": "    while both halves have values:"},
+    {"code": "        take the smaller front value", "when": "^compare .* vs"},
+    {"code": "    copy what is left of either half", "when": "half exhausted"},
+    {"code": "    # lo..hi is now sorted", "when": "merged — this section"},
+    {"code": "return a", "when": "every section merged"}
+  ],
+  "quick_sort": [
+    {"code": "quick_sort(lo, hi):  if lo >= hi: return", "when": "^start with|single value"},
+    {"code": "    pivot = a[hi]; i = lo", "when": "^partition positions"},
+    {"code": "    for j in lo .. hi-1:"},
+    {"code": "        if a[j] <= pivot: swap(a[i], a[j]); i += 1", "when": "<= pivot"},
+    {"code": "        # otherwise a[j] stays on the big side", "when": "> pivot"},
+    {"code": "    swap(a[i], a[hi])      # the pivot is final", "when": "pivot .* locked at"},
+    {"code": "    quick_sort(lo, i-1); quick_sort(i+1, hi)"},
+    {"code": "return a", "when": "every pivot locked"}
+  ],
+  "binary_search": [
+    {"code": "lo = 0; hi = n - 1", "when": "^search"},
+    {"code": "while lo <= hi:"},
+    {"code": "    mid = (lo + hi) / 2", "when": "check the middle"},
+    {"code": "    if a[mid] == target: return mid", "when": "found it"},
+    {"code": "    if a[mid] < target: lo = mid + 1", "when": "discard the left half|nothing left to search on the right"},
+    {"code": "    else: hi = mid - 1", "when": "discard the right half|nothing left to search on the left"},
+    {"code": "return -1", "when": "not (found|present|in)|range is empty"}
+  ],
+  "bfs": [
+    {"code": "queue = [start]; visited = {start}", "when": "^enqueue start"},
+    {"code": "while queue:"},
+    {"code": "    u = queue.pop_front()", "when": "^dequeue"},
+    {"code": "    for v in neighbours(u):"},
+    {"code": "        if v not in visited: visited.add(v); queue.push(v)", "when": "^discover"},
+    {"code": "# every reachable node visited, nearest first", "when": "queue empty"}
+  ],
+  "dfs": [
+    {"code": "dfs(u):  visited.add(u)", "when": "^start at"},
+    {"code": "    for v in neighbours(u):"},
+    {"code": "        if v not in visited: dfs(v)", "when": "go deeper"},
+    {"code": "    return                  # backtrack", "when": "backtrack"},
+    {"code": "# every reachable node visited", "when": "stack empty"}
+  ],
+  "dijkstra": [
+    {"code": "dist[start] = 0; pq = [(0, start)]", "when": "^start at"},
+    {"code": "while pq:"},
+    {"code": "    u = pq.pop_min()           # u's distance is final", "when": "^visit"},
+    {"code": "    for (v, w) in neighbours(u):"},
+    {"code": "        if dist[u] + w < dist[v]:"},
+    {"code": "            dist[v] = dist[u] + w; pq.push((dist[v], v))", "when": "^relax edge"},
+    {"code": "return dist", "when": "queue empty"}
+  ],
+  "prims_mst": [
+    {"code": "tree = {start}", "when": "^build the cheapest"},
+    {"code": "while tree is missing a node:"},
+    {"code": "    add the cheapest edge from the tree to a new node", "when": "^add edge"},
+    {"code": "return tree", "when": "every node connected"}
+  ],
+  "kruskals_mst": [
+    {"code": "sort edges by weight", "when": "^kruskal"},
+    {"code": "every node starts in its own group (DSU)", "when": "starts in its own group"},
+    {"code": "for (u, v, w) in edges:"},
+    {"code": "    if find(u) != find(v): union(u, v); take the edge", "when": "different groups"},
+    {"code": "    else: skip — it would close a cycle", "when": "same group|cycle"},
+    {"code": "return the taken edges", "when": "one group remains"}
+  ],
+  "topological_sort": [
+    {"code": "indeg[v] = number of edges into v", "when": "^every edge is a dependency"},
+    {"code": "queue = every v with indeg[v] == 0", "when": "^tasks with no prerequisites"},
+    {"code": "while queue:"},
+    {"code": "    u = queue.pop(); order.append(u)", "when": "nothing left blocking"},
+    {"code": "    for v in out(u): indeg[v] -= 1", "when": "still waits on"},
+    {"code": "        if indeg[v] == 0: queue.push(v)", "when": "is now ready"},
+    {"code": "return order      # shorter than V ⇒ a cycle", "when": "tasks emitted|cycle"}
+  ],
+  "bellman_ford": [
+    {"code": "dist[src] = 0; every other dist = ∞", "when": "^bellman-ford from"},
+    {"code": "repeat V − 1 times:", "when": "^round \\d+: sweep"},
+    {"code": "    for (u, v, w) in edges:"},
+    {"code": "        if dist[u] + w < dist[v]: dist[v] = dist[u] + w", "when": "is now reachable in"},
+    {"code": "    if nothing changed: stop early", "when": "changed nothing"},
+    {"code": "one more sweep: any improvement ⇒ negative cycle", "when": "negative cycle"}
+  ],
+  "kadanes": [
+    {"code": "best = cur = a[0]", "when": "^find the contiguous|^start the run"},
+    {"code": "for x in a[1:]:"},
+    {"code": "    if cur + x < x: cur = x          # restart", "when": "cut losses"},
+    {"code": "    else: cur = cur + x              # extend", "when": "^extend the run"},
+    {"code": "    best = max(best, cur)"},
+    {"code": "return best", "when": "^done"}
+  ],
+  "two_sum_sorted": [
+    {"code": "l = 0; r = n - 1", "when": "^find two values"},
+    {"code": "while l < r:"},
+    {"code": "    s = a[l] + a[r]"},
+    {"code": "    if s == target: return (l, r)", "when": "pair found"},
+    {"code": "    if s < target: l += 1", "when": "too small"},
+    {"code": "    else: r -= 1", "when": "too big"},
+    {"code": "return none", "when": "no pair"}
+  ],
+  "sliding_window": [
+    {"code": "sum = a[0] + … + a[k-1]; best = sum", "when": "^find the size|^first window"},
+    {"code": "for i in k .. n-1:"},
+    {"code": "    sum += a[i] − a[i−k]", "when": "^slide"},
+    {"code": "    best = max(best, sum)"},
+    {"code": "return best", "when": "^done"}
+  ],
+  "fibonacci_dp": [
+    {"code": "fib(n):", "when": "^compute fib"},
+    {"code": "    if n in memo: return memo[n]", "when": "already in the vault"},
+    {"code": "    if n <= 1: memo[n] = n; return n", "when": "^base case"},
+    {"code": "    memo[n] = fib(n−1) + fib(n−2)", "when": "unknown|= fib\\(\\d+\\) \\+ fib"},
+    {"code": "    return memo[n]", "when": "vault complete"}
+  ],
+  "knapsack_01": [
+    {"code": "dp[0][c] = 0 for every capacity c", "when": "^pack a|base case"},
+    {"code": "for each item i, for each capacity c:"},
+    {"code": "    if w[i] > c: dp[i][c] = dp[i−1][c]", "when": "doesn't fit"},
+    {"code": "    else: dp[i][c] = max(dp[i−1][c], v[i] + dp[i−1][c − w[i]])", "when": "take item|skipping item"},
+    {"code": "return dp[n][cap]", "when": "table complete"}
+  ],
+  "lcs": [
+    {"code": "dp[0][*] = dp[*][0] = 0", "when": "^find the longest|base cases"},
+    {"code": "for i in 1..n, j in 1..m:"},
+    {"code": "    if a[i] == b[j]: dp[i][j] = dp[i−1][j−1] + 1", "when": "matches .* extend the diagonal"},
+    {"code": "    else: dp[i][j] = max(dp[i−1][j], dp[i][j−1])", "when": "no match\\. carry"},
+    {"code": "walk back from dp[n][m] to read the subsequence", "when": "table complete|part of the lcs|follow the larger|traceback done"}
+  ],
+  "coin_change": [
+    {"code": "dp[0] = 0; dp[a] = ∞ for a > 0", "when": "^coins \\["},
+    {"code": "for each coin, for each amount a:", "when": "^row \\d+:"},
+    {"code": "    if coin > a: keep the answer from the row above", "when": "too big"},
+    {"code": "    else: dp[a] = min(dp[a], 1 + dp[a − coin])", "when": "spend one|spending a"},
+    {"code": "return dp[target]", "when": "^fewest coins"}
+  ],
+  "n_queens": [
+    {"code": "place(row):", "when": "^place \\d+ queens"},
+    {"code": "    if row == n: record the board", "when": "all \\d+ rows filled|^solved"},
+    {"code": "    for col in 0 .. n-1:"},
+    {"code": "        if (row, col) is attacked: skip it", "when": "is attacked"},
+    {"code": "        put a queen at (row, col); place(row + 1)", "when": "is safe — place"},
+    {"code": "    take the queen back (backtrack)", "when": "no safe square"}
+  ],
+  "balanced_brackets": [
+    {"code": "for ch in s:", "when": "^scan"},
+    {"code": "    if ch is an opener: push(ch)", "when": "opens — push"},
+    {"code": "    elif stack is empty or top doesn't match: return false", "when": "mismatch|nothing to close"},
+    {"code": "    else: pop()", "when": "closes the most recent"},
+    {"code": "return stack is empty", "when": "still wait|balanced|stack is empty"}
+  ],
+  "next_greater_element": [
+    {"code": "stack = []; ans = [−1] * n", "when": "^for each value"},
+    {"code": "for i in 0 .. n-1:"},
+    {"code": "    while stack and a[i] > a[stack.top]: ans[stack.pop()] = a[i]", "when": "is bigger than the waiting"},
+    {"code": "    stack.push(i)", "when": "has no answer yet"},
+    {"code": "# indices still on the stack keep −1", "when": "input exhausted"},
+    {"code": "return ans", "when": "^done"}
+  ],
+  "linked_list_reverse": [
+    {"code": "prev = null; curr = head", "when": "chain of \\d+"},
+    {"code": "while curr:"},
+    {"code": "    next = curr.next; curr.next = prev", "when": "^save the next"},
+    {"code": "    prev = curr; curr = next", "when": "^advance"},
+    {"code": "return prev              # the new head", "when": "new head"}
+  ],
+  "floyd_cycle": [
+    {"code": "slow = fast = head", "when": "chain of \\d+|^both pointers start"},
+    {"code": "while fast and fast.next:"},
+    {"code": "    slow = slow.next; fast = fast.next.next", "when": "^slow steps"},
+    {"code": "    if slow == fast: a loop exists", "when": "lapped"},
+    {"code": "if fast ran off the end: return no loop", "when": "ran off the end|no loop"},
+    {"code": "slow = head; while slow != fast: advance both one step", "when": "reset one pointer|both advance one step"},
+    {"code": "return slow              # where the loop starts", "when": "they meet at"}
+  ],
+  "bst_insert": [
+    {"code": "for v in values: insert(root, v)", "when": "^insert \\d+ values|^insert -?\\d+ —"},
+    {"code": "insert(node, v):  if the tree is empty: root = v", "when": "becomes the root"},
+    {"code": "    if v < node: go left — attach there if the slot is free", "when": "^-?\\d+ < "},
+    {"code": "    else: go right — attach there if the slot is free", "when": "^-?\\d+ >= "},
+    {"code": "# done", "when": "tree built"}
+  ],
+  "bst_search": [
+    {"code": "node = root", "when": "^bst built"},
+    {"code": "while node:"},
+    {"code": "    if target == node: return found", "when": "equals this node"},
+    {"code": "    node = node.left if target < node else node.right", "when": "go left|go right"},
+    {"code": "return not found", "when": "not found|empty"}
+  ],
+  "level_order": [
+    {"code": "queue = [root]", "when": "binary tree built"},
+    {"code": "while queue:"},
+    {"code": "    node = queue.pop_front(); visit(node)", "when": "^dequeue"},
+    {"code": "    queue.push(node.left, node.right)"},
+    {"code": "return the visit order", "when": "^level order:"}
+  ],
+  "kmp_search": [
+    {"code": "build fail[]: fail[i] = longest border of pattern[0..i]", "when": "^find '"},
+    {"code": "    extend the border, or fall back to a shorter one", "when": "shares nothing|extends the border|breaks the border"},
+    {"code": "scan: i over the text, j over the pattern", "when": "^failure table"},
+    {"code": "    if text[i] == pat[j]: advance both", "when": "matches pattern position"},
+    {"code": "        if j == m: report a match; j = fail[j−1]", "when": "whole pattern matched"},
+    {"code": "    elif j > 0: j = fail[j−1]      # never move i back", "when": "breaks the match"},
+    {"code": "    else: i += 1", "when": "does not start a match"},
+    {"code": "return matches", "when": "^found '|no match|not found"}
+  ],
+  "sieve": [
+    {"code": "mark 2 .. n as candidates", "when": "^every number"},
+    {"code": "for p in 2 .. √n:"},
+    {"code": "    if p is unmarked: p is prime", "when": "still standing|survived"},
+    {"code": "        cross out p², p² + p, p² + 2p, …", "when": "^cross out"},
+    {"code": "return the unmarked numbers", "when": "primes up to"}
+  ]
+}

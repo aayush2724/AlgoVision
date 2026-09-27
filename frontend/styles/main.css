@@ -1963,6 +1963,41 @@ input[type="range"]::-moz-range-thumb {
   gap: 1rem;
   font-size: 0.78rem;
 }
+/* Pseudocode: numbered lines, the one the current step executes lit up. */
+.pseudo-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 18rem;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  counter-reset: pseudo;
+}
+.pseudo-panel { margin-bottom: 1.5rem; }
+.pseudo-lines li {
+  position: relative;
+  white-space: pre;             /* indentation is the structure */
+  color: var(--inkDim);
+  padding: 0 0.5rem 0 2rem;
+  border-left: 2px solid transparent;
+}
+.pseudo-lines li::before {
+  counter-increment: pseudo;
+  content: counter(pseudo);
+  position: absolute;
+  left: 0.25rem;
+  width: 1.2rem;
+  text-align: right;
+  color: var(--cDim);
+  opacity: 0.6;
+}
+.pseudo-lines li.is-current {
+  color: var(--ink);
+  background: rgba(212, 96, 44, 0.14);
+  border-left-color: var(--c);
+}
 .rail-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .rail-chips .btn.rail-chip { font-size: 0.72rem; padding: 0.3rem 0.6rem; }
 

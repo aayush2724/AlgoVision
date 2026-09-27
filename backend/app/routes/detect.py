@@ -404,6 +404,52 @@ SIGNATURES = {
     "ninja_friends": ["ninja_friends", "ninja and his friends (cherry pickup ii)"],
     "max_sum_combination": ["max_sum_combination", "maximum sum combinations"],
     "accounts_merge": ["accounts_merge", "accounts merge"],
+    "a_star_grid": ["a_star_grid", "a* search on a grid"],
+    "best_first_grid": ["best_first_grid", "greedy best-first search on a grid"],
+    "zero_one_bfs": ["zero_one_bfs", "0-1 bfs (minimum cost path)"],
+    "max_flow": ["max_flow", "maximum flow (edmonds–karp)"],
+    "min_cut": ["min_cut", "minimum s-t cut"],
+    "bipartite_matching": ["bipartite_matching", "maximum bipartite matching (kuhn)"],
+    "lca_lifting": ["lca_lifting", "lowest common ancestor (binary lifting)"],
+    "kth_ancestor": ["kth_ancestor", "k-th ancestor (binary lifting)"],
+    "tsp_bitmask": ["tsp_bitmask", "travelling salesman (bitmask dp)"],
+    "assignment_bitmask": ["assignment_bitmask", "job assignment (bitmask dp)"],
+    "sparse_table": ["sparse_table", "sparse table (range minimum query)"],
+    "sqrt_decomposition": ["sqrt_decomposition", "sqrt decomposition (range sum)"],
+    "lazy_segment_tree": ["lazy_segment_tree", "segment tree with lazy propagation"],
+    "extended_gcd": ["extended_gcd", "extended euclidean algorithm"],
+    "mod_inverse": ["mod_inverse", "modular multiplicative inverse"],
+    "ncr_mod": ["ncr_mod", "ncr mod p (fermat inverse)"],
+    "euler_totient": ["euler_totient", "euler's totient function"],
+    "spf_sieve": ["spf_sieve", "smallest prime factor sieve"],
+    "crt": ["crt", "chinese remainder theorem"],
+    "suffix_array": ["suffix_array", "suffix array (prefix doubling)"],
+    "lcp_kasai": ["lcp_kasai", "lcp array (kasai)"],
+    "longest_repeated_substring": ["longest_repeated_substring", "longest repeated substring (sa + lcp)"],
+    "euler_path": ["euler_path", "euler path / circuit (hierholzer)"],
+    "longest_path_dag": ["longest_path_dag", "longest path in a dag"],
+    "count_paths_dag": ["count_paths_dag", "count paths in a dag"],
+    "matrix_exponentiation": ["matrix_exponentiation", "matrix exponentiation (fibonacci)"],
+    "ternary_search": ["ternary_search", "ternary search (peak of a unimodal array)"],
+    "meet_in_middle": ["meet_in_middle", "meet in the middle (subset sums ≤ s)"],
+    "nim": ["nim", "nim (xor of piles)"],
+    "grundy_numbers": ["grundy_numbers", "grundy numbers (subtraction game)"],
+    "optimal_game": ["optimal_game", "optimal strategy for a coin game"],
+    "aho_corasick": ["aho_corasick", "aho–corasick (multi-pattern search)"],
+    "substring_hash": ["substring_hash", "substring equality by rolling hash"],
+    "tarjan_scc": ["tarjan_scc", "strongly connected components (tarjan)"],
+    "two_sat": ["two_sat", "2-sat (implication graph + scc)"],
+    "lexicographic_topo": ["lexicographic_topo", "lexicographically smallest topological order"],
+    "convex_hull": ["convex_hull", "convex hull (monotone chain)"],
+    "polygon_area": ["polygon_area", "polygon area (shoelace formula)"],
+    "closest_pair": ["closest_pair", "closest pair of points (divide & conquer)"],
+    "digit_dp": ["digit_dp", "digit dp (count numbers with digit sum s)"],
+    "tree_robber": ["tree_robber", "house robber on a tree"],
+    "sos_dp": ["sos_dp", "sum over subsets (sos dp)"],
+    "sum_distances_tree": ["sum_distances_tree", "sum of distances in a tree (rerooting)"],
+    "bit_kth": ["bit_kth", "k-th smallest with a fenwick tree"],
+    "inversions_bit": ["inversions_bit", "count inversions with a fenwick tree"],
+    "prefix_sum_2d": ["prefix_sum_2d", "2-d prefix sums (rectangle queries)"],
 }
 
 REALWORLD_META = {
@@ -3942,6 +3988,374 @@ REALWORLD_META = {
         "scene": "vault",
         "title": "Accounts Merge",
         "hook": "Accounts 'Name email …' split by ';'. Union accounts sharing an email.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "a_star_grid": {
+        "scene": "grid_power",
+        "title": "A* Search on a Grid",
+        "hook": "Rows of S . # G split by '/'. Expand the smallest f = g + h.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "best_first_grid": {
+        "scene": "grid_power",
+        "title": "Greedy Best-First Search on a Grid",
+        "hook": "Rows of S . # G. Expand the smallest h only — fast, not always shortest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "zero_one_bfs": {
+        "scene": "grid_power",
+        "title": "0-1 BFS (Minimum Cost Path)",
+        "hook": "0/1 costs, rows split by '/'. Deque: 0-cost to the front.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_flow": {
+        "scene": "vault",
+        "title": "Maximum Flow (Edmonds–Karp)",
+        "hook": "Edges from>to:capacity with source S and sink T. Augment along BFS paths.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_cut": {
+        "scene": "vault",
+        "title": "Minimum s-t Cut",
+        "hook": "Edges from>to:capacity (S, T). Max flow, then what S can still reach.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bipartite_matching": {
+        "scene": "vault",
+        "title": "Maximum Bipartite Matching (Kuhn)",
+        "hook": "Left: allowed rights, separated by ';'. Kuhn's augmenting paths.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lca_lifting": {
+        "scene": "files",
+        "title": "Lowest Common Ancestor (Binary Lifting)",
+        "hook": "Level-order tree | two node values. Jump pointers are dashed.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "kth_ancestor": {
+        "scene": "files",
+        "title": "K-th Ancestor (Binary Lifting)",
+        "hook": "Level-order tree | node k. Hop by the bits of k.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "tsp_bitmask": {
+        "scene": "grid_power",
+        "title": "Travelling Salesman (Bitmask DP)",
+        "hook": "Distance matrix (≤ 5 cities). Rows are visited-sets as bitmasks.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "assignment_bitmask": {
+        "scene": "grid_power",
+        "title": "Job Assignment (Bitmask DP)",
+        "hook": "cost[person][job] (≤ 4×4). Rows are job-sets as bitmasks.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sparse_table": {
+        "scene": "leaderboard",
+        "title": "Sparse Table (Range Minimum Query)",
+        "hook": "Array | min l r, … Two overlapping power-of-two blocks.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sqrt_decomposition": {
+        "scene": "leaderboard",
+        "title": "Sqrt Decomposition (Range Sum)",
+        "hook": "Array | sum l r, set i v. Whole blocks by their sum.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lazy_segment_tree": {
+        "scene": "leaderboard",
+        "title": "Segment Tree With Lazy Propagation",
+        "hook": "Array | add l r v, sum l r. Pending adds wait as 'lazy'.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "extended_gcd": {
+        "scene": "vault",
+        "title": "Extended Euclidean Algorithm",
+        "hook": "a, b. Euclid down, then x, y back up: a·x + b·y = gcd.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "mod_inverse": {
+        "scene": "vault",
+        "title": "Modular Multiplicative Inverse",
+        "hook": "a, m. The x of extended Euclid when gcd = 1.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ncr_mod": {
+        "scene": "vault",
+        "title": "nCr mod p (Fermat Inverse)",
+        "hook": "n, r (≤ 20). Factorials mod p, Fermat inverse for the division.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "euler_totient": {
+        "scene": "vault",
+        "title": "Euler's Totient Function",
+        "hook": "n. φ = n·Π(1 − 1/p) over its distinct primes.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "spf_sieve": {
+        "scene": "vault",
+        "title": "Smallest Prime Factor Sieve",
+        "hook": "n (≤ 60) and x to factorise. Sieve smallest prime factors.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "crt": {
+        "scene": "vault",
+        "title": "Chinese Remainder Theorem",
+        "hook": "Congruences 'r m', comma-separated. Merge them pairwise.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "suffix_array": {
+        "scene": "dna",
+        "title": "Suffix Array (Prefix Doubling)",
+        "hook": "2–10 letters. Rank by 1, 2, 4, … characters.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lcp_kasai": {
+        "scene": "dna",
+        "title": "LCP Array (Kasai)",
+        "hook": "2–10 letters. Walk suffixes in text order; h drops by ≤ 1.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_repeated_substring": {
+        "scene": "dna",
+        "title": "Longest Repeated Substring (SA + LCP)",
+        "hook": "2–10 letters. The biggest LCP between sorted neighbours.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "euler_path": {
+        "scene": "vault",
+        "title": "Euler Path / Circuit (Hierholzer)",
+        "hook": "Undirected edges A-B, … 0 or 2 odd-degree vertices needed.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_path_dag": {
+        "scene": "vault",
+        "title": "Longest Path in a DAG",
+        "hook": "Directed edges from>to:weight, start S. Topo order, relax with max.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_paths_dag": {
+        "scene": "vault",
+        "title": "Count Paths in a DAG",
+        "hook": "Directed edges with S and T. ways[v] = Σ ways[u].",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "matrix_exponentiation": {
+        "scene": "vault",
+        "title": "Matrix Exponentiation (Fibonacci)",
+        "hook": "n (0–90). F(n) from [[1,1],[1,0]]ⁿ by square-and-multiply.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ternary_search": {
+        "scene": "vault",
+        "title": "Ternary Search (Peak of a Unimodal Array)",
+        "hook": "Rises strictly, then falls strictly. Keep two thirds each round.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "meet_in_middle": {
+        "scene": "vault",
+        "title": "Meet in the Middle (Subset Sums ≤ S)",
+        "hook": "Up to 8 numbers and S. Half sums + binary search.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "nim": {
+        "scene": "vault",
+        "title": "Nim (XOR of Piles)",
+        "hook": "Pile sizes (≤ 63). XOR ≠ 0 means the player to move wins.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "grundy_numbers": {
+        "scene": "vault",
+        "title": "Grundy Numbers (Subtraction Game)",
+        "hook": "n | allowed removals. g(n) = mex of reachable Grundy numbers.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "optimal_game": {
+        "scene": "grid_power",
+        "title": "Optimal Strategy for a Coin Game",
+        "hook": "Coin values (≤ 8). Take an end; the opponent plays perfectly too.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "aho_corasick": {
+        "scene": "files",
+        "title": "Aho–Corasick (Multi-Pattern Search)",
+        "hook": "Text | patterns. Trie + dashed failure links; scan the text once.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "substring_hash": {
+        "scene": "dna",
+        "title": "Substring Equality by Rolling Hash",
+        "hook": "Text | queries 'i j len'. Prefix hashes compare any two substrings in O(1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "tarjan_scc": {
+        "scene": "vault",
+        "title": "Strongly Connected Components (Tarjan)",
+        "hook": "Directed edges A>B, … One DFS with disc/low and a stack.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "two_sat": {
+        "scene": "vault",
+        "title": "2-SAT (Implication Graph + SCC)",
+        "hook": "Clauses like a|!b (! = not). Implication graph, then SCCs.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lexicographic_topo": {
+        "scene": "vault",
+        "title": "Lexicographically Smallest Topological Order",
+        "hook": "Directed edges. Kahn with a min-heap: always the smallest ready vertex.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "convex_hull": {
+        "scene": "grid_power",
+        "title": "Convex Hull (Monotone Chain)",
+        "hook": "Points 'x y' (0–9) separated by ';'. Lower + upper chains with a stack.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "polygon_area": {
+        "scene": "grid_power",
+        "title": "Polygon Area (Shoelace Formula)",
+        "hook": "Vertices 'x y' in order, separated by ';'. Shoelace formula.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "closest_pair": {
+        "scene": "grid_power",
+        "title": "Closest Pair of Points (Divide & Conquer)",
+        "hook": "Points 'x y' separated by ';'. Split, solve halves, check the strip.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "digit_dp": {
+        "scene": "grid_power",
+        "title": "Digit DP (Count Numbers With Digit Sum S)",
+        "hook": "N (≤ 99999) and the digit sum S. Stay tight along N's digits.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "tree_robber": {
+        "scene": "files",
+        "title": "House Robber on a Tree",
+        "hook": "Level-order tree of house values. Each node keeps take/skip.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sos_dp": {
+        "scene": "grid_power",
+        "title": "Sum Over Subsets (SOS DP)",
+        "hook": "2, 4, 8 or 16 values (one per mask). Add one bit at a time.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_distances_tree": {
+        "scene": "files",
+        "title": "Sum of Distances in a Tree (Rerooting)",
+        "hook": "Level-order tree. Sizes bottom-up, then reroot top-down.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bit_kth": {
+        "scene": "leaderboard",
+        "title": "K-th Smallest With a Fenwick Tree",
+        "hook": "Ops: add v, remove v, kth k (values 1–16). Binary lifting on the tree.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "inversions_bit": {
+        "scene": "leaderboard",
+        "title": "Count Inversions With a Fenwick Tree",
+        "hook": "Values 1–16. Scan right to left; count smaller values already seen.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "prefix_sum_2d": {
+        "scene": "grid_power",
+        "title": "2-D Prefix Sums (Rectangle Queries)",
+        "hook": "Matrix | 'r1 c1 r2 c2' queries. Four lookups per rectangle.",
         "metaphors": {"node": "node", "edge": "link", "weight": "cost",
                       "visit": "Visiting", "start": "The start",
                       "done": "The answer."}

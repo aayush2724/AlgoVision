@@ -41,6 +41,9 @@ from app.tracers import (
     dp_stocks_lis, bst_ops, heaps_more, strings_basic, window_more, graph_text,
     dp_interval, arrays_more, basics, ll_more, bs_hard, recursion_more,
     greedy_stack, tree_build, ds_impl, lists_hard, strings_trie, misc_hard,
+    search_heuristic, flow, lifting, bitmask_dp, range_queries,
+    number_theory, suffix_structs, graph_more, algebra, games,
+    string_auto, graph_scc, geometry, dp_adv, bit_more,
 )
 # Modules whose run(algo, text, target) validates (ValueError → 400) and traces.
 RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
@@ -48,7 +51,10 @@ RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
                heaps_more, strings_basic, window_more, graph_text,
                dp_interval, arrays_more, basics, ll_more, bs_hard,
                recursion_more, greedy_stack, tree_build, ds_impl,
-               lists_hard, strings_trie, misc_hard)
+               lists_hard, strings_trie, misc_hard, search_heuristic, flow, lifting,
+               bitmask_dp, range_queries, number_theory, suffix_structs,
+               graph_more, algebra, games, string_auto, graph_scc, geometry,
+               dp_adv, bit_more)
 from app.tracers.common import Graph
 import os
 

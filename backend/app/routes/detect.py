@@ -332,6 +332,78 @@ SIGNATURES = {
     "divide_bits": ["divide_bits", "divide without * or /"],
     "xor_range": ["xor_range", "xor of numbers in a range"],
     "single_number_iii": ["single_number_iii", "single number iii (two uniques)"],
+    "ll_insert_head": ["ll_insert_head", "insert at the head of a linked list"],
+    "ll_delete_head": ["ll_delete_head", "delete the head of a linked list"],
+    "ll_length": ["ll_length", "length of a linked list"],
+    "ll_search": ["ll_search", "search in a linked list"],
+    "dll_insert_head": ["dll_insert_head", "insert before the head of a doubly linked list"],
+    "dll_delete_head": ["dll_delete_head", "delete the head of a doubly linked list"],
+    "dll_pairs_sum": ["dll_pairs_sum", "pairs with a given sum in a sorted dll"],
+    "dll_remove_duplicates": ["dll_remove_duplicates", "remove duplicates from a sorted dll"],
+    "ll_reverse_recursive": ["ll_reverse_recursive", "reverse a linked list (recursive)"],
+    "loop_length": ["loop_length", "length of a loop in a linked list"],
+    "sort_012_list": ["sort_012_list", "sort a linked list of 0s, 1s and 2s"],
+    "sort_list": ["sort_list", "sort a linked list (merge sort)"],
+    "y_intersection": ["y_intersection", "intersection point of a y-shaped linked list"],
+    "reverse_k_group": ["reverse_k_group", "reverse a linked list in groups of k"],
+    "search_rotated_ii": ["search_rotated_ii", "search in rotated sorted array ii (duplicates)"],
+    "median_two_sorted": ["median_two_sorted", "median of two sorted arrays"],
+    "kth_two_sorted": ["kth_two_sorted", "k-th element of two sorted arrays"],
+    "gas_station": ["gas_station", "minimise max distance to gas station"],
+    "peak_element_ii": ["peak_element_ii", "find a peak element ii (matrix)"],
+    "matrix_median": ["matrix_median", "median of a row-wise sorted matrix"],
+    "print_1_to_n": ["print_1_to_n", "print 1 to n using recursion"],
+    "print_n_to_1": ["print_n_to_1", "print n to 1 using recursion"],
+    "recursive_bubble_sort": ["recursive_bubble_sort", "recursive bubble sort"],
+    "recursive_insertion_sort": ["recursive_insertion_sort", "recursive insertion sort"],
+    "count_good_numbers": ["count_good_numbers", "count good numbers"],
+    "sort_stack": ["sort_stack", "sort a stack using recursion"],
+    "reverse_stack": ["reverse_stack", "reverse a stack using recursion"],
+    "recursive_atoi": ["recursive_atoi", "recursive atoi()"],
+    "word_break": ["word_break", "word break"],
+    "m_coloring": ["m_coloring", "m-coloring problem"],
+    "sudoku_solver": ["sudoku_solver", "sudoku solver"],
+    "expression_add_operators": ["expression_add_operators", "expression add operators"],
+    "valid_paren_star": ["valid_paren_star", "valid parenthesis string (with *)"],
+    "shortest_job_first": ["shortest_job_first", "shortest job first (sjf) scheduling"],
+    "lru_page_faults": ["lru_page_faults", "lru page replacement (page faults)"],
+    "insert_interval": ["insert_interval", "insert interval"],
+    "non_overlapping_intervals": ["non_overlapping_intervals", "non-overlapping intervals"],
+    "greater_to_right": ["greater_to_right", "number of greater elements to the right"],
+    "sum_subarray_ranges": ["sum_subarray_ranges", "sum of subarray ranges"],
+    "celebrity": ["celebrity", "the celebrity problem"],
+    "build_pre_in": ["build_pre_in", "construct a binary tree from preorder & inorder"],
+    "build_post_in": ["build_post_in", "construct a binary tree from postorder & inorder"],
+    "serialize_tree": ["serialize_tree", "serialize and deserialize a binary tree"],
+    "morris_inorder": ["morris_inorder", "morris inorder traversal"],
+    "morris_preorder": ["morris_preorder", "morris preorder traversal"],
+    "flatten_tree": ["flatten_tree", "flatten a binary tree to a linked list"],
+    "identical_trees": ["identical_trees", "check if two trees are identical"],
+    "merge_two_bsts": ["merge_two_bsts", "merge two bsts (sorted output)"],
+    "stack_array": ["stack_array", "implement a stack using an array"],
+    "queue_array": ["queue_array", "implement a queue using an array"],
+    "stack_using_queue": ["stack_using_queue", "implement a stack using a queue"],
+    "queue_using_stacks": ["queue_using_stacks", "implement a queue using stacks"],
+    "stack_linkedlist": ["stack_linkedlist", "implement a stack using a linked list"],
+    "queue_linkedlist": ["queue_linkedlist", "implement a queue using a linked list"],
+    "min_stack": ["min_stack", "implement a min stack"],
+    "lru_cache": ["lru_cache", "lru cache"],
+    "lfu_cache": ["lfu_cache", "lfu cache"],
+    "design_twitter": ["design_twitter", "design twitter"],
+    "clone_random_list": ["clone_random_list", "clone a linked list with random pointers"],
+    "flatten_list": ["flatten_list", "flatten a linked list (sorted columns)"],
+    "merge_k_lists": ["merge_k_lists", "merge k sorted lists"],
+    "bracket_reversals": ["bracket_reversals", "minimum bracket reversals to balance"],
+    "count_and_say": ["count_and_say", "count and say"],
+    "longest_happy_prefix": ["longest_happy_prefix", "longest happy prefix (lps)"],
+    "count_palindromic_subseq": ["count_palindromic_subseq", "count palindromic subsequences"],
+    "distinct_substrings": ["distinct_substrings", "number of distinct substrings (trie)"],
+    "max_xor_pair": ["max_xor_pair", "maximum xor of two numbers (trie)"],
+    "max_xor_queries": ["max_xor_queries", "maximum xor with an element from an array"],
+    "trie_advanced": ["trie_advanced", "trie with counts (insert, count, erase)"],
+    "ninja_friends": ["ninja_friends", "ninja and his friends (cherry pickup ii)"],
+    "max_sum_combination": ["max_sum_combination", "maximum sum combinations"],
+    "accounts_merge": ["accounts_merge", "accounts merge"],
 }
 
 REALWORLD_META = {
@@ -3294,6 +3366,582 @@ REALWORLD_META = {
         "scene": "vault",
         "title": "Single Number III (Two Uniques)",
         "hook": "Pairs plus two singletons. Split by the lowest differing bit.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_insert_head": {
+        "scene": "train",
+        "title": "Insert at the Head of a Linked List",
+        "hook": "The list, and the value to insert. New node → old head, then move head.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_delete_head": {
+        "scene": "train",
+        "title": "Delete the Head of a Linked List",
+        "hook": "The list. Move head one step; free the old head.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_length": {
+        "scene": "train",
+        "title": "Length of a Linked List",
+        "hook": "The list. Walk to null, counting.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_search": {
+        "scene": "train",
+        "title": "Search in a Linked List",
+        "hook": "The list and x. No indexing — walk and compare.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_insert_head": {
+        "scene": "train",
+        "title": "Insert Before the Head of a Doubly Linked List",
+        "hook": "The DLL and a value. Fix next AND prev.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_delete_head": {
+        "scene": "train",
+        "title": "Delete the Head of a Doubly Linked List",
+        "hook": "The DLL. Move head; clear the new head's prev.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_pairs_sum": {
+        "scene": "train",
+        "title": "Pairs With a Given Sum in a Sorted DLL",
+        "hook": "A sorted DLL and the sum. Head and tail walk inward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_remove_duplicates": {
+        "scene": "train",
+        "title": "Remove Duplicates From a Sorted DLL",
+        "hook": "A sorted DLL. Unlink each repeat (next and prev).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_reverse_recursive": {
+        "scene": "train",
+        "title": "Reverse a Linked List (Recursive)",
+        "hook": "The list. Reverse the rest, then flip one arrow on the way back.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "loop_length": {
+        "scene": "train",
+        "title": "Length of a Loop in a Linked List",
+        "hook": "The list and where the tail links back (−1 = none). Floyd, then count the ring.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sort_012_list": {
+        "scene": "train",
+        "title": "Sort a Linked List of 0s, 1s and 2s",
+        "hook": "0s, 1s and 2s. Build three chains by relinking, then join.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sort_list": {
+        "scene": "train",
+        "title": "Sort a Linked List (Merge Sort)",
+        "hook": "The list. Merge sort: split at the middle, merge by relinking.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "y_intersection": {
+        "scene": "train",
+        "title": "Intersection Point of a Y-Shaped Linked List",
+        "hook": "A only | B only | shared tail. Pointers swap heads at the end.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_k_group": {
+        "scene": "train",
+        "title": "Reverse a Linked List in Groups of K",
+        "hook": "The list and k. Reverse each full group; a short tail stays.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "search_rotated_ii": {
+        "scene": "vault",
+        "title": "Search in Rotated Sorted Array II (duplicates)",
+        "hook": "A rotated array (duplicates allowed) and the target.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "median_two_sorted": {
+        "scene": "vault",
+        "title": "Median of Two Sorted Arrays",
+        "hook": "Two sorted arrays split by '|'. Binary-search the cut.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "kth_two_sorted": {
+        "scene": "vault",
+        "title": "K-th Element of Two Sorted Arrays",
+        "hook": "Two sorted arrays and k. The left part holds k values.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "gas_station": {
+        "scene": "vault",
+        "title": "Minimise Max Distance to Gas Station",
+        "hook": "Station positions and k new stations. Binary-search the real answer.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "peak_element_ii": {
+        "scene": "vault",
+        "title": "Find a Peak Element II (matrix)",
+        "hook": "Rows split by '/', neighbours distinct. Column max, then climb.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "matrix_median": {
+        "scene": "vault",
+        "title": "Median of a Row-Wise Sorted Matrix",
+        "hook": "Sorted rows split by '/', odd cell count. Binary-search the value.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "print_1_to_n": {
+        "scene": "vault",
+        "title": "Print 1 to N Using Recursion",
+        "hook": "N (1–10). Print before the call → ascending.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "print_n_to_1": {
+        "scene": "vault",
+        "title": "Print N to 1 Using Recursion",
+        "hook": "N (1–10). Print after the call → descending.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "recursive_bubble_sort": {
+        "scene": "leaderboard",
+        "title": "Recursive Bubble Sort",
+        "hook": "Up to 10 numbers. One pass, then bubble(n − 1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "recursive_insertion_sort": {
+        "scene": "leaderboard",
+        "title": "Recursive Insertion Sort",
+        "hook": "Up to 10 numbers. Insert a[i], then insert(i + 1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_good_numbers": {
+        "scene": "vault",
+        "title": "Count Good Numbers",
+        "hook": "Length n (≤ 10^15). 5^ceil(n/2) · 4^floor(n/2) by fast power.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sort_stack": {
+        "scene": "plates",
+        "title": "Sort a Stack Using Recursion",
+        "hook": "Stack bottom → top (≤ 8). Pop, sort the rest, insert in order.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_stack": {
+        "scene": "plates",
+        "title": "Reverse a Stack Using Recursion",
+        "hook": "Stack bottom → top (≤ 8). Pop, reverse the rest, insert at the bottom.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "recursive_atoi": {
+        "scene": "dna",
+        "title": "Recursive atoi()",
+        "hook": "Any text (≤ 16). Spaces, sign, then one digit per call.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "word_break": {
+        "scene": "dna",
+        "title": "Word Break",
+        "hook": "Text | words. can(i) = a word starts at i and can(i + len).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "m_coloring": {
+        "scene": "vault",
+        "title": "M-Coloring Problem",
+        "hook": "Edges like 0-1,1-2 and m colours. Try, recurse, undo.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sudoku_solver": {
+        "scene": "grid_power",
+        "title": "Sudoku Solver",
+        "hook": "4×4 or 9×9, 0 = blank (9×9 rows may skip commas).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "expression_add_operators": {
+        "scene": "vault",
+        "title": "Expression Add Operators",
+        "hook": "1–5 digits and the target. Choose + − × or join between digits.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "valid_paren_star": {
+        "scene": "vault",
+        "title": "Valid Parenthesis String (with *)",
+        "hook": "Only ( ) *. Track the range of possible open counts.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "shortest_job_first": {
+        "scene": "scheduler",
+        "title": "Shortest Job First (SJF) Scheduling",
+        "hook": "Burst times. Shortest first minimises the average wait.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lru_page_faults": {
+        "scene": "scheduler",
+        "title": "LRU Page Replacement (Page Faults)",
+        "hook": "Page requests and capacity. Evict the least recently used.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "insert_interval": {
+        "scene": "scheduler",
+        "title": "Insert Interval",
+        "hook": "Sorted intervals | new interval. Copy, absorb, copy.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "non_overlapping_intervals": {
+        "scene": "scheduler",
+        "title": "Non-overlapping Intervals",
+        "hook": "Intervals like 1-2,2-3. Sort by end; keep what fits.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "greater_to_right": {
+        "scene": "leaderboard",
+        "title": "Number of Greater Elements to the Right",
+        "hook": "Up to 10 numbers. For each index, count bigger values to its right.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_subarray_ranges": {
+        "scene": "stocks",
+        "title": "Sum of Subarray Ranges",
+        "hook": "Up to 10 numbers. Σ max·count − Σ min·count via monotonic stacks.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "celebrity": {
+        "scene": "vault",
+        "title": "The Celebrity Problem",
+        "hook": "Square 0/1 'knows' matrix. Eliminate, then verify.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "build_pre_in": {
+        "scene": "files",
+        "title": "Construct a Binary Tree from Preorder & Inorder",
+        "hook": "Preorder | inorder (distinct values). Root first, inorder splits the rest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "build_post_in": {
+        "scene": "files",
+        "title": "Construct a Binary Tree from Postorder & Inorder",
+        "hook": "Postorder | inorder (distinct values). Root last, inorder splits the rest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "serialize_tree": {
+        "scene": "files",
+        "title": "Serialize and Deserialize a Binary Tree",
+        "hook": "Level order, null for gaps. BFS writes '#' for missing children.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "morris_inorder": {
+        "scene": "files",
+        "title": "Morris Inorder Traversal",
+        "hook": "Level order. Dashed edges are temporary threads.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "morris_preorder": {
+        "scene": "files",
+        "title": "Morris Preorder Traversal",
+        "hook": "Level order. Visit when the thread is made, not when it's removed.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "flatten_tree": {
+        "scene": "files",
+        "title": "Flatten a Binary Tree to a Linked List",
+        "hook": "Level order. Splice each left subtree into the right chain.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "identical_trees": {
+        "scene": "files",
+        "title": "Check if Two Trees are Identical",
+        "hook": "Two level-order trees split by '|'. Compare in lockstep.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "merge_two_bsts": {
+        "scene": "files",
+        "title": "Merge Two BSTs (sorted output)",
+        "hook": "Two BSTs as insertion orders split by '|'. Inorders, then merge.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stack_array": {
+        "scene": "plates",
+        "title": "Implement a Stack Using an Array",
+        "hook": "Ops: push x, pop, top. Array + top index.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "queue_array": {
+        "scene": "scheduler",
+        "title": "Implement a Queue Using an Array",
+        "hook": "Ops: push x, pop, front. Circular array.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stack_using_queue": {
+        "scene": "plates",
+        "title": "Implement a Stack Using a Queue",
+        "hook": "Ops: push x, pop, top. Rotate after each push.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "queue_using_stacks": {
+        "scene": "scheduler",
+        "title": "Implement a Queue Using Stacks",
+        "hook": "Ops: push x, pop, front. Pour in→out only when out is empty.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stack_linkedlist": {
+        "scene": "train",
+        "title": "Implement a Stack Using a Linked List",
+        "hook": "Ops: push x, pop, top. New nodes go at the head.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "queue_linkedlist": {
+        "scene": "train",
+        "title": "Implement a Queue Using a Linked List",
+        "hook": "Ops: push x, pop, front. Enqueue at rear, dequeue at front.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_stack": {
+        "scene": "plates",
+        "title": "Implement a Min Stack",
+        "hook": "Ops: push x, pop, top, getmin. Each entry keeps the min below it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lru_cache": {
+        "scene": "scheduler",
+        "title": "LRU Cache",
+        "hook": "Ops: put k v, get k. Evict the least recently used.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lfu_cache": {
+        "scene": "scheduler",
+        "title": "LFU Cache",
+        "hook": "Ops: put k v, get k. Evict the least used (ties: least recent).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "design_twitter": {
+        "scene": "scheduler",
+        "title": "Design Twitter",
+        "hook": "Ops: post u t, follow a b, unfollow a b, feed u.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "clone_random_list": {
+        "scene": "train",
+        "title": "Clone a Linked List With Random Pointers",
+        "hook": "Values | random index per node (−1 = null). Weave, point, unweave.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "flatten_list": {
+        "scene": "train",
+        "title": "Flatten a Linked List (sorted columns)",
+        "hook": "Sorted columns split by '|'. Merge from the right.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "merge_k_lists": {
+        "scene": "train",
+        "title": "Merge K Sorted Lists",
+        "hook": "Sorted lists split by '|'. Min-heap of heads.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bracket_reversals": {
+        "scene": "dna",
+        "title": "Minimum Bracket Reversals to Balance",
+        "hook": "Only { and }. Cancel pairs; ceil(close/2) + ceil(open/2).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_and_say": {
+        "scene": "dna",
+        "title": "Count and Say",
+        "hook": "n (1–8). Read the previous term run by run.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_happy_prefix": {
+        "scene": "dna",
+        "title": "Longest Happy Prefix (LPS)",
+        "hook": "Up to 16 letters. The KMP lps array's last value.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_palindromic_subseq": {
+        "scene": "dna",
+        "title": "Count Palindromic Subsequences",
+        "hook": "Up to 10 letters. Interval DP with inclusion–exclusion.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "distinct_substrings": {
+        "scene": "vault",
+        "title": "Number of Distinct Substrings (Trie)",
+        "hook": "Up to 8 letters. Insert every suffix; count new trie nodes.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_xor_pair": {
+        "scene": "vault",
+        "title": "Maximum XOR of Two Numbers (Trie)",
+        "hook": "Numbers 0–255. Bit trie; walk towards the opposite bit.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_xor_queries": {
+        "scene": "vault",
+        "title": "Maximum XOR With an Element From an Array",
+        "hook": "Array | queries 'x m'. Sort by m, insert values ≤ m.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "trie_advanced": {
+        "scene": "files",
+        "title": "Trie With Counts (insert, count, erase)",
+        "hook": "Ops: insert w, countwords w, countprefix p, erase w. Nodes keep prefix|end counts.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ninja_friends": {
+        "scene": "grid_power",
+        "title": "Ninja and His Friends (Cherry Pickup II)",
+        "hook": "Rows split by '/'. Two walkers from the top corners; a shared cell counts once.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "max_sum_combination": {
+        "scene": "leaderboard",
+        "title": "Maximum Sum Combinations",
+        "hook": "Two arrays | and k. Max-heap over index pairs.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "accounts_merge": {
+        "scene": "vault",
+        "title": "Accounts Merge",
+        "hook": "Accounts 'Name email …' split by ';'. Union accounts sharing an email.",
         "metaphors": {"node": "node", "edge": "link", "weight": "cost",
                       "visit": "Visiting", "start": "The start",
                       "done": "The answer."}

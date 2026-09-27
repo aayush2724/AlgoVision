@@ -169,6 +169,60 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   min stack / queue-via-stacks (operation-sequence input), matrix median /
   2-D peak, and the Step 3 matrix problems (set zeros, rotate, spiral).
 
+**Batches 65–69 (new tracers) — five modules, 32 ids, 32 A2Z rows. A2Z is
+now complete: 411 rows linked; the only unlinked rows are the 6 theory
+videos (11-18, 13-36, 13-59, 15-51, 15-65, 15-72).** Two small renderer
+additions: tree steps may carry `threads` (dashed temporary edges), and list
+steps may carry `aux_links` + `aux_label` (a second, dashed pointer kind,
+drawn in the prev lane).
+  - 65 `tree_build.py` (tree): build from pre+in / post+in (nodes appear in
+    their final positions), serialise/deserialise, Morris inorder/preorder
+    (threads dashed), flatten to a right chain, identical trees (side by
+    side), merge two BSTs (two inorders + merge).
+  - 66 `ds_impl.py`: operation scripts ("push 3, pop, top") for stack/queue
+    on arrays (grid, capacity target), stack via queue, queue via stacks,
+    min stack, LRU, LFU, Design Twitter; stack/queue on a linked list
+    (list view, LIST_TEXT).
+  - 67 `lists_hard.py` (list): clone with random pointers (weave, point,
+    unweave; random dashed), flatten sorted columns (child solid, next
+    dashed), merge K sorted lists (min-heap of heads).
+  - 68 `strings_trie.py`: bracket reversals, count and say, longest happy
+    prefix (lps), count palindromic subsequences, distinct substrings (suffix
+    trie), max XOR pair, max XOR with limit queries (offline); plus
+    `trie_advanced` on the tree view (prefix|end counts, erase prunes nodes).
+  - 69 `misc_hard.py`: ninja & friends (3-D DP, replayed path), maximum sum
+    combinations (heap over index pairs), accounts merge (DSU).
+Full suite 1614.
+
+**Batches 60–64 (new tracers) — four modules, 40 ids, 41 A2Z rows.**
+The list view now takes text-input run modules (`LIST_TEXT` in engine.js),
+and `renderListStep` redraws the boxes when a step's `values` change, so a
+trace can create nodes (insert at head). Everything else is grid via
+TEXT_GRID.
+  - 60 `ll_more.py` (list): insert/delete head (singly + doubly), length,
+    search, pairs with sum in a sorted DLL, remove duplicates from a DLL.
+  - 61 `ll_more.py` (list): recursive reverse, loop length, sort 0/1/2 by
+    relinking, merge-sort a list, Y intersection, reverse in k-groups.
+  - 62 `bs_hard.py`: rotated search with duplicates, median / k-th of two
+    sorted arrays (partition search), gas stations (real-valued answer),
+    peak element II, matrix median.
+  - 63 `recursion_more.py`: print 1..N / N..1, recursive bubble/insertion
+    sort, count good numbers (fast power), sort/reverse a stack, recursive
+    atoi, word break, M-colouring, sudoku (4×4 or 9×9, capped at 300 steps),
+    expression add operators.
+  - 64 `greedy_stack.py`: valid parenthesis with *, SJF, LRU page faults,
+    insert interval, non-overlapping intervals, greater elements to the
+    right, sum of subarray ranges, celebrity. 9-40 is linked to
+    max_rectangle_ones.
+Full suite 1593. A2Z now 379 linked; 38 left, 6 of them theory rows
+(11-18, 13-36, 13-59, 15-51, 15-65, 15-72). The rest need new views or
+designs: random-pointer/flatten lists, stack/queue implementations,
+LRU/LFU caches, Design Twitter, tree construction/serialisation/Morris,
+merge K lists, merge 2 BSTs, accounts merge, ninja & friends (3-D DP),
+trie extras (distinct substrings, max XOR), and Step 18 strings (bracket
+reversals, count-and-say, longest happy prefix, count palindromic
+subsequences).
+
 **Batches 55–59 (new tracers) — three modules, 51 ids, 56 A2Z rows.** All
 grid view via `RUN_MODULES`; engine.js prepends ids to TEXT_GRID. No renderer
 changes.

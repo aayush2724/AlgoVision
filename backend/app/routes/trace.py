@@ -36,7 +36,10 @@ from app.tracers import (
     expr_convert, subsets_ii, combination_sum_ii, combination_sum_iii,
     palindrome_partition, letter_combinations, bs_variants,
     answer_numeric, matrix_search, list_arith, stack_more, array_basics,
+    tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
 )
+# Modules whose run(algo, text, target) validates (ValueError → 400) and traces.
+RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings)
 from app.tracers.common import Graph
 import os
 
@@ -230,6 +233,8 @@ def algorithms():
             *({"id": k, "name": v, "input": "text"}
               for mod in (matrix_search, list_arith)
               for k, v in mod.TITLES.items()),
+            *({"id": k, "name": v, "input": "text"}
+              for mod in RUN_MODULES for k, v in mod.TITLES.items()),
         ]
     }
 
@@ -1294,6 +1299,13 @@ def run_trace(request: Request, req: TraceRequest):
         raise HTTPException(status_code=400, detail=problem)
       return expr_convert.trace(text, req.algorithm)
 
+    for mod in RUN_MODULES:
+      if req.algorithm in mod.TITLES:
+        try:
+          return mod.run(req.algorithm, req.text, req.target)
+        except ValueError as e:
+          raise HTTPException(status_code=400, detail=str(e)) from None
+
     if req.algorithm in answer_numeric.TITLES:
       arr = req.array or []
       problem = answer_numeric.validate(req.algorithm, arr, req.text)
@@ -1918,7 +1930,8 @@ def run_trace(request: Request, req: TraceRequest):
                 "combination_sum_iii", "palindrome_partition",
                 "letter_combinations", *bs_variants.TITLES,
                 *answer_numeric.TITLES, *matrix_search.TITLES,
-                *list_arith.TITLES, *stack_more.TITLES, *array_basics.TITLES])
+                *list_arith.TITLES, *stack_more.TITLES, *array_basics.TITLES,
+                *(k for mod in RUN_MODULES for k in mod.TITLES)])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

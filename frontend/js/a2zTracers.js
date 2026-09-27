@@ -292,4 +292,41 @@ export const A2Z_TRACER = {
   "3-7":   "move_zeros",             // Move Zeros to End
   "3-14":  "longest_subarray_sum_k", // Longest Subarray with Sum K (positives)
   "3-24":  "leaders",                // Leaders in an Array
+
+  // ══ Batches 40–44 (2026-09-27): level-order binary trees (40 traversals,
+  // 41 views, 42 checks) and table DP (43 grid DP, 44 string DP).
+  "13-39":  "iter_preorder",           // Iterative Preorder Traversal
+  "13-40":  "iter_inorder",            // Iterative Inorder Traversal
+  "13-41":  "postorder_two_stacks",    // Post-order using 2 stacks
+  "13-42":  "postorder_one_stack",     // Post-order using 1 stack
+  "13-48":  "zigzag_traversal",        // Zig Zag or Spiral Traversal
+  "13-51":  "right_view",              // Right/Left View
+  "13-49":  "top_view",                // Top View
+  "13-50":  "bottom_view",             // Bottom view
+  "13-18":  "vertical_order",          // Vertical Order Traversal
+  "13-17":  "boundary_traversal",      // Boundary Traversal
+  "13-54":  "max_width",               // Maximum Width of BT
+  "13-45":  "balanced_tree",           // Check for balanced binary tree
+  "13-22":  "symmetric_tree",          // Symmetric Binary Tree
+  "13-14":  "max_path_sum",            // Maximum path sum
+  "13-52":  "root_to_leaf_paths",      // Print root to leaf path
+  "13-55":  "children_sum",            // Children Sum Property
+  "13-56":  "nodes_at_distance_k",     // Nodes at distance K
+  "13-57":  "burn_tree",               // Minimum time to burn the BT
+  "13-58":  "count_complete_nodes",    // Count nodes in a complete BT
+  "16-4":   "frog_jump_k",             // Frog jump with K distances
+  "16-7":   "ninja_training",          // Ninja's training
+  "16-59":  "min_falling_path",        // Minimum Falling Path Sum
+  "16-60":  "triangle_path",           // Triangle
+  "16-15":  "partition_equal_subset",  // Partition equal subset sum
+  "16-17":  "count_subsets_sum_k",     // Count subsets with sum K
+  "16-23":  "unbounded_knapsack",      // Unbounded knapsack
+  "16-66":  "rod_cutting",             // Rod Cutting Problem
+  "16-67":  "print_lcs",               // Print Longest Common Subsequence
+  "16-28":  "longest_palindromic_subseq", // Longest palindromic subsequence
+  "16-68":  "min_insert_palindrome",   // Minimum insertions to make string palindrome
+  "16-69":  "min_ins_del",             // Minimum insertions or deletions A to B
+  "16-31":  "shortest_supersequence",  // Shortest common supersequence
+  "16-32":  "distinct_subsequences",   // Distinct subsequences
+  "16-34":  "wildcard_match",          // Wildcard matching
 };

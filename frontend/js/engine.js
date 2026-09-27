@@ -221,6 +221,11 @@ const LIST_ARITH = ['add_two_numbers', 'add_one_list'];
 const STACK_MORE = ['next_smaller', 'nge_circular', 'remove_k_digits', 'sum_subarray_mins'];
 const ARRAY_BASICS = ['remove_duplicates_sorted', 'rotate_array_k', 'move_zeros', 'leaders', 'longest_subarray_sum_k', 'second_largest'];
 
+// Batches 40–44: level-order binary trees and more table DP.
+const TREE_SHAPE = ['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes'];
+const DP_MORE = ['frog_jump_k', 'ninja_training', 'min_falling_path', 'triangle_path', 'partition_equal_subset', 'count_subsets_sum_k', 'unbounded_knapsack', 'rod_cutting'];
+const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palindrome', 'min_ins_del', 'shortest_supersequence', 'distinct_subsequences', 'wildcard_match'];
+
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   prims_mst: 'graph', kruskals_mst: 'graph',
@@ -251,6 +256,8 @@ const VIEW_FOR = {
   subsets_recursion: 'tree', generate_parentheses: 'tree',
   subsets_ii: 'tree', combination_sum_ii: 'tree', combination_sum_iii: 'tree',
   palindrome_partition: 'tree', letter_combinations: 'tree',
+  iter_preorder: 'tree', iter_inorder: 'tree', postorder_two_stacks: 'tree', postorder_one_stack: 'tree', zigzag_traversal: 'tree', right_view: 'tree', top_view: 'tree', bottom_view: 'tree', vertical_order: 'tree', boundary_traversal: 'tree', max_width: 'tree', balanced_tree: 'tree', symmetric_tree: 'tree', max_path_sum: 'tree', root_to_leaf_paths: 'tree', children_sum: 'tree', nodes_at_distance_k: 'tree', burn_tree: 'tree', count_complete_nodes: 'tree',
+  frog_jump_k: 'grid', ninja_training: 'grid', min_falling_path: 'grid', triangle_path: 'grid', partition_equal_subset: 'grid', count_subsets_sum_k: 'grid', unbounded_knapsack: 'grid', rod_cutting: 'grid', print_lcs: 'grid', longest_palindromic_subseq: 'grid', min_insert_palindrome: 'grid', min_ins_del: 'grid', shortest_supersequence: 'grid', distinct_subsequences: 'grid', wildcard_match: 'grid',
   sqrt_search: 'array', nth_root: 'array', min_bouquets: 'array', next_smaller: 'array', nge_circular: 'array', remove_k_digits: 'array', sum_subarray_mins: 'array', remove_duplicates_sorted: 'array', rotate_array_k: 'array', move_zeros: 'array', leaders: 'array', longest_subarray_sum_k: 'array', second_largest: 'array',
   search_2d_matrix: 'grid', search_2d_matrix_ii: 'grid', row_max_ones: 'grid', add_two_numbers: 'grid', add_one_list: 'grid',
   lower_bound: 'array', upper_bound: 'array', first_last_occurrence: 'array', floor_ceil: 'array', kth_missing: 'array', single_element_sorted: 'array',
@@ -571,6 +578,9 @@ export function mountEngine(view, algo = 'dijkstra') {
       subsets_recursion: 'files', generate_parentheses: 'plates',
       subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
       palindrome_partition: 'dna', letter_combinations: 'files',
+      iter_preorder: 'files', iter_inorder: 'files', postorder_two_stacks: 'files', postorder_one_stack: 'files', zigzag_traversal: 'files', right_view: 'files', top_view: 'files', bottom_view: 'files', vertical_order: 'files', boundary_traversal: 'files', max_width: 'files', balanced_tree: 'files', symmetric_tree: 'files', max_path_sum: 'files', root_to_leaf_paths: 'files', children_sum: 'files', nodes_at_distance_k: 'files', burn_tree: 'files', count_complete_nodes: 'files',
+      frog_jump_k: 'vault', ninja_training: 'vault', min_falling_path: 'vault', triangle_path: 'vault', partition_equal_subset: 'vault', count_subsets_sum_k: 'vault', unbounded_knapsack: 'vault', rod_cutting: 'vault',
+      print_lcs: 'dna', longest_palindromic_subseq: 'dna', min_insert_palindrome: 'dna', min_ins_del: 'dna', shortest_supersequence: 'dna', distinct_subsequences: 'dna', wildcard_match: 'dna',
       sqrt_search: 'vault', nth_root: 'vault', min_bouquets: 'market',
       search_2d_matrix: 'library', search_2d_matrix_ii: 'library', row_max_ones: 'grid_power',
       add_two_numbers: 'train', add_one_list: 'train',
@@ -1083,6 +1093,142 @@ export function mountEngine(view, algo = 'dijkstra') {
     prefix_to_postfix: {
       array: '/-AK-/BL*CD',
       hint: 'A valid prefix expression, scanned right to left. Each operator pushes left + right + operator.',
+    },
+    iter_preorder: {
+      array: '1,2,3,4,5,6,7',
+      hint: 'Level order with null for gaps (up to 15 nodes). Watch the stack: right is pushed before left.',
+    },
+    iter_inorder: {
+      array: '1,2,3,4,5,6,7',
+      hint: 'Level order with null for gaps. Slide left pushing; pop, visit, turn right.',
+    },
+    postorder_two_stacks: {
+      array: '1,2,3,4,5,6,7',
+      hint: 'Level order with null for gaps. Stack 2 collects root-right-left, then reads back reversed.',
+    },
+    postorder_one_stack: {
+      array: '1,2,3,4,5,6,7',
+      hint: 'Level order with null for gaps. Go right only if that subtree isn\'t finished yet.',
+    },
+    zigzag_traversal: {
+      array: '3,9,20,null,null,15,7',
+      hint: 'Level order with null for gaps. Every other level is read right to left.',
+    },
+    right_view: {
+      array: '1,2,3,null,5,null,4',
+      hint: 'Level order with null for gaps. Last node per level = right view; first = left view.',
+    },
+    top_view: {
+      array: '1,2,3,4,5,6,7',
+      hint: 'Level order with null for gaps. First node seen at each horizontal distance.',
+    },
+    bottom_view: {
+      array: '1,2,3,4,5,6,7,null,null,8,9',
+      hint: 'Level order with null for gaps. The last node at each horizontal distance wins.',
+    },
+    vertical_order: {
+      array: '3,9,20,null,null,15,7',
+      hint: 'Level order with null for gaps. Columns by horizontal distance, top to bottom.',
+    },
+    boundary_traversal: {
+      array: '1,2,3,4,5,6,7,null,null,8,9',
+      hint: 'Level order with null for gaps. Root, left edge, leaves, right edge (bottom-up).',
+    },
+    max_width: {
+      array: '1,3,2,5,3,null,9',
+      hint: 'Level order with null for gaps. Slots are numbered as if the tree were complete.',
+    },
+    balanced_tree: {
+      array: '3,9,20,null,null,15,7',
+      hint: 'Level order with null for gaps. Try 1,2,2,3,3,null,null,4,4 for an unbalanced one.',
+    },
+    symmetric_tree: {
+      array: '1,2,2,3,4,4,3',
+      hint: 'Level order with null for gaps. Try 1,2,2,null,3,null,3 for a lopsided one.',
+    },
+    max_path_sum: {
+      array: '-10,9,20,null,null,15,7',
+      hint: 'Level order with null for gaps; negatives welcome. A path may bend at one node.',
+    },
+    root_to_leaf_paths: {
+      array: '1,2,3,null,5',
+      hint: 'Level order with null for gaps. Each leaf closes one path.',
+    },
+    children_sum: {
+      array: '50,7,2,3,5,1,30',
+      hint: 'Level order with null for gaps. Values only ever go up — watch them change.',
+    },
+    nodes_at_distance_k: {
+      array: '3,5,1,6,2,0,8,null,null,7,4 | 5 2',
+      hint: 'The tree, then | target k. The search can move up through parents too.',
+    },
+    burn_tree: {
+      array: '1,2,3,4,null,5,6,null,7 | 2',
+      hint: 'The tree, then | start node. Fire spreads to children and the parent each minute.',
+    },
+    count_complete_nodes: {
+      array: '1,2,3,4,5,6',
+      hint: 'A complete tree in level order. Perfect subtrees are counted without walking them.',
+    },
+    frog_jump_k: {
+      array: '30, 10, 60, 10, 60, 50', target: '2',
+      hint: '2–10 heights and K. Each stone looks back up to K stones for the cheapest jump.',
+    },
+    ninja_training: {
+      array: '10,40,70 / 20,50,80 / 30,60,90',
+      hint: 'One row per day, three task scores each (rows split by /). No task twice in a row.',
+    },
+    min_falling_path: {
+      array: '2,1,3 / 6,5,4 / 7,8,9',
+      hint: 'A matrix up to 6×6, rows split by /. Each cell reads the three cells above.',
+    },
+    triangle_path: {
+      array: '2 / 3,4 / 6,5,7 / 4,1,8,3',
+      hint: 'Row i has i+1 numbers, rows split by /. Move to the same or next index.',
+    },
+    partition_equal_subset: {
+      array: '1, 5, 11, 5',
+      hint: 'Up to 6 numbers (1–12, total ≤ 24). Equal halves ⇔ some subset reaches total/2.',
+    },
+    count_subsets_sum_k: {
+      array: '1, 2, 2, 3', target: '3',
+      hint: 'Up to 6 numbers (1–12) and K. Each cell adds ways without and with the new value.',
+    },
+    unbounded_knapsack: {
+      array: '2:5, 4:11, 6:13', target: '10',
+      hint: 'weight:value items (up to 5) and a capacity up to 12. Taking an item reads the same row.',
+    },
+    rod_cutting: {
+      array: '1, 5, 8, 9, 10, 17, 17, 20',
+      hint: 'The price of a piece of length 1, 2, 3, … (up to 8). The rod length is the number of prices.',
+    },
+    print_lcs: {
+      array: 'abcde, bdgek',
+      hint: 'Two words (up to 8 chars). Fill the table, then trace the answer back from the corner.',
+    },
+    longest_palindromic_subseq: {
+      array: 'bbbab',
+      hint: 'One word (up to 8 chars) — compared with its own reverse.',
+    },
+    min_insert_palindrome: {
+      array: 'abcaa',
+      hint: 'One word (up to 8 chars). Insertions = length − longest palindromic subsequence.',
+    },
+    min_ins_del: {
+      array: 'abcd, anc',
+      hint: 'Two words: A then B (up to 8 chars). Keep the LCS, delete/insert the rest.',
+    },
+    shortest_supersequence: {
+      array: 'brute, groot',
+      hint: 'Two words (up to 8 chars). The LCS is written once.',
+    },
+    distinct_subsequences: {
+      array: 'babgbag, bag',
+      hint: 'Text, then target (up to 8 chars each). Count the ways the target appears.',
+    },
+    wildcard_match: {
+      array: 'abdefcd, ab*cd',
+      hint: 'Text, then pattern with ? (one char) and * (any run).',
     },
     sqrt_search: {
       array: '28',
@@ -1990,6 +2136,18 @@ export function mountEngine(view, algo = 'dijkstra') {
       }
       if (!/^[2-9]{1,2}$/.test(raw)) return { error: 'One or two digits from 2–9.' };
       return { text: raw };
+    }
+
+    if (TREE_SHAPE.includes(algoId) || DP_MORE.includes(algoId)
+        || DP_STRINGS.includes(algoId)) {
+      const raw = (arrayInput?.value || '').trim();
+      if (!raw) return { error: 'Type an input first — see the hint below.' };
+      if (raw.length > 120) return { error: 'That input is too long.' };
+      const needsT = ['frog_jump_k', 'count_subsets_sum_k', 'unbounded_knapsack'].includes(algoId);
+      if (!needsT) return { text: raw };   // the server validates and explains
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(t)) return { error: 'Enter a whole number.' };
+      return { text: raw, target: t };
     }
 
     if (MATRIX_SEARCH.includes(algoId) || LIST_ARITH.includes(algoId)) {
@@ -4283,6 +4441,11 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
+        } else if (TREE_SHAPE.includes(algoId)) {
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { text: parsed.text });
         } else if (algoId === 'generate_parentheses' || algoId === 'binary_strings') {
           renderTreeView();
           res = isOffline
@@ -5025,7 +5188,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         'combination_sum', 'combination_sum_ii', 'lower_bound', 'upper_bound',
         'first_last_occurrence', 'floor_ceil', 'kth_missing', 'min_bouquets',
         'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
-        'rotate_array_k', 'longest_subarray_sum_k'].includes(algoId)
+        'rotate_array_k', 'longest_subarray_sum_k', 'frog_jump_k',
+        'count_subsets_sum_k', 'unbounded_knapsack'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -5059,7 +5223,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'kth_missing') targetLabel.textContent = 'K =';
         if (targetLabel && algoId === 'min_bouquets') targetLabel.textContent = 'M, K =';
         if (targetLabel && ['search_2d_matrix', 'search_2d_matrix_ii'].includes(algoId)) targetLabel.textContent = 'X =';
-        if (targetLabel && ['remove_k_digits', 'rotate_array_k', 'longest_subarray_sum_k'].includes(algoId)) targetLabel.textContent = 'K =';
+        if (targetLabel && ['remove_k_digits', 'rotate_array_k', 'longest_subarray_sum_k',
+          'frog_jump_k', 'count_subsets_sum_k'].includes(algoId)) targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'unbounded_knapsack') targetLabel.textContent = 'CAP =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

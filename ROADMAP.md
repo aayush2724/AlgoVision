@@ -158,11 +158,39 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Search second batch (4,9), Linked List DLL + Tries (6,17), list
   stragglers (6), binary search on the answer (4), recursion trees (7),
   expression conversions (9), loop-style recursion trees (7), binary-search
-  boundary variants (4), batches 35–39 (see below) → [next] what is left
+  boundary variants (4), batches 35–39, batches 40–44 (trees + DP, see
+  below) → [next] Graphs (Step 15, 37 open, mostly existing graph/grid views),
+  the rest of DP (stocks II–IV/cooldown/fee, LIS variants, MCM-style interval
+  DP), BST (Step 14) and Heaps (Step 11); after that, what is left
   needs genuinely new views: DLL pair-sum / intersection of Y lists (two
   pointer lists), clone with random pointers, flattening, LRU/LFU caches,
   min stack / queue-via-stacks (operation-sequence input), matrix median /
   2-D peak, and the Step 3 matrix problems (set zeros, rotate, spiral).
+
+**Batches 40–44 (new tracers) — five modules, 34 ids, 34 A2Z rows.**
+New shared `bt_common.py`: binary trees from LeetCode level-order text
+("1,2,3,null,5"), so shapes a BST can't express (symmetric, lopsided) work;
+same inorder-rank layout as every tree view. Modules expose
+`run(algo, text, target)` (ValueError → 400) and the route dispatches them
+generically via `RUN_MODULES`.
+  - 40 `tree_traverse_more.py`: iterative pre/inorder, postorder with two
+    stacks / one stack, zigzag (13-39..42, 13-48).
+  - 41 `tree_views.py`: right/left, top, bottom views, vertical order,
+    boundary, max width (13-51, 13-49, 13-50, 13-18, 13-17, 13-54).
+  - 42 `tree_checks.py`: balanced, symmetric, max path sum, root-to-leaf
+    paths, children-sum (increment-only fix-up), nodes at distance k and
+    burn time (parent map + outward BFS; "tree | target k"), count nodes in
+    a complete tree (13-45, 13-22, 13-14, 13-52, 13-55..58).
+  - 43 `dp_more.py`: frog jump K, ninja training, min falling path,
+    triangle, partition equal subset, count subsets with sum K, unbounded
+    knapsack, rod cutting (16-4, 16-7, 16-59, 16-60, 16-15, 16-17, 16-23,
+    16-66).
+  - 44 `dp_strings.py`: print LCS, longest palindromic subsequence, min
+    insertions for a palindrome, min insert/delete A→B, shortest common
+    supersequence, distinct subsequences, wildcard matching (16-67, 16-28,
+    16-68, 16-69, 16-31, 16-32, 16-34).
+Tests: trees vs independent recursive references on random shapes; DP vs
+brute force (itertools enumeration, regex for wildcards). Full suite 1519.
 
 **Batches 35–39 (new tracers) — five modules, 20 ids, 19 A2Z rows.**
   - 35 `answer_numeric.py`: `sqrt_search` (4-40), `nth_root` (4-41),

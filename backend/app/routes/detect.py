@@ -172,6 +172,40 @@ SIGNATURES = {
     "leaders": ["leaders", "leaders in an array", "array leaders"],
     "longest_subarray_sum_k": ["longest_subarray_sum_k", "longest subarray with sum k", "longest subarray sum"],
     "second_largest": ["second_largest", "second largest element", "second largest"],
+    "iter_preorder": ["iter_preorder", "iterative preorder"],
+    "iter_inorder": ["iter_inorder", "iterative inorder"],
+    "postorder_two_stacks": ["postorder_two_stacks", "postorder two stacks", "postorder using 2 stack"],
+    "postorder_one_stack": ["postorder_one_stack", "postorder one stack", "postorder using 1 stack"],
+    "zigzag_traversal": ["zigzag_traversal", "zigzag", "spiral traversal"],
+    "right_view": ["right_view", "right view", "left view"],
+    "top_view": ["top_view", "top view"],
+    "bottom_view": ["bottom_view", "bottom view"],
+    "vertical_order": ["vertical_order", "vertical order"],
+    "boundary_traversal": ["boundary_traversal", "boundary traversal"],
+    "max_width": ["max_width", "maximum width", "width of binary tree"],
+    "balanced_tree": ["balanced_tree", "balanced binary tree", "height balanced"],
+    "symmetric_tree": ["symmetric_tree", "symmetric tree", "mirror tree"],
+    "max_path_sum": ["max_path_sum", "maximum path sum", "max path sum"],
+    "root_to_leaf_paths": ["root_to_leaf_paths", "root to leaf path"],
+    "children_sum": ["children_sum", "children sum property"],
+    "nodes_at_distance_k": ["nodes_at_distance_k", "distance k", "nodes at distance"],
+    "burn_tree": ["burn_tree", "burn the binary tree", "burn tree"],
+    "count_complete_nodes": ["count_complete_nodes", "count nodes complete", "complete binary tree nodes"],
+    "frog_jump_k": ["frog_jump_k", "frog jump with k", "frog jump k"],
+    "ninja_training": ["ninja_training", "ninja training", "ninja's training"],
+    "min_falling_path": ["min_falling_path", "minimum falling path", "falling path sum"],
+    "triangle_path": ["triangle_path", "triangle", "triangle path sum"],
+    "partition_equal_subset": ["partition_equal_subset", "partition equal subset", "equal sum partition"],
+    "count_subsets_sum_k": ["count_subsets_sum_k", "count subsets with sum", "number of subsets with sum"],
+    "unbounded_knapsack": ["unbounded_knapsack", "unbounded knapsack"],
+    "rod_cutting": ["rod_cutting", "rod cutting", "cut the rod"],
+    "print_lcs": ["print_lcs", "print lcs", "print longest common subsequence"],
+    "longest_palindromic_subseq": ["longest_palindromic_subseq", "longest palindromic subsequence"],
+    "min_insert_palindrome": ["min_insert_palindrome", "minimum insertions palindrome", "min insertions to make palindrome"],
+    "min_ins_del": ["min_ins_del", "minimum insertions deletions", "convert string a to b"],
+    "shortest_supersequence": ["shortest_supersequence", "shortest common supersequence"],
+    "distinct_subsequences": ["distinct_subsequences", "distinct subsequences"],
+    "wildcard_match": ["wildcard_match", "wildcard matching", "wildcard pattern"],
 }
 
 REALWORLD_META = {
@@ -1856,6 +1890,278 @@ REALWORLD_META = {
         "hook": "Keep a champion and a runner-up as you scan — no sorting needed.",
         "metaphors": {"node": "item", "edge": "—", "weight": "value",
                       "visit": "Checking", "start": "The input",
+                      "done": "The answer."}
+    },
+    "iter_preorder": {
+        "scene": "files",
+        "title": "Iterative Preorder Traversal",
+        "hook": "Level order with null for gaps (up to 15 nodes). Watch the stack: right is pushed before left.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "iter_inorder": {
+        "scene": "files",
+        "title": "Iterative Inorder Traversal",
+        "hook": "Level order with null for gaps. Slide left pushing; pop, visit, turn right.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "postorder_two_stacks": {
+        "scene": "files",
+        "title": "Postorder With Two Stacks",
+        "hook": "Level order with null for gaps. Stack 2 collects root-right-left, then reads back reversed.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "postorder_one_stack": {
+        "scene": "files",
+        "title": "Postorder With One Stack",
+        "hook": "Level order with null for gaps. Go right only if that subtree isn't finished yet.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "zigzag_traversal": {
+        "scene": "files",
+        "title": "Zigzag Level Order Traversal",
+        "hook": "Level order with null for gaps. Every other level is read right to left.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "right_view": {
+        "scene": "files",
+        "title": "Right / Left View of a Binary Tree",
+        "hook": "Level order with null for gaps. Last node per level = right view; first = left view.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "top_view": {
+        "scene": "files",
+        "title": "Top View of a Binary Tree",
+        "hook": "Level order with null for gaps. First node seen at each horizontal distance.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "bottom_view": {
+        "scene": "files",
+        "title": "Bottom View of a Binary Tree",
+        "hook": "Level order with null for gaps. The last node at each horizontal distance wins.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "vertical_order": {
+        "scene": "files",
+        "title": "Vertical Order Traversal",
+        "hook": "Level order with null for gaps. Columns by horizontal distance, top to bottom.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "boundary_traversal": {
+        "scene": "files",
+        "title": "Boundary Traversal",
+        "hook": "Level order with null for gaps. Root, left edge, leaves, right edge (bottom-up).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "max_width": {
+        "scene": "files",
+        "title": "Maximum Width of a Binary Tree",
+        "hook": "Level order with null for gaps. Slots are numbered as if the tree were complete.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "balanced_tree": {
+        "scene": "files",
+        "title": "Check for a Balanced Binary Tree",
+        "hook": "Level order with null for gaps. Try 1,2,2,3,3,null,null,4,4 for an unbalanced one.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "symmetric_tree": {
+        "scene": "files",
+        "title": "Symmetric Binary Tree",
+        "hook": "Level order with null for gaps. Try 1,2,2,null,3,null,3 for a lopsided one.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "max_path_sum": {
+        "scene": "files",
+        "title": "Maximum Path Sum",
+        "hook": "Level order with null for gaps; negatives welcome. A path may bend at one node.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "root_to_leaf_paths": {
+        "scene": "files",
+        "title": "Root-to-Leaf Paths",
+        "hook": "Level order with null for gaps. Each leaf closes one path.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "children_sum": {
+        "scene": "files",
+        "title": "Children Sum Property",
+        "hook": "Level order with null for gaps. Values only ever go up — watch them change.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "nodes_at_distance_k": {
+        "scene": "files",
+        "title": "All Nodes at Distance K",
+        "hook": "The tree, then | target k. The search can move up through parents too.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "burn_tree": {
+        "scene": "files",
+        "title": "Minimum Time to Burn a Binary Tree",
+        "hook": "The tree, then | start node. Fire spreads to children and the parent each minute.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "count_complete_nodes": {
+        "scene": "files",
+        "title": "Count Nodes in a Complete Binary Tree",
+        "hook": "A complete tree in level order. Perfect subtrees are counted without walking them.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "frog_jump_k": {
+        "scene": "vault",
+        "title": "Frog Jump With K Distances",
+        "hook": "2–10 heights and K. Each stone looks back up to K stones for the cheapest jump.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "ninja_training": {
+        "scene": "vault",
+        "title": "Ninja's Training",
+        "hook": "One row per day, three task scores each (rows split by /). No task twice in a row.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "min_falling_path": {
+        "scene": "vault",
+        "title": "Minimum Falling Path Sum",
+        "hook": "A matrix up to 6×6, rows split by /. Each cell reads the three cells above.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "triangle_path": {
+        "scene": "vault",
+        "title": "Triangle (Minimum Path Sum)",
+        "hook": "Row i has i+1 numbers, rows split by /. Move to the same or next index.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "partition_equal_subset": {
+        "scene": "vault",
+        "title": "Partition Equal Subset Sum",
+        "hook": "Up to 6 numbers (1–12, total ≤ 24). Equal halves ⇔ some subset reaches total/2.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "count_subsets_sum_k": {
+        "scene": "vault",
+        "title": "Count Subsets With Sum K",
+        "hook": "Up to 6 numbers (1–12) and K. Each cell adds ways without and with the new value.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "unbounded_knapsack": {
+        "scene": "vault",
+        "title": "Unbounded Knapsack",
+        "hook": "weight:value items (up to 5) and a capacity up to 12. Taking an item reads the same row.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "rod_cutting": {
+        "scene": "vault",
+        "title": "Rod Cutting",
+        "hook": "The price of a piece of length 1, 2, 3, … (up to 8). The rod length is the number of prices.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "print_lcs": {
+        "scene": "dna",
+        "title": "Print the Longest Common Subsequence",
+        "hook": "Two words (up to 8 chars). Fill the table, then trace the answer back from the corner.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "longest_palindromic_subseq": {
+        "scene": "dna",
+        "title": "Longest Palindromic Subsequence",
+        "hook": "One word (up to 8 chars) — compared with its own reverse.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "min_insert_palindrome": {
+        "scene": "dna",
+        "title": "Minimum Insertions to Make a Palindrome",
+        "hook": "One word (up to 8 chars). Insertions = length − longest palindromic subsequence.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "min_ins_del": {
+        "scene": "dna",
+        "title": "Minimum Insertions/Deletions (A → B)",
+        "hook": "Two words: A then B (up to 8 chars). Keep the LCS, delete/insert the rest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "shortest_supersequence": {
+        "scene": "dna",
+        "title": "Shortest Common Supersequence",
+        "hook": "Two words (up to 8 chars). The LCS is written once.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "distinct_subsequences": {
+        "scene": "dna",
+        "title": "Distinct Subsequences",
+        "hook": "Text, then target (up to 8 chars each). Count the ways the target appears.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "wildcard_match": {
+        "scene": "dna",
+        "title": "Wildcard Matching",
+        "hook": "Text, then pattern with ? (one char) and * (any run).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "value",
+                      "visit": "Visiting", "start": "The input",
                       "done": "The answer."}
     }
 }

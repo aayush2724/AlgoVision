@@ -30,6 +30,9 @@ from app.tracers import (
     stock_span, largest_rectangle, rat_in_maze, word_search,
     trapping_rainwater, asteroid_collision, find_min_rotated, find_peak,
     dll_reverse, dll_delete_key, remove_nth_from_end, longest_complete_word,
+    ll_palindrome, odd_even_list, rotate_list, delete_middle,
+    koko_bananas, min_max_partition, aggressive_cows,
+    subsets_recursion, generate_parentheses, binary_strings, combination_sum,
 )
 from app.tracers.common import Graph
 import os
@@ -194,6 +197,17 @@ def algorithms():
             {"id": "dll_delete_key", "name": "Delete Key from Doubly Linked List", "input": "array"},
             {"id": "remove_nth_from_end", "name": "Remove Nth Node From End", "input": "array"},
             {"id": "longest_complete_word", "name": "Longest Word With All Prefixes (Trie)", "input": "text"},
+            {"id": "ll_palindrome", "name": "Linked List Palindrome Check", "input": "array"},
+            {"id": "odd_even_list", "name": "Segregate Odd & Even Nodes",   "input": "array"},
+            {"id": "rotate_list",   "name": "Rotate a Linked List",         "input": "array"},
+            {"id": "delete_middle", "name": "Delete the Middle Node",       "input": "array"},
+            {"id": "koko_bananas",  "name": "Koko Eating Bananas (Search the Answer)", "input": "array"},
+            {"id": "min_max_partition", "name": "Book Allocation / Split Array (Min Max Sum)", "input": "array"},
+            {"id": "aggressive_cows", "name": "Aggressive Cows (Max Min Gap)", "input": "array"},
+            {"id": "subsets_recursion", "name": "Subsets (Recursion Tree)", "input": "array"},
+            {"id": "generate_parentheses", "name": "Generate Parentheses",   "input": "number"},
+            {"id": "binary_strings", "name": "Binary Strings Without Consecutive 1s", "input": "number"},
+            {"id": "combination_sum", "name": "Combination Sum (Recursion Tree)", "input": "array"},
         ]
     }
 
@@ -1107,6 +1121,110 @@ def run_trace(request: Request, req: TraceRequest):
                  f"characters per word.")
       return longest_complete_word.trace(words)
 
+    if req.algorithm in ("ll_palindrome", "odd_even_list", "delete_middle"):
+      mod = {"ll_palindrome": ll_palindrome, "odd_even_list": odd_even_list,
+             "delete_middle": delete_middle}[req.algorithm]
+      arr = _validated_array(req.array, mod.MAX_LIST_LEN, req.algorithm)
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail=f"{req.algorithm} needs a non-empty list.")
+      return mod.trace(arr)
+
+    if req.algorithm == "rotate_list":
+      arr = _validated_array(req.array, rotate_list.MAX_LIST_LEN, "rotate_list")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="rotate_list needs a non-empty list.")
+      t = req.target
+      if t is None or t != int(t) or not (0 <= int(t) <= rotate_list.MAX_K):
+        raise HTTPException(status_code=400,
+          detail=f"K must be a whole number from 0 to {rotate_list.MAX_K}.")
+      return rotate_list.trace(arr, int(t))
+
+    if req.algorithm in ("koko_bananas", "min_max_partition", "aggressive_cows"):
+      mod = {"koko_bananas": koko_bananas, "min_max_partition": min_max_partition,
+             "aggressive_cows": aggressive_cows}[req.algorithm]
+      arr = _validated_array(req.array, mod.MAX_LEN, req.algorithm)
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail=f"{req.algorithm} needs a non-empty array.")
+      if any(v != int(v) for v in arr):
+        raise HTTPException(status_code=400, detail="Whole numbers only.")
+      t = req.target
+      if t is None or t != int(t):
+        raise HTTPException(status_code=400,
+          detail=f"{req.algorithm} requires a whole-number 'target'.")
+      t, n = int(t), len(arr)
+      if req.algorithm == "koko_bananas":
+        if any(not (1 <= v <= koko_bananas.MAX_PILE) for v in arr):
+          raise HTTPException(status_code=400,
+            detail=f"Piles must be 1-{koko_bananas.MAX_PILE} bananas.")
+        if not (n <= t <= 1_000_000):
+          raise HTTPException(status_code=400,
+            detail=f"H must be at least {n} hours (one per pile).")
+      elif req.algorithm == "min_max_partition":
+        if any(not (1 <= v <= min_max_partition.MAX_VALUE) for v in arr):
+          raise HTTPException(status_code=400,
+            detail=f"Values must be 1-{min_max_partition.MAX_VALUE}.")
+        if not (1 <= t <= n):
+          raise HTTPException(status_code=400, detail=f"K must be 1-{n}.")
+      else:
+        if any(not (0 <= v <= aggressive_cows.MAX_POS) for v in arr):
+          raise HTTPException(status_code=400,
+            detail=f"Stall positions must be 0-{aggressive_cows.MAX_POS}.")
+        if len(set(arr)) != n:
+          raise HTTPException(status_code=400,
+            detail="Stall positions must be distinct.")
+        if not (2 <= t <= n):
+          raise HTTPException(status_code=400, detail=f"Cows must be 2-{n}.")
+      return mod.trace(arr, t)
+
+    if req.algorithm == "subsets_recursion":
+      arr = _validated_array(req.array, subsets_recursion.MAX_LEN,
+                             "subsets_recursion")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="subsets_recursion needs at least one element.")
+      if any(v != int(v) or not (0 <= v <= 9) for v in arr):
+        raise HTTPException(status_code=400, detail="Digits 0-9 only.")
+      k = req.target
+      if k is not None and (k != int(k) or not (0 <= k <= 36)):
+        raise HTTPException(status_code=400,
+          detail="K must be a whole number 0-36 (or omitted).")
+      return subsets_recursion.trace(arr, None if k is None else int(k))
+
+    if req.algorithm in ("generate_parentheses", "binary_strings"):
+      mod = generate_parentheses if req.algorithm == "generate_parentheses" \
+        else binary_strings
+      t = req.target
+      if t is None or t != int(t) or not (1 <= int(t) <= mod.MAX_N):
+        raise HTTPException(status_code=400,
+          detail=f"{req.algorithm} needs 'target' = n, a whole number "
+                 f"1-{mod.MAX_N}.")
+      return mod.trace(int(t))
+
+    if req.algorithm == "combination_sum":
+      arr = _validated_array(req.array, combination_sum.MAX_CANDIDATES,
+                             "combination_sum")
+      if not arr:
+        raise HTTPException(status_code=400,
+          detail="combination_sum needs at least one candidate.")
+      if any(v != int(v) or not (1 <= v <= 9) for v in arr) or \
+          len(set(arr)) != len(arr):
+        raise HTTPException(status_code=400,
+          detail="Candidates must be distinct digits 1-9.")
+      t = req.target
+      if t is None or t != int(t) or not (1 <= int(t) <= combination_sum.MAX_TARGET):
+        raise HTTPException(status_code=400,
+          detail=f"Target must be 1-{combination_sum.MAX_TARGET}.")
+      cands = sorted(int(v) for v in arr)
+      if combination_sum.tree_size(cands, int(t)) > combination_sum.MAX_NODES:
+        raise HTTPException(status_code=400,
+          detail=f"That recursion tree has more than "
+                 f"{combination_sum.MAX_NODES} calls — too big to draw. Use a "
+                 f"smaller target or bigger candidates.")
+      return combination_sum.trace(cands, int(t))
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1670,7 +1788,10 @@ def run_trace(request: Request, req: TraceRequest):
                 "trapping_rainwater", "asteroid_collision",
                 "find_min_rotated", "find_peak", "dll_reverse",
                 "dll_delete_key", "remove_nth_from_end",
-                "longest_complete_word"])
+                "longest_complete_word", "ll_palindrome", "odd_even_list",
+                "rotate_list", "delete_middle", "koko_bananas",
+                "min_max_partition", "aggressive_cows", "subsets_recursion",
+                "generate_parentheses", "binary_strings", "combination_sum"])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

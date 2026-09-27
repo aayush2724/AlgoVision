@@ -155,12 +155,48 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Progress order (user-approved, batch-by-batch): [done] Heaps+Sliding Window,
   Bit Manipulation, Binary Trees (13), DP remainder (16), Arrays+Binary Search
   first batch (3,4), Recursion/Stack first batch (7,9), Stack + Binary
-  Search second batch (4,9), Linked List DLL + Tries (6,17) → [next] the
-  view-bound leftovers (recursion tree for subsets/combination sum, token
-  stream for infix/postfix, "binary search on the answer" family), plus the
-  plain-view list stragglers (palindrome LL, odd/even segregate, rotate LL,
-  add two numbers).
+  Search second batch (4,9), Linked List DLL + Tries (6,17), list
+  stragglers (6), binary search on the answer (4), recursion trees (7) →
+  [next] token stream for infix/postfix (9), recursion-tree follow-ons
+  (Subsets II, Combination Sum II/III, palindrome partitioning), minimum
+  bouquets / kth missing (4), add-two-numbers (needs a two-list view).
   Floyd-Warshall etc. blocked until the graph-model change.
+
+**Batch 31 (new tracers) — Recursion trees (Step 7).**
+New shared helper `tracers/recursion_tree.py` (RecTree): tracers record each
+call as a node of a binary take/skip tree plus an event per visit; the whole
+tree is laid out once, then revealed call by call in DFS order so nodes never
+jump. Rendered by the existing `tree` view (`current` orange, `marked` green
+answer leaves). Renderer tweak: labels longer than 3 chars draw as a pill
+sized to the text instead of an r=15 circle (tries/BSTs unchanged).
+  - `subsets_recursion` (7-28, 7-31, and with optional K: 7-29, 7-30) —
+    take left / skip right; ≤ 4 digits so 16 leaves at most.
+  - `generate_parentheses` (7-7) — only legal prefixes are ever built; n ≤ 3.
+  - `binary_strings` (7-27) — no "11"; leaf counts are Fibonacci; n ≤ 4.
+  - `combination_sum` (7-11) — take-again left / move-on right; labels are
+    "picked→candidate" (22→3), ✗ for dead ends; inputs whose tree exceeds
+    45 calls are rejected up front via `tree_size`.
+Tests: itertools references + a well-formedness check on every step's tree.
+
+**Batch 30 (new tracers) — Binary search on the answer (Step 4).**
+Array view gained an OPTIONAL `answer` field → a number line above the cells
+(full range, lo..hi highlighted, "guess" marker, green "best"). The cells
+below show the feasibility check for the current guess.
+  - `koko_bananas` (4-16; 4-18 smallest divisor is the identical ceil-sum).
+  - `min_max_partition` (4-22 book allocation, 4-24 painter's, 4-42 ship in
+    D days, 4-43 split array — all "≤ k contiguous groups, minimise the max").
+  - `aggressive_cows` (4-21) — maximise the minimum gap; stalls sorted for you.
+Tests vs brute force over every candidate answer / every partition / every
+cow placement.
+
+**Batch 29 (new tracers) — Linked-list stragglers (Step 6).**
+  - `ll_palindrome` (6-43) — middle, reverse back half, compare, restore
+    (test asserts the arrows end exactly as given).
+  - `odd_even_list` (6-44), `rotate_list` (6-56, K input, ring then cut),
+    `delete_middle` (6-46, fast starts two ahead).
+  - 6-41 (loop start) linked to the existing floyd_cycle, which already runs
+    Floyd's phase two.
+Full suite after batches 29–31: 1467 passing. A2Z now 130 rows linked.
 
 **Batch 28 (new tracers) — Linked List DLL + Tries (Steps 6, 17).**
 The list renderer gained two OPTIONAL step fields (absent = old behaviour,

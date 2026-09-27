@@ -232,6 +232,11 @@ const VIEW_FOR = {
   find_min_rotated: 'array', find_peak: 'array',
   dll_reverse: 'list', dll_delete_key: 'list', remove_nth_from_end: 'list',
   longest_complete_word: 'tree',
+  ll_palindrome: 'list', odd_even_list: 'list', rotate_list: 'list',
+  delete_middle: 'list',
+  koko_bananas: 'array', min_max_partition: 'array', aggressive_cows: 'array',
+  subsets_recursion: 'tree', generate_parentheses: 'tree',
+  binary_strings: 'tree', combination_sum: 'tree',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
   hash_table: 'grid', bst_delete: 'tree', heap_extract: 'tree',
@@ -540,6 +545,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       find_min_rotated: 'library', find_peak: 'stocks',
       dll_reverse: 'train', dll_delete_key: 'train',
       remove_nth_from_end: 'train', longest_complete_word: 'library',
+      ll_palindrome: 'train', odd_even_list: 'train', rotate_list: 'train',
+      delete_middle: 'train',
+      koko_bananas: 'market', min_max_partition: 'scheduler',
+      aggressive_cows: 'grid_power',
+      subsets_recursion: 'files', generate_parentheses: 'plates',
+      binary_strings: 'files', combination_sum: 'vault',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
       prims_mst: 'grid_power', kruskals_mst: 'grid_power',
@@ -790,6 +801,63 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
       }
     }
+    renderAnswerLine(s.answer);
+  }
+
+  // "Binary search on the answer" (Koko, book allocation, aggressive cows):
+  // the search runs over candidate answers, not array positions, so draw that
+  // range as a number line above the cells. Optional — absent, nothing drawn.
+  function renderAnswerLine(a) {
+    svg.querySelector('#answer-line')?.remove();
+    if (!a || a.max === undefined) return;
+    const g = makeSVG('g');
+    g.setAttribute('id', 'answer-line');
+    const X0 = 110, X1 = 690, Y = 62;
+    const span = Math.max(a.max - a.min, 1);
+    const xOf = (v) => X0 + (Math.min(Math.max(v, a.min), a.max) - a.min) / span * (X1 - X0);
+    const line = (x1, x2, stroke, width) => {
+      const l = makeSVG('line');
+      l.setAttribute('x1', x1); l.setAttribute('x2', x2);
+      l.setAttribute('y1', Y); l.setAttribute('y2', Y);
+      l.setAttribute('stroke', stroke); l.setAttribute('stroke-width', width);
+      l.setAttribute('stroke-linecap', 'round');
+      g.appendChild(l);
+    };
+    const text = (x, y, str, fill, size = '8', anchor = 'middle') => {
+      const t = makeSVG('text');
+      t.setAttribute('x', x); t.setAttribute('y', y);
+      t.setAttribute('text-anchor', anchor);
+      t.setAttribute('fill', fill);
+      t.setAttribute('font-family', 'var(--font-ui)');
+      t.setAttribute('font-size', size);
+      t.textContent = str;
+      g.appendChild(t);
+    };
+    line(X0, X1, 'var(--cDim)', 1);
+    text(X0 - 8, Y + 3, String(a.min), 'var(--cDim)', '8', 'end');
+    text(X1 + 8, Y + 3, String(a.max), 'var(--cDim)', '8', 'start');
+    text(X0, Y - 22, a.label || 'ANSWER', 'var(--cDim)', '7', 'start');
+    if (a.lo !== null && a.hi !== null && a.lo <= a.hi) {
+      line(xOf(a.lo), xOf(a.hi), 'var(--c)', 4);
+      text(xOf(a.lo), Y + 16, `lo ${a.lo}`, 'var(--c)', '7');
+      if (a.hi !== a.lo) text(xOf(a.hi), Y + 16, `hi ${a.hi}`, 'var(--c)', '7');
+    }
+    if (a.best !== null && a.best !== undefined) {
+      const c = makeSVG('circle');
+      c.setAttribute('cx', xOf(a.best)); c.setAttribute('cy', Y);
+      c.setAttribute('r', 4); c.setAttribute('fill', '#4ade80');
+      g.appendChild(c);
+      text(xOf(a.best), Y + 26, `best ${a.best}`, '#4ade80', '7');
+    }
+    if (a.mid !== null && a.mid !== undefined) {
+      const x = xOf(a.mid);
+      const tri = makeSVG('polygon');
+      tri.setAttribute('points', `${x},${Y - 3} ${x - 5},${Y - 11} ${x + 5},${Y - 11}`);
+      tri.setAttribute('fill', 'var(--cBright)');
+      g.appendChild(tri);
+      text(x, Y - 14, `guess ${a.mid}`, 'var(--cBright)', '8');
+    }
+    svg.appendChild(g);
   }
 
   const ARRAY_DEFAULTS = {
@@ -952,6 +1020,50 @@ export function mountEngine(view, algo = 'dijkstra') {
     remove_nth_from_end: {
       array: '1, 2, 3, 4, 5', target: '2',
       hint: 'Up to 10 nodes and N (1 to the length). Fast gets an N-node head start; then both move together.',
+    },
+    subsets_recursion: {
+      array: '1, 2, 3', target: '',
+      hint: 'Up to 4 digits (0–9). Left = take, right = skip; every leaf is a subset. Add K to highlight only the leaves that sum to K.',
+    },
+    generate_parentheses: {
+      array: '', target: '3',
+      hint: 'n = 1–3 pairs. Branches that would break the rules are never built — every leaf is balanced.',
+    },
+    binary_strings: {
+      array: '', target: '4',
+      hint: 'n = 1–4 bits. A 1 can never follow a 1, so that branch is pruned. Count the leaves — Fibonacci.',
+    },
+    combination_sum: {
+      array: '2, 3, 6, 7', target: '7',
+      hint: 'Up to 4 distinct digits (1–9) and a target up to 12. Left = take again, right = move on. The tree must stay under 45 calls.',
+    },
+    koko_bananas: {
+      array: '3, 6, 7, 11', target: '8',
+      hint: 'Up to 8 piles (1–1000) and the hours H (at least one per pile). The line above searches speeds, not positions.',
+    },
+    min_max_partition: {
+      array: '12, 34, 67, 90', target: '2',
+      hint: 'Up to 10 values (1–500) and K groups. Same problem as book allocation, painter\'s partition and ship-in-D-days.',
+    },
+    aggressive_cows: {
+      array: '0, 3, 4, 7, 10, 9', target: '4',
+      hint: 'Up to 10 distinct stall positions (sorted for you) and the number of cows. The line above searches the gap.',
+    },
+    ll_palindrome: {
+      array: '1, 2, 3, 2, 1',
+      hint: 'Up to 10 nodes. Find the middle, reverse the back half, compare, then put it back. Try 1, 2, 2, 3 too.',
+    },
+    odd_even_list: {
+      array: '1, 2, 3, 4, 5, 6',
+      hint: 'Up to 10 nodes. Positions 1, 3, 5… then 2, 4, 6… — only the arrows change.',
+    },
+    rotate_list: {
+      array: '1, 2, 3, 4, 5', target: '2',
+      hint: 'Up to 10 nodes, K from 0 to 100. The last K nodes move to the front; K larger than the length wraps.',
+    },
+    delete_middle: {
+      array: '1, 3, 4, 7, 1, 2, 6',
+      hint: 'Up to 10 nodes. Fast starts two ahead, so slow stops just before the middle and can unlink it.',
     },
     longest_complete_word: {
       array: 'N, NI, NIN, NINJ, NINJA, NINGA',
@@ -1185,6 +1297,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
   // Algorithms whose only input is a single number, whatever their view.
   const NUMBER_ONLY = { sieve: [10, 50, 'N ='], n_queens: [4, 6, 'BOARD ='],
+    generate_parentheses: [1, 3, 'PAIRS ='], binary_strings: [1, 4, 'BITS ='],
     prime_factorisation: [2, 9999, 'N ='] };
 
   function parseArrayInput() {
@@ -1729,7 +1842,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     if (values.some(v => !Number.isFinite(v))) return { error: 'Only numbers, separated by commas.' };
     if (values.some(v => Math.abs(v) > 1_000_000)) return { error: 'Keep values within ±1,000,000.' };
     const maxLen = ['linked_list_reverse', 'floyd_cycle', 'dll_reverse',
-      'dll_delete_key', 'remove_nth_from_end'].includes(algoId) ? 10
+      'dll_delete_key', 'remove_nth_from_end', 'll_palindrome', 'odd_even_list',
+      'rotate_list', 'delete_middle'].includes(algoId) ? 10
       : traceView === 'tree' ? 12
       : algoId === 'binary_search' ? 20 : 16;
     if (values.length > maxLen) return { error: `Max ${maxLen} values for this algorithm.` };
@@ -1789,6 +1903,14 @@ export function mountEngine(view, algo = 'dijkstra') {
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isFinite(t) || (targetInput?.value || '').trim() === '') {
         return { error: 'Which value should be deleted?' };
+      }
+      return { array: values, target: t };
+    }
+
+    if (algoId === 'rotate_list') {
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(t) || t < 0 || t > 100) {
+        return { error: 'K must be a whole number from 0 to 100.' };
       }
       return { array: values, target: t };
     }
@@ -1853,6 +1975,52 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Dutch flag sorts only 0s, 1s and 2s — use those values.' };
       }
       return { array: values };
+    }
+
+    if (algoId === 'subsets_recursion' || algoId === 'combination_sum') {
+      const n = values.length;
+      const raw = (targetInput?.value || '').trim();
+      if (algoId === 'subsets_recursion') {
+        if (n > 4) return { error: 'Max 4 elements — 2⁴ = 16 leaves is already a wide tree.' };
+        if (values.some(v => !Number.isInteger(v) || v < 0 || v > 9)) return { error: 'Digits 0–9 only.' };
+        if (raw === '') return { array: values };
+        const k = Number(raw);
+        if (!Number.isInteger(k) || k < 0 || k > 36) return { error: 'K must be a whole number 0–36, or blank.' };
+        return { array: values, target: k };
+      }
+      if (n > 4) return { error: 'Max 4 candidates.' };
+      if (values.some(v => !Number.isInteger(v) || v < 1 || v > 9)) return { error: 'Candidates must be digits 1–9.' };
+      if (new Set(values).size !== n) return { error: 'Candidates must be distinct.' };
+      const k = Number(raw);
+      if (!Number.isInteger(k) || k < 1 || k > 12) return { error: 'Target must be 1–12.' };
+      return { array: values, target: k };
+    }
+
+    if (algoId === 'koko_bananas' || algoId === 'min_max_partition'
+        || algoId === 'aggressive_cows') {
+      const t = Number((targetInput?.value || '').trim());
+      const n = values.length;
+      if (values.some(v => !Number.isInteger(v))) return { error: 'Whole numbers only.' };
+      if (algoId === 'koko_bananas') {
+        if (n > 8) return { error: 'Max 8 piles.' };
+        if (values.some(v => v < 1 || v > 1000)) return { error: 'Piles must be 1–1000 bananas.' };
+        if (!Number.isInteger(t) || t < n || t > 1_000_000) {
+          return { error: `H must be a whole number of hours, at least ${n} (one per pile).` };
+        }
+        return { array: values, target: t };
+      }
+      if (algoId === 'min_max_partition') {
+        if (n > 10) return { error: 'Max 10 values.' };
+        if (values.some(v => v < 1 || v > 500)) return { error: 'Values must be 1–500.' };
+        if (!Number.isInteger(t) || t < 1 || t > n) return { error: `K must be 1–${n}.` };
+        return { array: values, target: t };
+      }
+      if (n > 10) return { error: 'Max 10 stalls.' };
+      if (values.some(v => v < 0 || v > 1000)) return { error: 'Stall positions must be 0–1000.' };
+      if (new Set(values).size !== n) return { error: 'Stall positions must be distinct.' };
+      if (!Number.isInteger(t) || t < 2 || t > n) return { error: `Cows must be 2–${n}.` };
+      const sorted = values.slice().sort((a, b) => a - b);
+      return { array: sorted, target: t, sortedForYou: sorted.some((v, i) => v !== values[i]) };
     }
 
     if (algoId === 'trapping_rainwater') {
@@ -2360,10 +2528,21 @@ export function mountEngine(view, algo = 'dijkstra') {
     nodes.forEach(n => {
       const isCurrent = n.id === s.current;
       const isMarked = marked.has(n.id);
-      const circle = makeSVG('circle');
+      // Recursion-tree labels ("(()(", "223") outgrow a circle — draw those
+      // as a pill sized to the text; short labels keep the classic circle.
+      const label = fmtCell(n.value);
+      const long = String(label).length > 3;
+      const circle = makeSVG(long ? 'rect' : 'circle');
       circle.dataset.nodeId = n.id;
-      circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
-      circle.setAttribute('r', '15');
+      if (long) {
+        const w = String(label).length * 7 + 10;
+        circle.setAttribute('x', px(n) - w / 2); circle.setAttribute('y', py(n) - 10);
+        circle.setAttribute('width', w); circle.setAttribute('height', 20);
+        circle.setAttribute('rx', 10);
+      } else {
+        circle.setAttribute('cx', px(n)); circle.setAttribute('cy', py(n));
+        circle.setAttribute('r', '15');
+      }
       circle.setAttribute('fill', isCurrent
         ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(212, 96, 44,0.2)')
         : (isMarked ? 'rgba(74,222,128,0.12)' : 'var(--cDeep)'));
@@ -3715,7 +3894,8 @@ export function mountEngine(view, algo = 'dijkstra') {
             : await api.postTrace(algoId, { text: parsed.text });
         } else if (traceView === 'list') {
           renderListView(parsed.array);
-          const payload = ['floyd_cycle', 'dll_delete_key', 'remove_nth_from_end'].includes(algoId)
+          const payload = ['floyd_cycle', 'dll_delete_key', 'remove_nth_from_end',
+            'rotate_list'].includes(algoId)
             ? { array: parsed.array, target: parsed.target }
             : { array: parsed.array };
           res = isOffline
@@ -3801,6 +3981,18 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { text: parsed.text });
+        } else if (algoId === 'generate_parentheses' || algoId === 'binary_strings') {
+          renderTreeView();
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, { target: parsed.target });
+        } else if (algoId === 'subsets_recursion' || algoId === 'combination_sum') {
+          renderTreeView();
+          const payload = parsed.target === undefined
+            ? { array: parsed.array } : { array: parsed.array, target: parsed.target };
+          res = isOffline
+            ? localArrayTrace(parsed)
+            : await api.postTrace(algoId, payload);
         } else if (algoId === 'n_queens' || algoId === 'sieve') {
           if (algoId === 'sieve') {
             renderArrayView(Array.from({ length: parsed.target + 1 }, (_, i) => i));
@@ -3869,7 +4061,8 @@ export function mountEngine(view, algo = 'dijkstra') {
             res = localArrayTrace(parsed);
           } else {
             const needsTarget = ['binary_search', 'search_rotated', 'two_sum_sorted',
-              'sliding_window', 'sliding_window_maximum'].includes(algoId);
+              'sliding_window', 'sliding_window_maximum', 'koko_bananas',
+              'min_max_partition', 'aggressive_cows'].includes(algoId);
             const payload = needsTarget
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
@@ -4521,7 +4714,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         'unique_paths', 'flood_fill', 'segment_tree', 'fenwick_tree',
         'bst_delete', 'coin_change', 'coin_change_2', 'subset_sum',
         'sliding_window_maximum', 'rat_in_maze', 'dll_delete_key',
-        'remove_nth_from_end'].includes(algoId)
+        'remove_nth_from_end', 'rotate_list', 'koko_bananas',
+        'min_max_partition', 'aggressive_cows', 'subsets_recursion',
+        'combination_sum'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -4543,6 +4738,12 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'rat_in_maze') targetLabel.textContent = 'MAZE =';
         if (targetLabel && algoId === 'dll_delete_key') targetLabel.textContent = 'KEY =';
         if (targetLabel && algoId === 'remove_nth_from_end') targetLabel.textContent = 'N =';
+        if (targetLabel && algoId === 'rotate_list') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'koko_bananas') targetLabel.textContent = 'H =';
+        if (targetLabel && algoId === 'min_max_partition') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'aggressive_cows') targetLabel.textContent = 'COWS =';
+        if (targetLabel && algoId === 'subsets_recursion') targetLabel.textContent = 'K (opt) =';
+        if (targetLabel && algoId === 'combination_sum') targetLabel.textContent = 'TARGET =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

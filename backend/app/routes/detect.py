@@ -126,6 +126,17 @@ SIGNATURES = {
     "dll_delete_key": ["dll_delete_key", "delete all occurrences", "delete key doubly linked", "remove key from dll", "delete occurrences of a key"],
     "remove_nth_from_end": ["remove_nth_from_end", "remove nth node", "nth node from the end", "nth from end", "delete nth from back"],
     "longest_complete_word": ["longest_complete_word", "complete string", "longest word with all prefixes", "all prefixes present", "longest word in dictionary"],
+    "ll_palindrome": ["ll_palindrome", "palindrome linked list", "linked list palindrome", "is list palindrome"],
+    "odd_even_list": ["odd_even_list", "odd even linked list", "segregate odd and even", "odd and even nodes"],
+    "rotate_list": ["rotate_list", "rotate a linked list", "rotate list", "rotate ll by k"],
+    "delete_middle": ["delete_middle", "delete the middle node", "delete middle node", "remove middle of linked list"],
+    "koko_bananas": ["koko_bananas", "koko eating bananas", "koko", "bananas per hour", "smallest divisor", "minimum eating speed"],
+    "min_max_partition": ["min_max_partition", "book allocation", "allocate books", "painter's partition", "painters partition", "split array largest sum", "capacity to ship", "ship packages within d days"],
+    "aggressive_cows": ["aggressive_cows", "aggressive cows", "place cows", "magnetic force between balls", "maximize minimum distance"],
+    "subsets_recursion": ["subsets_recursion", "subsets", "subset sums", "all subsequences", "subsequences with sum k", "print all subsequences", "power set recursion"],
+    "generate_parentheses": ["generate_parentheses", "generate parentheses", "balanced parentheses combinations", "all valid parentheses"],
+    "binary_strings": ["binary_strings", "binary strings without consecutive", "no consecutive ones", "no consecutive 1s"],
+    "combination_sum": ["combination_sum", "combination sum", "combinations that sum to target", "coin combinations list"],
 }
 
 REALWORLD_META = {
@@ -1443,6 +1454,94 @@ REALWORLD_META = {
             "start": "The empty root",
             "done": "The longest word whose every prefix is a word."
         }
+    },
+    "ll_palindrome": {
+        "scene": "train",
+        "title": "Does the Train Read the Same Both Ways?",
+        "hook": "You can only walk a train front to back. So turn the back half around, walk both halves toward the middle comparing cargo, then turn it back.",
+        "metaphors": {"node": "carriage", "edge": "coupling", "weight": "cargo",
+                      "visit": "Comparing two carriages", "start": "The full train",
+                      "done": "A verdict, with the train left exactly as it was."}
+    },
+    "odd_even_list": {
+        "scene": "train",
+        "title": "Split the Train Into Two Convoys",
+        "hook": "Every other carriage recouples to the one two ahead, forming two convoys; then the second convoy is hitched to the end of the first.",
+        "metaphors": {"node": "carriage", "edge": "coupling", "weight": "cargo",
+                      "visit": "Recoupling a carriage", "start": "One mixed train",
+                      "done": "Odd positions first, then even — no carriage moved."}
+    },
+    "rotate_list": {
+        "scene": "train",
+        "title": "Loop the Track, Then Cut It",
+        "hook": "Hitch the last carriage to the engine to make a ring, roll to the right spot, and uncouple — the last K carriages are now at the front.",
+        "metaphors": {"node": "carriage", "edge": "coupling", "weight": "cargo",
+                      "visit": "Rolling to the cut point", "start": "The original train",
+                      "done": "Rotated by changing just two couplings."}
+    },
+    "delete_middle": {
+        "scene": "train",
+        "title": "Uncouple the Middle Carriage",
+        "hook": "Send a runner ahead at double speed with a two-carriage head start; when it hits the end, you're standing right before the middle one.",
+        "metaphors": {"node": "carriage", "edge": "coupling", "weight": "cargo",
+                      "visit": "Walking the train", "start": "Both walkers near the engine",
+                      "done": "The middle carriage is gone, in one pass."}
+    },
+    "koko_bananas": {
+        "scene": "market",
+        "title": "How Slowly Can Koko Eat?",
+        "hook": "Don't search the piles — search the answer. Guess a speed, time every pile; too slow means go faster, fast enough means try slower.",
+        "metaphors": {"node": "pile", "edge": "—", "weight": "bananas",
+                      "visit": "Timing a pile", "start": "Any speed from 1 to the biggest pile",
+                      "done": "The slowest speed that still beats the guards."}
+    },
+    "min_max_partition": {
+        "scene": "scheduler",
+        "title": "Share the Work So the Busiest Is Least Busy",
+        "hook": "Guess a workload cap, hand out work left to right until each person hits it. Too many people needed? Raise the cap. Few enough? Lower it.",
+        "metaphors": {"node": "job", "edge": "—", "weight": "effort",
+                      "visit": "Handing out a job", "start": "Cap between the biggest job and the total",
+                      "done": "The smallest cap that still fits k people."}
+    },
+    "aggressive_cows": {
+        "scene": "grid_power",
+        "title": "Keep the Cows as Far Apart as Possible",
+        "hook": "Guess a minimum gap and drop cows greedily left to right. All fit? Try a wider gap. Some left over? Narrow it.",
+        "metaphors": {"node": "stall", "edge": "gap", "weight": "position",
+                      "visit": "Testing a stall", "start": "Gaps from 1 to the full span",
+                      "done": "The widest gap every cow can keep."}
+    },
+    "subsets_recursion": {
+        "scene": "files",
+        "title": "Every Packing List, One Yes/No at a Time",
+        "hook": "For each item you ask one question — pack it or not? Two answers per item branch into a tree, and every leaf is one complete packing list.",
+        "metaphors": {"node": "decision", "edge": "yes / no", "weight": "item",
+                      "visit": "Deciding an item", "start": "An empty bag",
+                      "done": "All 2ⁿ packing lists, found by branching."}
+    },
+    "generate_parentheses": {
+        "scene": "plates",
+        "title": "Stack and Unstack Plates Legally",
+        "hook": "You may put a plate down while you have plates left, and pick one up only if one is down. Follow every legal choice and each leaf is a valid sequence.",
+        "metaphors": {"node": "prefix", "edge": "place / remove", "weight": "—",
+                      "visit": "Choosing the next move", "start": "An empty table",
+                      "done": "Every balanced sequence, with illegal branches never tried."}
+    },
+    "binary_strings": {
+        "scene": "files",
+        "title": "Light Switches That Can't Both Be On",
+        "hook": "A row of switches where no two neighbours may be on. Build left to right: 'off' is always fine, 'on' only after an 'off'.",
+        "metaphors": {"node": "pattern", "edge": "off / on", "weight": "—",
+                      "visit": "Setting the next switch", "start": "No switches set",
+                      "done": "Every legal pattern — and their count is Fibonacci."}
+    },
+    "combination_sum": {
+        "scene": "vault",
+        "title": "Make Change, Listing Every Way",
+        "hook": "Keep using the current coin while it fits, or retire it for good and move to the next. Each path that lands exactly on the amount is one way.",
+        "metaphors": {"node": "handful", "edge": "use again / retire", "weight": "coin",
+                      "visit": "Choosing a coin", "start": "Nothing picked",
+                      "done": "Every combination that hits the target, each once."}
     }
 }
 

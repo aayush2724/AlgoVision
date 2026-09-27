@@ -212,4 +212,31 @@ export const A2Z_TRACER = {
   "6-52":  "dll_delete_key",         // Delete all occurrences of a key in DLL
   "6-45":  "remove_nth_from_end",    // Remove Nth node from the back of the LL
   "17-3":  "longest_complete_word",  // Longest Word with All Prefixes
+
+  // ══ Batch 29 (2026-09-27): the plain-view linked-list stragglers.
+  "6-41":  "floyd_cycle",            // Starting point of the loop (Floyd phase 2)
+  "6-43":  "ll_palindrome",          // Check if LL is palindrome
+  "6-44":  "odd_even_list",          // Segregate odd and even nodes
+  "6-46":  "delete_middle",          // Delete the middle node
+  "6-56":  "rotate_list",            // Rotate a LL
+
+  // ══ Batch 30 (2026-09-27): binary search on the answer. The array view
+  // gained an optional number line for the answer range being searched.
+  "4-16":  "koko_bananas",           // Koko eating bananas
+  "4-18":  "koko_bananas",           // Smallest divisor (same ceil-sum check)
+  "4-22":  "min_max_partition",      // Book Allocation Problem
+  "4-24":  "min_max_partition",      // Painter's Partition
+  "4-42":  "min_max_partition",      // Capacity to Ship Packages Within D Days
+  "4-43":  "min_max_partition",      // Split array - largest sum
+  "4-21":  "aggressive_cows",        // Aggressive Cows
+
+  // ══ Batch 31 (2026-09-27): recursion trees on the existing tree view —
+  // each call is a node, answers are green leaves.
+  "7-28":  "subsets_recursion",      // Power Set
+  "7-31":  "subsets_recursion",      // Subsets I (subset sums — leaf notes carry sums)
+  "7-29":  "subsets_recursion",      // Count all subsequences with sum K (K input)
+  "7-30":  "subsets_recursion",      // Check if there exists a subsequence with sum K
+  "7-7":   "generate_parentheses",   // Generate Parentheses
+  "7-27":  "binary_strings",         // Binary Strings Without Consecutive 1s
+  "7-11":  "combination_sum",        // Combination Sum
 };

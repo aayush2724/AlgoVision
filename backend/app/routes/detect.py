@@ -206,6 +206,37 @@ SIGNATURES = {
     "shortest_supersequence": ["shortest_supersequence", "shortest common supersequence"],
     "distinct_subsequences": ["distinct_subsequences", "distinct subsequences"],
     "wildcard_match": ["wildcard_match", "wildcard matching", "wildcard pattern"],
+    "number_of_islands": ["number_of_islands", "number of islands", "connected components in matrix", "count islands"],
+    "rotten_oranges": ["rotten_oranges", "rotten oranges", "rotting oranges"],
+    "nearest_one_distance": ["nearest_one_distance", "distance of nearest cell", "nearest 1", "01 matrix"],
+    "surrounded_regions": ["surrounded_regions", "surrounded regions", "replace o with x"],
+    "number_of_enclaves": ["number_of_enclaves", "number of enclaves", "enclaves"],
+    "binary_maze_path": ["binary_maze_path", "shortest path in binary maze", "binary maze", "shortest path binary matrix"],
+    "min_effort_path": ["min_effort_path", "path with minimum effort", "minimum effort"],
+    "swim_rising_water": ["swim_rising_water", "swim in rising water"],
+    "largest_island": ["largest_island", "making a large island", "largest island"],
+    "islands_ii": ["islands_ii", "number of islands ii", "islands 2", "online islands"],
+    "floyd_warshall": ["floyd_warshall", "floyd warshall", "floyd-warshall", "all pairs shortest path"],
+    "city_fewest_neighbours": ["city_fewest_neighbours", "city with the smallest number of neighbors", "city smallest neighbours", "threshold distance city"],
+    "stock_ii": ["stock_ii", "best time to buy and sell stock ii", "stock ii"],
+    "stock_iii": ["stock_iii", "best time to buy and sell stock iii", "stock iii"],
+    "stock_iv": ["stock_iv", "best time to buy and sell stock iv", "stock iv"],
+    "stock_cooldown": ["stock_cooldown", "stock with cooldown", "cooldown"],
+    "stock_fee": ["stock_fee", "stock with transaction fee", "transaction fee"],
+    "print_lis": ["print_lis", "print longest increasing subsequence", "print lis"],
+    "largest_divisible_subset": ["largest_divisible_subset", "largest divisible subset"],
+    "longest_string_chain": ["longest_string_chain", "longest string chain"],
+    "longest_bitonic": ["longest_bitonic", "longest bitonic subsequence", "bitonic"],
+    "number_of_lis": ["number_of_lis", "number of longest increasing subsequence", "number of lis"],
+    "cycle_undirected_bfs": ["cycle_undirected_bfs", "cycle detection undirected bfs", "detect cycle undirected bfs"],
+    "cycle_undirected_dfs": ["cycle_undirected_dfs", "cycle detection undirected dfs", "detect cycle undirected dfs", "detect a cycle in an undirected graph"],
+    "bridges": ["bridges", "bridges in graph", "critical connections", "tarjan bridges"],
+    "articulation_points": ["articulation_points", "articulation point", "cut vertex"],
+    "connect_network_ops": ["connect_network_ops", "make network connected", "number of operations to make network connected"],
+    "cycle_directed": ["cycle_directed", "cycle detection directed", "detect a cycle in a directed graph"],
+    "safe_states": ["safe_states", "eventual safe states", "safe states"],
+    "kosaraju": ["kosaraju", "kosaraju", "strongly connected components", "scc"],
+    "shortest_path_dag": ["shortest_path_dag", "shortest path in dag", "dag shortest path"],
 }
 
 REALWORLD_META = {
@@ -2162,6 +2193,254 @@ REALWORLD_META = {
         "hook": "Text, then pattern with ? (one char) and * (any run).",
         "metaphors": {"node": "node", "edge": "link", "weight": "value",
                       "visit": "Visiting", "start": "The input",
+                      "done": "The answer."}
+    },
+    "number_of_islands": {
+        "scene": "grid_power",
+        "title": "Number of Islands",
+        "hook": "0/1 grid, rows split by / (up to 7×7). Each new island gets its own letter.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "rotten_oranges": {
+        "scene": "grid_power",
+        "title": "Rotten Oranges",
+        "hook": "0 empty, 1 fresh, 2 rotten. Cells show the minute they rot; −1 if some never can.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "nearest_one_distance": {
+        "scene": "grid_power",
+        "title": "Distance of Nearest Cell Having 1",
+        "hook": "0/1 grid. A BFS from every 1 at once fills in each cell's distance.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "surrounded_regions": {
+        "scene": "grid_power",
+        "title": "Surrounded Regions",
+        "hook": "X/O grid. Only O regions touching the border survive; the rest flip to X.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "number_of_enclaves": {
+        "scene": "grid_power",
+        "title": "Number of Enclaves",
+        "hook": "0/1 grid. Land that can't walk off the edge is counted (marked E).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "binary_maze_path": {
+        "scene": "maze",
+        "title": "Shortest Path in a Binary Maze",
+        "hook": "1 = open, 0 = wall (up to 6×6). BFS from top-left to bottom-right.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "min_effort_path": {
+        "scene": "maze",
+        "title": "Path With Minimum Effort",
+        "hook": "Heights 0–99. A route costs its steepest single step — Dijkstra on that.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "swim_rising_water": {
+        "scene": "maze",
+        "title": "Swim in Rising Water",
+        "hook": "Heights 0–99. A route costs its highest cell — Dijkstra on that.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_island": {
+        "scene": "maze",
+        "title": "Making a Large Island",
+        "hook": "0/1 grid. Cells show island sizes; each 0 is tried as the one flip.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "islands_ii": {
+        "scene": "maze",
+        "title": "Number of Islands II (Online)",
+        "hook": "Grid size, then the cells turned to land in order. Union-find keeps the count.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "floyd_warshall": {
+        "scene": "vault",
+        "title": "Floyd–Warshall (All-Pairs Shortest Paths)",
+        "hook": "Edges: A>B:3 one way, A-B:3 both ways (up to 6 nodes). Negatives allowed.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "city_fewest_neighbours": {
+        "scene": "vault",
+        "title": "City With the Fewest Neighbours in Reach",
+        "hook": "Roads as A-B:len (both ways) and a distance threshold. Floyd–Warshall, then count.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stock_ii": {
+        "scene": "stocks",
+        "title": "Best Time to Buy & Sell Stock II (Unlimited)",
+        "hook": "Up to 8 prices. Two states per day: free or holding a share.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stock_iii": {
+        "scene": "stocks",
+        "title": "Best Time to Buy & Sell Stock III (≤ 2 Trades)",
+        "hook": "Up to 8 prices, at most two trades: buy1, sell1, buy2, sell2.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stock_iv": {
+        "scene": "stocks",
+        "title": "Best Time to Buy & Sell Stock IV (≤ k Trades)",
+        "hook": "Up to 8 prices and k (1–3) trades.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stock_cooldown": {
+        "scene": "stocks",
+        "title": "Buy & Sell Stock With Cooldown",
+        "hook": "Up to 8 prices. After a sale you must rest one day.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "stock_fee": {
+        "scene": "stocks",
+        "title": "Buy & Sell Stock With Transaction Fee",
+        "hook": "Up to 8 prices and the fee paid on every sale.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "print_lis": {
+        "scene": "vault",
+        "title": "Print the Longest Increasing Subsequence",
+        "hook": "Up to 8 numbers. Keep each position's predecessor to print one LIS back.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_divisible_subset": {
+        "scene": "vault",
+        "title": "Largest Divisible Subset",
+        "hook": "Up to 8 positive numbers (sorted for you). 'Smaller' becomes 'divides'.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_string_chain": {
+        "scene": "vault",
+        "title": "Longest String Chain",
+        "hook": "Up to 8 words. A word extends a chain if deleting one letter gives the previous one.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "longest_bitonic": {
+        "scene": "vault",
+        "title": "Longest Bitonic Subsequence",
+        "hook": "Up to 8 numbers. Rising into i plus falling out of i, minus 1.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "number_of_lis": {
+        "scene": "vault",
+        "title": "Number of Longest Increasing Subsequences",
+        "hook": "Up to 8 numbers. Track the best length and how many ways reach it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "cycle_undirected_bfs": {
+        "scene": "grid_power",
+        "title": "Cycle Detection in an Undirected Graph (BFS)",
+        "hook": "Explore by BFS, remembering where you came from; a visited neighbour that isn't your parent closes a loop.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "cycle_undirected_dfs": {
+        "scene": "grid_power",
+        "title": "Cycle Detection in an Undirected Graph (DFS)",
+        "hook": "Walk depth-first; meeting an already-visited node that isn't where you just came from means a loop.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bridges": {
+        "scene": "grid_power",
+        "title": "Bridges in a Graph (Tarjan)",
+        "hook": "A cable is critical when nothing below it can reach back above it — low-link beats discovery time.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "articulation_points": {
+        "scene": "grid_power",
+        "title": "Articulation Points",
+        "hook": "A hub is critical when some branch below it can only reach the rest through it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "connect_network_ops": {
+        "scene": "grid_power",
+        "title": "Operations to Make a Network Connected",
+        "hook": "Every spare cable can join two groups; you need one move per extra group.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "cycle_directed": {
+        "scene": "scheduler",
+        "title": "Cycle Detection in a Directed Graph (DFS)",
+        "hook": "One-way streets: only an edge back into your current route makes a loop.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "safe_states": {
+        "scene": "scheduler",
+        "title": "Find Eventual Safe States",
+        "hook": "A room is safe if every corridor out of it eventually dead-ends — never into a loop.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "kosaraju": {
+        "scene": "scheduler",
+        "title": "Strongly Connected Components (Kosaraju)",
+        "hook": "Finish order on the graph, then explore the reversed graph from the last finisher: each sweep is one tightly-knit group.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "shortest_path_dag": {
+        "scene": "scheduler",
+        "title": "Shortest Path in a DAG",
+        "hook": "With no loops, relaxing edges in topological order settles every distance in one pass.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
                       "done": "The answer."}
     }
 }

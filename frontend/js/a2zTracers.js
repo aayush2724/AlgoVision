@@ -329,4 +329,43 @@ export const A2Z_TRACER = {
   "16-31":  "shortest_supersequence",  // Shortest common supersequence
   "16-32":  "distinct_subsequences",   // Distinct subsequences
   "16-34":  "wildcard_match",          // Wildcard matching
+
+  // ══ Batches 45–49 (2026-09-27): grid graphs (45), grid shortest paths /
+  // union-find (46), undirected structure (47), directed graphs + Floyd (48),
+  // stock state machines + LIS family (49).
+  "15-7":   "number_of_islands",       // Number of islands
+  "15-53":  "number_of_islands",       // Connected components in matrix
+  "15-9":   "rotten_oranges",          // Rotten Oranges
+  "15-57":  "nearest_one_distance",    // Distance of nearest cell having one
+  "15-13":  "surrounded_regions",      // Surrounded Regions
+  "15-14":  "number_of_enclaves",      // Number of enclaves
+  "15-66":  "binary_maze_path",        // Shortest Distance in a Binary Maze
+  "15-29":  "min_effort_path",         // Path with minimum effort
+  "15-76":  "swim_rising_water",       // Swim in Rising Water
+  "15-43":  "largest_island",          // Making a large island
+  "15-42":  "islands_ii",              // Number of islands II
+  "15-55":  "cycle_undirected_bfs",    // Cycle Detection in Undirected Graph (bfs)
+  "15-56":  "cycle_undirected_dfs",    // Detect a cycle in an undirected graph
+  "15-77":  "bridges",                 // Bridges in graph
+  "15-78":  "articulation_points",     // Articulation point in graph
+  "15-40":  "connect_network_ops",     // Operations to make network connected
+  "15-59":  "cycle_directed",          // Cycle Detection in Directed Graph (DFS)
+  "15-62":  "cycle_directed",          // Detect a cycle in a directed graph
+  "15-23":  "safe_states",             // Find eventual safe states
+  "15-79":  "kosaraju",                // Kosaraju's algorithm
+  "15-26":  "shortest_path_dag",       // Shortest path in DAG
+  "15-21":  "topological_sort",        // Course Schedule I (can finish = no cycle)
+  "15-22":  "topological_sort",        // Course Schedule II (the order)
+  "15-70":  "floyd_warshall",          // Floyd warshall algorithm
+  "15-71":  "city_fewest_neighbours",  // City with smallest number of neighbours
+  "16-70":  "stock_ii",                // Buy and sell stock II
+  "16-71":  "stock_iii",               // Buy and sell stock III
+  "16-72":  "stock_iv",                // Buy and sell stock IV
+  "16-73":  "stock_cooldown",          // Stock with cooldown
+  "16-74":  "stock_fee",               // Stock with transaction fees
+  "16-42":  "print_lis",               // Print LIS
+  "16-43":  "largest_divisible_subset", // Largest Divisible Subset
+  "16-44":  "longest_string_chain",    // Longest String Chain
+  "16-45":  "longest_bitonic",         // Longest Bitonic Subsequence
+  "16-46":  "number_of_lis",           // Number of LIS
 };

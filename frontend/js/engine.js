@@ -226,6 +226,11 @@ const TREE_SHAPE = ['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'po
 const DP_MORE = ['frog_jump_k', 'ninja_training', 'min_falling_path', 'triangle_path', 'partition_equal_subset', 'count_subsets_sum_k', 'unbounded_knapsack', 'rod_cutting'];
 const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palindrome', 'min_ins_del', 'shortest_supersequence', 'distinct_subsequences', 'wildcard_match'];
 
+// Batches 45–49: text-input grid problems and drawn-graph problems.
+const TEXT_GRID = ['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis'];
+// Edges of these algorithms are read a → b, so the graph draws arrowheads.
+const DIRECTED_ALGOS = ['topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
+
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   prims_mst: 'graph', kruskals_mst: 'graph',
@@ -256,6 +261,8 @@ const VIEW_FOR = {
   subsets_recursion: 'tree', generate_parentheses: 'tree',
   subsets_ii: 'tree', combination_sum_ii: 'tree', combination_sum_iii: 'tree',
   palindrome_partition: 'tree', letter_combinations: 'tree',
+  number_of_islands: 'grid', rotten_oranges: 'grid', nearest_one_distance: 'grid', surrounded_regions: 'grid', number_of_enclaves: 'grid', binary_maze_path: 'grid', min_effort_path: 'grid', swim_rising_water: 'grid', largest_island: 'grid', islands_ii: 'grid', floyd_warshall: 'grid', city_fewest_neighbours: 'grid', stock_ii: 'grid', stock_iii: 'grid', stock_iv: 'grid', stock_cooldown: 'grid', stock_fee: 'grid', print_lis: 'grid', largest_divisible_subset: 'grid', longest_string_chain: 'grid', longest_bitonic: 'grid', number_of_lis: 'grid',
+  cycle_undirected_bfs: 'graph', cycle_undirected_dfs: 'graph', bridges: 'graph', articulation_points: 'graph', connect_network_ops: 'graph', cycle_directed: 'graph', safe_states: 'graph', kosaraju: 'graph', shortest_path_dag: 'graph',
   iter_preorder: 'tree', iter_inorder: 'tree', postorder_two_stacks: 'tree', postorder_one_stack: 'tree', zigzag_traversal: 'tree', right_view: 'tree', top_view: 'tree', bottom_view: 'tree', vertical_order: 'tree', boundary_traversal: 'tree', max_width: 'tree', balanced_tree: 'tree', symmetric_tree: 'tree', max_path_sum: 'tree', root_to_leaf_paths: 'tree', children_sum: 'tree', nodes_at_distance_k: 'tree', burn_tree: 'tree', count_complete_nodes: 'tree',
   frog_jump_k: 'grid', ninja_training: 'grid', min_falling_path: 'grid', triangle_path: 'grid', partition_equal_subset: 'grid', count_subsets_sum_k: 'grid', unbounded_knapsack: 'grid', rod_cutting: 'grid', print_lcs: 'grid', longest_palindromic_subseq: 'grid', min_insert_palindrome: 'grid', min_ins_del: 'grid', shortest_supersequence: 'grid', distinct_subsequences: 'grid', wildcard_match: 'grid',
   sqrt_search: 'array', nth_root: 'array', min_bouquets: 'array', next_smaller: 'array', nge_circular: 'array', remove_k_digits: 'array', sum_subarray_mins: 'array', remove_duplicates_sorted: 'array', rotate_array_k: 'array', move_zeros: 'array', leaders: 'array', longest_subarray_sum_k: 'array', second_largest: 'array',
@@ -578,6 +585,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       subsets_recursion: 'files', generate_parentheses: 'plates',
       subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
       palindrome_partition: 'dna', letter_combinations: 'files',
+      number_of_islands: 'grid_power', rotten_oranges: 'grid_power', nearest_one_distance: 'grid_power', surrounded_regions: 'grid_power', number_of_enclaves: 'grid_power', binary_maze_path: 'maze', min_effort_path: 'maze', swim_rising_water: 'maze', largest_island: 'maze', islands_ii: 'maze', floyd_warshall: 'vault', city_fewest_neighbours: 'vault', stock_ii: 'stocks', stock_iii: 'stocks', stock_iv: 'stocks', stock_cooldown: 'stocks', stock_fee: 'stocks', print_lis: 'vault', largest_divisible_subset: 'vault', longest_string_chain: 'vault', longest_bitonic: 'vault', number_of_lis: 'vault', cycle_undirected_bfs: 'grid_power', cycle_undirected_dfs: 'grid_power', bridges: 'grid_power', articulation_points: 'grid_power', connect_network_ops: 'grid_power', cycle_directed: 'scheduler', safe_states: 'scheduler', kosaraju: 'scheduler', shortest_path_dag: 'scheduler',
       iter_preorder: 'files', iter_inorder: 'files', postorder_two_stacks: 'files', postorder_one_stack: 'files', zigzag_traversal: 'files', right_view: 'files', top_view: 'files', bottom_view: 'files', vertical_order: 'files', boundary_traversal: 'files', max_width: 'files', balanced_tree: 'files', symmetric_tree: 'files', max_path_sum: 'files', root_to_leaf_paths: 'files', children_sum: 'files', nodes_at_distance_k: 'files', burn_tree: 'files', count_complete_nodes: 'files',
       frog_jump_k: 'vault', ninja_training: 'vault', min_falling_path: 'vault', triangle_path: 'vault', partition_equal_subset: 'vault', count_subsets_sum_k: 'vault', unbounded_knapsack: 'vault', rod_cutting: 'vault',
       print_lcs: 'dna', longest_palindromic_subseq: 'dna', min_insert_palindrome: 'dna', min_ins_del: 'dna', shortest_supersequence: 'dna', distinct_subsequences: 'dna', wildcard_match: 'dna',
@@ -620,6 +628,25 @@ export function mountEngine(view, algo = 'dijkstra') {
       svg.appendChild(hint);
     }
 
+    // Directed algorithms read each edge source → target: draw arrowheads that
+    // stop at the target's rim (node radius 22) instead of under the circle.
+    const directed = DIRECTED_ALGOS.includes(algoId);
+    if (directed) {
+      const defs = makeSVG("defs");
+      const marker = makeSVG("marker");
+      marker.setAttribute("id", "arrowhead");
+      marker.setAttribute("viewBox", "0 0 10 10");
+      marker.setAttribute("refX", "10"); marker.setAttribute("refY", "5");
+      marker.setAttribute("markerWidth", "7"); marker.setAttribute("markerHeight", "7");
+      marker.setAttribute("orient", "auto-start-reverse");
+      const tip = makeSVG("path");
+      tip.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+      tip.setAttribute("fill", "var(--cDim)");
+      marker.appendChild(tip);
+      defs.appendChild(marker);
+      svg.appendChild(defs);
+    }
+
     // Draw edges
     userGraph.links.forEach((link, idx) => {
       const source = userGraph.nodes.find(n => n.id === link.source);
@@ -628,7 +655,15 @@ export function mountEngine(view, algo = 'dijkstra') {
 
       const line = makeSVG("line");
       line.setAttribute("x1", source.x); line.setAttribute("y1", source.y);
-      line.setAttribute("x2", target.x); line.setAttribute("y2", target.y);
+      if (directed) {
+        const dx = target.x - source.x, dy = target.y - source.y;
+        const len = Math.hypot(dx, dy) || 1;
+        line.setAttribute("x2", target.x - dx / len * 24);
+        line.setAttribute("y2", target.y - dy / len * 24);
+        line.setAttribute("marker-end", "url(#arrowhead)");
+      } else {
+        line.setAttribute("x2", target.x); line.setAttribute("y2", target.y);
+      }
       line.setAttribute("class", "edge");
       line.setAttribute("id", `edge-${link.source}-${link.target}`);
       line.dataset.idx = idx;
@@ -1229,6 +1264,94 @@ export function mountEngine(view, algo = 'dijkstra') {
     wildcard_match: {
       array: 'abdefcd, ab*cd',
       hint: 'Text, then pattern with ? (one char) and * (any run).',
+    },
+    number_of_islands: {
+      array: '1,1,0,0 / 1,0,0,1 / 0,0,1,1 / 0,0,0,0 / 1,0,1,0',
+      hint: '0/1 grid, rows split by / (up to 7×7). Each new island gets its own letter.',
+    },
+    rotten_oranges: {
+      array: '2,1,1 / 1,1,0 / 0,1,1',
+      hint: '0 empty, 1 fresh, 2 rotten. Cells show the minute they rot; −1 if some never can.',
+    },
+    nearest_one_distance: {
+      array: '0,0,0 / 0,1,0 / 1,1,1',
+      hint: '0/1 grid. A BFS from every 1 at once fills in each cell\'s distance.',
+    },
+    surrounded_regions: {
+      array: 'X,X,X,X / X,O,O,X / X,X,O,X / X,O,X,X',
+      hint: 'X/O grid. Only O regions touching the border survive; the rest flip to X.',
+    },
+    number_of_enclaves: {
+      array: '0,0,0,0 / 1,0,1,0 / 0,1,1,0 / 0,0,0,0',
+      hint: '0/1 grid. Land that can\'t walk off the edge is counted (marked E).',
+    },
+    binary_maze_path: {
+      array: '1,1,0,1 / 1,1,1,1 / 0,1,0,1 / 1,1,1,1',
+      hint: '1 = open, 0 = wall (up to 6×6). BFS from top-left to bottom-right.',
+    },
+    min_effort_path: {
+      array: '1,2,2 / 3,8,2 / 5,3,5',
+      hint: 'Heights 0–99. A route costs its steepest single step — Dijkstra on that.',
+    },
+    swim_rising_water: {
+      array: '0,1,2,3 / 8,7,6,4 / 9,10,11,5',
+      hint: 'Heights 0–99. A route costs its highest cell — Dijkstra on that.',
+    },
+    largest_island: {
+      array: '1,0,1 / 0,0,1 / 1,1,0',
+      hint: '0/1 grid. Cells show island sizes; each 0 is tried as the one flip.',
+    },
+    islands_ii: {
+      array: '3x3 | 0:0 0:1 1:2 2:1 1:1',
+      hint: 'Grid size, then the cells turned to land in order. Union-find keeps the count.',
+    },
+    floyd_warshall: {
+      array: 'A>B:3, B>C:-2, A>C:4, C>D:2, D>A:1',
+      hint: 'Edges: A>B:3 one way, A-B:3 both ways (up to 6 nodes). Negatives allowed.',
+    },
+    city_fewest_neighbours: {
+      array: '0-1:3, 1-2:1, 1-3:4, 2-3:1', target: '4',
+      hint: 'Roads as A-B:len (both ways) and a distance threshold. Floyd–Warshall, then count.',
+    },
+    stock_ii: {
+      array: '7, 1, 5, 3, 6, 4',
+      hint: 'Up to 8 prices. Two states per day: free or holding a share.',
+    },
+    stock_iii: {
+      array: '3, 3, 5, 0, 0, 3, 1, 4',
+      hint: 'Up to 8 prices, at most two trades: buy1, sell1, buy2, sell2.',
+    },
+    stock_iv: {
+      array: '3, 2, 6, 5, 0, 3', target: '2',
+      hint: 'Up to 8 prices and k (1–3) trades.',
+    },
+    stock_cooldown: {
+      array: '1, 2, 3, 0, 2',
+      hint: 'Up to 8 prices. After a sale you must rest one day.',
+    },
+    stock_fee: {
+      array: '1, 3, 2, 8, 4, 9', target: '2',
+      hint: 'Up to 8 prices and the fee paid on every sale.',
+    },
+    print_lis: {
+      array: '10, 9, 2, 5, 3, 7, 101, 18',
+      hint: 'Up to 8 numbers. Keep each position\'s predecessor to print one LIS back.',
+    },
+    largest_divisible_subset: {
+      array: '1, 2, 4, 8, 3',
+      hint: 'Up to 8 positive numbers (sorted for you). \'Smaller\' becomes \'divides\'.',
+    },
+    longest_string_chain: {
+      array: 'a, b, ba, bca, bda, bdca',
+      hint: 'Up to 8 words. A word extends a chain if deleting one letter gives the previous one.',
+    },
+    longest_bitonic: {
+      array: '1, 11, 2, 10, 4, 5, 2, 1',
+      hint: 'Up to 8 numbers. Rising into i plus falling out of i, minus 1.',
+    },
+    number_of_lis: {
+      array: '1, 3, 5, 4, 7',
+      hint: 'Up to 8 numbers. Track the best length and how many ways reach it.',
     },
     sqrt_search: {
       array: '28',
@@ -2139,11 +2262,12 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
 
     if (TREE_SHAPE.includes(algoId) || DP_MORE.includes(algoId)
-        || DP_STRINGS.includes(algoId)) {
+        || DP_STRINGS.includes(algoId) || TEXT_GRID.includes(algoId)) {
       const raw = (arrayInput?.value || '').trim();
       if (!raw) return { error: 'Type an input first — see the hint below.' };
       if (raw.length > 120) return { error: 'That input is too long.' };
-      const needsT = ['frog_jump_k', 'count_subsets_sum_k', 'unbounded_knapsack'].includes(algoId);
+      const needsT = ['frog_jump_k', 'count_subsets_sum_k', 'unbounded_knapsack',
+        'city_fewest_neighbours', 'stock_iv', 'stock_fee'].includes(algoId);
       if (!needsT) return { text: raw };   // the server validates and explains
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isInteger(t)) return { error: 'Enter a whole number.' };
@@ -5189,7 +5313,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         'first_last_occurrence', 'floor_ceil', 'kth_missing', 'min_bouquets',
         'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
         'rotate_array_k', 'longest_subarray_sum_k', 'frog_jump_k',
-        'count_subsets_sum_k', 'unbounded_knapsack'].includes(algoId)
+        'count_subsets_sum_k', 'unbounded_knapsack', 'city_fewest_neighbours',
+        'stock_iv', 'stock_fee'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -5226,6 +5351,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && ['remove_k_digits', 'rotate_array_k', 'longest_subarray_sum_k',
           'frog_jump_k', 'count_subsets_sum_k'].includes(algoId)) targetLabel.textContent = 'K =';
         if (targetLabel && algoId === 'unbounded_knapsack') targetLabel.textContent = 'CAP =';
+        if (targetLabel && algoId === 'city_fewest_neighbours') targetLabel.textContent = 'MAX DIST =';
+        if (targetLabel && algoId === 'stock_iv') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'stock_fee') targetLabel.textContent = 'FEE =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

@@ -37,9 +37,12 @@ from app.tracers import (
     palindrome_partition, letter_combinations, bs_variants,
     answer_numeric, matrix_search, list_arith, stack_more, array_basics,
     tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
+    grid_graphs, grid_paths, graph_undirected, graph_directed, floyd,
+    dp_stocks_lis,
 )
 # Modules whose run(algo, text, target) validates (ValueError → 400) and traces.
-RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings)
+RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
+               grid_graphs, grid_paths, floyd, dp_stocks_lis)
 from app.tracers.common import Graph
 import os
 
@@ -63,6 +66,9 @@ GRAPH_TRACERS = {
     "connected_components": connected_components.trace,
     "bipartite_check": bipartite_check.trace,
     "bellman_ford": bellman_ford.trace,
+    # Batches 47–48: structure problems on the drawn graph.
+    **{k: graph_undirected.trace_for(k) for k in graph_undirected.TITLES},
+    **{k: graph_directed.trace_for(k) for k in graph_directed.TITLES},
 }
 # These need non-negative weights to be correct; the shared Graph model now
 # allows negatives (for Bellman-Ford), so they reject them here instead.
@@ -235,6 +241,9 @@ def algorithms():
               for k, v in mod.TITLES.items()),
             *({"id": k, "name": v, "input": "text"}
               for mod in RUN_MODULES for k, v in mod.TITLES.items()),
+            *({"id": k, "name": v, "input": "graph"}
+              for mod in (graph_undirected, graph_directed)
+              for k, v in mod.TITLES.items()),
         ]
     }
 

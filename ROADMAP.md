@@ -158,14 +158,41 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Search second batch (4,9), Linked List DLL + Tries (6,17), list
   stragglers (6), binary search on the answer (4), recursion trees (7),
   expression conversions (9), loop-style recursion trees (7), binary-search
-  boundary variants (4), batches 35–39, batches 40–44 (trees + DP, see
-  below) → [next] Graphs (Step 15, 37 open, mostly existing graph/grid views),
-  the rest of DP (stocks II–IV/cooldown/fee, LIS variants, MCM-style interval
-  DP), BST (Step 14) and Heaps (Step 11); after that, what is left
+  boundary variants (4), batches 35–39, batches 40–44 (trees + DP),
+  batches 45–49 (graphs + DP, see below) → [next] BST (Step 14), Heaps
+  (Step 11), interval DP (MCM-style: burst balloons, cut stick, boolean
+  evaluation, palindrome partitioning II, partition array for max sum),
+  remaining graph items (word ladder, alien dictionary, cheapest flight /
+  network delay / ways to arrive, accounts merge, most stones); after that,
+  what is left
   needs genuinely new views: DLL pair-sum / intersection of Y lists (two
   pointer lists), clone with random pointers, flattening, LRU/LFU caches,
   min stack / queue-via-stacks (operation-sequence input), matrix median /
   2-D peak, and the Step 3 matrix problems (set zeros, rotate, spiral).
+
+**Batches 45–49 (new tracers) — six modules, 32 ids, 35 A2Z rows.**
+Shared `grid_common.py` (Grid step collector + matrix parser). The graph view
+now draws ARROWHEADS for algorithms in `DIRECTED_ALGOS` (engine.js) — lines
+stop at the target rim; this also fixed topological_sort / bellman_ford,
+which previously showed direction-less lines. Graph tracers register in
+`GRAPH_TRACERS` via `trace_for(algo)`; text tracers join `RUN_MODULES`.
+  - 45 `grid_graphs.py`: islands (15-7, 15-53), rotten oranges, nearest-1
+    distance, surrounded regions, enclaves.
+  - 46 `grid_paths.py`: binary maze BFS, min-effort and rising-water
+    Dijkstra (minimax), largest island (DSU + flip), islands II (online DSU).
+  - 47 `graph_undirected.py`: cycle BFS/DFS, bridges + articulation points
+    (Tarjan, low-links on nodes, bridges green), network-connect ops.
+  - 48 `graph_directed.py`: directed cycle, safe states, Kosaraju (SCC ids on
+    nodes), DAG shortest path; `floyd.py` (grid, text edges "A>B:3"/"A-B:3"):
+    Floyd–Warshall + city with fewest neighbours. Course Schedule I/II link
+    to the existing topological_sort (Kahn already reports cycles).
+  - 49 `dp_stocks_lis.py`: stock II/III/IV/cooldown/fee as state-machine
+    tables; print LIS, largest divisible subset, string chain, bitonic,
+    number of LIS.
+Tests use a different method than each tracer (edge/vertex deletion for
+bridges/APs, reachability for SCC/safe states, Bellman-Ford for DAG/Floyd,
+threshold+BFS for minimax paths, full buy/sell enumeration for stocks).
+Full suite 1533 passing. A2Z now 237 rows linked.
 
 **Batches 40–44 (new tracers) — five modules, 34 ids, 34 A2Z rows.**
 New shared `bt_common.py`: binary trees from LeetCode level-order text

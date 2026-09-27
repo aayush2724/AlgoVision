@@ -156,10 +156,46 @@ subsets). Numeric ones use a fixed 12-bit row; inputs are plain text ("13",
   Bit Manipulation, Binary Trees (13), DP remainder (16), Arrays+Binary Search
   first batch (3,4), Recursion/Stack first batch (7,9), Stack + Binary
   Search second batch (4,9), Linked List DLL + Tries (6,17), list
-  stragglers (6), binary search on the answer (4), recursion trees (7) →
-  [next] token stream for infix/postfix (9), recursion-tree follow-ons
-  (Subsets II, Combination Sum II/III, palindrome partitioning), minimum
-  bouquets / kth missing (4), add-two-numbers (needs a two-list view).
+  stragglers (6), binary search on the answer (4), recursion trees (7),
+  expression conversions (9), loop-style recursion trees (7), binary-search
+  boundary variants (4) → [next] add-two-numbers (needs a two-list view),
+  minimum bouquets (needs a second scalar input), sqrt / nth root (answer
+  search over a number-only input), 2-D matrix binary searches (4-29, 4-47,
+  4-48 — grid view).
+
+**Batch 34 (new tracers) — Binary-search boundary variants (Step 4).**
+One module `bs_variants.py`, six ids on the existing low/high/mid window;
+the renderer now outlines the recorded best-so-far `ans` cell green (kept
+visible even outside the live range):
+  - `lower_bound` (4-2, 4-4 search insert), `upper_bound` (4-3)
+  - `first_last_occurrence` (4-6, 4-34 count = last − first + 1)
+  - `floor_ceil` (4-5), `kth_missing` (4-20, search on arr[i] − (i+1))
+  - `single_element_sorted` (4-39, pair-parity flip)
+`validate()` explains malformed input. Tests vs `bisect` and brute force.
+Full suite 1490 passing. A2Z now 149 rows linked.
+
+**Batch 33 (new tracers) — Loop-style recursion trees (Step 7).**
+RecTree now records an n-ary `children` list (binary tracers keep left/right)
+and the tree renderer draws edges from `children` when present — which also
+fixed a latent trie bug: nodes with 3+ children only drew their first two
+edges (e.g. CAT/COT/CUP lost C→U).
+  - `subsets_ii` (7-32) — skip equal values per level; every node is a subset.
+  - `combination_sum_ii` (7-12), `combination_sum_iii` (7-15, input "k, n").
+  - `palindrome_partition` (7-17) — only palindromic pieces branch.
+  - `letter_combinations` (7-16) — 1-2 keypad digits.
+Each reports `meta.nodes`; the route rejects trees over 45 calls. Tests vs
+itertools brute force + per-step n-ary well-formedness.
+
+**Batch 32 (new tracers) — Expression conversions (Step 9).**
+One module `expr_convert.py`, six ids (9-9, 9-10, 9-11, 9-34, 9-35, 9-36):
+an operator stack (shunting-yard; infix→prefix = right-to-left scan with
+swapped brackets and flipped tie rule, reversed at the end) and an operand
+stack of sub-expressions for postfix/prefix sources. `validate()` explains
+malformed input. The stack view gained OPTIONAL `output`/`output_label`
+(an output row), `rtl` (right-to-left shading + row label), and text-sized
+stack boxes. Tests: an independent recursive-descent parser proves all six
+directions preserve the expression tree on 300 random expressions.
+Full suite after batches 32–33: 1482 passing. A2Z now 141 rows linked.
   Floyd-Warshall etc. blocked until the graph-model change.
 
 **Batch 31 (new tracers) — Recursion trees (Step 7).**

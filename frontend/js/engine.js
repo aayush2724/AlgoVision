@@ -208,6 +208,10 @@ function escapeHTML(str) {
 // ── Algorithm resolution ─────────────────────────────────────────────────────
 // Maps any world/route name to a traceable algorithm id and its view type.
 
+// Binary-search variants (batch 34): one backend module, six catalog ids.
+const BS_VARIANTS = ['lower_bound', 'upper_bound', 'first_last_occurrence',
+  'floor_ceil', 'kth_missing', 'single_element_sorted'];
+
 const VIEW_FOR = {
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   prims_mst: 'graph', kruskals_mst: 'graph',
@@ -236,6 +240,10 @@ const VIEW_FOR = {
   delete_middle: 'list',
   koko_bananas: 'array', min_max_partition: 'array', aggressive_cows: 'array',
   subsets_recursion: 'tree', generate_parentheses: 'tree',
+  subsets_ii: 'tree', combination_sum_ii: 'tree', combination_sum_iii: 'tree',
+  palindrome_partition: 'tree', letter_combinations: 'tree',
+  lower_bound: 'array', upper_bound: 'array', first_last_occurrence: 'array', floor_ceil: 'array', kth_missing: 'array', single_element_sorted: 'array',
+  infix_to_postfix: 'stack', infix_to_prefix: 'stack', postfix_to_infix: 'stack', postfix_to_prefix: 'stack', prefix_to_infix: 'stack', prefix_to_postfix: 'stack',
   binary_strings: 'tree', combination_sum: 'tree',
   n_queens: 'grid', unique_paths: 'grid', sieve: 'array',
   kmp_search: 'array', segment_tree: 'tree', fenwick_tree: 'array',
@@ -550,6 +558,10 @@ export function mountEngine(view, algo = 'dijkstra') {
       koko_bananas: 'market', min_max_partition: 'scheduler',
       aggressive_cows: 'grid_power',
       subsets_recursion: 'files', generate_parentheses: 'plates',
+      subsets_ii: 'files', combination_sum_ii: 'vault', combination_sum_iii: 'vault',
+      palindrome_partition: 'dna', letter_combinations: 'files',
+      lower_bound: 'library', upper_bound: 'library', first_last_occurrence: 'library', floor_ceil: 'library', kth_missing: 'library', single_element_sorted: 'library',
+      infix_to_postfix: 'plates', infix_to_prefix: 'plates', postfix_to_infix: 'plates', postfix_to_prefix: 'plates', prefix_to_infix: 'plates', prefix_to_postfix: 'plates',
       binary_strings: 'files', combination_sum: 'vault',
       two_sum_sorted: 'market', sliding_window: 'stocks', kadanes: 'stocks',
       knapsack_01: 'vault', lcs: 'dna',
@@ -757,13 +769,20 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (g) g.setAttribute("opacity", "1");
 
       if (algoId === 'binary_search' || algoId === 'search_rotated'
-          || algoId === 'find_min_rotated' || algoId === 'find_peak') {
+          || algoId === 'find_min_rotated' || algoId === 'find_peak'
+          || BS_VARIANTS.includes(algoId)) {
         const inRange = s.low != null && idx >= s.low && idx <= s.high;
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (inRange) cell.setAttribute("stroke", "var(--c)");
         if (idx === s.mid) {
           cell.setAttribute("fill", "rgba(212, 96, 44,0.18)");
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
+          cell.setAttribute("stroke-width", "2");
+        }
+        // Boundary searches record a best-so-far answer and keep going.
+        if (idx === s.ans && idx !== s.mid) {
+          if (g) g.setAttribute("opacity", "1");
+          cell.setAttribute("stroke", "#4ade80");
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'two_sum_sorted') {
@@ -1020,6 +1039,74 @@ export function mountEngine(view, algo = 'dijkstra') {
     remove_nth_from_end: {
       array: '1, 2, 3, 4, 5', target: '2',
       hint: 'Up to 10 nodes and N (1 to the length). Fast gets an N-node head start; then both move together.',
+    },
+    infix_to_postfix: {
+      array: 'A+B*(C^D-E)',
+      hint: 'Single-letter/digit operands, + - * / ^ and brackets, up to 15 chars. ^ is right-associative: try A^B^C.',
+    },
+    infix_to_prefix: {
+      array: '(A-B/C)*(A/K-L)',
+      hint: 'Scanned right to left with the brackets\' roles swapped; the output is built backwards and reversed at the end.',
+    },
+    postfix_to_infix: {
+      array: 'AB-DE+F*/',
+      hint: 'A valid postfix expression (up to 15 chars). Each operator pops two sub-expressions and pushes them bracketed.',
+    },
+    postfix_to_prefix: {
+      array: 'AB-DE+F*/',
+      hint: 'A valid postfix expression. Each operator pops two sub-expressions and pushes operator + left + right.',
+    },
+    prefix_to_infix: {
+      array: '*+PQ-MN',
+      hint: 'A valid prefix expression, scanned right to left — the first pop is the left operand.',
+    },
+    prefix_to_postfix: {
+      array: '/-AK-/BL*CD',
+      hint: 'A valid prefix expression, scanned right to left. Each operator pushes left + right + operator.',
+    },
+    lower_bound: {
+      array: '1, 2, 2, 3, 5', target: '2',
+      hint: 'Up to 16 numbers (sorted for you). The first position whose value is ≥ X — also where X would be inserted.',
+    },
+    upper_bound: {
+      array: '1, 2, 2, 3, 5', target: '2',
+      hint: 'Up to 16 numbers (sorted for you). The first position whose value is > X.',
+    },
+    first_last_occurrence: {
+      array: '2, 4, 6, 8, 8, 8, 11, 13', target: '8',
+      hint: 'Two searches: one keeps going left after a match, one keeps going right. Last − first + 1 is the count.',
+    },
+    floor_ceil: {
+      array: '3, 4, 4, 7, 8, 10', target: '5',
+      hint: 'Floor = largest value ≤ X, ceil = smallest value ≥ X — two boundary searches.',
+    },
+    kth_missing: {
+      array: '2, 3, 4, 7, 11', target: '5',
+      hint: 'Strictly increasing positive numbers. Before index i, arr[i] − (i+1) numbers are missing — search on that.',
+    },
+    single_element_sorted: {
+      array: '1, 1, 2, 3, 3, 4, 4, 8, 8',
+      hint: 'Sorted, every value twice except one. Pairs start on even indices before it and odd ones after.',
+    },
+    subsets_ii: {
+      array: '1, 2, 2',
+      hint: 'Up to 4 digits (0–9), duplicates welcome — that is the point. Every node is a distinct subset.',
+    },
+    combination_sum_ii: {
+      array: '1, 1, 2, 5, 6, 7', target: '8',
+      hint: 'Up to 6 digits (1–9, repeats allowed) and a target up to 15. Each candidate is used at most once.',
+    },
+    combination_sum_iii: {
+      array: '3, 9',
+      hint: 'Two numbers: k (how many digits) and n (their sum). Digits 1–9, each used once.',
+    },
+    palindrome_partition: {
+      array: 'aabb',
+      hint: 'Up to 6 lowercase letters. Only palindromic pieces get a branch — every leaf is a valid partition.',
+    },
+    letter_combinations: {
+      array: '23',
+      hint: 'One or two digits 2–9, like a phone keypad. Each digit branches into its 3 or 4 letters.',
     },
     subsets_recursion: {
       array: '1, 2, 3', target: '',
@@ -1803,6 +1890,17 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (t < 0 || t > 18) return { error: 'Keep n between 0 and 18.' };
       return { target: t };
     }
+    if (algoId.includes('fix_to_')) {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      const kind = algoId.split('_to_')[0];
+      if (!raw) return { error: 'Type an expression.' };
+      if (raw.length > 15) return { error: 'Max 15 characters.' };
+      const ok = kind === 'infix' ? /^[A-Za-z0-9+\-*/^()]+$/ : /^[A-Za-z0-9+\-*/^]+$/;
+      if (!ok.test(raw)) {
+        return { error: `Single letters/digits and + - * / ^${kind === 'infix' ? ' ( )' : ''} only.` };
+      }
+      return { text: raw };  // the server checks well-formedness and explains
+    }
     if (traceView === 'stack') {
       const raw = (arrayInput?.value || '').replace(/\s+/g, '');
       if (!raw) return { error: 'Type a bracket sequence — e.g. ({[]})' };
@@ -1975,6 +2073,50 @@ export function mountEngine(view, algo = 'dijkstra') {
         return { error: 'Dutch flag sorts only 0s, 1s and 2s — use those values.' };
       }
       return { array: values };
+    }
+
+    if (BS_VARIANTS.includes(algoId)) {
+      if (values.length > 16) return { error: 'Max 16 numbers.' };
+      if (algoId === 'single_element_sorted') return { array: values };
+      const t = Number((targetInput?.value || '').trim());
+      if ((targetInput?.value || '').trim() === '' || !Number.isFinite(t)) {
+        return { error: algoId === 'kth_missing' ? 'Enter K.' : 'Enter a number X to search for.' };
+      }
+      if (algoId === 'kth_missing') return { array: values, target: t };
+      const sorted = values.slice().sort((a, b) => a - b);
+      return { array: sorted, target: t, sortedForYou: sorted.some((v, i) => v !== values[i]) };
+    }
+
+    if (algoId === 'palindrome_partition' || algoId === 'letter_combinations') {
+      const raw = (arrayInput?.value || '').replace(/\s+/g, '');
+      if (algoId === 'palindrome_partition') {
+        if (!/^[a-z]{1,6}$/.test(raw.toLowerCase())) return { error: '1–6 letters only.' };
+        return { text: raw.toLowerCase() };
+      }
+      if (!/^[2-9]{1,2}$/.test(raw)) return { error: 'One or two digits from 2–9.' };
+      return { text: raw };
+    }
+
+    if (algoId === 'subsets_ii' || algoId === 'combination_sum_ii'
+        || algoId === 'combination_sum_iii') {
+      const n = values.length;
+      if (values.some(v => !Number.isInteger(v))) return { error: 'Whole numbers only.' };
+      if (algoId === 'subsets_ii') {
+        if (n > 4) return { error: 'Max 4 elements.' };
+        if (values.some(v => v < 0 || v > 9)) return { error: 'Digits 0–9 only.' };
+        return { array: values };
+      }
+      if (algoId === 'combination_sum_iii') {
+        if (n !== 2) return { error: 'Give two numbers: k, n — e.g. 3, 9' };
+        const [k, s] = values;
+        if (k < 1 || k > 9 || s < 1 || s > 45) return { error: 'k must be 1–9 and n 1–45.' };
+        return { array: values };
+      }
+      if (n > 6) return { error: 'Max 6 candidates.' };
+      if (values.some(v => v < 1 || v > 9)) return { error: 'Candidates must be digits 1–9.' };
+      const t = Number((targetInput?.value || '').trim());
+      if (!Number.isInteger(t) || t < 1 || t > 15) return { error: 'Target must be 1–15.' };
+      return { array: values, target: t };
     }
 
     if (algoId === 'subsets_recursion' || algoId === 'combination_sum') {
@@ -2360,6 +2502,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     rowLabel.setAttribute('fill', 'var(--cDim)');
     rowLabel.setAttribute('font-family', 'var(--font-ui)');
     rowLabel.setAttribute('font-size', '6');
+    rowLabel.setAttribute('id', 'stack-rowlabel');
     rowLabel.textContent = 'INPUT — LEFT TO RIGHT';
     svg.appendChild(rowLabel);
 
@@ -2409,7 +2552,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         cell.setAttribute('stroke-width', '2');
         cell.setAttribute('fill', s.action === 'mismatch'
           ? 'rgba(248,113,113,0.15)' : 'rgba(212, 96, 44,0.15)');
-      } else if (s.pos !== null && s.pos !== undefined && idx < s.pos) {
+      } else if (s.pos !== null && s.pos !== undefined
+                 && (s.rtl ? idx > s.pos : idx < s.pos)) {
         cell.setAttribute('stroke', 'var(--c)');
         cell.setAttribute('stroke-width', '1');
         cell.setAttribute('fill', 'rgba(212, 96, 44,0.03)');
@@ -2421,10 +2565,36 @@ export function mountEngine(view, algo = 'dijkstra') {
     });
 
     // Draw the stack growing left → right along the bottom
-    const bx = 80, by = 215, bw = 38, bh = 36;
+    const rowLabel = svg.querySelector('#stack-rowlabel');
+    if (rowLabel) rowLabel.textContent = s.rtl ? 'INPUT — RIGHT TO LEFT' : 'INPUT — LEFT TO RIGHT';
+
+    // Expression conversions build an output string alongside the stack.
+    if (s.output !== undefined) {
+      const lab = makeSVG('text');
+      lab.setAttribute('x', '80'); lab.setAttribute('y', '140');
+      lab.setAttribute('fill', 'var(--cDim)');
+      lab.setAttribute('font-family', 'var(--font-ui)');
+      lab.setAttribute('font-size', '7');
+      lab.textContent = `OUTPUT — ${s.output_label || ''}`;
+      g.appendChild(lab);
+      const out = makeSVG('text');
+      out.setAttribute('x', '80'); out.setAttribute('y', '166');
+      out.setAttribute('fill', '#4ade80');
+      out.setAttribute('font-family', 'var(--font-mono)');
+      out.setAttribute('font-size', '18');
+      out.textContent = s.output || '…';
+      g.appendChild(out);
+    }
+
+    // Boxes size to their text: conversions push whole sub-expressions.
+    const bx = 80, by = 215, bh = 36;
+    let cursor = bx;
     (s.stack || []).forEach((ch, k) => {
+      const bw = Math.max(38, String(ch).length * 9 + 14);
+      const x = cursor;
+      cursor += bw + 4;
       const rect = makeSVG('rect');
-      rect.setAttribute('x', bx + k * (bw + 4));
+      rect.setAttribute('x', x);
       rect.setAttribute('y', by);
       rect.setAttribute('width', bw);
       rect.setAttribute('height', bh);
@@ -2434,12 +2604,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('stroke-width', isTop ? '2' : '1');
       g.appendChild(rect);
       const t = makeSVG('text');
-      t.setAttribute('x', bx + k * (bw + 4) + bw / 2);
+      t.setAttribute('x', x + bw / 2);
       t.setAttribute('y', by + bh / 2 + 5);
       t.setAttribute('text-anchor', 'middle');
       t.setAttribute('fill', 'var(--cBright)');
       t.setAttribute('font-family', 'var(--font-mono)');
-      t.setAttribute('font-size', '15');
+      t.setAttribute('font-size', String(ch).length > 6 ? '12' : '15');
       t.textContent = ch;
       g.appendChild(t);
     });
@@ -2510,7 +2680,11 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     // Edges first so they sit behind the nodes
     nodes.forEach(n => {
-      [n.left, n.right].forEach(cid => {
+      // n-ary trees (tries, loop-style recursion) list every child; binary
+      // trees (BSTs, heaps) only have left/right.
+      const kids = Array.isArray(n.children) && n.children.length
+        ? n.children : [n.left, n.right];
+      kids.forEach(cid => {
         const c = byId[cid];
         if (c === undefined) return;
         const line = makeSVG('line');
@@ -3970,7 +4144,9 @@ export function mountEngine(view, algo = 'dijkstra') {
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { array: parsed.array, target: parsed.target });
         } else if (algoId === 'trie_insert' || algoId === 'huffman'
-                   || algoId === 'longest_complete_word') {
+                   || algoId === 'longest_complete_word'
+                   || algoId === 'palindrome_partition'
+                   || algoId === 'letter_combinations') {
           renderTreeView();
           res = isOffline
             ? localArrayTrace(parsed)
@@ -3986,7 +4162,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           res = isOffline
             ? localArrayTrace(parsed)
             : await api.postTrace(algoId, { target: parsed.target });
-        } else if (algoId === 'subsets_recursion' || algoId === 'combination_sum') {
+        } else if (['subsets_recursion', 'combination_sum', 'subsets_ii',
+                    'combination_sum_ii', 'combination_sum_iii'].includes(algoId)) {
           renderTreeView();
           const payload = parsed.target === undefined
             ? { array: parsed.array } : { array: parsed.array, target: parsed.target };
@@ -4062,7 +4239,8 @@ export function mountEngine(view, algo = 'dijkstra') {
           } else {
             const needsTarget = ['binary_search', 'search_rotated', 'two_sum_sorted',
               'sliding_window', 'sliding_window_maximum', 'koko_bananas',
-              'min_max_partition', 'aggressive_cows'].includes(algoId);
+              'min_max_partition', 'aggressive_cows', 'lower_bound', 'upper_bound',
+              'first_last_occurrence', 'floor_ceil', 'kth_missing'].includes(algoId);
             const payload = needsTarget
               ? { array: parsed.array, target: parsed.target }
               : { array: parsed.array };
@@ -4716,7 +4894,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         'sliding_window_maximum', 'rat_in_maze', 'dll_delete_key',
         'remove_nth_from_end', 'rotate_list', 'koko_bananas',
         'min_max_partition', 'aggressive_cows', 'subsets_recursion',
-        'combination_sum'].includes(algoId)
+        'combination_sum', 'combination_sum_ii', 'lower_bound', 'upper_bound',
+        'first_last_occurrence', 'floor_ceil', 'kth_missing'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -4744,6 +4923,10 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'aggressive_cows') targetLabel.textContent = 'COWS =';
         if (targetLabel && algoId === 'subsets_recursion') targetLabel.textContent = 'K (opt) =';
         if (targetLabel && algoId === 'combination_sum') targetLabel.textContent = 'TARGET =';
+        if (targetLabel && algoId === 'combination_sum_ii') targetLabel.textContent = 'TARGET =';
+        if (targetLabel && ['lower_bound', 'upper_bound', 'first_last_occurrence',
+          'floor_ceil'].includes(algoId)) targetLabel.textContent = 'X =';
+        if (targetLabel && algoId === 'kth_missing') targetLabel.textContent = 'K =';
       }
       if (arrayHint) arrayHint.textContent = defaults.hint;
       // What-If sliders only make sense for graphs — hide the whole section.

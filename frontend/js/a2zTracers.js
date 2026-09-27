@@ -239,4 +239,31 @@ export const A2Z_TRACER = {
   "7-7":   "generate_parentheses",   // Generate Parentheses
   "7-27":  "binary_strings",         // Binary Strings Without Consecutive 1s
   "7-11":  "combination_sum",        // Combination Sum
+
+  // ══ Batch 32 (2026-09-27): expression conversions on the stack view (now
+  // with an output row, text-sized boxes and right-to-left scans).
+  "9-9":   "infix_to_postfix",       // Infix to Postfix Conversion
+  "9-36":  "infix_to_prefix",        // Infix to Prefix Conversion
+  "9-11":  "postfix_to_infix",       // Postfix to Infix Conversion
+  "9-35":  "postfix_to_prefix",      // Postfix to Prefix Conversion
+  "9-10":  "prefix_to_infix",        // Prefix to Infix Conversion
+  "9-34":  "prefix_to_postfix",      // Prefix to Postfix Conversion
+
+  // ══ Batch 33 (2026-09-27): loop-style recursion (n-ary trees — the tree
+  // renderer now draws every child, which also fixed 3+-child trie nodes).
+  "7-32":  "subsets_ii",             // Subsets II
+  "7-12":  "combination_sum_ii",     // Combination Sum II
+  "7-15":  "combination_sum_iii",    // Combination Sum III
+  "7-17":  "palindrome_partition",   // Palindrome partitioning
+  "7-16":  "letter_combinations",    // Letter Combinations of a Phone Number
+
+  // ══ Batch 34 (2026-09-27): binary-search boundary variants (one module).
+  "4-2":   "lower_bound",            // Lower Bound
+  "4-4":   "lower_bound",            // Search insert position (= lower bound)
+  "4-3":   "upper_bound",            // Upper Bound
+  "4-5":   "floor_ceil",             // Floor and Ceil in Sorted Array
+  "4-6":   "first_last_occurrence",  // First and last occurrence
+  "4-34":  "first_last_occurrence",  // Count occurrences (last − first + 1)
+  "4-20":  "kth_missing",            // Kth Missing Positive Number
+  "4-39":  "single_element_sorted",  // Single element in a Sorted Array
 };

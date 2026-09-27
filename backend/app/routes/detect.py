@@ -137,6 +137,23 @@ SIGNATURES = {
     "generate_parentheses": ["generate_parentheses", "generate parentheses", "balanced parentheses combinations", "all valid parentheses"],
     "binary_strings": ["binary_strings", "binary strings without consecutive", "no consecutive ones", "no consecutive 1s"],
     "combination_sum": ["combination_sum", "combination sum", "combinations that sum to target", "coin combinations list"],
+    "infix_to_postfix": ["infix_to_postfix", "infix to postfix", "shunting yard", "shunting-yard", "reverse polish conversion"],
+    "infix_to_prefix": ["infix_to_prefix", "infix to prefix", "polish notation conversion"],
+    "postfix_to_infix": ["postfix_to_infix", "postfix to infix"],
+    "postfix_to_prefix": ["postfix_to_prefix", "postfix to prefix"],
+    "prefix_to_infix": ["prefix_to_infix", "prefix to infix"],
+    "prefix_to_postfix": ["prefix_to_postfix", "prefix to postfix"],
+    "subsets_ii": ["subsets_ii", "subsets ii", "subsets with duplicates", "unique subsets", "distinct subsets"],
+    "combination_sum_ii": ["combination_sum_ii", "combination sum ii", "combination sum 2", "each number used once"],
+    "combination_sum_iii": ["combination_sum_iii", "combination sum iii", "combination sum 3", "k numbers sum to n"],
+    "palindrome_partition": ["palindrome_partition", "palindrome partitioning", "partition into palindromes", "all palindromic partitions"],
+    "letter_combinations": ["letter_combinations", "letter combinations", "phone number letters", "keypad combinations", "phone keypad"],
+    "lower_bound": ["lower_bound", "lower bound", "search insert position", "insert position", "first element not less than"],
+    "upper_bound": ["upper_bound", "upper bound", "first element greater than"],
+    "first_last_occurrence": ["first_last_occurrence", "first and last occurrence", "first and last position", "count occurrences", "number of occurrences"],
+    "floor_ceil": ["floor_ceil", "floor and ceil", "floor in sorted array", "ceil in sorted array"],
+    "kth_missing": ["kth_missing", "kth missing positive", "k-th missing", "missing positive number"],
+    "single_element_sorted": ["single_element_sorted", "single element in a sorted array", "single non-duplicate", "appears once sorted"],
 }
 
 REALWORLD_META = {
@@ -1542,6 +1559,142 @@ REALWORLD_META = {
         "metaphors": {"node": "handful", "edge": "use again / retire", "weight": "coin",
                       "visit": "Choosing a coin", "start": "Nothing picked",
                       "done": "Every combination that hits the target, each once."}
+    },
+    "infix_to_postfix": {
+        "scene": "plates",
+        "title": "Waiting Room for Operators",
+        "hook": "Numbers walk straight through; operators wait in line until a weaker one arrives and sends the stronger ones out first.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "infix_to_prefix": {
+        "scene": "plates",
+        "title": "The Same Queue, Run Backwards",
+        "hook": "Read the expression from the right, let ')' open groups, and write the answer backwards — then flip it.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "postfix_to_infix": {
+        "scene": "plates",
+        "title": "Rebuild the Brackets",
+        "hook": "Each operator grabs the two most recent pieces off the pile and glues them into one bracketed piece.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "postfix_to_prefix": {
+        "scene": "plates",
+        "title": "Move the Operator to the Front",
+        "hook": "Same pile of pieces as postfix → infix, but each operator is written before its two operands.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "prefix_to_infix": {
+        "scene": "plates",
+        "title": "Rebuild Brackets, Reading Backwards",
+        "hook": "Scan from the right; the first piece off the pile is the LEFT operand this time.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "prefix_to_postfix": {
+        "scene": "plates",
+        "title": "Move the Operator to the Back",
+        "hook": "Scan from the right, pop two pieces, and glue them as left + right + operator.",
+        "metaphors": {"node": "token", "edge": "—", "weight": "precedence",
+                      "visit": "Reading a token", "start": "An empty stack",
+                      "done": "The expression, rewritten."}
+    },
+    "subsets_ii": {
+        "scene": "files",
+        "title": "Packing Lists Without Repeats",
+        "hook": "Two identical items give identical lists — so at each step, only reach for the first of any identical items.",
+        "metaphors": {"node": "call", "edge": "choice", "weight": "—",
+                      "visit": "Making a recursive call", "start": "The empty choice",
+                      "done": "Every answer, found by branching."}
+    },
+    "combination_sum_ii": {
+        "scene": "vault",
+        "title": "Exact Change, Each Coin Once",
+        "hook": "Coins sorted, each usable once. Skip a coin identical to the one just tried, and stop as soon as a coin is too big.",
+        "metaphors": {"node": "call", "edge": "choice", "weight": "—",
+                      "visit": "Making a recursive call", "start": "The empty choice",
+                      "done": "Every answer, found by branching."}
+    },
+    "combination_sum_iii": {
+        "scene": "vault",
+        "title": "Pick k Digits That Hit the Sum",
+        "hook": "Always pick a bigger digit than last time, so every set appears once; stop when a digit overshoots.",
+        "metaphors": {"node": "call", "edge": "choice", "weight": "—",
+                      "visit": "Making a recursive call", "start": "The empty choice",
+                      "done": "Every answer, found by branching."}
+    },
+    "palindrome_partition": {
+        "scene": "dna",
+        "title": "Cut a Strand Into Mirror Pieces",
+        "hook": "Snip the strand only where the piece reads the same both ways; every way to reach the end is one answer.",
+        "metaphors": {"node": "call", "edge": "choice", "weight": "—",
+                      "visit": "Making a recursive call", "start": "The empty choice",
+                      "done": "Every answer, found by branching."}
+    },
+    "letter_combinations": {
+        "scene": "files",
+        "title": "What Words Could Those Keys Spell?",
+        "hook": "Each keypad digit stands for 3 or 4 letters. Branch on every letter, one level per key.",
+        "metaphors": {"node": "call", "edge": "choice", "weight": "—",
+                      "visit": "Making a recursive call", "start": "The empty choice",
+                      "done": "Every answer, found by branching."}
+    },
+    "lower_bound": {
+        "scene": "library",
+        "title": "Where Would This Book Go?",
+        "hook": "Find the first shelf slot holding a call number at least as big — even after a match, keep checking left.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
+    },
+    "upper_bound": {
+        "scene": "library",
+        "title": "The First Book Past This Number",
+        "hook": "Find the first slot strictly bigger; everything before it is at most your number.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
+    },
+    "first_last_occurrence": {
+        "scene": "library",
+        "title": "Where Does This Run of Copies Start and End?",
+        "hook": "Two searches: one keeps sliding left after a match, the other keeps sliding right.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
+    },
+    "floor_ceil": {
+        "scene": "library",
+        "title": "The Nearest Books on Either Side",
+        "hook": "The largest call number not above yours, and the smallest not below it.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
+    },
+    "kth_missing": {
+        "scene": "library",
+        "title": "Which Call Number Is Missing?",
+        "hook": "Before each book, its number minus its position tells you how many numbers were skipped. Search on that count.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
+    },
+    "single_element_sorted": {
+        "scene": "library",
+        "title": "The Book Without a Twin",
+        "hook": "Twins start on even slots until the odd one out shifts everything — search for where the pattern breaks.",
+        "metaphors": {"node": "book", "edge": "shelf order", "weight": "call number",
+                      "visit": "Checking the middle book at position", "start": "The whole shelf",
+                      "done": "The boundary, found in log n."}
     }
 }
 

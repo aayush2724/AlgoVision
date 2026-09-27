@@ -33,6 +33,8 @@ from app.tracers import (
     ll_palindrome, odd_even_list, rotate_list, delete_middle,
     koko_bananas, min_max_partition, aggressive_cows,
     subsets_recursion, generate_parentheses, binary_strings, combination_sum,
+    expr_convert, subsets_ii, combination_sum_ii, combination_sum_iii,
+    palindrome_partition, letter_combinations, bs_variants,
 )
 from app.tracers.common import Graph
 import os
@@ -208,8 +210,60 @@ def algorithms():
             {"id": "generate_parentheses", "name": "Generate Parentheses",   "input": "number"},
             {"id": "binary_strings", "name": "Binary Strings Without Consecutive 1s", "input": "number"},
             {"id": "combination_sum", "name": "Combination Sum (Recursion Tree)", "input": "array"},
+            {"id": "infix_to_postfix", "name": "Infix → Postfix",           "input": "text"},
+            {"id": "infix_to_prefix", "name": "Infix → Prefix",             "input": "text"},
+            {"id": "postfix_to_infix", "name": "Postfix → Infix",           "input": "text"},
+            {"id": "postfix_to_prefix", "name": "Postfix → Prefix",         "input": "text"},
+            {"id": "prefix_to_infix", "name": "Prefix → Infix",             "input": "text"},
+            {"id": "prefix_to_postfix", "name": "Prefix → Postfix",         "input": "text"},
+            {"id": "subsets_ii",    "name": "Subsets II (No Duplicates)",   "input": "array"},
+            {"id": "combination_sum_ii", "name": "Combination Sum II",      "input": "array"},
+            {"id": "combination_sum_iii", "name": "Combination Sum III",    "input": "array"},
+            {"id": "palindrome_partition", "name": "Palindrome Partitioning", "input": "text"},
+            {"id": "letter_combinations", "name": "Letter Combinations of a Phone Number", "input": "text"},
+            *({"id": k, "name": v, "input": "array"}
+              for k, v in bs_variants.TITLES.items()),
         ]
     }
+
+def _loop_recursion_trace(req):
+    """Validate and run the n-ary recursion-tree tracers (batch 33)."""
+    a = req.algorithm
+    if a in ("palindrome_partition", "letter_combinations"):
+      text = (req.text or "").replace(" ", "")
+      if a == "palindrome_partition":
+        text = text.lower()
+        if not _re.fullmatch(rf"[a-z]{{1,{palindrome_partition.MAX_LEN}}}", text):
+          raise HTTPException(status_code=400,
+            detail=f"1-{palindrome_partition.MAX_LEN} letters only.")
+        return palindrome_partition.trace(text)
+      if not _re.fullmatch(rf"[2-9]{{1,{letter_combinations.MAX_DIGITS}}}", text):
+        raise HTTPException(status_code=400,
+          detail="One or two digits from 2-9.")
+      return letter_combinations.trace(text)
+    arr = req.array or []
+    if not arr or any(v != int(v) for v in arr):
+      raise HTTPException(status_code=400,
+        detail=f"{a} needs whole numbers in 'array'.")
+    if a == "subsets_ii":
+      if len(arr) > subsets_ii.MAX_LEN or any(not (0 <= v <= 9) for v in arr):
+        raise HTTPException(status_code=400,
+          detail=f"Up to {subsets_ii.MAX_LEN} digits 0-9.")
+      return subsets_ii.trace(arr)
+    if a == "combination_sum_iii":
+      if len(arr) != 2 or not (1 <= arr[0] <= 9) or not (1 <= arr[1] <= 45):
+        raise HTTPException(status_code=400,
+          detail="Give [k, n] with k 1-9 and n 1-45.")
+      return combination_sum_iii.trace(int(arr[0]), int(arr[1]))
+    if len(arr) > combination_sum_ii.MAX_LEN or any(not (1 <= v <= 9) for v in arr):
+      raise HTTPException(status_code=400,
+        detail=f"Up to {combination_sum_ii.MAX_LEN} candidates, digits 1-9.")
+    t = req.target
+    if t is None or t != int(t) or not (1 <= t <= combination_sum_ii.MAX_TARGET):
+      raise HTTPException(status_code=400,
+        detail=f"Target must be 1-{combination_sum_ii.MAX_TARGET}.")
+    return combination_sum_ii.trace(arr, int(t))
+
 
 def _validated_array(array, max_len, algo):
     if array is None:
@@ -1225,6 +1279,35 @@ def run_trace(request: Request, req: TraceRequest):
                  f"smaller target or bigger candidates.")
       return combination_sum.trace(cands, int(t))
 
+    if req.algorithm in expr_convert.MODES:
+      text = (req.text or "").replace(" ", "")
+      kind = expr_convert.MODES[req.algorithm][0]
+      problem = expr_convert.validate(text, kind)
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      return expr_convert.trace(text, req.algorithm)
+
+    if req.algorithm in bs_variants.TITLES:
+      arr = req.array or []
+      problem = bs_variants.validate(req.algorithm, arr, req.target)
+      if problem:
+        raise HTTPException(status_code=400, detail=problem)
+      if req.target is not None and abs(req.target) > MAX_VALUE:
+        raise HTTPException(status_code=400,
+          detail=f"Target must be within ±{MAX_VALUE}.")
+      _validated_array(arr, bs_variants.MAX_LEN, req.algorithm)
+      return bs_variants.trace(req.algorithm, arr, req.target)
+
+    if req.algorithm in ("subsets_ii", "combination_sum_ii",
+                         "combination_sum_iii", "palindrome_partition",
+                         "letter_combinations"):
+      out = _loop_recursion_trace(req)
+      if out["meta"]["nodes"] > 45:
+        raise HTTPException(status_code=400,
+          detail=f"That recursion tree has {out['meta']['nodes']} calls — too "
+                 f"big to draw (max 45). Try a smaller input.")
+      return out
+
     if req.algorithm == "trie_insert":
       if req.text is None:
         raise HTTPException(
@@ -1791,7 +1874,10 @@ def run_trace(request: Request, req: TraceRequest):
                 "longest_complete_word", "ll_palindrome", "odd_even_list",
                 "rotate_list", "delete_middle", "koko_bananas",
                 "min_max_partition", "aggressive_cows", "subsets_recursion",
-                "generate_parentheses", "binary_strings", "combination_sum"])
+                "generate_parentheses", "binary_strings", "combination_sum",
+                *expr_convert.MODES, "subsets_ii", "combination_sum_ii",
+                "combination_sum_iii", "palindrome_partition",
+                "letter_combinations", *bs_variants.TITLES])
     raise HTTPException(
       status_code=400,
       detail=f"Algorithm must be one of: {', '.join(valid)}"

@@ -15,14 +15,27 @@ class RecTree:
         self.nodes: list = []
         self.events: list = []
 
-    def node(self, label: str, parent: int | None = None, side: str = "left"):
+    def node(self, label: str, parent: int | None = None,
+             side: str | None = "left"):
+        """Add a call. Binary tracers pass side='left'/'right'; tracers whose
+        recursion loops over choices pass side=None and get n-ary children."""
         nid = len(self.nodes)
         depth = 0 if parent is None else self.nodes[parent]["depth"] + 1
         self.nodes.append({"id": nid, "value": label, "depth": depth,
-                           "x": 0.5, "left": None, "right": None})
+                           "x": 0.5, "left": None, "right": None,
+                           "children": []})
         if parent is not None:
-            self.nodes[parent][side] = nid
+            if side:
+                self.nodes[parent][side] = nid
+            self.nodes[parent]["children"].append(nid)
+            if side:
+                # Keep children in left-then-right order for binary trees.
+                kids = self.nodes[parent]["children"]
+                kids.sort(key=lambda k: (self.nodes[parent]["right"] == k))
         return nid
+
+    def size(self) -> int:
+        return len(self.nodes)
 
     def event(self, nid: int | None, note: str, counts: dict,
               good: bool = False):
@@ -35,8 +48,7 @@ class RecTree:
         leaves: list = []
 
         def order(nid):
-            kids = [k for k in (self.nodes[nid]["left"],
-                                self.nodes[nid]["right"]) if k is not None]
+            kids = self.nodes[nid]["children"]
             if not kids:
                 leaves.append(nid)
             for k in kids:
@@ -47,8 +59,7 @@ class RecTree:
             self.nodes[nid]["x"] = (rank + 0.5) / len(leaves)
 
         def centre(nid):
-            kids = [k for k in (self.nodes[nid]["left"],
-                                self.nodes[nid]["right"]) if k is not None]
+            kids = self.nodes[nid]["children"]
             if kids:
                 xs = [centre(k) for k in kids]
                 self.nodes[nid]["x"] = sum(xs) / len(xs)
@@ -66,7 +77,8 @@ class RecTree:
                 revealed.add(ev["nid"])
                 if ev["good"]:
                     good.add(ev["nid"])
-            tree = [dict(n) for n in self.nodes if n["id"] in revealed]
+            tree = [dict(n, children=[k for k in n["children"] if k in revealed])
+                    for n in self.nodes if n["id"] in revealed]
             out.append({
                 "i": len(out),
                 "line": 0,

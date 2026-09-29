@@ -44,6 +44,8 @@ from app.tracers import (
     search_heuristic, flow, lifting, bitmask_dp, range_queries,
     number_theory, suffix_structs, graph_more, algebra, games,
     string_auto, graph_scc, geometry, dp_adv, bit_more,
+    basics_more, recursion_basics, pascal_more, ll_basics2, heaps_build, bst_more,
+    misc_a2z,
 )
 # Modules whose run(algo, text, target) validates (ValueError → 400) and traces.
 RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
@@ -54,7 +56,8 @@ RUN_MODULES = (tree_traverse_more, tree_views, tree_checks, dp_more, dp_strings,
                lists_hard, strings_trie, misc_hard, search_heuristic, flow, lifting,
                bitmask_dp, range_queries, number_theory, suffix_structs,
                graph_more, algebra, games, string_auto, graph_scc, geometry,
-               dp_adv, bit_more)
+               dp_adv, bit_more, basics_more, recursion_basics, pascal_more,
+               ll_basics2, heaps_build, bst_more, misc_a2z)
 from app.tracers.common import Graph
 import os
 
@@ -84,7 +87,7 @@ GRAPH_TRACERS = {
 }
 # These need non-negative weights to be correct; the shared Graph model now
 # allows negatives (for Bellman-Ford), so they reject them here instead.
-NONNEGATIVE_GRAPH = {"dijkstra", "prims_mst", "kruskals_mst"}
+NONNEGATIVE_GRAPH = {"dijkstra", "prims_mst", "kruskals_mst", "print_shortest_path"}
 SORT_TRACERS = {
     "merge_sort": merge_sort.trace,
     "quick_sort": quick_sort.trace,

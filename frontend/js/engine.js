@@ -222,18 +222,20 @@ const STACK_MORE = ['next_smaller', 'nge_circular', 'remove_k_digits', 'sum_suba
 const ARRAY_BASICS = ['remove_duplicates_sorted', 'rotate_array_k', 'move_zeros', 'leaders', 'longest_subarray_sum_k', 'second_largest'];
 
 // Batches 40–44: level-order binary trees and more table DP.
-const TREE_SHAPE = ['aho_corasick', 'tree_robber', 'sum_distances_tree'].concat(['lca_lifting', 'kth_ancestor'].concat(['build_pre_in', 'build_post_in', 'serialize_tree', 'morris_inorder', 'morris_preorder', 'flatten_tree', 'identical_trees', 'merge_two_bsts', 'trie_advanced'].concat(['floor_ceil_bst', 'kth_bst', 'lca_bst', 'successor_predecessor', 'two_sum_bst', 'bst_from_preorder', 'validate_bst', 'recover_bst', 'largest_bst', 'connect_sticks', 'is_min_heap', 'min_to_max_heap', 'word_ladder', 'word_ladder_ii'].concat(['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes']))));
+const TREE_SHAPE = ['heapify', 'build_heap', 'bst_min_max', 'bst_iterator', 'aho_corasick', 'tree_robber', 'sum_distances_tree'].concat(['lca_lifting', 'kth_ancestor'].concat(['build_pre_in', 'build_post_in', 'serialize_tree', 'morris_inorder', 'morris_preorder', 'flatten_tree', 'identical_trees', 'merge_two_bsts', 'trie_advanced'].concat(['floor_ceil_bst', 'kth_bst', 'lca_bst', 'successor_predecessor', 'two_sum_bst', 'bst_from_preorder', 'validate_bst', 'recover_bst', 'largest_bst', 'connect_sticks', 'is_min_heap', 'min_to_max_heap', 'word_ladder', 'word_ladder_ii'].concat(['iter_preorder', 'iter_inorder', 'postorder_two_stacks', 'postorder_one_stack', 'zigzag_traversal', 'right_view', 'top_view', 'bottom_view', 'vertical_order', 'boundary_traversal', 'max_width', 'balanced_tree', 'symmetric_tree', 'max_path_sum', 'root_to_leaf_paths', 'children_sum', 'nodes_at_distance_k', 'burn_tree', 'count_complete_nodes']))));
 const DP_MORE = ['frog_jump_k', 'ninja_training', 'min_falling_path', 'triangle_path', 'partition_equal_subset', 'count_subsets_sum_k', 'unbounded_knapsack', 'rod_cutting'];
 const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palindrome', 'min_ins_del', 'shortest_supersequence', 'distinct_subsequences', 'wildcard_match'];
 
 // Batches 45–49: text-input grid problems and drawn-graph problems.
 // Linked-list tracers that take text input (run modules) on the list view.
-const LIST_TEXT = ['stack_linkedlist', 'queue_linkedlist', 'clone_random_list', 'flatten_list', 'merge_k_lists', 'll_insert_head', 'll_delete_head', 'll_length', 'll_search', 'dll_insert_head', 'dll_delete_head', 'dll_pairs_sum', 'dll_remove_duplicates', 'll_reverse_recursive', 'loop_length', 'sort_012_list', 'sort_list', 'y_intersection', 'reverse_k_group'];
-const TEXT_GRID = ['substring_hash', 'tarjan_scc', 'two_sat', 'lexicographic_topo', 'convex_hull', 'polygon_area', 'closest_pair', 'digit_dp', 'sos_dp', 'bit_kth', 'inversions_bit', 'prefix_sum_2d'].concat(['a_star_grid', 'best_first_grid', 'zero_one_bfs', 'max_flow', 'min_cut', 'bipartite_matching', 'tsp_bitmask', 'assignment_bitmask', 'sparse_table', 'sqrt_decomposition', 'lazy_segment_tree', 'extended_gcd', 'mod_inverse', 'ncr_mod', 'euler_totient', 'spf_sieve', 'crt', 'suffix_array', 'lcp_kasai', 'longest_repeated_substring', 'euler_path', 'longest_path_dag', 'count_paths_dag', 'matrix_exponentiation', 'ternary_search', 'meet_in_middle', 'nim', 'grundy_numbers', 'optimal_game'].concat(['stack_array', 'queue_array', 'stack_using_queue', 'queue_using_stacks', 'min_stack', 'lru_cache', 'lfu_cache', 'design_twitter', 'bracket_reversals', 'count_and_say', 'longest_happy_prefix', 'count_palindromic_subseq', 'distinct_substrings', 'max_xor_pair', 'max_xor_queries', 'ninja_friends', 'max_sum_combination', 'accounts_merge'].concat(['search_rotated_ii', 'median_two_sorted', 'kth_two_sorted', 'gas_station', 'peak_element_ii', 'matrix_median', 'print_1_to_n', 'print_n_to_1', 'recursive_bubble_sort', 'recursive_insertion_sort', 'count_good_numbers', 'sort_stack', 'reverse_stack', 'recursive_atoi', 'word_break', 'm_coloring', 'sudoku_solver', 'expression_add_operators', 'valid_paren_star', 'shortest_job_first', 'lru_page_faults', 'insert_interval', 'non_overlapping_intervals', 'greater_to_right', 'sum_subarray_ranges', 'celebrity'].concat(['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']))))));
+const LIST_TEXT = ['ll_traverse', 'll_delete_tail', 'll_delete_kth', 'll_delete_value', 'll_insert_tail', 'll_insert_kth', 'll_insert_before_value', 'dll_from_array', 'dll_delete_tail', 'dll_delete_kth', 'dll_remove_node', 'dll_insert_before_tail', 'dll_insert_before_kth', 'dll_insert_before_node', 'stack_linkedlist', 'queue_linkedlist', 'clone_random_list', 'flatten_list', 'merge_k_lists', 'll_insert_head', 'll_delete_head', 'll_length', 'll_search', 'dll_insert_head', 'dll_delete_head', 'dll_pairs_sum', 'dll_remove_duplicates', 'll_reverse_recursive', 'loop_length', 'sort_012_list', 'sort_list', 'y_intersection', 'reverse_k_group'];
+const TEXT_GRID = ['count_odd_digits', 'largest_digit', 'perfect_number', 'lcm', 'array_sum', 'count_odd_array', 'second_highest_freq', 'sum_high_low_freq', 'reverse_string', 'set_rightmost_unset_bit', 'sum_array_rec', 'sum_digits_rec', 'factorial_rec', 'prime_rec', 'sorted_rec', 'reverse_array_rec', 'reverse_string_rec', 'palindrome_rec', 'pascal_element', 'pascal_row', 'sort_k_sorted', 'single_number_ii', 'distinct_islands', 'shortest_palindrome', 'substring_hash', 'tarjan_scc', 'two_sat', 'lexicographic_topo', 'convex_hull', 'polygon_area', 'closest_pair', 'digit_dp', 'sos_dp', 'bit_kth', 'inversions_bit', 'prefix_sum_2d'].concat(['a_star_grid', 'best_first_grid', 'zero_one_bfs', 'max_flow', 'min_cut', 'bipartite_matching', 'tsp_bitmask', 'assignment_bitmask', 'sparse_table', 'sqrt_decomposition', 'lazy_segment_tree', 'extended_gcd', 'mod_inverse', 'ncr_mod', 'euler_totient', 'spf_sieve', 'crt', 'suffix_array', 'lcp_kasai', 'longest_repeated_substring', 'euler_path', 'longest_path_dag', 'count_paths_dag', 'matrix_exponentiation', 'ternary_search', 'meet_in_middle', 'nim', 'grundy_numbers', 'optimal_game'].concat(['stack_array', 'queue_array', 'stack_using_queue', 'queue_using_stacks', 'min_stack', 'lru_cache', 'lfu_cache', 'design_twitter', 'bracket_reversals', 'count_and_say', 'longest_happy_prefix', 'count_palindromic_subseq', 'distinct_substrings', 'max_xor_pair', 'max_xor_queries', 'ninja_friends', 'max_sum_combination', 'accounts_merge'].concat(['search_rotated_ii', 'median_two_sorted', 'kth_two_sorted', 'gas_station', 'peak_element_ii', 'matrix_median', 'print_1_to_n', 'print_n_to_1', 'recursive_bubble_sort', 'recursive_insertion_sort', 'count_good_numbers', 'sort_stack', 'reverse_stack', 'recursive_atoi', 'word_break', 'm_coloring', 'sudoku_solver', 'expression_add_operators', 'valid_paren_star', 'shortest_job_first', 'lru_page_faults', 'insert_interval', 'non_overlapping_intervals', 'greater_to_right', 'sum_subarray_ranges', 'celebrity'].concat(['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']))))));
 // Edges of these algorithms are read a → b, so the graph draws arrowheads.
 const DIRECTED_ALGOS = ['network_delay', 'topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
 
 const VIEW_FOR = {
+  // 2026-09-29 — rows the 20-module A2Z sheet added
+  count_odd_digits: 'grid', largest_digit: 'grid', perfect_number: 'grid', lcm: 'grid', array_sum: 'grid', count_odd_array: 'grid', second_highest_freq: 'grid', sum_high_low_freq: 'grid', reverse_string: 'grid', set_rightmost_unset_bit: 'grid', sum_array_rec: 'grid', sum_digits_rec: 'grid', factorial_rec: 'grid', prime_rec: 'grid', sorted_rec: 'grid', reverse_array_rec: 'grid', reverse_string_rec: 'grid', palindrome_rec: 'grid', pascal_element: 'grid', pascal_row: 'grid', sort_k_sorted: 'grid', single_number_ii: 'grid', distinct_islands: 'grid', shortest_palindrome: 'grid', ll_traverse: 'list', ll_delete_tail: 'list', ll_delete_kth: 'list', ll_delete_value: 'list', ll_insert_tail: 'list', ll_insert_kth: 'list', ll_insert_before_value: 'list', dll_from_array: 'list', dll_delete_tail: 'list', dll_delete_kth: 'list', dll_remove_node: 'list', dll_insert_before_tail: 'list', dll_insert_before_kth: 'list', dll_insert_before_node: 'list', heapify: 'tree', build_heap: 'tree', bst_min_max: 'tree', bst_iterator: 'tree', print_shortest_path: 'graph',
   dijkstra: 'graph', bfs: 'graph', dfs: 'graph',
   prims_mst: 'graph', kruskals_mst: 'graph',
   binary_search: 'array', merge_sort: 'array', quick_sort: 'array',
@@ -511,12 +513,12 @@ export function mountEngine(view, algo = 'dijkstra') {
   }
   // Online → the API; offline → the sample trace.
   const traceRequest = (payload) => (isOffline ? offlineSample() : api.postTrace(algoId, payload));
-  // The sample trace belongs to the default input, so show that input.
-  function resetToSampleInput() {
+  // The sample trace belongs to the DEFAULT input; say which one, so a
+  // student whose own input is still in the box knows what they're watching.
+  function sampleInputLabel() {
     const d = ARRAY_DEFAULTS[algoId];
-    if (!d || traceView === 'graph') return;
-    if (arrayInput) arrayInput.value = d.array ?? '';
-    if (targetInput && d.target !== undefined) targetInput.value = d.target;
+    if (!d || traceView === 'graph') return 'the sample input';
+    return `the sample input ${d.array ?? ''}${d.target !== undefined ? ` | ${d.target}` : ''}`;
   }
   let currentMeta = null;  // stores realworld_meta for current algo
   let currentScene = null; // stores scene renderer
@@ -673,6 +675,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       a_star_grid: 'grid_power', best_first_grid: 'grid_power', zero_one_bfs: 'grid_power', max_flow: 'vault', min_cut: 'vault', bipartite_matching: 'vault', lca_lifting: 'files', kth_ancestor: 'files', tsp_bitmask: 'grid_power', assignment_bitmask: 'grid_power', sparse_table: 'leaderboard', sqrt_decomposition: 'leaderboard', lazy_segment_tree: 'leaderboard', extended_gcd: 'vault', mod_inverse: 'vault', ncr_mod: 'vault', euler_totient: 'vault', spf_sieve: 'vault', crt: 'vault', suffix_array: 'dna', lcp_kasai: 'dna', longest_repeated_substring: 'dna', euler_path: 'vault', longest_path_dag: 'vault', count_paths_dag: 'vault', matrix_exponentiation: 'vault', ternary_search: 'vault', meet_in_middle: 'vault', nim: 'vault', grundy_numbers: 'vault', optimal_game: 'grid_power',
       build_pre_in: 'files', build_post_in: 'files', serialize_tree: 'files', morris_inorder: 'files', morris_preorder: 'files', flatten_tree: 'files', identical_trees: 'files', merge_two_bsts: 'files', stack_array: 'plates', queue_array: 'scheduler', stack_using_queue: 'plates', queue_using_stacks: 'scheduler', stack_linkedlist: 'train', queue_linkedlist: 'train', min_stack: 'plates', lru_cache: 'scheduler', lfu_cache: 'scheduler', design_twitter: 'scheduler', clone_random_list: 'train', flatten_list: 'train', merge_k_lists: 'train', bracket_reversals: 'dna', count_and_say: 'dna', longest_happy_prefix: 'dna', count_palindromic_subseq: 'dna', distinct_substrings: 'vault', max_xor_pair: 'vault', max_xor_queries: 'vault', trie_advanced: 'files', ninja_friends: 'grid_power', max_sum_combination: 'leaderboard', accounts_merge: 'vault',
       ll_insert_head: 'train', ll_delete_head: 'train', ll_length: 'train', ll_search: 'train', dll_insert_head: 'train', dll_delete_head: 'train', dll_pairs_sum: 'train', dll_remove_duplicates: 'train', ll_reverse_recursive: 'train', loop_length: 'train', sort_012_list: 'train', sort_list: 'train', y_intersection: 'train', reverse_k_group: 'train', search_rotated_ii: 'vault', median_two_sorted: 'vault', kth_two_sorted: 'vault', gas_station: 'vault', peak_element_ii: 'vault', matrix_median: 'vault', print_1_to_n: 'vault', print_n_to_1: 'vault', recursive_bubble_sort: 'leaderboard', recursive_insertion_sort: 'leaderboard', count_good_numbers: 'vault', sort_stack: 'plates', reverse_stack: 'plates', recursive_atoi: 'dna', word_break: 'dna', m_coloring: 'vault', sudoku_solver: 'grid_power', expression_add_operators: 'vault', valid_paren_star: 'vault', shortest_job_first: 'scheduler', lru_page_faults: 'scheduler', insert_interval: 'scheduler', non_overlapping_intervals: 'scheduler', greater_to_right: 'leaderboard', sum_subarray_ranges: 'stocks', celebrity: 'vault',
+      count_odd_digits: 'vault', largest_digit: 'vault', perfect_number: 'vault', lcm: 'vault', set_rightmost_unset_bit: 'vault', sum_array_rec: 'vault', sum_digits_rec: 'vault', factorial_rec: 'vault', prime_rec: 'vault', sorted_rec: 'vault', reverse_array_rec: 'vault', single_number_ii: 'vault', array_sum: 'leaderboard', count_odd_array: 'leaderboard', second_highest_freq: 'leaderboard', sum_high_low_freq: 'leaderboard', reverse_string: 'dna', reverse_string_rec: 'dna', palindrome_rec: 'dna', shortest_palindrome: 'dna', pascal_element: 'grid_power', pascal_row: 'grid_power', distinct_islands: 'grid_power', ll_traverse: 'train', ll_delete_tail: 'train', ll_delete_kth: 'train', ll_delete_value: 'train', ll_insert_tail: 'train', ll_insert_kth: 'train', ll_insert_before_value: 'train', dll_from_array: 'train', dll_delete_tail: 'train', dll_delete_kth: 'train', dll_remove_node: 'train', dll_insert_before_tail: 'train', dll_insert_before_kth: 'train', dll_insert_before_node: 'train', heapify: 'scheduler', build_heap: 'scheduler', sort_k_sorted: 'scheduler', bst_min_max: 'files', bst_iterator: 'files', print_shortest_path: 'gps',
       cut_stick: 'grid_power', burst_balloons: 'grid_power', boolean_evaluation: 'grid_power', palindrome_partition_ii: 'dna', partition_array_max_sum: 'grid_power', min_subset_diff: 'grid_power', count_partitions_diff: 'grid_power', target_sum: 'grid_power', max_rectangle_ones: 'grid_power', largest_element: 'leaderboard', check_sorted: 'leaderboard', linear_search: 'leaderboard', union_sorted: 'leaderboard', intersection_sorted: 'leaderboard', missing_number: 'vault', max_consecutive_ones: 'leaderboard', rearrange_by_sign: 'leaderboard', max_product_subarray: 'stocks', longest_sum_k_any: 'vault', count_sum_k: 'vault', largest_zero_sum: 'vault', count_xor_k: 'vault', longest_consecutive: 'vault', majority_n3: 'leaderboard', repeating_missing: 'vault', three_sum: 'leaderboard', four_sum: 'leaderboard', set_matrix_zeros: 'grid_power', rotate_matrix: 'grid_power', spiral_order: 'grid_power', pascal_triangle: 'grid_power', merge_no_space: 'leaderboard', count_inversions: 'leaderboard', reverse_pairs: 'leaderboard', count_digits: 'vault', reverse_number: 'vault', palindrome_number: 'vault', armstrong_number: 'vault', print_divisors: 'vault', check_prime: 'vault', factorial: 'vault', sum_first_n: 'vault', reverse_array: 'leaderboard', palindrome_string: 'dna', frequency_count: 'leaderboard', check_ith_bit: 'vault', check_odd: 'vault', swap_xor: 'vault', divide_bits: 'vault', xor_range: 'vault', single_number_iii: 'vault',
       number_of_islands: 'grid_power', rotten_oranges: 'grid_power', nearest_one_distance: 'grid_power', surrounded_regions: 'grid_power', number_of_enclaves: 'grid_power', binary_maze_path: 'maze', min_effort_path: 'maze', swim_rising_water: 'maze', largest_island: 'maze', islands_ii: 'maze', floyd_warshall: 'vault', city_fewest_neighbours: 'vault', stock_ii: 'stocks', stock_iii: 'stocks', stock_iv: 'stocks', stock_cooldown: 'stocks', stock_fee: 'stocks', print_lis: 'vault', largest_divisible_subset: 'vault', longest_string_chain: 'vault', longest_bitonic: 'vault', number_of_lis: 'vault', cycle_undirected_bfs: 'grid_power', cycle_undirected_dfs: 'grid_power', bridges: 'grid_power', articulation_points: 'grid_power', connect_network_ops: 'grid_power', cycle_directed: 'scheduler', safe_states: 'scheduler', kosaraju: 'scheduler', shortest_path_dag: 'scheduler',
       iter_preorder: 'files', iter_inorder: 'files', postorder_two_stacks: 'files', postorder_one_stack: 'files', zigzag_traversal: 'files', right_view: 'files', top_view: 'files', bottom_view: 'files', vertical_order: 'files', boundary_traversal: 'files', max_width: 'files', balanced_tree: 'files', symmetric_tree: 'files', max_path_sum: 'files', root_to_leaf_paths: 'files', children_sum: 'files', nodes_at_distance_k: 'files', burn_tree: 'files', count_complete_nodes: 'files',
@@ -1689,6 +1692,174 @@ export function mountEngine(view, algo = 'dijkstra') {
     reverse_pairs: {
       array: '1,3,2,3,1',
       hint: 'Up to 12 numbers. Count a[i] > 2·a[j] across halves during merge sort.',
+    },
+    count_odd_digits: {
+      array: '13579',
+      hint: 'A whole number. Peel each digit with % 10 and test it.',
+    },
+    largest_digit: {
+      array: '3947',
+      hint: 'A whole number. Keep the biggest digit seen so far.',
+    },
+    perfect_number: {
+      array: '28',
+      hint: 'A whole number. Sum its proper divisors; equal means perfect.',
+    },
+    lcm: {
+      array: '12,18',
+      hint: 'Two numbers. Euclid for the gcd, then a·b / gcd.',
+    },
+    array_sum: {
+      array: '3,1,4,1,5',
+      hint: 'Up to 12 numbers. One pass, a running total.',
+    },
+    count_odd_array: {
+      array: '3,8,5,2,7,6',
+      hint: 'Up to 12 numbers. Test each with % 2.',
+    },
+    second_highest_freq: {
+      array: '1,2,2,3,3,3,4',
+      hint: 'Up to 12 numbers. Tally, then read the second-highest count.',
+    },
+    sum_high_low_freq: {
+      array: '1,2,2,3,3,3',
+      hint: 'Up to 12 numbers. Tally; add the top and bottom counts.',
+    },
+    reverse_string: {
+      array: 'hello',
+      hint: 'A word. Swap the ends and walk inward.',
+    },
+    set_rightmost_unset_bit: {
+      array: '13',
+      hint: 'A number 0–254. n | (n + 1) flips the lowest 0 bit.',
+    },
+    sum_array_rec: {
+      array: '1,2,3,4',
+      hint: 'Up to 10 numbers. sum(i) = a[i] + sum(i + 1).',
+    },
+    sum_digits_rec: {
+      array: '1234',
+      hint: 'A whole number. f(n) = n % 10 + f(n // 10).',
+    },
+    factorial_rec: {
+      array: '5',
+      hint: '0–10. f(n) = n · f(n − 1).',
+    },
+    prime_rec: {
+      array: '29',
+      hint: '2–9999. Try each divisor d while d·d ≤ n.',
+    },
+    sorted_rec: {
+      array: '1,2,4,4,7',
+      hint: 'Up to 10 numbers. a[i] ≤ a[i + 1] and sorted(i + 1).',
+    },
+    reverse_array_rec: {
+      array: '1,2,3,4,5',
+      hint: 'Up to 10 numbers. Swap the ends, recurse inward.',
+    },
+    reverse_string_rec: {
+      array: 'recursion',
+      hint: 'A word. Swap the ends, recurse inward.',
+    },
+    palindrome_rec: {
+      array: 'racecar',
+      hint: 'A word. Ends must match, then check the inside.',
+    },
+    pascal_element: {
+      array: '5,3',
+      hint: 'row,column (1-based). C(r−1, c−1) by a running product.',
+    },
+    pascal_row: {
+      array: '6',
+      hint: 'The row number. Each entry from the previous one.',
+    },
+    ll_traverse: {
+      array: '4,5,6,7',
+      hint: 'The list. Follow next until null.',
+    },
+    ll_delete_tail: {
+      array: '1,2,3,4',
+      hint: 'The list. Walk to the second-last node and cut.',
+    },
+    ll_delete_kth: {
+      array: '1,2,3,4,5', target: '3',
+      hint: 'The list and k (1-based). Bypass the kth node.',
+    },
+    ll_delete_value: {
+      array: '1,2,3,4,5', target: '4',
+      hint: 'The list and the value. Find it, remembering the node before.',
+    },
+    ll_insert_tail: {
+      array: '1,2,3', target: '9',
+      hint: 'The list and the value. Walk to the end and hang it on.',
+    },
+    ll_insert_kth: {
+      array: '1,2,4,5 | 3', target: '3',
+      hint: 'The list | new value, and k (1-based). Insert after node k−1.',
+    },
+    ll_insert_before_value: {
+      array: '1,2,4,5 | 3', target: '4',
+      hint: 'The list | new value, and the value to insert before.',
+    },
+    dll_from_array: {
+      array: '3,1,4,1,5',
+      hint: 'The array. One node per value; link next and prev.',
+    },
+    dll_delete_tail: {
+      array: '1,2,3,4',
+      hint: 'The DLL. tail.prev knows the way — no walk.',
+    },
+    dll_delete_kth: {
+      array: '1,2,3,4,5', target: '3',
+      hint: 'The DLL and k. Fix next AND prev around it.',
+    },
+    dll_remove_node: {
+      array: '1,2,3,4,5', target: '3',
+      hint: 'The DLL and the node\'s value. Its neighbours link to each other.',
+    },
+    dll_insert_before_tail: {
+      array: '1,2,3', target: '9',
+      hint: 'The DLL and the value. Slot it between tail.prev and tail.',
+    },
+    dll_insert_before_kth: {
+      array: '1,2,4,5 | 3', target: '3',
+      hint: 'The DLL | new value, and k. Four links change.',
+    },
+    dll_insert_before_node: {
+      array: '1,2,4,5 | 3', target: '4',
+      hint: 'The DLL | new value, and the node\'s value.',
+    },
+    heapify: {
+      array: '4,10,3,5,1 | 0',
+      hint: 'Up to 12 numbers | index. Sink that node below its bigger child.',
+    },
+    build_heap: {
+      array: '4,10,3,5,1,8,7',
+      hint: 'Up to 12 numbers. Heapify every parent, last to first.',
+    },
+    sort_k_sorted: {
+      array: '6,5,3,2,8,10,9 | 3',
+      hint: 'Numbers | k. A min-heap of k+1 always holds the next smallest.',
+    },
+    bst_min_max: {
+      array: '8,3,10,1,6,14,4,7,13',
+      hint: 'Values inserted into a BST. Leftmost is min, rightmost is max.',
+    },
+    bst_iterator: {
+      array: '8,3,10,1,6,14,4,7',
+      hint: 'Values inserted into a BST. A stack of the left spine drives next().',
+    },
+    single_number_ii: {
+      array: '2,2,3,2',
+      hint: 'Every value thrice but one. Count 1-bits per position mod 3.',
+    },
+    distinct_islands: {
+      array: '1,1,0,1,1/1,0,0,0,1/0,0,0,0,0/1,1,0,1,1',
+      hint: '0/1 grid, rows split by /. Same offset shape = same island.',
+    },
+    shortest_palindrome: {
+      array: 'aacecaaa',
+      hint: 'A word. lps of s#reverse(s) finds the palindromic prefix.',
     },
     count_digits: {
       array: '12345',
@@ -3205,7 +3376,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       // A preview of the nodes; the server validates and sends the real list.
       const array = raw.split(/[|,]/).map((v) => v.trim()).filter(Boolean)
         .map(Number).filter(Number.isFinite).slice(0, 12);
-      if (!['ll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group'].includes(algoId)) return { text: raw, array };
+      if (!['ll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group', 'll_delete_kth', 'll_delete_value', 'll_insert_tail', 'll_insert_kth', 'll_insert_before_value', 'dll_delete_kth', 'dll_remove_node', 'dll_insert_before_tail', 'dll_insert_before_kth', 'dll_insert_before_node'].includes(algoId)) return { text: raw, array };
       const t = Number((targetInput?.value || '').trim());
       if (!Number.isInteger(t)) return { error: 'Enter a whole number.' };
       return { text: raw, target: t, array };
@@ -5202,15 +5373,27 @@ export function mountEngine(view, algo = 'dijkstra') {
     });
   }
 
-  async function checkBackend() {
-    try {
-      await api.getAlgorithms();
-      status.innerHTML = 'STATUS: <span style="color:var(--cBright)">CONNECTED</span>';
-      isOffline = false;
-    } catch {
-      status.innerHTML = 'STATUS: <span style="color:#ff5f5f">OFFLINE (EMULATOR)</span>';
-      isOffline = true;
-    }
+  // One probe in flight at a time: Run awaits the same promise instead of
+  // starting a second one. The probe waits out a cold start (see api.js).
+  let backendProbe = null;
+  function checkBackend() {
+    if (backendProbe) return backendProbe;
+    status.innerHTML = 'STATUS: <span style="color:var(--cDim)">CONNECTING…</span>';
+    backendProbe = (async () => {
+      try {
+        await api.getAlgorithms();
+        status.innerHTML = 'STATUS: <span style="color:var(--cBright)">CONNECTED</span>';
+        isOffline = false;
+      } catch {
+        status.innerHTML = canEmulate()
+          ? 'STATUS: <span style="color:#ff5f5f">OFFLINE — IN-BROWSER EMULATOR</span>'
+          : 'STATUS: <span style="color:#ff5f5f">OFFLINE — SAMPLE TRACE ONLY</span>';
+        isOffline = true;
+      } finally {
+        backendProbe = null;
+      }
+    })();
+    return backendProbe;
   }
 
   function localTrace(algorithm, startNode) {
@@ -5418,9 +5601,15 @@ export function mountEngine(view, algo = 'dijkstra') {
   async function run() {
     runBtn.disabled = true;
     explanationBox.classList.add('is-hidden');
-    if (isOffline) await checkBackend();   // the API may have woken up since
+    // The API may have woken up since (a sleeping free-tier server takes
+    // 20–30 s to answer its first request) — wait for it rather than
+    // guessing. The student's input is never replaced by the sample.
+    if (isOffline || backendProbe) {
+      status.innerHTML = 'STATUS: <span style="color:var(--c)">WAKING THE SERVER…</span>';
+      status.className = 'engine-status-pill running';
+      await checkBackend();
+    }
     offlineSampleShown = false;
-    if (isOffline && !canEmulate()) resetToSampleInput();
     status.innerHTML = 'STATUS: <span style="color:var(--c)">TRACING...</span>';
     status.className = 'engine-status-pill running';
 
@@ -5669,8 +5858,9 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (offlineSampleShown) {
         status.innerHTML = 'STATUS: <span style="color:#ffb454">OFFLINE — SAMPLE TRACE</span>';
         if (arrayHint) {
-          arrayHint.textContent = 'The server can\'t be reached, so this is the built-in trace '
-            + 'of the sample input. Your own input will trace once the server is back.';
+          arrayHint.textContent = `The server can't be reached, so this is the built-in trace of `
+            + `${sampleInputLabel()} — not of the input above. Press Run again once the `
+            + `server is back and your own input will trace.`;
         }
       }
     } catch (e) {
@@ -6312,7 +6502,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         'search_2d_matrix', 'search_2d_matrix_ii', 'remove_k_digits',
         'rotate_array_k', 'longest_subarray_sum_k', 'frog_jump_k',
         'count_subsets_sum_k', 'unbounded_knapsack', 'city_fewest_neighbours',
-        'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination', 'spf_sieve', 'meet_in_middle', 'digit_dp'].includes(algoId)
+        'stock_iv', 'stock_fee', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'max_card_points', 'subarrays_k_distinct', 'partition_array_max_sum', 'count_partitions_diff', 'target_sum', 'linear_search', 'longest_sum_k_any', 'count_sum_k', 'count_xor_k', 'four_sum', 'pascal_triangle', 'check_ith_bit', 'll_insert_head', 'll_search', 'dll_insert_head', 'dll_pairs_sum', 'loop_length', 'reverse_k_group', 'll_delete_kth', 'll_delete_value', 'll_insert_tail', 'll_insert_kth', 'll_insert_before_value', 'dll_delete_kth', 'dll_remove_node', 'dll_insert_before_tail', 'dll_insert_before_kth', 'dll_insert_before_node', 'search_rotated_ii', 'kth_two_sorted', 'gas_station', 'm_coloring', 'expression_add_operators', 'lru_page_faults', 'stack_array', 'queue_array', 'lru_cache', 'lfu_cache', 'max_sum_combination', 'spf_sieve', 'meet_in_middle', 'digit_dp'].includes(algoId)
         || numberOnly || traceView === 'table';
       if (wantsTarget && targetWrap) {
         targetWrap.style.display = 'inline-flex';
@@ -6371,6 +6561,16 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (targetLabel && algoId === 'pascal_triangle') targetLabel.textContent = 'ROWS =';
         if (targetLabel && algoId === 'check_ith_bit') targetLabel.textContent = 'I =';
         if (targetLabel && algoId === 'll_insert_head') targetLabel.textContent = 'VALUE =';
+        if (targetLabel && algoId === 'll_delete_kth') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'll_delete_value') targetLabel.textContent = 'X =';
+        if (targetLabel && algoId === 'll_insert_tail') targetLabel.textContent = 'VALUE =';
+        if (targetLabel && algoId === 'll_insert_kth') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'll_insert_before_value') targetLabel.textContent = 'BEFORE =';
+        if (targetLabel && algoId === 'dll_delete_kth') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'dll_remove_node') targetLabel.textContent = 'NODE =';
+        if (targetLabel && algoId === 'dll_insert_before_tail') targetLabel.textContent = 'VALUE =';
+        if (targetLabel && algoId === 'dll_insert_before_kth') targetLabel.textContent = 'K =';
+        if (targetLabel && algoId === 'dll_insert_before_node') targetLabel.textContent = 'NODE =';
         if (targetLabel && algoId === 'll_search') targetLabel.textContent = 'X =';
         if (targetLabel && algoId === 'dll_insert_head') targetLabel.textContent = 'VALUE =';
         if (targetLabel && algoId === 'dll_pairs_sum') targetLabel.textContent = 'SUM =';

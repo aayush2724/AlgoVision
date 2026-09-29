@@ -1,15 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { ALGORITHMS, KEYCAP_LABEL as SHORT } from './data.js';
+import { ALGORITHMS, ALGO_CATEGORIES, capLabel } from './data.js';
 
 /* ══════════════════════════════════════════════════════════════
    The AlgoVision keyboard.
 
-   A full-size 3D mechanical keyboard. Most caps are decorative —
-   modifiers and math-glyph novelties — and scattered among them
-   are 22 algorithm keys. Drag to rotate, scroll to zoom, hover to
-   inspect, click an algorithm key to dive into its live trace.
+   A 60% 3D mechanical keyboard. Modifier and math-glyph caps are
+   decorative; the 48 other caps are algorithm keys. Drag to rotate,
+   scroll to zoom, hover to inspect, click a key to dive into its
+   live trace.
+
+   Like a real 60% board, the caps have LAYERS: layer 1 is the curated
+   classics laid out below; the FN caps (or the [ ] keys) page through
+   the rest of the catalog, family by family, so every one of the
+   algorithms in data.js sits on a keycap somewhere.
 ══════════════════════════════════════════════════════════════ */
 
 // Colourway of the reference board: warm greys, cream, tan, burnt orange.
@@ -68,6 +73,32 @@ const GAP = 0.14;
 const STEP = U + GAP;
 const ROW_UNITS = 15;
 
+// ── Layers ─────────────────────────────────────────────────────
+// Layer 1 is LAYOUT's own algorithm keys. The remaining algorithms are laid
+// on the same slots in catalog-family order, a board-full at a time, so a
+// page reads "GRAPHS" or "PATTERNS · STRUCTURES" rather than a random mix.
+const SLOT_IDS = LAYOUT.flatMap(row => row.filter(e => e.t === 'a').map(e => e.id));
+
+function buildLayers() {
+  const byId = Object.fromEntries(ALGORITHMS.map(a => [a.id, a]));
+  const layers = [{ name: 'CLASSICS', ids: SLOT_IDS.filter(id => byId[id]) }];
+  const onBoard = new Set(layers[0].ids);
+  const rest = [];
+  for (const fam of ALGO_CATEGORIES.filter(c => c !== 'All')) {
+    for (const a of ALGORITHMS) {
+      if (a.category === fam && !onBoard.has(a.id)) rest.push(a);
+    }
+  }
+  const size = layers[0].ids.length;   // one cap per slot that really exists
+  for (let i = 0; i < rest.length; i += size) {
+    const page = rest.slice(i, i + size);
+    const fams = [...new Set(page.map(a => a.category))].map(f => f.toUpperCase());
+    const name = fams.length <= 2 ? fams.join(' · ') : `${fams[0]} … ${fams[fams.length - 1]}`;
+    layers.push({ name, ids: page.map(a => a.id) });
+  }
+  return layers;
+}
+
 function capTexture(entry, algo) {
   const wPx = Math.round(256 * entry.w);
   const c = document.createElement('canvas');
@@ -85,7 +116,7 @@ function capTexture(entry, algo) {
   if (entry.t === 'a') {
     x.fillStyle = st.legend;
     x.font = '600 64px Geist, system-ui, sans-serif';
-    x.fillText(SHORT[algo.id] || algo.id.slice(0, 4).toUpperCase(), wPx / 2, 116);
+    x.fillText(capLabel(algo), wPx / 2, 116);
     x.fillStyle = st.sub;
     x.font = '500 28px "Geist Mono", monospace';
     x.fillText(algo.complexity, wPx / 2, 184);
@@ -93,6 +124,13 @@ function capTexture(entry, algo) {
     x.fillStyle = st.sub;
     x.font = '500 86px Geist, "Geist Mono", system-ui, sans-serif';
     x.fillText(entry.glyph, wPx / 2, 134);
+  } else if (entry.label === 'FN') {
+    x.fillStyle = st.legend;
+    x.font = '600 56px Geist, system-ui, sans-serif';
+    x.fillText('FN', wPx / 2, 108);
+    x.fillStyle = st.sub;
+    x.font = '500 26px "Geist Mono", monospace';
+    x.fillText('LAYER ▸', wPx / 2, 184);
   } else {
     x.fillStyle = st.sub;
     x.font = '500 40px Geist, system-ui, sans-serif';
@@ -104,7 +142,7 @@ function capTexture(entry, algo) {
   return t;
 }
 
-export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect } = {}) {
+export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect, onLayer } = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
@@ -228,10 +266,14 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
     return sideCache.get(hex);
   };
 
-  const algoKeys = [];
+  const algoKeys = [];      // the 48 slot caps, re-legended per layer
+  const fnKeys = [];        // the FN caps — click to page layers
   const decorMats = [];
   const byAlgo = Object.fromEntries(ALGORITHMS.map(a => [a.id, a]));
   const raycaster = new THREE.Raycaster();
+  const layers = buildLayers();
+  const totalOnBoard = layers.reduce((s, l) => s + l.ids.length, 0);
+  let layer = 0;
 
   LAYOUT.forEach((row, ri) => {
     let cursor = -rowW / 2;
@@ -252,14 +294,52 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
       cap.castShadow = true;
       scene.add(cap);
       if (algo) {
-        cap.userData = { algo, targetY: 0 };
+        cap.userData = { algo, targetY: 0, slot: algoKeys.length };
         algoKeys.push(cap);
+      } else if (entry.t === 'm' && entry.label === 'FN') {
+        cap.userData = { fn: true, targetY: 0 };
+        fnKeys.push(cap);
+        decorMats.push(topMat);
       } else {
         decorMats.push(topMat);
       }
       cursor += capW + GAP;
     });
   });
+
+  // Re-legend every slot for layer k. A slot past the end of a short last
+  // page becomes a blank grey cap that nothing responds to.
+  let liveKeys = algoKeys.slice();
+  function applyLayer(k) {
+    layer = ((k % layers.length) + layers.length) % layers.length;
+    const ids = layers[layer].ids;
+    algoKeys.forEach((cap, i) => {
+      const algo = byAlgo[ids[i]] || null;
+      const old = cap.material[2];
+      old.map?.dispose();
+      old.dispose();
+      const entry = algo ? { t: 'a', w: 1 } : { t: 'g', glyph: '·', c: 'grey', w: 1 };
+      const st = algo ? capStyle(algo) : CAP_COLORS.grey;
+      const topMat = new THREE.MeshStandardMaterial({
+        map: capTexture(entry, algo), roughness: 0.55, metalness: 0.05,
+      });
+      const sideMat = sideFor(st.cap);
+      cap.material = [sideMat, sideMat, topMat, sideMat, sideMat, sideMat];
+      cap.userData.algo = algo;
+    });
+    liveKeys = algoKeys.filter(c => c.userData.algo);
+    if (hovered) { hovered = null; tip.classList.remove('show'); }
+    onLayer?.(layer + 1, layers.length, layers[layer].name);
+  }
+  // Same shortcut as a tiling window manager: ] next layer, [ previous.
+  function onKey(e) {
+    if (focused || flying || e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key === ']') applyLayer(layer + 1);
+    else if (e.key === '[') applyLayer(layer - 1);
+  }
+  window.addEventListener('keydown', onKey);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   // Aim just below the plate so the board sits centred under the nav.
@@ -332,7 +412,7 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   function launch(cap) {
     const algo = cap.userData.algo;
     visited.add(algo.id);
-    if (onCount) onCount(visited.size, algoKeys.length);
+    if (onCount) onCount(visited.size, totalOnBoard);
     homePos.copy(camera.position);
     homeTarget.copy(controls.target);
     // Pan to the monitor rather than navigating away — the trace plays there.
@@ -342,7 +422,11 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
       t: 0, algo, mode: 'focus',
     };
   }
-  function onClick() { if (hovered && !flying && !focused) launch(hovered); }
+  function onClick(e) {
+    if (!hovered || flying || focused) return;
+    if (hovered.userData.fn) applyLayer(layer + (e.shiftKey ? -1 : 1));
+    else launch(hovered);
+  }
   renderer.domElement.addEventListener('click', onClick);
 
   // Fly back to the board and hand control to the user again.
@@ -417,12 +501,16 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
     const dt = Math.min(clock.getDelta(), 0.05);
 
     raycaster.setFromCamera(mouse, camera);
-    const hits = flying ? [] : raycaster.intersectObjects(algoKeys, false);
+    const hits = flying ? [] : raycaster.intersectObjects(liveKeys.concat(fnKeys), false);
     const hit = hits.length ? hits[0].object : null;
     if (hit !== hovered) {
       hovered = hit;
       renderer.domElement.style.cursor = hit ? 'pointer' : 'grab';
-      if (hit) {
+      if (hit && hit.userData.fn) {
+        const next = layers[(layer + 1) % layers.length];
+        tip.innerHTML = `<strong>Next layer ▸ ${next.name}</strong><span>layer ${layer + 1} of ${layers.length} · shift-click for previous</span>`;
+        tip.classList.add('show');
+      } else if (hit) {
         const a = hit.userData.algo;
         tip.innerHTML = `<strong>${a.name}</strong><span>${a.category} · ${a.complexity}</span>`;
         tip.classList.add('show');
@@ -434,10 +522,10 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
       tip.style.transform = `translate(${tip._client.x + 16}px, ${tip._client.y - 8}px)`;
     }
 
-    algoKeys.forEach(k => {
+    for (const k of algoKeys.concat(fnKeys)) {
       k.userData.targetY = (k === hovered) ? 0.22 : 0;
       k.position.y += (k.userData.targetY - k.position.y) * Math.min(1, dt * 14);
-    });
+    }
 
     if (flying) {
       flying.t += dt;
@@ -481,12 +569,18 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   };
   document.addEventListener('visibilitychange', onVis);
 
+  onLayer?.(1, layers.length, layers[0].name);
+
   return {
     blur,
     isFocused: () => !!focused,
+    nextLayer: () => applyLayer(layer + 1),
+    prevLayer: () => applyLayer(layer - 1),
+    layerCount: () => layers.length,
     dispose() {
       alive = false;
       cancelAnimationFrame(raf);
+      window.removeEventListener('keydown', onKey);
       ro.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       controls.dispose();

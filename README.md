@@ -36,9 +36,10 @@ students **run it on their own input, step by step, and analyse the cost**.
   the browser; exportable/importable as JSON.
 - **Paste-any-code detection** — paste DSA code and AlgoVision detects the
   algorithm and launches the right visual world.
-- **Works fully offline** — every tracer has an in-browser emulator and the
-  AI narrator has template fallbacks, so nothing breaks without a backend or
-  an API key.
+- **Degrades honestly offline** — 23 classic algorithms have an in-browser
+  emulator that traces your own input; every other algorithm replays the
+  built-in trace of its sample input, labelled as such. The AI narrator has
+  template fallbacks, so nothing breaks without a backend or an API key.
 
 ## Structure
 
@@ -66,10 +67,19 @@ docker compose up --build
 ```
 
 Then open:
-- Frontend: http://localhost:5500 (or http://localhost:8080 via Docker)
+- App: http://localhost:8000 (or http://localhost:8080 via Docker). With the
+  script, the backend serves the frontend directory itself, so there is one
+  origin and edits to `frontend/` are live on reload. If port 8000 is busy the
+  script picks the next free one and prints the URL — it never kills another
+  process. Override with `PORT=8123 bash start-dev.sh`.
 - API docs: http://localhost:8000/docs
 - ML health: http://localhost:8500/health (start-dev.sh only — under Docker the
   ML service is internal to the compose network and not published)
+
+If the API is unreachable the status pill says so (`OFFLINE — SAMPLE TRACE
+ONLY`), Run replays the built-in trace of the sample input, and your own input
+stays in the box for when the server is back. A sleeping free-tier server
+(Render) is waited out — Run shows `WAKING THE SERVER…` for up to 45 s.
 
 ## For educators
 

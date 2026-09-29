@@ -64,6 +64,19 @@ app.include_router(detect.router,prefix=settings.API_PREFIX)
 def root():
   return {"name": settings.PROJECT_NAME}
 
+# The frontend is buildless ES modules with no version stamps in their URLs,
+# so browsers must revalidate them on every load or a page can end up running
+# last week's engine.js next to today's data.js. StaticFiles already sends an
+# ETag, which makes an unchanged file a cheap 304. (nginx.conf and vercel.json
+# set the same header for their deployments.)
+@app.middleware("http")
+async def revalidate_static(request: Request, call_next):
+  response = await call_next(request)
+  if not request.url.path.startswith(settings.API_PREFIX):
+    response.headers.setdefault("Cache-Control", "no-cache, must-revalidate")
+  return response
+
+
 FRONTEND_DIR = Path(__file__).parent.parent.parent / "frontend"
 if FRONTEND_DIR.exists():
   app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

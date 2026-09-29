@@ -58,6 +58,7 @@ export const PAGES = {
         <div class="kbd-corner kbd-tl">
           <span class="kbd-tiny-label">KEYS EXPLORED</span>
           <span id="kbd-count" class="kbd-count">0 / ${DATA.ALGORITHMS.length}</span>
+          <span id="kbd-layer" class="kbd-layer">LAYER 1 · CLASSICS</span>
         </div>
         <div class="kbd-corner kbd-tc">
           <span class="kbd-tc-brand">AlgoVision</span>
@@ -68,6 +69,7 @@ export const PAGES = {
           <div class="kbd-legend"><span>DRAG</span><em>ROTATE</em></div>
           <div class="kbd-legend"><span>SCROLL</span><em>ZOOM</em></div>
           <div class="kbd-legend"><span>CLICK KEY</span><em>TRACE IT</em></div>
+          <div class="kbd-legend"><span>FN / [ ]</span><em>NEXT LAYER</em></div>
         </div>
         <div class="kbd-corner kbd-br">
           <a href="#/explore">ALL ALGORITHMS →</a>
@@ -162,6 +164,7 @@ export const PAGES = {
       // ── The keyboard ──
       const stage = view.querySelector('#kbd-stage');
       const countEl = view.querySelector('#kbd-count');
+      const layerEl = view.querySelector('#kbd-layer');
       // The flat grid is the mobile hero, so skip the 3D entirely rather than
       // downloading three.js to render something CSS has already hidden.
       const wantsBoard = window.matchMedia('(min-width: 641px)').matches;
@@ -178,6 +181,10 @@ export const PAGES = {
           const kbd = initKeyboard(stage, {
             onCount: (n, total) => {
               if (countEl) countEl.textContent = `${n} / ${total}`;
+            },
+            // The board has layers (FN pages through them); say which is up.
+            onLayer: (k, count, name) => {
+              if (layerEl) layerEl.textContent = `LAYER ${k}/${count} · ${name}`;
             },
             // Keep the panel glued to the screen for the whole pan.
             onScreenRect: (r) => {
@@ -680,7 +687,7 @@ export const PAGES = {
                   }</div>
                   <div class="step-body">
                     <div class="step-head">
-                      <a class="step-link" href="#/a2z-problem?step=${idx+1}&prob=${step.step.replace('Step ','')}-1">
+                      <a class="step-link" href="#/a2z-problem?step=${idx+1}&prob=${first ? first.id : ''}">
                         <span class="step-name">${step.title}</span>
                       </a>
                       <span class="step-meta">${step.step} · ${probs.length} problems</span>
@@ -833,7 +840,7 @@ export const PAGES = {
           let currentStepIdx = 0;
           let currentProbIdx = 0;
 
-          const targetProbId = params.get('prob') || '1-1';
+          const targetProbId = params.get('prob') || DATA.A2Z_STEPS[0]?.problems?.[0]?.id || '';
           DATA.A2Z_STEPS.forEach((step, si) => {
             (step.problems||[]).forEach((p, pi) => {
               if (p.id === targetProbId) { currentStepIdx=si; currentProbIdx=pi; }
@@ -912,7 +919,9 @@ export const PAGES = {
             const probWorld   = view.querySelector('#prob-world');
             const probHook    = view.querySelector('#prob-hook');
 
-            if (probIdLabel) probIdLabel.textContent = prob.id;
+            // Position on the sheet (module.item), not the internal id — ids are
+            // append-only and no longer track the module a row sits in.
+            if (probIdLabel) probIdLabel.textContent = `${si + 1}.${pi + 1}`;
             if (probTitle)   probTitle.textContent   = prob.title;
             if (probDiff) {
               const diffMap = { E:'Easy', M:'Medium', H:'Hard' };
@@ -966,28 +975,6 @@ export const PAGES = {
             let controller = null;
             let currentSceneStep = 0;
 
-            // The sheet carries language-basics rows and Pattern 1-22, which
-            // have no algorithm to trace. Say so plainly instead of mounting a
-            // scene that renders nothing.
-            if (prob.traceable === false) {
-              vizInner.innerHTML = `
-                <div class="viz-concept">
-                  <span class="eyebrow">No visualisation</span>
-                  <h3>${prob.title}</h3>
-                  <p>This one is groundwork rather than an algorithm — there is
-                     no trace to step through. Tick it off once you're
-                     comfortable with the idea, and carry on.</p>
-                  <a class="btn btn-ghost" href="#/explore">Find something to trace →</a>
-                </div>`;
-              view.querySelector('#scene-step-back')?.setAttribute('disabled', '');
-              view.querySelector('#scene-step-fwd')?.setAttribute('disabled', '');
-              const counter = view.querySelector('#scene-step-counter');
-              if (counter) counter.textContent = '—';
-              const narr = view.querySelector('#scene-narration');
-              if (narr) narr.textContent = prob.hook || '';
-              return;
-            }
-
             // Rows wired in a2zTracers.js play the REAL step-through trace on
             // the student's own input (the same engine the Experience page
             // runs), not the metaphor animation. The mini engine brings its
@@ -1010,6 +997,28 @@ export const PAGES = {
               }).catch(e => console.error('Real-trace mount failed:', e));
               return;
             }
+            // The sheet's lecture rows and Pattern 1-22 have no algorithm to trace
+            // (unless a2zTracers.js links one — checked above). Say so plainly
+            // instead of mounting a scene that renders nothing.
+            if (prob.traceable === false) {
+              vizInner.innerHTML = `
+                <div class="viz-concept">
+                  <span class="eyebrow">No visualisation</span>
+                  <h3>${prob.title}</h3>
+                  <p>This one is groundwork rather than an algorithm — there is
+                     no trace to step through. Tick it off once you're
+                     comfortable with the idea, and carry on.</p>
+                  <a class="btn btn-ghost" href="#/explore">Find something to trace →</a>
+                </div>`;
+              view.querySelector('#scene-step-back')?.setAttribute('disabled', '');
+              view.querySelector('#scene-step-fwd')?.setAttribute('disabled', '');
+              const counter = view.querySelector('#scene-step-counter');
+              if (counter) counter.textContent = '—';
+              const narr = view.querySelector('#scene-narration');
+              if (narr) narr.textContent = prob.hook || '';
+              return;
+            }
+
 
             try {
               controller = mountScene(vizInner, prob.viz || 'default', prob);

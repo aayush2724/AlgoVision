@@ -10,6 +10,9 @@
   low[v] ≥ tin[u] (the root: when it has two or more DFS children).
 * connect_network_ops — each extra (redundant) cable can reconnect one
   component; the answer is components − 1 if there are at least n − 1 cables.
+* print_shortest_path — Dijkstra from the start, remembering each node's
+  parent; walk the parents back from the LAST node (the sheet's "1 to n") to
+  print the path, drawn green.
 
 Reuses the `graph` view: visited nodes, the active node/edge, green edges
 (`mst_edges`) for bridges / spare cables, and `dist` labels for low-links.
@@ -25,6 +28,7 @@ TITLES = {
     "bridges": "Bridges in a Graph (Tarjan)",
     "articulation_points": "Articulation Points",
     "connect_network_ops": "Operations to Make a Network Connected",
+    "print_shortest_path": "Print the Shortest Path (Dijkstra + Parents)",
 }
 
 
@@ -225,8 +229,57 @@ def _network(graph: Graph, start: str, algo: str):
     return {"meta": _meta(algo, res, components=comps), "steps": S.steps}
 
 
+def _print_path(graph, start, algo):
+    import heapq
+    adj = adjacency(graph)
+    ids = [n.id for n in graph.nodes]
+    goal = ids[-1] if ids[-1] != start else ids[0]
+    S = _Steps()
+    S.counts = {"relaxations": 0, "visits": 0}
+    dist = {u: float("inf") for u in ids}
+    parent = {u: None for u in ids}
+    dist[start] = 0
+    fmt = lambda: {u: (None if d == float("inf") else d) for u, d in dist.items()}
+    S.add(f"Dijkstra from {start}, but every relaxation also records parent[v] = u. "
+          f"Destination: {goal} (the last node).", node=start, dist=fmt())
+    pq, done = [(0, start)], set()
+    while pq:
+        d, u = heapq.heappop(pq)
+        if u in done:
+            continue
+        done.add(u)
+        S.counts["visits"] += 1
+        S.add(f"Visit {u} (distance {d:g}).", visited=done, node=u, dist=fmt())
+        for v, w in sorted(adj.get(u, [])):
+            if v in done:
+                continue
+            if d + w < dist[v]:
+                dist[v] = d + w
+                parent[v] = u
+                heapq.heappush(pq, (dist[v], v))
+                S.counts["relaxations"] += 1
+                S.add(f"Relax {u}→{v}: dist {d + w:g}, parent[{v}] = {u}.",
+                      visited=done, node=v, edge=(u, v), dist=fmt())
+    if dist[goal] == float("inf"):
+        S.add(f"{goal} was never reached — no path.", visited=done, dist=fmt())
+        return {"meta": _meta(algo, []), "steps": S.steps}
+    path, u = [], goal
+    while u is not None:
+        path.append(u)
+        u = parent[u]
+    path.reverse()
+    green = []
+    for i in range(len(path) - 1, 0, -1):
+        green.append((path[i - 1], path[i]))
+        S.add(f"Walk back: parent[{path[i]}] = {path[i - 1]}.", visited=done,
+              node=path[i - 1], edge=(path[i - 1], path[i]), green=green, dist=fmt())
+    S.add(f"Path {' → '.join(path)}, total {dist[goal]:g}.", visited=done,
+          node=goal, green=green, dist=fmt())
+    return {"meta": _meta(algo, path), "steps": S.steps}
+
+
 def trace_for(algo):
     fn = {"cycle_undirected_bfs": _cycle, "cycle_undirected_dfs": _cycle,
           "bridges": _tarjan, "articulation_points": _tarjan,
-          "connect_network_ops": _network}[algo]
+          "connect_network_ops": _network, "print_shortest_path": _print_path}[algo]
     return lambda graph, start: fn(graph, start, algo)

@@ -1,433 +1,4435 @@
 {
-  "a_star_grid": {"algorithm":"a_star_grid","text":"S....#/.###.#/.#...#/.#.#../...#.G"},
-  "accounts_merge": {"algorithm":"accounts_merge","text":"John j1 j2; John j1 j3; Mary m1; John j4"},
-  "activity_selection": {"algorithm":"activity_selection","text":"1-2,3-4,0-6,5-7,8-9,5-9"},
-  "add_one_list": {"algorithm":"add_one_list","text":"1,9,9"},
-  "add_two_numbers": {"algorithm":"add_two_numbers","text":"2,4,3/5,6,4"},
-  "aggressive_cows": {"algorithm":"aggressive_cows","array":[0,3,4,7,9,10],"target":4},
-  "aho_corasick": {"algorithm":"aho_corasick","text":"ushers | he, she, his, hers"},
-  "alien_dictionary": {"algorithm":"alien_dictionary","text":"baa, abcd, abca, cab, cad"},
-  "anagram": {"algorithm":"anagram","text":"LISTEN,SILENT"},
-  "armstrong_number": {"algorithm":"armstrong_number","text":"153"},
-  "articulation_points": {"algorithm":"articulation_points","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "assign_cookies": {"algorithm":"assign_cookies","text":"1,2,3|1,1"},
-  "assignment_bitmask": {"algorithm":"assignment_bitmask","text":"9,2,7,8/6,4,3,7/5,8,1,8/7,6,9,4"},
-  "asteroid_collision": {"algorithm":"asteroid_collision","array":[5,10,-5,8,-8,2,-12]},
-  "balanced_brackets": {"algorithm":"balanced_brackets","text":"({[]})"},
-  "balanced_tree": {"algorithm":"balanced_tree","text":"3,9,20,null,null,15,7"},
-  "bellman_ford": {"algorithm":"bellman_ford","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "best_first_grid": {"algorithm":"best_first_grid","text":"S....#/.###.#/.#...#/.#.#../...#.G"},
-  "bfs": {"algorithm":"bfs","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "binary_maze_path": {"algorithm":"binary_maze_path","text":"1,1,0,1 / 1,1,1,1 / 0,1,0,1 / 1,1,1,1"},
-  "binary_search": {"algorithm":"binary_search","array":[1,3,5,7,9,12,15],"target":9},
-  "binary_strings": {"algorithm":"binary_strings","target":4},
-  "binary_subarray_sum": {"algorithm":"binary_subarray_sum","text":"1,0,1,0,1","target":2},
-  "bipartite_check": {"algorithm":"bipartite_check","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "bipartite_matching": {"algorithm":"bipartite_matching","text":"a: x y; b: x; c: y z"},
-  "bit_kth": {"algorithm":"bit_kth","text":"add 5, add 2, add 9, kth 1, kth 3, remove 2, kth 1"},
-  "boolean_evaluation": {"algorithm":"boolean_evaluation","text":"T|F&T^F"},
-  "bottom_view": {"algorithm":"bottom_view","text":"1,2,3,4,5,6,7,null,null,8,9"},
-  "boundary_traversal": {"algorithm":"boundary_traversal","text":"1,2,3,4,5,6,7,null,null,8,9"},
-  "bracket_reversals": {"algorithm":"bracket_reversals","text":"}{{}}{{{"},
-  "bridges": {"algorithm":"bridges","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "bst_delete": {"algorithm":"bst_delete","array":[8,3,10,1,6,14,4,7,13],"target":3},
-  "bst_from_preorder": {"algorithm":"bst_from_preorder","text":"8,5,1,7,10,12"},
-  "bst_insert": {"algorithm":"bst_insert","array":[8,3,10,1,6,14,4]},
-  "bst_search": {"algorithm":"bst_search","array":[8,3,10,1,6,14,4],"target":6},
-  "bubble_sort": {"algorithm":"bubble_sort","array":[7,3,9,1,12,5]},
-  "build_post_in": {"algorithm":"build_post_in","text":"9,15,7,20,3 | 9,3,15,20,7"},
-  "build_pre_in": {"algorithm":"build_pre_in","text":"3,9,20,15,7 | 9,3,15,20,7"},
-  "burn_tree": {"algorithm":"burn_tree","text":"1,2,3,4,null,5,6,null,7 | 2"},
-  "burst_balloons": {"algorithm":"burst_balloons","text":"3,1,5,8"},
-  "buy_sell_stock": {"algorithm":"buy_sell_stock","array":[7,1,5,3,6,4]},
-  "candy": {"algorithm":"candy","array":[1,0,2]},
-  "celebrity": {"algorithm":"celebrity","text":"0,1,0/0,0,0/0,1,0"},
-  "char_replacement": {"algorithm":"char_replacement","text":"AABABBA","target":1},
-  "cheapest_flight_k": {"algorithm":"cheapest_flight_k","text":"0>1:100, 1>2:100, 2>0:100, 1>3:600, 2>3:200 | 0 3 1"},
-  "check_ith_bit": {"algorithm":"check_ith_bit","text":"13","target":2},
-  "check_odd": {"algorithm":"check_odd","text":"7"},
-  "check_prime": {"algorithm":"check_prime","text":"97"},
-  "check_sorted": {"algorithm":"check_sorted","text":"1,2,2,5,8"},
-  "children_sum": {"algorithm":"children_sum","text":"50,7,2,3,5,1,30"},
-  "city_fewest_neighbours": {"algorithm":"city_fewest_neighbours","text":"0-1:3, 1-2:1, 1-3:4, 2-3:1","target":4},
-  "clone_random_list": {"algorithm":"clone_random_list","text":"7,13,11,10,1 | -1,0,4,2,0"},
-  "closest_pair": {"algorithm":"closest_pair","text":"2 3; 9 9; 4 5; 5 1; 1 0; 3 4"},
-  "coin_change": {"algorithm":"coin_change","array":[1,3,4],"target":6},
-  "coin_change_2": {"algorithm":"coin_change_2","array":[1,2,3],"target":4},
-  "combination_sum": {"algorithm":"combination_sum","array":[2,3,6,7],"target":7},
-  "combination_sum_ii": {"algorithm":"combination_sum_ii","array":[1,1,2,5,6,7],"target":8},
-  "combination_sum_iii": {"algorithm":"combination_sum_iii","array":[3,9]},
-  "connect_network_ops": {"algorithm":"connect_network_ops","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "connect_sticks": {"algorithm":"connect_sticks","text":"2,4,3"},
-  "connected_components": {"algorithm":"connected_components","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "convex_hull": {"algorithm":"convex_hull","text":"0 0; 1 1; 2 2; 2 0; 2 4; 3 3; 0 3; 1 2"},
-  "count_and_say": {"algorithm":"count_and_say","text":"5"},
-  "count_complete_nodes": {"algorithm":"count_complete_nodes","text":"1,2,3,4,5,6"},
-  "count_digits": {"algorithm":"count_digits","text":"12345"},
-  "count_good_numbers": {"algorithm":"count_good_numbers","text":"50"},
-  "count_inversions": {"algorithm":"count_inversions","text":"5,3,2,4,1"},
-  "count_palindromic_subseq": {"algorithm":"count_palindromic_subseq","text":"abcb"},
-  "count_partitions_diff": {"algorithm":"count_partitions_diff","text":"5,2,6,4","target":3},
-  "count_paths_dag": {"algorithm":"count_paths_dag","text":"S>A, S>B, A>B, A>T, B>T"},
-  "count_set_bits": {"algorithm":"count_set_bits","text":"13"},
-  "count_subsets_sum_k": {"algorithm":"count_subsets_sum_k","text":"1, 2, 2, 3","target":3},
-  "count_sum_k": {"algorithm":"count_sum_k","text":"1,2,3,-3,1,1,1,4,2,-3","target":3},
-  "count_xor_k": {"algorithm":"count_xor_k","text":"4,2,2,6,4","target":6},
-  "counting_sort": {"algorithm":"counting_sort","array":[4,2,2,8,3,3,1]},
-  "crt": {"algorithm":"crt","text":"2 3, 3 5, 2 7"},
-  "cut_stick": {"algorithm":"cut_stick","text":"7 | 1,3,4,5"},
-  "cycle_directed": {"algorithm":"cycle_directed","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "cycle_undirected_bfs": {"algorithm":"cycle_undirected_bfs","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "cycle_undirected_dfs": {"algorithm":"cycle_undirected_dfs","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "delete_middle": {"algorithm":"delete_middle","array":[1,3,4,7,1,2,6]},
-  "design_twitter": {"algorithm":"design_twitter","text":"post 1 5, feed 1, follow 1 2, post 2 6, feed 1, unfollow 1 2, feed 1"},
-  "dfs": {"algorithm":"dfs","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "digit_dp": {"algorithm":"digit_dp","text":"100","target":10},
-  "dijkstra": {"algorithm":"dijkstra","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "distinct_subsequences": {"algorithm":"distinct_subsequences","text":"babgbag, bag"},
-  "distinct_substrings": {"algorithm":"distinct_substrings","text":"abab"},
-  "divide_bits": {"algorithm":"divide_bits","text":"22, 3"},
-  "dll_delete_head": {"algorithm":"dll_delete_head","text":"1,2,3"},
-  "dll_delete_key": {"algorithm":"dll_delete_key","array":[2,5,2,7,2],"target":2},
-  "dll_insert_head": {"algorithm":"dll_insert_head","text":"1,2,3","target":0},
-  "dll_pairs_sum": {"algorithm":"dll_pairs_sum","text":"1,2,4,5,6,8,9","target":7},
-  "dll_remove_duplicates": {"algorithm":"dll_remove_duplicates","text":"1,1,1,2,3,3,4"},
-  "dll_reverse": {"algorithm":"dll_reverse","array":[10,20,30,40]},
-  "dsu": {"algorithm":"dsu","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "dutch_flag": {"algorithm":"dutch_flag","array":[2,0,2,1,1,0]},
-  "edit_distance": {"algorithm":"edit_distance","text":"KITTEN,SITTING"},
-  "euler_path": {"algorithm":"euler_path","text":"A-B, B-C, C-A, C-D"},
-  "euler_totient": {"algorithm":"euler_totient","text":"36"},
-  "expression_add_operators": {"algorithm":"expression_add_operators","text":"123","target":6},
-  "extended_gcd": {"algorithm":"extended_gcd","text":"240, 46"},
-  "factorial": {"algorithm":"factorial","text":"5"},
-  "fast_exponentiation": {"algorithm":"fast_exponentiation","array":[3,13]},
-  "fenwick_tree": {"algorithm":"fenwick_tree","array":[3,1,4,1,5,9,2,6],"target":4},
-  "fibonacci_dp": {"algorithm":"fibonacci_dp","target":10},
-  "find_middle": {"algorithm":"find_middle","array":[10,20,30,40,50]},
-  "find_min_rotated": {"algorithm":"find_min_rotated","array":[4,5,6,7,0,1,2]},
-  "find_peak": {"algorithm":"find_peak","array":[1,3,2,4,6,5,2]},
-  "first_last_occurrence": {"algorithm":"first_last_occurrence","array":[2,4,6,8,8,8,11,13],"target":8},
-  "flatten_list": {"algorithm":"flatten_list","text":"5,7,8,30 | 10,20 | 19,22,50 | 28,35,40,45"},
-  "flatten_tree": {"algorithm":"flatten_tree","text":"1,2,5,3,4,null,6"},
-  "flood_fill": {"algorithm":"flood_fill","target":5},
-  "floor_ceil": {"algorithm":"floor_ceil","array":[3,4,4,7,8,10],"target":5},
-  "floor_ceil_bst": {"algorithm":"floor_ceil_bst","text":"10,5,15,2,6,13,22 | 12"},
-  "floyd_cycle": {"algorithm":"floyd_cycle","array":[1,2,3,4,5],"target":2},
-  "floyd_warshall": {"algorithm":"floyd_warshall","text":"A>B:3, B>C:-2, A>C:4, C>D:2, D>A:1"},
-  "four_sum": {"algorithm":"four_sum","text":"1,0,-1,0,-2,2","target":0},
-  "fractional_knapsack": {"algorithm":"fractional_knapsack","text":"10:60,20:100,30:120|50"},
-  "frequency_count": {"algorithm":"frequency_count","text":"10,5,10,15,10,5"},
-  "frog_jump": {"algorithm":"frog_jump","array":[30,10,60,10,60,50]},
-  "frog_jump_k": {"algorithm":"frog_jump_k","text":"30, 10, 60, 10, 60, 50","target":2},
-  "gas_station": {"algorithm":"gas_station","text":"1,13,17,23","target":5},
-  "gcd_euclid": {"algorithm":"gcd_euclid","array":[48,36]},
-  "generate_parentheses": {"algorithm":"generate_parentheses","target":3},
-  "greater_to_right": {"algorithm":"greater_to_right","text":"3,4,2,7,5,8,10,6"},
-  "grundy_numbers": {"algorithm":"grundy_numbers","text":"10 | 1,3,4"},
-  "hand_of_straights": {"algorithm":"hand_of_straights","text":"1,2,3,6,2,3,4,7,8","target":3},
-  "hash_table": {"algorithm":"hash_table","text":"CAT,DOG,OWL,FOX | DOG"},
-  "heap_extract": {"algorithm":"heap_extract","array":[3,9,2,1,7,5]},
-  "heap_insert": {"algorithm":"heap_insert","array":[3,9,5,1,12,8]},
-  "heap_sort": {"algorithm":"heap_sort","array":[5,3,8,1,9,2,7]},
-  "house_robber": {"algorithm":"house_robber","array":[2,7,9,3,1]},
-  "huffman": {"algorithm":"huffman","text":"ABRACADABRA"},
-  "identical_trees": {"algorithm":"identical_trees","text":"1,2,3 | 1,2,3"},
-  "infix_to_postfix": {"algorithm":"infix_to_postfix","text":"A+B*(C^D-E)"},
-  "infix_to_prefix": {"algorithm":"infix_to_prefix","text":"(A-B/C)*(A/K-L)"},
-  "insert_interval": {"algorithm":"insert_interval","text":"1-2,3-5,6-7,8-10,12-16 | 4-8"},
-  "insertion_sort": {"algorithm":"insertion_sort","array":[7,3,9,1,12,5]},
-  "intersection_sorted": {"algorithm":"intersection_sorted","text":"1,2,2,3,3,4 | 2,2,3,3,5"},
-  "inversions_bit": {"algorithm":"inversions_bit","text":"8,4,2,1"},
-  "is_min_heap": {"algorithm":"is_min_heap","text":"10,20,30,21,23"},
-  "islands_ii": {"algorithm":"islands_ii","text":"3x3 | 0:0 0:1 1:2 2:1 1:1"},
-  "isomorphic_strings": {"algorithm":"isomorphic_strings","text":"egg, add"},
-  "iter_inorder": {"algorithm":"iter_inorder","text":"1,2,3,4,5,6,7"},
-  "iter_preorder": {"algorithm":"iter_preorder","text":"1,2,3,4,5,6,7"},
-  "job_sequencing": {"algorithm":"job_sequencing","text":"2:100,1:19,2:27,1:25,3:15"},
-  "jump_game": {"algorithm":"jump_game","array":[2,3,1,1,4]},
-  "jump_game_ii": {"algorithm":"jump_game_ii","array":[2,3,1,1,4]},
-  "kadanes": {"algorithm":"kadanes","array":[-2,1,-3,4,-1,2,1,-5,4]},
-  "kmp_search": {"algorithm":"kmp_search","text":"ABABDABACDABABCABAB,ABABCABAB"},
-  "knapsack_01": {"algorithm":"knapsack_01","text":"2:3,3:4,4:5,5:6","target":8},
-  "koko_bananas": {"algorithm":"koko_bananas","array":[3,6,7,11],"target":8},
-  "kosaraju": {"algorithm":"kosaraju","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "kruskals_mst": {"algorithm":"kruskals_mst","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "kth_ancestor": {"algorithm":"kth_ancestor","text":"1,2,3,4,5,6,7,8 | 8 2"},
-  "kth_bst": {"algorithm":"kth_bst","text":"5,3,6,2,4,1 | 3"},
-  "kth_largest": {"algorithm":"kth_largest","text":"3,2,1,5,6,4|2"},
-  "kth_missing": {"algorithm":"kth_missing","array":[2,3,4,7,11],"target":5},
-  "kth_smallest": {"algorithm":"kth_smallest","text":"7,10,4,3,20,15|3"},
-  "kth_two_sorted": {"algorithm":"kth_two_sorted","text":"2,3,6,7,9 | 1,4,8,10","target":5},
-  "largest_bst": {"algorithm":"largest_bst","text":"10,5,15,1,8,null,7"},
-  "largest_divisible_subset": {"algorithm":"largest_divisible_subset","text":"1, 2, 4, 8, 3"},
-  "largest_element": {"algorithm":"largest_element","text":"3,9,2,7,5"},
-  "largest_island": {"algorithm":"largest_island","text":"1,0,1 / 0,0,1 / 1,1,0"},
-  "largest_odd_number": {"algorithm":"largest_odd_number","text":"35427"},
-  "largest_rectangle": {"algorithm":"largest_rectangle","array":[2,1,5,6,2,3]},
-  "largest_zero_sum": {"algorithm":"largest_zero_sum","text":"15,-2,2,-8,1,7,10,23"},
-  "lazy_segment_tree": {"algorithm":"lazy_segment_tree","text":"1,2,3,4,5 | add 1 3 2, sum 0 4, sum 2 3"},
-  "lca_bst": {"algorithm":"lca_bst","text":"6,2,8,0,4,7,9,3,5 | 3 5"},
-  "lca_bt": {"algorithm":"lca_bt","text":"8,3,10,1,6,14,4 | 1 6"},
-  "lca_lifting": {"algorithm":"lca_lifting","text":"1,2,3,4,5,6,7,8,9 | 8 5"},
-  "lcp_kasai": {"algorithm":"lcp_kasai","text":"banana"},
-  "lcs": {"algorithm":"lcs","text":"ABCBDAB,BDCAB"},
-  "leaders": {"algorithm":"leaders","array":[10,22,12,3,0,6]},
-  "lemonade_change": {"algorithm":"lemonade_change","array":[5,5,5,10,20]},
-  "letter_combinations": {"algorithm":"letter_combinations","text":"23"},
-  "level_order": {"algorithm":"level_order","array":[8,3,10,1,6,14,4]},
-  "lexicographic_topo": {"algorithm":"lexicographic_topo","text":"E>B, C>A, B>A, D>A, C>D"},
-  "lfu_cache": {"algorithm":"lfu_cache","text":"put 1 1, put 2 2, get 1, put 3 3, get 2, get 3, put 4 4, get 1, get 3, get 4","target":2},
-  "linear_search": {"algorithm":"linear_search","text":"4,7,1,9,3","target":9},
-  "linked_list_reverse": {"algorithm":"linked_list_reverse","array":[10,20,30,40,50]},
-  "lis": {"algorithm":"lis","array":[10,9,2,5,3,7,101,18]},
-  "ll_delete_head": {"algorithm":"ll_delete_head","text":"1,2,3"},
-  "ll_insert_head": {"algorithm":"ll_insert_head","text":"1,2,3","target":9},
-  "ll_length": {"algorithm":"ll_length","text":"4,5,6,7"},
-  "ll_palindrome": {"algorithm":"ll_palindrome","array":[1,2,3,2,1]},
-  "ll_reverse_recursive": {"algorithm":"ll_reverse_recursive","text":"1,2,3,4,5"},
-  "ll_search": {"algorithm":"ll_search","text":"4,5,6,7","target":6},
-  "longest_bitonic": {"algorithm":"longest_bitonic","text":"1, 11, 2, 10, 4, 5, 2, 1"},
-  "longest_common_prefix": {"algorithm":"longest_common_prefix","text":"flower, flow, flight"},
-  "longest_common_substring": {"algorithm":"longest_common_substring","text":"ABCDE,ZBCDF"},
-  "longest_complete_word": {"algorithm":"longest_complete_word","text":"N,NI,NIN,NINJ,NINJA,NINGA"},
-  "longest_consecutive": {"algorithm":"longest_consecutive","text":"100,4,200,1,3,2"},
-  "longest_happy_prefix": {"algorithm":"longest_happy_prefix","text":"ababab"},
-  "longest_k_distinct": {"algorithm":"longest_k_distinct","text":"ECEBA|2"},
-  "longest_palindromic_subseq": {"algorithm":"longest_palindromic_subseq","text":"bbbab"},
-  "longest_path_dag": {"algorithm":"longest_path_dag","text":"S>A:5, S>B:3, A>C:6, B>C:7, A>B:2, C>T:1"},
-  "longest_repeated_substring": {"algorithm":"longest_repeated_substring","text":"banana"},
-  "longest_string_chain": {"algorithm":"longest_string_chain","text":"a, b, ba, bca, bda, bdca"},
-  "longest_subarray_sum_k": {"algorithm":"longest_subarray_sum_k","array":[2,3,5,1,9],"target":10},
-  "longest_substring_no_repeat": {"algorithm":"longest_substring_no_repeat","text":"ABCABCBB"},
-  "longest_sum_k_any": {"algorithm":"longest_sum_k_any","text":"1,-1,5,-2,3","target":3},
-  "loop_length": {"algorithm":"loop_length","text":"1,2,3,4,5,6","target":2},
-  "lower_bound": {"algorithm":"lower_bound","array":[1,2,2,3,5],"target":2},
-  "lru_cache": {"algorithm":"lru_cache","text":"put 1 1, put 2 2, get 1, put 3 3, get 2, put 4 4, get 1, get 3, get 4","target":2},
-  "lru_page_faults": {"algorithm":"lru_page_faults","text":"5,0,1,3,2,4,1,0,5","target":4},
-  "m_coloring": {"algorithm":"m_coloring","text":"0-1,1-2,2-3,3-0,0-2","target":3},
-  "majority_element": {"algorithm":"majority_element","array":[2,2,1,1,1,2,2]},
-  "majority_n3": {"algorithm":"majority_n3","text":"1,1,1,3,3,2,2,2"},
-  "manacher": {"algorithm":"manacher","text":"FORGEEKSSKEEGFOR"},
-  "matrix_chain": {"algorithm":"matrix_chain","array":[40,20,30,10,30]},
-  "matrix_exponentiation": {"algorithm":"matrix_exponentiation","text":"10"},
-  "matrix_median": {"algorithm":"matrix_median","text":"1,3,5/2,6,9/3,6,9"},
-  "max_card_points": {"algorithm":"max_card_points","text":"1,2,3,4,5,6,1","target":3},
-  "max_consecutive_ones": {"algorithm":"max_consecutive_ones","text":"1,1,0,1,1,1,0,1"},
-  "max_consecutive_ones_iii": {"algorithm":"max_consecutive_ones_iii","text":"1,1,0,0,1,1,1,0|2"},
-  "max_flow": {"algorithm":"max_flow","text":"S>A:10, S>C:10, A>B:4, A>C:2, A>D:8, C>D:9, B>T:10, D>B:6, D>T:10"},
-  "max_nesting_depth": {"algorithm":"max_nesting_depth","text":"(1+(2*3))+1"},
-  "max_path_sum": {"algorithm":"max_path_sum","text":"-10,9,20,null,null,15,7"},
-  "max_product_subarray": {"algorithm":"max_product_subarray","text":"2,3,-2,4,-1"},
-  "max_rectangle_ones": {"algorithm":"max_rectangle_ones","text":"1,0,1,0,0/1,0,1,1,1/1,1,1,1,1/1,0,0,1,0"},
-  "max_sum_combination": {"algorithm":"max_sum_combination","text":"1,4,2,3 | 2,5,1,6","target":4},
-  "max_width": {"algorithm":"max_width","text":"1,3,2,5,3,null,9"},
-  "max_xor_pair": {"algorithm":"max_xor_pair","text":"3,10,5,25,2,8"},
-  "max_xor_queries": {"algorithm":"max_xor_queries","text":"0,1,2,3,4 | 3 1, 1 3, 5 6"},
-  "median_stream": {"algorithm":"median_stream","text":"5,15,1,3"},
-  "median_two_sorted": {"algorithm":"median_two_sorted","text":"1,3,8 | 7,9,10,11"},
-  "meet_in_middle": {"algorithm":"meet_in_middle","text":"2,3,5,7,1","target":10},
-  "merge_intervals": {"algorithm":"merge_intervals","text":"1-3,2-6,8-10,15-18"},
-  "merge_k_lists": {"algorithm":"merge_k_lists","text":"1,4,5 | 1,3,4 | 2,6"},
-  "merge_no_space": {"algorithm":"merge_no_space","text":"1,4,8,10 | 2,3,9"},
-  "merge_sort": {"algorithm":"merge_sort","array":[7,3,9,1,12,5]},
-  "merge_two_bsts": {"algorithm":"merge_two_bsts","text":"3,1,5 | 4,2,6"},
-  "merge_two_sorted_lists": {"algorithm":"merge_two_sorted_lists","text":"1,3,5,7|2,4,6"},
-  "min_bit_flips": {"algorithm":"min_bit_flips","text":"10|7"},
-  "min_bouquets": {"algorithm":"min_bouquets","array":[7,7,7,7,13,11,12,7],"text":"2,3"},
-  "min_cut": {"algorithm":"min_cut","text":"S>A:3, S>B:2, A>B:1, A>T:2, B>T:3"},
-  "min_effort_path": {"algorithm":"min_effort_path","text":"1,2,2 / 3,8,2 / 5,3,5"},
-  "min_falling_path": {"algorithm":"min_falling_path","text":"2,1,3 / 6,5,4 / 7,8,9"},
-  "min_heap": {"algorithm":"min_heap","array":[5,3,8,1,12,2]},
-  "min_ins_del": {"algorithm":"min_ins_del","text":"abcd, anc"},
-  "min_insert_palindrome": {"algorithm":"min_insert_palindrome","text":"abcaa"},
-  "min_max_partition": {"algorithm":"min_max_partition","array":[12,34,67,90],"target":2},
-  "min_multiplications": {"algorithm":"min_multiplications","text":"3 30 | 2,5,7"},
-  "min_platforms": {"algorithm":"min_platforms","text":"900,940,950,1100,1500,1800|910,1200,1120,1130,1900,2000"},
-  "min_stack": {"algorithm":"min_stack","text":"push 5, push 3, push 7, getmin, pop, getmin, pop, getmin"},
-  "min_subset_diff": {"algorithm":"min_subset_diff","text":"1,6,11,5"},
-  "min_to_max_heap": {"algorithm":"min_to_max_heap","text":"3,5,9,6,8,20,10,12,18,9"},
-  "min_window_subsequence": {"algorithm":"min_window_subsequence","text":"abcdebdde, bde"},
-  "min_window_substring": {"algorithm":"min_window_substring","text":"ADOBECODEBANC, ABC"},
-  "missing_number": {"algorithm":"missing_number","text":"3,0,1,4,5"},
-  "mod_inverse": {"algorithm":"mod_inverse","text":"3, 11"},
-  "morris_inorder": {"algorithm":"morris_inorder","text":"1,2,3,4,5,null,6"},
-  "morris_preorder": {"algorithm":"morris_preorder","text":"1,2,3,4,5,null,6"},
-  "most_stones": {"algorithm":"most_stones","text":"0:0,0:1,1:0,1:2,2:1,2:2"},
-  "move_zeros": {"algorithm":"move_zeros","array":[1,0,2,3,0,4,0,1]},
-  "n_queens": {"algorithm":"n_queens","target":6},
-  "ncr_mod": {"algorithm":"ncr_mod","text":"10, 3"},
-  "nearest_one_distance": {"algorithm":"nearest_one_distance","text":"0,0,0 / 0,1,0 / 1,1,1"},
-  "network_delay": {"algorithm":"network_delay","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "next_greater_element": {"algorithm":"next_greater_element","array":[2,1,2,4,3]},
-  "next_permutation": {"algorithm":"next_permutation","array":[1,5,8,4,7,6,5,3,1]},
-  "next_smaller": {"algorithm":"next_smaller","array":[4,8,5,2,25]},
-  "nge_circular": {"algorithm":"nge_circular","array":[5,4,3,2,1]},
-  "nice_subarrays": {"algorithm":"nice_subarrays","text":"1,1,2,1,1","target":3},
-  "nim": {"algorithm":"nim","text":"3,4,5"},
-  "ninja_friends": {"algorithm":"ninja_friends","text":"2,3,1,2/3,4,2,2/5,6,3,5"},
-  "ninja_training": {"algorithm":"ninja_training","text":"10,40,70 / 20,50,80 / 30,60,90"},
-  "nodes_at_distance_k": {"algorithm":"nodes_at_distance_k","text":"3,5,1,6,2,0,8,null,null,7,4 | 5 2"},
-  "non_overlapping_intervals": {"algorithm":"non_overlapping_intervals","text":"1-2,2-3,3-4,1-3"},
-  "nth_root": {"algorithm":"nth_root","array":[3,27]},
-  "number_of_enclaves": {"algorithm":"number_of_enclaves","text":"0,0,0,0 / 1,0,1,0 / 0,1,1,0 / 0,0,0,0"},
-  "number_of_islands": {"algorithm":"number_of_islands","text":"1,1,0,0 / 1,0,0,1 / 0,0,1,1 / 0,0,0,0 / 1,0,1,0"},
-  "number_of_lis": {"algorithm":"number_of_lis","text":"1, 3, 5, 4, 7"},
-  "odd_even_list": {"algorithm":"odd_even_list","array":[1,2,3,4,5,6]},
-  "optimal_game": {"algorithm":"optimal_game","text":"5,3,7,10"},
-  "palindrome_number": {"algorithm":"palindrome_number","text":"12321"},
-  "palindrome_partition": {"algorithm":"palindrome_partition","text":"aabb"},
-  "palindrome_partition_ii": {"algorithm":"palindrome_partition_ii","text":"aabbc"},
-  "palindrome_string": {"algorithm":"palindrome_string","text":"racecar"},
-  "partition_array_max_sum": {"algorithm":"partition_array_max_sum","text":"1,15,7,9,2,5,10","target":3},
-  "partition_equal_subset": {"algorithm":"partition_equal_subset","text":"1, 5, 11, 5"},
-  "pascal_triangle": {"algorithm":"pascal_triangle","text":"rows","target":5},
-  "peak_element_ii": {"algorithm":"peak_element_ii","text":"10,20,15/21,30,14/7,16,32"},
-  "polygon_area": {"algorithm":"polygon_area","text":"0 0; 4 0; 4 3; 0 3"},
-  "postfix_to_infix": {"algorithm":"postfix_to_infix","text":"AB-DE+F*/"},
-  "postfix_to_prefix": {"algorithm":"postfix_to_prefix","text":"AB-DE+F*/"},
-  "postorder_one_stack": {"algorithm":"postorder_one_stack","text":"1,2,3,4,5,6,7"},
-  "postorder_two_stacks": {"algorithm":"postorder_two_stacks","text":"1,2,3,4,5,6,7"},
-  "power_of_two": {"algorithm":"power_of_two","text":"16"},
-  "power_set": {"algorithm":"power_set","text":"A,B,C"},
-  "prefix_sum_2d": {"algorithm":"prefix_sum_2d","text":"3,0,1,4/5,6,3,2/1,2,0,1 | 1 1 2 2, 0 0 2 3"},
-  "prefix_sums": {"algorithm":"prefix_sums","array":[3,1,4,1,5,9]},
-  "prefix_to_infix": {"algorithm":"prefix_to_infix","text":"*+PQ-MN"},
-  "prefix_to_postfix": {"algorithm":"prefix_to_postfix","text":"/-AK-/BL*CD"},
-  "prime_factorisation": {"algorithm":"prime_factorisation","target":360},
-  "prims_mst": {"algorithm":"prims_mst","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "print_1_to_n": {"algorithm":"print_1_to_n","text":"5"},
-  "print_divisors": {"algorithm":"print_divisors","text":"36"},
-  "print_lcs": {"algorithm":"print_lcs","text":"abcde, bdgek"},
-  "print_lis": {"algorithm":"print_lis","text":"10, 9, 2, 5, 3, 7, 101, 18"},
-  "print_n_to_1": {"algorithm":"print_n_to_1","text":"5"},
-  "queue_array": {"algorithm":"queue_array","text":"push 1, push 2, push 3, pop, push 4, front, pop, pop, pop","target":3},
-  "queue_linkedlist": {"algorithm":"queue_linkedlist","text":"push 1, push 2, push 3, front, pop, pop"},
-  "queue_using_stacks": {"algorithm":"queue_using_stacks","text":"push 1, push 2, front, pop, push 3, pop, pop, pop"},
-  "quick_sort": {"algorithm":"quick_sort","array":[7,3,9,1,12,5]},
-  "rabin_karp": {"algorithm":"rabin_karp","text":"ABRACADABRA,ABRA"},
-  "radix_sort": {"algorithm":"radix_sort","array":[170,45,75,90,2,802,24,66]},
-  "rank_replace": {"algorithm":"rank_replace","text":"40,10,20,30"},
-  "rat_in_maze": {"algorithm":"rat_in_maze","target":4,"text":"0:1,0:2,0:3,1:2,2:2,2:3,3:0"},
-  "rearrange_by_sign": {"algorithm":"rearrange_by_sign","text":"3,1,-2,-5,2,-4"},
-  "recover_bst": {"algorithm":"recover_bst","text":"3,1,4,null,null,2"},
-  "recursive_atoi": {"algorithm":"recursive_atoi","text":"-42abc"},
-  "recursive_bubble_sort": {"algorithm":"recursive_bubble_sort","text":"5,1,4,2,8"},
-  "recursive_insertion_sort": {"algorithm":"recursive_insertion_sort","text":"5,1,4,2,8"},
-  "remove_duplicates_sorted": {"algorithm":"remove_duplicates_sorted","array":[1,1,2,2,2,3,3]},
-  "remove_k_digits": {"algorithm":"remove_k_digits","array":[1,4,3,2,2,1,9],"target":3},
-  "remove_nth_from_end": {"algorithm":"remove_nth_from_end","array":[1,2,3,4,5],"target":2},
-  "remove_outer_parens": {"algorithm":"remove_outer_parens","text":"(()())(())"},
-  "repeating_missing": {"algorithm":"repeating_missing","text":"3,1,2,5,3"},
-  "reverse_array": {"algorithm":"reverse_array","text":"1,2,3,4,5"},
-  "reverse_k_group": {"algorithm":"reverse_k_group","text":"1,2,3,4,5,6,7,8","target":3},
-  "reverse_number": {"algorithm":"reverse_number","text":"1234"},
-  "reverse_pairs": {"algorithm":"reverse_pairs","text":"1,3,2,3,1"},
-  "reverse_stack": {"algorithm":"reverse_stack","text":"1,2,3,4"},
-  "reverse_words": {"algorithm":"reverse_words","text":"the sky is  blue"},
-  "right_view": {"algorithm":"right_view","text":"1,2,3,null,5,null,4"},
-  "rod_cutting": {"algorithm":"rod_cutting","text":"1, 5, 8, 9, 10, 17, 17, 20"},
-  "roman_to_integer": {"algorithm":"roman_to_integer","text":"MCMXCIV"},
-  "root_to_leaf_paths": {"algorithm":"root_to_leaf_paths","text":"1,2,3,null,5"},
-  "rotate_array_k": {"algorithm":"rotate_array_k","array":[1,2,3,4,5,6,7],"target":2},
-  "rotate_list": {"algorithm":"rotate_list","array":[1,2,3,4,5],"target":2},
-  "rotate_matrix": {"algorithm":"rotate_matrix","text":"1,2,3/4,5,6/7,8,9"},
-  "rotate_string": {"algorithm":"rotate_string","text":"abcde, cdeab"},
-  "rotten_oranges": {"algorithm":"rotten_oranges","text":"2,1,1 / 1,1,0 / 0,1,1"},
-  "row_max_ones": {"algorithm":"row_max_ones","text":"0,0,1,1/0,1,1,1/0,0,0,1"},
-  "safe_states": {"algorithm":"safe_states","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "search_2d_matrix": {"algorithm":"search_2d_matrix","text":"1,3,5,7/10,11,16,20/23,30,34,60","target":16},
-  "search_2d_matrix_ii": {"algorithm":"search_2d_matrix_ii","text":"1,4,7,11/2,5,8,12/3,6,9,16/10,13,14,17","target":5},
-  "search_rotated": {"algorithm":"search_rotated","array":[4,5,6,7,0,1,2],"target":0},
-  "search_rotated_ii": {"algorithm":"search_rotated_ii","text":"2,5,6,0,0,1,2","target":0},
-  "second_largest": {"algorithm":"second_largest","array":[1,2,4,7,7,5]},
-  "segment_tree": {"algorithm":"segment_tree","array":[3,1,4,1,5,9,2,6]},
-  "selection_sort": {"algorithm":"selection_sort","array":[7,3,9,1,12,5]},
-  "serialize_tree": {"algorithm":"serialize_tree","text":"1,2,3,null,null,4,5"},
-  "set_matrix_zeros": {"algorithm":"set_matrix_zeros","text":"1,1,1/1,0,1/1,1,1"},
-  "shortest_job_first": {"algorithm":"shortest_job_first","text":"4,3,7,1,2"},
-  "shortest_path_dag": {"algorithm":"shortest_path_dag","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "shortest_supersequence": {"algorithm":"shortest_supersequence","text":"brute, groot"},
-  "sieve": {"algorithm":"sieve","target":30},
-  "single_element_sorted": {"algorithm":"single_element_sorted","array":[1,1,2,3,3,4,4,8,8]},
-  "single_number": {"algorithm":"single_number","text":"4,1,2,1,2"},
-  "single_number_iii": {"algorithm":"single_number_iii","text":"1,2,1,3,2,5"},
-  "sliding_window": {"algorithm":"sliding_window","array":[4,2,9,7,1,8,6],"target":3},
-  "sliding_window_maximum": {"algorithm":"sliding_window_maximum","array":[1,3,-1,-3,5,3,6,7],"target":3},
-  "sort_012_list": {"algorithm":"sort_012_list","text":"1,0,2,1,0,2,1"},
-  "sort_by_frequency": {"algorithm":"sort_by_frequency","text":"tree"},
-  "sort_list": {"algorithm":"sort_list","text":"4,2,1,3,9,-1"},
-  "sort_stack": {"algorithm":"sort_stack","text":"3,1,4,2"},
-  "sos_dp": {"algorithm":"sos_dp","text":"1,2,3,4,5,6,7,8"},
-  "sparse_table": {"algorithm":"sparse_table","text":"5,2,4,7,1,3 | min 1 4, min 0 2, min 3 3"},
-  "spf_sieve": {"algorithm":"spf_sieve","text":"30","target":24},
-  "spiral_order": {"algorithm":"spiral_order","text":"1,2,3,4/5,6,7,8/9,10,11,12"},
-  "sqrt_decomposition": {"algorithm":"sqrt_decomposition","text":"1,2,3,4,5,6,7 | sum 1 5, set 3 10, sum 0 6"},
-  "sqrt_search": {"algorithm":"sqrt_search","array":[28]},
-  "stack_array": {"algorithm":"stack_array","text":"push 3, push 5, top, pop, pop, pop, push 7","target":3},
-  "stack_linkedlist": {"algorithm":"stack_linkedlist","text":"push 1, push 2, push 3, top, pop, pop"},
-  "stack_using_queue": {"algorithm":"stack_using_queue","text":"push 1, push 2, push 3, top, pop, top"},
-  "stock_cooldown": {"algorithm":"stock_cooldown","text":"1, 2, 3, 0, 2"},
-  "stock_fee": {"algorithm":"stock_fee","text":"1, 3, 2, 8, 4, 9","target":2},
-  "stock_ii": {"algorithm":"stock_ii","text":"7, 1, 5, 3, 6, 4"},
-  "stock_iii": {"algorithm":"stock_iii","text":"3, 3, 5, 0, 0, 3, 1, 4"},
-  "stock_iv": {"algorithm":"stock_iv","text":"3, 2, 6, 5, 0, 3","target":2},
-  "stock_span": {"algorithm":"stock_span","array":[100,80,60,70,60,75,85]},
-  "string_to_integer": {"algorithm":"string_to_integer","text":"-042abc"},
-  "subarrays_k_distinct": {"algorithm":"subarrays_k_distinct","text":"1,2,1,2,3","target":2},
-  "subset_sum": {"algorithm":"subset_sum","array":[3,4,5],"target":9},
-  "subsets_ii": {"algorithm":"subsets_ii","array":[1,2,2]},
-  "subsets_recursion": {"algorithm":"subsets_recursion","array":[1,2,3]},
-  "substring_hash": {"algorithm":"substring_hash","text":"abcabcab | 0 3 3, 1 4 4, 0 1 2"},
-  "substrings_all_three": {"algorithm":"substrings_all_three","text":"abcabc"},
-  "successor_predecessor": {"algorithm":"successor_predecessor","text":"20,8,22,4,12,10,14 | 10"},
-  "sudoku_solver": {"algorithm":"sudoku_solver","text":"1,0,0,0/0,0,3,0/0,4,0,0/0,0,0,2"},
-  "suffix_array": {"algorithm":"suffix_array","text":"banana"},
-  "sum_distances_tree": {"algorithm":"sum_distances_tree","text":"1,2,3,4,5"},
-  "sum_first_n": {"algorithm":"sum_first_n","text":"10"},
-  "sum_of_beauty": {"algorithm":"sum_of_beauty","text":"aabcb"},
-  "sum_subarray_mins": {"algorithm":"sum_subarray_mins","array":[3,1,2,4]},
-  "sum_subarray_ranges": {"algorithm":"sum_subarray_ranges","text":"4,-2,-3,4,1"},
-  "surrounded_regions": {"algorithm":"surrounded_regions","text":"X,X,X,X / X,O,O,X / X,X,O,X / X,O,X,X"},
-  "swap_xor": {"algorithm":"swap_xor","text":"13, 4"},
-  "swim_rising_water": {"algorithm":"swim_rising_water","text":"0,1,2,3 / 8,7,6,4 / 9,10,11,5"},
-  "symmetric_tree": {"algorithm":"symmetric_tree","text":"1,2,2,3,4,4,3"},
-  "target_sum": {"algorithm":"target_sum","text":"1,1,1,1,1","target":3},
-  "tarjan_scc": {"algorithm":"tarjan_scc","text":"A>B, B>C, C>A, B>D, D>E, E>F, F>D, G>F, G>H, H>G"},
-  "task_scheduler": {"algorithm":"task_scheduler","text":"A,A,A,B,B,B","target":2},
-  "ternary_search": {"algorithm":"ternary_search","text":"1,3,8,12,9,4,2"},
-  "three_sum": {"algorithm":"three_sum","text":"-1,0,1,2,-1,-4"},
-  "top_k_frequent": {"algorithm":"top_k_frequent","text":"1,1,1,2,2,3","target":2},
-  "top_view": {"algorithm":"top_view","text":"1,2,3,4,5,6,7"},
-  "topological_sort": {"algorithm":"topological_sort","start":"A","graph":{"nodes":[{"id":"A","x":100,"y":150,"label":"Home"},{"id":"B","x":250,"y":80,"label":"Uptown"},{"id":"C","x":250,"y":220,"label":"Downtown"},{"id":"D","x":420,"y":80,"label":"Airport"},{"id":"E","x":420,"y":220,"label":"Mall"},{"id":"F","x":560,"y":150,"label":"Station"},{"id":"G","x":680,"y":150,"label":"Office"}],"edges":[["A","B",4],["A","C",2],["B","D",5],["B","E",10],["C","E",3],["D","F",2],["E","F",4],["F","G",1]]}},
-  "trapping_rainwater": {"algorithm":"trapping_rainwater","array":[0,1,0,2,1,0,1,3,2,1,2,1]},
-  "tree_diameter": {"algorithm":"tree_diameter","array":[8,3,10,1,6,14,4]},
-  "tree_max_depth": {"algorithm":"tree_max_depth","array":[8,3,10,1,6,14,4]},
-  "tree_robber": {"algorithm":"tree_robber","text":"3,4,5,1,3,null,1"},
-  "tree_traversal": {"algorithm":"tree_traversal","array":[8,3,10,1,6,14,4]},
-  "triangle_path": {"algorithm":"triangle_path","text":"2 / 3,4 / 6,5,7 / 4,1,8,3"},
-  "trie_advanced": {"algorithm":"trie_advanced","text":"insert apple, insert apple, insert app, countwords apple, countprefix app, erase apple, countwords apple"},
-  "trie_insert": {"algorithm":"trie_insert","text":"CAT,CAR,DOG"},
-  "tsp_bitmask": {"algorithm":"tsp_bitmask","text":"0,10,15,20/10,0,35,25/15,35,0,30/20,25,30,0"},
-  "two_sat": {"algorithm":"two_sat","text":"a|b, !a|c, !b|!c, a|!c"},
-  "two_sum_bst": {"algorithm":"two_sum_bst","text":"5,3,6,2,4,7 | 9"},
-  "two_sum_sorted": {"algorithm":"two_sum_sorted","array":[1,3,5,7,9,12],"target":16},
-  "unbounded_knapsack": {"algorithm":"unbounded_knapsack","text":"2:5, 4:11, 6:13","target":10},
-  "union_sorted": {"algorithm":"union_sorted","text":"1,2,3,4,5 | 2,3,4,4,5,6"},
-  "unique_paths": {"algorithm":"unique_paths","target":4},
-  "upper_bound": {"algorithm":"upper_bound","array":[1,2,2,3,5],"target":2},
-  "valid_paren_star": {"algorithm":"valid_paren_star","text":"(*))"},
-  "validate_bst": {"algorithm":"validate_bst","text":"5,1,4,null,null,3,6"},
-  "vertical_order": {"algorithm":"vertical_order","text":"3,9,20,null,null,15,7"},
-  "ways_to_arrive": {"algorithm":"ways_to_arrive","text":"0-6:7,0-1:2,1-2:3,1-3:3,6-3:3,3-5:1,6-5:1,2-5:1,0-4:5,4-6:2 | 0 6"},
-  "wildcard_match": {"algorithm":"wildcard_match","text":"abdefcd, ab*cd"},
-  "word_break": {"algorithm":"word_break","text":"leetcode | leet,code"},
-  "word_ladder": {"algorithm":"word_ladder","text":"hit, cog | hot,dot,dog,lot,log,cog"},
-  "word_ladder_ii": {"algorithm":"word_ladder_ii","text":"hit, cog | hot,dot,dog,lot,log,cog"},
-  "word_search": {"algorithm":"word_search","text":"ABCE/SFCS/ADEE,ABCCED"},
-  "xor_range": {"algorithm":"xor_range","text":"3, 9"},
-  "y_intersection": {"algorithm":"y_intersection","text":"1,2 | 9,8,7 | 4,5"},
-  "z_function": {"algorithm":"z_function","text":"AABXAAB"},
-  "zero_one_bfs": {"algorithm":"zero_one_bfs","text":"0,1,1/0,0,1/1,0,0"},
-  "zigzag_traversal": {"algorithm":"zigzag_traversal","text":"3,9,20,null,null,15,7"}
+ "a_star_grid": {
+  "algorithm": "a_star_grid",
+  "text": "S....#/.###.#/.#...#/.#.#../...#.G"
+ },
+ "accounts_merge": {
+  "algorithm": "accounts_merge",
+  "text": "John j1 j2; John j1 j3; Mary m1; John j4"
+ },
+ "activity_selection": {
+  "algorithm": "activity_selection",
+  "text": "1-2,3-4,0-6,5-7,8-9,5-9"
+ },
+ "add_one_list": {
+  "algorithm": "add_one_list",
+  "text": "1,9,9"
+ },
+ "add_two_numbers": {
+  "algorithm": "add_two_numbers",
+  "text": "2,4,3/5,6,4"
+ },
+ "aggressive_cows": {
+  "algorithm": "aggressive_cows",
+  "array": [
+   0,
+   3,
+   4,
+   7,
+   9,
+   10
+  ],
+  "target": 4
+ },
+ "aho_corasick": {
+  "algorithm": "aho_corasick",
+  "text": "ushers | he, she, his, hers"
+ },
+ "alien_dictionary": {
+  "algorithm": "alien_dictionary",
+  "text": "baa, abcd, abca, cab, cad"
+ },
+ "anagram": {
+  "algorithm": "anagram",
+  "text": "LISTEN,SILENT"
+ },
+ "armstrong_number": {
+  "algorithm": "armstrong_number",
+  "text": "153"
+ },
+ "articulation_points": {
+  "algorithm": "articulation_points",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "assign_cookies": {
+  "algorithm": "assign_cookies",
+  "text": "1,2,3|1,1"
+ },
+ "assignment_bitmask": {
+  "algorithm": "assignment_bitmask",
+  "text": "9,2,7,8/6,4,3,7/5,8,1,8/7,6,9,4"
+ },
+ "asteroid_collision": {
+  "algorithm": "asteroid_collision",
+  "array": [
+   5,
+   10,
+   -5,
+   8,
+   -8,
+   2,
+   -12
+  ]
+ },
+ "balanced_brackets": {
+  "algorithm": "balanced_brackets",
+  "text": "({[]})"
+ },
+ "balanced_tree": {
+  "algorithm": "balanced_tree",
+  "text": "3,9,20,null,null,15,7"
+ },
+ "bellman_ford": {
+  "algorithm": "bellman_ford",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "best_first_grid": {
+  "algorithm": "best_first_grid",
+  "text": "S....#/.###.#/.#...#/.#.#../...#.G"
+ },
+ "bfs": {
+  "algorithm": "bfs",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "binary_maze_path": {
+  "algorithm": "binary_maze_path",
+  "text": "1,1,0,1 / 1,1,1,1 / 0,1,0,1 / 1,1,1,1"
+ },
+ "binary_search": {
+  "algorithm": "binary_search",
+  "array": [
+   1,
+   3,
+   5,
+   7,
+   9,
+   12,
+   15
+  ],
+  "target": 9
+ },
+ "binary_strings": {
+  "algorithm": "binary_strings",
+  "target": 4
+ },
+ "binary_subarray_sum": {
+  "algorithm": "binary_subarray_sum",
+  "text": "1,0,1,0,1",
+  "target": 2
+ },
+ "bipartite_check": {
+  "algorithm": "bipartite_check",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "bipartite_matching": {
+  "algorithm": "bipartite_matching",
+  "text": "a: x y; b: x; c: y z"
+ },
+ "bit_kth": {
+  "algorithm": "bit_kth",
+  "text": "add 5, add 2, add 9, kth 1, kth 3, remove 2, kth 1"
+ },
+ "boolean_evaluation": {
+  "algorithm": "boolean_evaluation",
+  "text": "T|F&T^F"
+ },
+ "bottom_view": {
+  "algorithm": "bottom_view",
+  "text": "1,2,3,4,5,6,7,null,null,8,9"
+ },
+ "boundary_traversal": {
+  "algorithm": "boundary_traversal",
+  "text": "1,2,3,4,5,6,7,null,null,8,9"
+ },
+ "bracket_reversals": {
+  "algorithm": "bracket_reversals",
+  "text": "}{{}}{{{"
+ },
+ "bridges": {
+  "algorithm": "bridges",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "bst_delete": {
+  "algorithm": "bst_delete",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4,
+   7,
+   13
+  ],
+  "target": 3
+ },
+ "bst_from_preorder": {
+  "algorithm": "bst_from_preorder",
+  "text": "8,5,1,7,10,12"
+ },
+ "bst_insert": {
+  "algorithm": "bst_insert",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ]
+ },
+ "bst_search": {
+  "algorithm": "bst_search",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ],
+  "target": 6
+ },
+ "bubble_sort": {
+  "algorithm": "bubble_sort",
+  "array": [
+   7,
+   3,
+   9,
+   1,
+   12,
+   5
+  ]
+ },
+ "build_post_in": {
+  "algorithm": "build_post_in",
+  "text": "9,15,7,20,3 | 9,3,15,20,7"
+ },
+ "build_pre_in": {
+  "algorithm": "build_pre_in",
+  "text": "3,9,20,15,7 | 9,3,15,20,7"
+ },
+ "burn_tree": {
+  "algorithm": "burn_tree",
+  "text": "1,2,3,4,null,5,6,null,7 | 2"
+ },
+ "burst_balloons": {
+  "algorithm": "burst_balloons",
+  "text": "3,1,5,8"
+ },
+ "buy_sell_stock": {
+  "algorithm": "buy_sell_stock",
+  "array": [
+   7,
+   1,
+   5,
+   3,
+   6,
+   4
+  ]
+ },
+ "candy": {
+  "algorithm": "candy",
+  "array": [
+   1,
+   0,
+   2
+  ]
+ },
+ "celebrity": {
+  "algorithm": "celebrity",
+  "text": "0,1,0/0,0,0/0,1,0"
+ },
+ "char_replacement": {
+  "algorithm": "char_replacement",
+  "text": "AABABBA",
+  "target": 1
+ },
+ "cheapest_flight_k": {
+  "algorithm": "cheapest_flight_k",
+  "text": "0>1:100, 1>2:100, 2>0:100, 1>3:600, 2>3:200 | 0 3 1"
+ },
+ "check_ith_bit": {
+  "algorithm": "check_ith_bit",
+  "text": "13",
+  "target": 2
+ },
+ "check_odd": {
+  "algorithm": "check_odd",
+  "text": "7"
+ },
+ "check_prime": {
+  "algorithm": "check_prime",
+  "text": "97"
+ },
+ "check_sorted": {
+  "algorithm": "check_sorted",
+  "text": "1,2,2,5,8"
+ },
+ "children_sum": {
+  "algorithm": "children_sum",
+  "text": "50,7,2,3,5,1,30"
+ },
+ "city_fewest_neighbours": {
+  "algorithm": "city_fewest_neighbours",
+  "text": "0-1:3, 1-2:1, 1-3:4, 2-3:1",
+  "target": 4
+ },
+ "clone_random_list": {
+  "algorithm": "clone_random_list",
+  "text": "7,13,11,10,1 | -1,0,4,2,0"
+ },
+ "closest_pair": {
+  "algorithm": "closest_pair",
+  "text": "2 3; 9 9; 4 5; 5 1; 1 0; 3 4"
+ },
+ "coin_change": {
+  "algorithm": "coin_change",
+  "array": [
+   1,
+   3,
+   4
+  ],
+  "target": 6
+ },
+ "coin_change_2": {
+  "algorithm": "coin_change_2",
+  "array": [
+   1,
+   2,
+   3
+  ],
+  "target": 4
+ },
+ "combination_sum": {
+  "algorithm": "combination_sum",
+  "array": [
+   2,
+   3,
+   6,
+   7
+  ],
+  "target": 7
+ },
+ "combination_sum_ii": {
+  "algorithm": "combination_sum_ii",
+  "array": [
+   1,
+   1,
+   2,
+   5,
+   6,
+   7
+  ],
+  "target": 8
+ },
+ "combination_sum_iii": {
+  "algorithm": "combination_sum_iii",
+  "array": [
+   3,
+   9
+  ]
+ },
+ "connect_network_ops": {
+  "algorithm": "connect_network_ops",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "connect_sticks": {
+  "algorithm": "connect_sticks",
+  "text": "2,4,3"
+ },
+ "connected_components": {
+  "algorithm": "connected_components",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "convex_hull": {
+  "algorithm": "convex_hull",
+  "text": "0 0; 1 1; 2 2; 2 0; 2 4; 3 3; 0 3; 1 2"
+ },
+ "count_and_say": {
+  "algorithm": "count_and_say",
+  "text": "5"
+ },
+ "count_complete_nodes": {
+  "algorithm": "count_complete_nodes",
+  "text": "1,2,3,4,5,6"
+ },
+ "count_digits": {
+  "algorithm": "count_digits",
+  "text": "12345"
+ },
+ "count_good_numbers": {
+  "algorithm": "count_good_numbers",
+  "text": "50"
+ },
+ "count_inversions": {
+  "algorithm": "count_inversions",
+  "text": "5,3,2,4,1"
+ },
+ "count_palindromic_subseq": {
+  "algorithm": "count_palindromic_subseq",
+  "text": "abcb"
+ },
+ "count_partitions_diff": {
+  "algorithm": "count_partitions_diff",
+  "text": "5,2,6,4",
+  "target": 3
+ },
+ "count_paths_dag": {
+  "algorithm": "count_paths_dag",
+  "text": "S>A, S>B, A>B, A>T, B>T"
+ },
+ "count_set_bits": {
+  "algorithm": "count_set_bits",
+  "text": "13"
+ },
+ "count_subsets_sum_k": {
+  "algorithm": "count_subsets_sum_k",
+  "text": "1, 2, 2, 3",
+  "target": 3
+ },
+ "count_sum_k": {
+  "algorithm": "count_sum_k",
+  "text": "1,2,3,-3,1,1,1,4,2,-3",
+  "target": 3
+ },
+ "count_xor_k": {
+  "algorithm": "count_xor_k",
+  "text": "4,2,2,6,4",
+  "target": 6
+ },
+ "counting_sort": {
+  "algorithm": "counting_sort",
+  "array": [
+   4,
+   2,
+   2,
+   8,
+   3,
+   3,
+   1
+  ]
+ },
+ "crt": {
+  "algorithm": "crt",
+  "text": "2 3, 3 5, 2 7"
+ },
+ "cut_stick": {
+  "algorithm": "cut_stick",
+  "text": "7 | 1,3,4,5"
+ },
+ "cycle_directed": {
+  "algorithm": "cycle_directed",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "cycle_undirected_bfs": {
+  "algorithm": "cycle_undirected_bfs",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "cycle_undirected_dfs": {
+  "algorithm": "cycle_undirected_dfs",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "delete_middle": {
+  "algorithm": "delete_middle",
+  "array": [
+   1,
+   3,
+   4,
+   7,
+   1,
+   2,
+   6
+  ]
+ },
+ "design_twitter": {
+  "algorithm": "design_twitter",
+  "text": "post 1 5, feed 1, follow 1 2, post 2 6, feed 1, unfollow 1 2, feed 1"
+ },
+ "dfs": {
+  "algorithm": "dfs",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "digit_dp": {
+  "algorithm": "digit_dp",
+  "text": "100",
+  "target": 10
+ },
+ "dijkstra": {
+  "algorithm": "dijkstra",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "distinct_subsequences": {
+  "algorithm": "distinct_subsequences",
+  "text": "babgbag, bag"
+ },
+ "distinct_substrings": {
+  "algorithm": "distinct_substrings",
+  "text": "abab"
+ },
+ "divide_bits": {
+  "algorithm": "divide_bits",
+  "text": "22, 3"
+ },
+ "dll_delete_head": {
+  "algorithm": "dll_delete_head",
+  "text": "1,2,3"
+ },
+ "dll_delete_key": {
+  "algorithm": "dll_delete_key",
+  "array": [
+   2,
+   5,
+   2,
+   7,
+   2
+  ],
+  "target": 2
+ },
+ "dll_insert_head": {
+  "algorithm": "dll_insert_head",
+  "text": "1,2,3",
+  "target": 0
+ },
+ "dll_pairs_sum": {
+  "algorithm": "dll_pairs_sum",
+  "text": "1,2,4,5,6,8,9",
+  "target": 7
+ },
+ "dll_remove_duplicates": {
+  "algorithm": "dll_remove_duplicates",
+  "text": "1,1,1,2,3,3,4"
+ },
+ "dll_reverse": {
+  "algorithm": "dll_reverse",
+  "array": [
+   10,
+   20,
+   30,
+   40
+  ]
+ },
+ "dsu": {
+  "algorithm": "dsu",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "dutch_flag": {
+  "algorithm": "dutch_flag",
+  "array": [
+   2,
+   0,
+   2,
+   1,
+   1,
+   0
+  ]
+ },
+ "edit_distance": {
+  "algorithm": "edit_distance",
+  "text": "KITTEN,SITTING"
+ },
+ "euler_path": {
+  "algorithm": "euler_path",
+  "text": "A-B, B-C, C-A, C-D"
+ },
+ "euler_totient": {
+  "algorithm": "euler_totient",
+  "text": "36"
+ },
+ "expression_add_operators": {
+  "algorithm": "expression_add_operators",
+  "text": "123",
+  "target": 6
+ },
+ "extended_gcd": {
+  "algorithm": "extended_gcd",
+  "text": "240, 46"
+ },
+ "factorial": {
+  "algorithm": "factorial",
+  "text": "5"
+ },
+ "fast_exponentiation": {
+  "algorithm": "fast_exponentiation",
+  "array": [
+   3,
+   13
+  ]
+ },
+ "fenwick_tree": {
+  "algorithm": "fenwick_tree",
+  "array": [
+   3,
+   1,
+   4,
+   1,
+   5,
+   9,
+   2,
+   6
+  ],
+  "target": 4
+ },
+ "fibonacci_dp": {
+  "algorithm": "fibonacci_dp",
+  "target": 10
+ },
+ "find_middle": {
+  "algorithm": "find_middle",
+  "array": [
+   10,
+   20,
+   30,
+   40,
+   50
+  ]
+ },
+ "find_min_rotated": {
+  "algorithm": "find_min_rotated",
+  "array": [
+   4,
+   5,
+   6,
+   7,
+   0,
+   1,
+   2
+  ]
+ },
+ "find_peak": {
+  "algorithm": "find_peak",
+  "array": [
+   1,
+   3,
+   2,
+   4,
+   6,
+   5,
+   2
+  ]
+ },
+ "first_last_occurrence": {
+  "algorithm": "first_last_occurrence",
+  "array": [
+   2,
+   4,
+   6,
+   8,
+   8,
+   8,
+   11,
+   13
+  ],
+  "target": 8
+ },
+ "flatten_list": {
+  "algorithm": "flatten_list",
+  "text": "5,7,8,30 | 10,20 | 19,22,50 | 28,35,40,45"
+ },
+ "flatten_tree": {
+  "algorithm": "flatten_tree",
+  "text": "1,2,5,3,4,null,6"
+ },
+ "flood_fill": {
+  "algorithm": "flood_fill",
+  "target": 5
+ },
+ "floor_ceil": {
+  "algorithm": "floor_ceil",
+  "array": [
+   3,
+   4,
+   4,
+   7,
+   8,
+   10
+  ],
+  "target": 5
+ },
+ "floor_ceil_bst": {
+  "algorithm": "floor_ceil_bst",
+  "text": "10,5,15,2,6,13,22 | 12"
+ },
+ "floyd_cycle": {
+  "algorithm": "floyd_cycle",
+  "array": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "target": 2
+ },
+ "floyd_warshall": {
+  "algorithm": "floyd_warshall",
+  "text": "A>B:3, B>C:-2, A>C:4, C>D:2, D>A:1"
+ },
+ "four_sum": {
+  "algorithm": "four_sum",
+  "text": "1,0,-1,0,-2,2",
+  "target": 0
+ },
+ "fractional_knapsack": {
+  "algorithm": "fractional_knapsack",
+  "text": "10:60,20:100,30:120|50"
+ },
+ "frequency_count": {
+  "algorithm": "frequency_count",
+  "text": "10,5,10,15,10,5"
+ },
+ "frog_jump": {
+  "algorithm": "frog_jump",
+  "array": [
+   30,
+   10,
+   60,
+   10,
+   60,
+   50
+  ]
+ },
+ "frog_jump_k": {
+  "algorithm": "frog_jump_k",
+  "text": "30, 10, 60, 10, 60, 50",
+  "target": 2
+ },
+ "gas_station": {
+  "algorithm": "gas_station",
+  "text": "1,13,17,23",
+  "target": 5
+ },
+ "gcd_euclid": {
+  "algorithm": "gcd_euclid",
+  "array": [
+   48,
+   36
+  ]
+ },
+ "generate_parentheses": {
+  "algorithm": "generate_parentheses",
+  "target": 3
+ },
+ "greater_to_right": {
+  "algorithm": "greater_to_right",
+  "text": "3,4,2,7,5,8,10,6"
+ },
+ "grundy_numbers": {
+  "algorithm": "grundy_numbers",
+  "text": "10 | 1,3,4"
+ },
+ "hand_of_straights": {
+  "algorithm": "hand_of_straights",
+  "text": "1,2,3,6,2,3,4,7,8",
+  "target": 3
+ },
+ "hash_table": {
+  "algorithm": "hash_table",
+  "text": "CAT,DOG,OWL,FOX | DOG"
+ },
+ "heap_extract": {
+  "algorithm": "heap_extract",
+  "array": [
+   3,
+   9,
+   2,
+   1,
+   7,
+   5
+  ]
+ },
+ "heap_insert": {
+  "algorithm": "heap_insert",
+  "array": [
+   3,
+   9,
+   5,
+   1,
+   12,
+   8
+  ]
+ },
+ "heap_sort": {
+  "algorithm": "heap_sort",
+  "array": [
+   5,
+   3,
+   8,
+   1,
+   9,
+   2,
+   7
+  ]
+ },
+ "house_robber": {
+  "algorithm": "house_robber",
+  "array": [
+   2,
+   7,
+   9,
+   3,
+   1
+  ]
+ },
+ "huffman": {
+  "algorithm": "huffman",
+  "text": "ABRACADABRA"
+ },
+ "identical_trees": {
+  "algorithm": "identical_trees",
+  "text": "1,2,3 | 1,2,3"
+ },
+ "infix_to_postfix": {
+  "algorithm": "infix_to_postfix",
+  "text": "A+B*(C^D-E)"
+ },
+ "infix_to_prefix": {
+  "algorithm": "infix_to_prefix",
+  "text": "(A-B/C)*(A/K-L)"
+ },
+ "insert_interval": {
+  "algorithm": "insert_interval",
+  "text": "1-2,3-5,6-7,8-10,12-16 | 4-8"
+ },
+ "insertion_sort": {
+  "algorithm": "insertion_sort",
+  "array": [
+   7,
+   3,
+   9,
+   1,
+   12,
+   5
+  ]
+ },
+ "intersection_sorted": {
+  "algorithm": "intersection_sorted",
+  "text": "1,2,2,3,3,4 | 2,2,3,3,5"
+ },
+ "inversions_bit": {
+  "algorithm": "inversions_bit",
+  "text": "8,4,2,1"
+ },
+ "is_min_heap": {
+  "algorithm": "is_min_heap",
+  "text": "10,20,30,21,23"
+ },
+ "islands_ii": {
+  "algorithm": "islands_ii",
+  "text": "3x3 | 0:0 0:1 1:2 2:1 1:1"
+ },
+ "isomorphic_strings": {
+  "algorithm": "isomorphic_strings",
+  "text": "egg, add"
+ },
+ "iter_inorder": {
+  "algorithm": "iter_inorder",
+  "text": "1,2,3,4,5,6,7"
+ },
+ "iter_preorder": {
+  "algorithm": "iter_preorder",
+  "text": "1,2,3,4,5,6,7"
+ },
+ "job_sequencing": {
+  "algorithm": "job_sequencing",
+  "text": "2:100,1:19,2:27,1:25,3:15"
+ },
+ "jump_game": {
+  "algorithm": "jump_game",
+  "array": [
+   2,
+   3,
+   1,
+   1,
+   4
+  ]
+ },
+ "jump_game_ii": {
+  "algorithm": "jump_game_ii",
+  "array": [
+   2,
+   3,
+   1,
+   1,
+   4
+  ]
+ },
+ "kadanes": {
+  "algorithm": "kadanes",
+  "array": [
+   -2,
+   1,
+   -3,
+   4,
+   -1,
+   2,
+   1,
+   -5,
+   4
+  ]
+ },
+ "kmp_search": {
+  "algorithm": "kmp_search",
+  "text": "ABABDABACDABABCABAB,ABABCABAB"
+ },
+ "knapsack_01": {
+  "algorithm": "knapsack_01",
+  "text": "2:3,3:4,4:5,5:6",
+  "target": 8
+ },
+ "koko_bananas": {
+  "algorithm": "koko_bananas",
+  "array": [
+   3,
+   6,
+   7,
+   11
+  ],
+  "target": 8
+ },
+ "kosaraju": {
+  "algorithm": "kosaraju",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "kruskals_mst": {
+  "algorithm": "kruskals_mst",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "kth_ancestor": {
+  "algorithm": "kth_ancestor",
+  "text": "1,2,3,4,5,6,7,8 | 8 2"
+ },
+ "kth_bst": {
+  "algorithm": "kth_bst",
+  "text": "5,3,6,2,4,1 | 3"
+ },
+ "kth_largest": {
+  "algorithm": "kth_largest",
+  "text": "3,2,1,5,6,4|2"
+ },
+ "kth_missing": {
+  "algorithm": "kth_missing",
+  "array": [
+   2,
+   3,
+   4,
+   7,
+   11
+  ],
+  "target": 5
+ },
+ "kth_smallest": {
+  "algorithm": "kth_smallest",
+  "text": "7,10,4,3,20,15|3"
+ },
+ "kth_two_sorted": {
+  "algorithm": "kth_two_sorted",
+  "text": "2,3,6,7,9 | 1,4,8,10",
+  "target": 5
+ },
+ "largest_bst": {
+  "algorithm": "largest_bst",
+  "text": "10,5,15,1,8,null,7"
+ },
+ "largest_divisible_subset": {
+  "algorithm": "largest_divisible_subset",
+  "text": "1, 2, 4, 8, 3"
+ },
+ "largest_element": {
+  "algorithm": "largest_element",
+  "text": "3,9,2,7,5"
+ },
+ "largest_island": {
+  "algorithm": "largest_island",
+  "text": "1,0,1 / 0,0,1 / 1,1,0"
+ },
+ "largest_odd_number": {
+  "algorithm": "largest_odd_number",
+  "text": "35427"
+ },
+ "largest_rectangle": {
+  "algorithm": "largest_rectangle",
+  "array": [
+   2,
+   1,
+   5,
+   6,
+   2,
+   3
+  ]
+ },
+ "largest_zero_sum": {
+  "algorithm": "largest_zero_sum",
+  "text": "15,-2,2,-8,1,7,10,23"
+ },
+ "lazy_segment_tree": {
+  "algorithm": "lazy_segment_tree",
+  "text": "1,2,3,4,5 | add 1 3 2, sum 0 4, sum 2 3"
+ },
+ "lca_bst": {
+  "algorithm": "lca_bst",
+  "text": "6,2,8,0,4,7,9,3,5 | 3 5"
+ },
+ "lca_bt": {
+  "algorithm": "lca_bt",
+  "text": "8,3,10,1,6,14,4 | 1 6"
+ },
+ "lca_lifting": {
+  "algorithm": "lca_lifting",
+  "text": "1,2,3,4,5,6,7,8,9 | 8 5"
+ },
+ "lcp_kasai": {
+  "algorithm": "lcp_kasai",
+  "text": "banana"
+ },
+ "lcs": {
+  "algorithm": "lcs",
+  "text": "ABCBDAB,BDCAB"
+ },
+ "leaders": {
+  "algorithm": "leaders",
+  "array": [
+   10,
+   22,
+   12,
+   3,
+   0,
+   6
+  ]
+ },
+ "lemonade_change": {
+  "algorithm": "lemonade_change",
+  "array": [
+   5,
+   5,
+   5,
+   10,
+   20
+  ]
+ },
+ "letter_combinations": {
+  "algorithm": "letter_combinations",
+  "text": "23"
+ },
+ "level_order": {
+  "algorithm": "level_order",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ]
+ },
+ "lexicographic_topo": {
+  "algorithm": "lexicographic_topo",
+  "text": "E>B, C>A, B>A, D>A, C>D"
+ },
+ "lfu_cache": {
+  "algorithm": "lfu_cache",
+  "text": "put 1 1, put 2 2, get 1, put 3 3, get 2, get 3, put 4 4, get 1, get 3, get 4",
+  "target": 2
+ },
+ "linear_search": {
+  "algorithm": "linear_search",
+  "text": "4,7,1,9,3",
+  "target": 9
+ },
+ "linked_list_reverse": {
+  "algorithm": "linked_list_reverse",
+  "array": [
+   10,
+   20,
+   30,
+   40,
+   50
+  ]
+ },
+ "lis": {
+  "algorithm": "lis",
+  "array": [
+   10,
+   9,
+   2,
+   5,
+   3,
+   7,
+   101,
+   18
+  ]
+ },
+ "ll_delete_head": {
+  "algorithm": "ll_delete_head",
+  "text": "1,2,3"
+ },
+ "ll_insert_head": {
+  "algorithm": "ll_insert_head",
+  "text": "1,2,3",
+  "target": 9
+ },
+ "ll_length": {
+  "algorithm": "ll_length",
+  "text": "4,5,6,7"
+ },
+ "ll_palindrome": {
+  "algorithm": "ll_palindrome",
+  "array": [
+   1,
+   2,
+   3,
+   2,
+   1
+  ]
+ },
+ "ll_reverse_recursive": {
+  "algorithm": "ll_reverse_recursive",
+  "text": "1,2,3,4,5"
+ },
+ "ll_search": {
+  "algorithm": "ll_search",
+  "text": "4,5,6,7",
+  "target": 6
+ },
+ "longest_bitonic": {
+  "algorithm": "longest_bitonic",
+  "text": "1, 11, 2, 10, 4, 5, 2, 1"
+ },
+ "longest_common_prefix": {
+  "algorithm": "longest_common_prefix",
+  "text": "flower, flow, flight"
+ },
+ "longest_common_substring": {
+  "algorithm": "longest_common_substring",
+  "text": "ABCDE,ZBCDF"
+ },
+ "longest_complete_word": {
+  "algorithm": "longest_complete_word",
+  "text": "N,NI,NIN,NINJ,NINJA,NINGA"
+ },
+ "longest_consecutive": {
+  "algorithm": "longest_consecutive",
+  "text": "100,4,200,1,3,2"
+ },
+ "longest_happy_prefix": {
+  "algorithm": "longest_happy_prefix",
+  "text": "ababab"
+ },
+ "longest_k_distinct": {
+  "algorithm": "longest_k_distinct",
+  "text": "ECEBA|2"
+ },
+ "longest_palindromic_subseq": {
+  "algorithm": "longest_palindromic_subseq",
+  "text": "bbbab"
+ },
+ "longest_path_dag": {
+  "algorithm": "longest_path_dag",
+  "text": "S>A:5, S>B:3, A>C:6, B>C:7, A>B:2, C>T:1"
+ },
+ "longest_repeated_substring": {
+  "algorithm": "longest_repeated_substring",
+  "text": "banana"
+ },
+ "longest_string_chain": {
+  "algorithm": "longest_string_chain",
+  "text": "a, b, ba, bca, bda, bdca"
+ },
+ "longest_subarray_sum_k": {
+  "algorithm": "longest_subarray_sum_k",
+  "array": [
+   2,
+   3,
+   5,
+   1,
+   9
+  ],
+  "target": 10
+ },
+ "longest_substring_no_repeat": {
+  "algorithm": "longest_substring_no_repeat",
+  "text": "ABCABCBB"
+ },
+ "longest_sum_k_any": {
+  "algorithm": "longest_sum_k_any",
+  "text": "1,-1,5,-2,3",
+  "target": 3
+ },
+ "loop_length": {
+  "algorithm": "loop_length",
+  "text": "1,2,3,4,5,6",
+  "target": 2
+ },
+ "lower_bound": {
+  "algorithm": "lower_bound",
+  "array": [
+   1,
+   2,
+   2,
+   3,
+   5
+  ],
+  "target": 2
+ },
+ "lru_cache": {
+  "algorithm": "lru_cache",
+  "text": "put 1 1, put 2 2, get 1, put 3 3, get 2, put 4 4, get 1, get 3, get 4",
+  "target": 2
+ },
+ "lru_page_faults": {
+  "algorithm": "lru_page_faults",
+  "text": "5,0,1,3,2,4,1,0,5",
+  "target": 4
+ },
+ "m_coloring": {
+  "algorithm": "m_coloring",
+  "text": "0-1,1-2,2-3,3-0,0-2",
+  "target": 3
+ },
+ "majority_element": {
+  "algorithm": "majority_element",
+  "array": [
+   2,
+   2,
+   1,
+   1,
+   1,
+   2,
+   2
+  ]
+ },
+ "majority_n3": {
+  "algorithm": "majority_n3",
+  "text": "1,1,1,3,3,2,2,2"
+ },
+ "manacher": {
+  "algorithm": "manacher",
+  "text": "FORGEEKSSKEEGFOR"
+ },
+ "matrix_chain": {
+  "algorithm": "matrix_chain",
+  "array": [
+   40,
+   20,
+   30,
+   10,
+   30
+  ]
+ },
+ "matrix_exponentiation": {
+  "algorithm": "matrix_exponentiation",
+  "text": "10"
+ },
+ "matrix_median": {
+  "algorithm": "matrix_median",
+  "text": "1,3,5/2,6,9/3,6,9"
+ },
+ "max_card_points": {
+  "algorithm": "max_card_points",
+  "text": "1,2,3,4,5,6,1",
+  "target": 3
+ },
+ "max_consecutive_ones": {
+  "algorithm": "max_consecutive_ones",
+  "text": "1,1,0,1,1,1,0,1"
+ },
+ "max_consecutive_ones_iii": {
+  "algorithm": "max_consecutive_ones_iii",
+  "text": "1,1,0,0,1,1,1,0|2"
+ },
+ "max_flow": {
+  "algorithm": "max_flow",
+  "text": "S>A:10, S>C:10, A>B:4, A>C:2, A>D:8, C>D:9, B>T:10, D>B:6, D>T:10"
+ },
+ "max_nesting_depth": {
+  "algorithm": "max_nesting_depth",
+  "text": "(1+(2*3))+1"
+ },
+ "max_path_sum": {
+  "algorithm": "max_path_sum",
+  "text": "-10,9,20,null,null,15,7"
+ },
+ "max_product_subarray": {
+  "algorithm": "max_product_subarray",
+  "text": "2,3,-2,4,-1"
+ },
+ "max_rectangle_ones": {
+  "algorithm": "max_rectangle_ones",
+  "text": "1,0,1,0,0/1,0,1,1,1/1,1,1,1,1/1,0,0,1,0"
+ },
+ "max_sum_combination": {
+  "algorithm": "max_sum_combination",
+  "text": "1,4,2,3 | 2,5,1,6",
+  "target": 4
+ },
+ "max_width": {
+  "algorithm": "max_width",
+  "text": "1,3,2,5,3,null,9"
+ },
+ "max_xor_pair": {
+  "algorithm": "max_xor_pair",
+  "text": "3,10,5,25,2,8"
+ },
+ "max_xor_queries": {
+  "algorithm": "max_xor_queries",
+  "text": "0,1,2,3,4 | 3 1, 1 3, 5 6"
+ },
+ "median_stream": {
+  "algorithm": "median_stream",
+  "text": "5,15,1,3"
+ },
+ "median_two_sorted": {
+  "algorithm": "median_two_sorted",
+  "text": "1,3,8 | 7,9,10,11"
+ },
+ "meet_in_middle": {
+  "algorithm": "meet_in_middle",
+  "text": "2,3,5,7,1",
+  "target": 10
+ },
+ "merge_intervals": {
+  "algorithm": "merge_intervals",
+  "text": "1-3,2-6,8-10,15-18"
+ },
+ "merge_k_lists": {
+  "algorithm": "merge_k_lists",
+  "text": "1,4,5 | 1,3,4 | 2,6"
+ },
+ "merge_no_space": {
+  "algorithm": "merge_no_space",
+  "text": "1,4,8,10 | 2,3,9"
+ },
+ "merge_sort": {
+  "algorithm": "merge_sort",
+  "array": [
+   7,
+   3,
+   9,
+   1,
+   12,
+   5
+  ]
+ },
+ "merge_two_bsts": {
+  "algorithm": "merge_two_bsts",
+  "text": "3,1,5 | 4,2,6"
+ },
+ "merge_two_sorted_lists": {
+  "algorithm": "merge_two_sorted_lists",
+  "text": "1,3,5,7|2,4,6"
+ },
+ "min_bit_flips": {
+  "algorithm": "min_bit_flips",
+  "text": "10|7"
+ },
+ "min_bouquets": {
+  "algorithm": "min_bouquets",
+  "array": [
+   7,
+   7,
+   7,
+   7,
+   13,
+   11,
+   12,
+   7
+  ],
+  "text": "2,3"
+ },
+ "min_cut": {
+  "algorithm": "min_cut",
+  "text": "S>A:3, S>B:2, A>B:1, A>T:2, B>T:3"
+ },
+ "min_effort_path": {
+  "algorithm": "min_effort_path",
+  "text": "1,2,2 / 3,8,2 / 5,3,5"
+ },
+ "min_falling_path": {
+  "algorithm": "min_falling_path",
+  "text": "2,1,3 / 6,5,4 / 7,8,9"
+ },
+ "min_heap": {
+  "algorithm": "min_heap",
+  "array": [
+   5,
+   3,
+   8,
+   1,
+   12,
+   2
+  ]
+ },
+ "min_ins_del": {
+  "algorithm": "min_ins_del",
+  "text": "abcd, anc"
+ },
+ "min_insert_palindrome": {
+  "algorithm": "min_insert_palindrome",
+  "text": "abcaa"
+ },
+ "min_max_partition": {
+  "algorithm": "min_max_partition",
+  "array": [
+   12,
+   34,
+   67,
+   90
+  ],
+  "target": 2
+ },
+ "min_multiplications": {
+  "algorithm": "min_multiplications",
+  "text": "3 30 | 2,5,7"
+ },
+ "min_platforms": {
+  "algorithm": "min_platforms",
+  "text": "900,940,950,1100,1500,1800|910,1200,1120,1130,1900,2000"
+ },
+ "min_stack": {
+  "algorithm": "min_stack",
+  "text": "push 5, push 3, push 7, getmin, pop, getmin, pop, getmin"
+ },
+ "min_subset_diff": {
+  "algorithm": "min_subset_diff",
+  "text": "1,6,11,5"
+ },
+ "min_to_max_heap": {
+  "algorithm": "min_to_max_heap",
+  "text": "3,5,9,6,8,20,10,12,18,9"
+ },
+ "min_window_subsequence": {
+  "algorithm": "min_window_subsequence",
+  "text": "abcdebdde, bde"
+ },
+ "min_window_substring": {
+  "algorithm": "min_window_substring",
+  "text": "ADOBECODEBANC, ABC"
+ },
+ "missing_number": {
+  "algorithm": "missing_number",
+  "text": "3,0,1,4,5"
+ },
+ "mod_inverse": {
+  "algorithm": "mod_inverse",
+  "text": "3, 11"
+ },
+ "morris_inorder": {
+  "algorithm": "morris_inorder",
+  "text": "1,2,3,4,5,null,6"
+ },
+ "morris_preorder": {
+  "algorithm": "morris_preorder",
+  "text": "1,2,3,4,5,null,6"
+ },
+ "most_stones": {
+  "algorithm": "most_stones",
+  "text": "0:0,0:1,1:0,1:2,2:1,2:2"
+ },
+ "move_zeros": {
+  "algorithm": "move_zeros",
+  "array": [
+   1,
+   0,
+   2,
+   3,
+   0,
+   4,
+   0,
+   1
+  ]
+ },
+ "n_queens": {
+  "algorithm": "n_queens",
+  "target": 6
+ },
+ "ncr_mod": {
+  "algorithm": "ncr_mod",
+  "text": "10, 3"
+ },
+ "nearest_one_distance": {
+  "algorithm": "nearest_one_distance",
+  "text": "0,0,0 / 0,1,0 / 1,1,1"
+ },
+ "network_delay": {
+  "algorithm": "network_delay",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "next_greater_element": {
+  "algorithm": "next_greater_element",
+  "array": [
+   2,
+   1,
+   2,
+   4,
+   3
+  ]
+ },
+ "next_permutation": {
+  "algorithm": "next_permutation",
+  "array": [
+   1,
+   5,
+   8,
+   4,
+   7,
+   6,
+   5,
+   3,
+   1
+  ]
+ },
+ "next_smaller": {
+  "algorithm": "next_smaller",
+  "array": [
+   4,
+   8,
+   5,
+   2,
+   25
+  ]
+ },
+ "nge_circular": {
+  "algorithm": "nge_circular",
+  "array": [
+   5,
+   4,
+   3,
+   2,
+   1
+  ]
+ },
+ "nice_subarrays": {
+  "algorithm": "nice_subarrays",
+  "text": "1,1,2,1,1",
+  "target": 3
+ },
+ "nim": {
+  "algorithm": "nim",
+  "text": "3,4,5"
+ },
+ "ninja_friends": {
+  "algorithm": "ninja_friends",
+  "text": "2,3,1,2/3,4,2,2/5,6,3,5"
+ },
+ "ninja_training": {
+  "algorithm": "ninja_training",
+  "text": "10,40,70 / 20,50,80 / 30,60,90"
+ },
+ "nodes_at_distance_k": {
+  "algorithm": "nodes_at_distance_k",
+  "text": "3,5,1,6,2,0,8,null,null,7,4 | 5 2"
+ },
+ "non_overlapping_intervals": {
+  "algorithm": "non_overlapping_intervals",
+  "text": "1-2,2-3,3-4,1-3"
+ },
+ "nth_root": {
+  "algorithm": "nth_root",
+  "array": [
+   3,
+   27
+  ]
+ },
+ "number_of_enclaves": {
+  "algorithm": "number_of_enclaves",
+  "text": "0,0,0,0 / 1,0,1,0 / 0,1,1,0 / 0,0,0,0"
+ },
+ "number_of_islands": {
+  "algorithm": "number_of_islands",
+  "text": "1,1,0,0 / 1,0,0,1 / 0,0,1,1 / 0,0,0,0 / 1,0,1,0"
+ },
+ "number_of_lis": {
+  "algorithm": "number_of_lis",
+  "text": "1, 3, 5, 4, 7"
+ },
+ "odd_even_list": {
+  "algorithm": "odd_even_list",
+  "array": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ]
+ },
+ "optimal_game": {
+  "algorithm": "optimal_game",
+  "text": "5,3,7,10"
+ },
+ "palindrome_number": {
+  "algorithm": "palindrome_number",
+  "text": "12321"
+ },
+ "palindrome_partition": {
+  "algorithm": "palindrome_partition",
+  "text": "aabb"
+ },
+ "palindrome_partition_ii": {
+  "algorithm": "palindrome_partition_ii",
+  "text": "aabbc"
+ },
+ "palindrome_string": {
+  "algorithm": "palindrome_string",
+  "text": "racecar"
+ },
+ "partition_array_max_sum": {
+  "algorithm": "partition_array_max_sum",
+  "text": "1,15,7,9,2,5,10",
+  "target": 3
+ },
+ "partition_equal_subset": {
+  "algorithm": "partition_equal_subset",
+  "text": "1, 5, 11, 5"
+ },
+ "pascal_triangle": {
+  "algorithm": "pascal_triangle",
+  "text": "rows",
+  "target": 5
+ },
+ "peak_element_ii": {
+  "algorithm": "peak_element_ii",
+  "text": "10,20,15/21,30,14/7,16,32"
+ },
+ "polygon_area": {
+  "algorithm": "polygon_area",
+  "text": "0 0; 4 0; 4 3; 0 3"
+ },
+ "postfix_to_infix": {
+  "algorithm": "postfix_to_infix",
+  "text": "AB-DE+F*/"
+ },
+ "postfix_to_prefix": {
+  "algorithm": "postfix_to_prefix",
+  "text": "AB-DE+F*/"
+ },
+ "postorder_one_stack": {
+  "algorithm": "postorder_one_stack",
+  "text": "1,2,3,4,5,6,7"
+ },
+ "postorder_two_stacks": {
+  "algorithm": "postorder_two_stacks",
+  "text": "1,2,3,4,5,6,7"
+ },
+ "power_of_two": {
+  "algorithm": "power_of_two",
+  "text": "16"
+ },
+ "power_set": {
+  "algorithm": "power_set",
+  "text": "A,B,C"
+ },
+ "prefix_sum_2d": {
+  "algorithm": "prefix_sum_2d",
+  "text": "3,0,1,4/5,6,3,2/1,2,0,1 | 1 1 2 2, 0 0 2 3"
+ },
+ "prefix_sums": {
+  "algorithm": "prefix_sums",
+  "array": [
+   3,
+   1,
+   4,
+   1,
+   5,
+   9
+  ]
+ },
+ "prefix_to_infix": {
+  "algorithm": "prefix_to_infix",
+  "text": "*+PQ-MN"
+ },
+ "prefix_to_postfix": {
+  "algorithm": "prefix_to_postfix",
+  "text": "/-AK-/BL*CD"
+ },
+ "prime_factorisation": {
+  "algorithm": "prime_factorisation",
+  "target": 360
+ },
+ "prims_mst": {
+  "algorithm": "prims_mst",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "print_1_to_n": {
+  "algorithm": "print_1_to_n",
+  "text": "5"
+ },
+ "print_divisors": {
+  "algorithm": "print_divisors",
+  "text": "36"
+ },
+ "print_lcs": {
+  "algorithm": "print_lcs",
+  "text": "abcde, bdgek"
+ },
+ "print_lis": {
+  "algorithm": "print_lis",
+  "text": "10, 9, 2, 5, 3, 7, 101, 18"
+ },
+ "print_n_to_1": {
+  "algorithm": "print_n_to_1",
+  "text": "5"
+ },
+ "queue_array": {
+  "algorithm": "queue_array",
+  "text": "push 1, push 2, push 3, pop, push 4, front, pop, pop, pop",
+  "target": 3
+ },
+ "queue_linkedlist": {
+  "algorithm": "queue_linkedlist",
+  "text": "push 1, push 2, push 3, front, pop, pop"
+ },
+ "queue_using_stacks": {
+  "algorithm": "queue_using_stacks",
+  "text": "push 1, push 2, front, pop, push 3, pop, pop, pop"
+ },
+ "quick_sort": {
+  "algorithm": "quick_sort",
+  "array": [
+   7,
+   3,
+   9,
+   1,
+   12,
+   5
+  ]
+ },
+ "rabin_karp": {
+  "algorithm": "rabin_karp",
+  "text": "ABRACADABRA,ABRA"
+ },
+ "radix_sort": {
+  "algorithm": "radix_sort",
+  "array": [
+   170,
+   45,
+   75,
+   90,
+   2,
+   802,
+   24,
+   66
+  ]
+ },
+ "rank_replace": {
+  "algorithm": "rank_replace",
+  "text": "40,10,20,30"
+ },
+ "rat_in_maze": {
+  "algorithm": "rat_in_maze",
+  "target": 4,
+  "text": "0:1,0:2,0:3,1:2,2:2,2:3,3:0"
+ },
+ "rearrange_by_sign": {
+  "algorithm": "rearrange_by_sign",
+  "text": "3,1,-2,-5,2,-4"
+ },
+ "recover_bst": {
+  "algorithm": "recover_bst",
+  "text": "3,1,4,null,null,2"
+ },
+ "recursive_atoi": {
+  "algorithm": "recursive_atoi",
+  "text": "-42abc"
+ },
+ "recursive_bubble_sort": {
+  "algorithm": "recursive_bubble_sort",
+  "text": "5,1,4,2,8"
+ },
+ "recursive_insertion_sort": {
+  "algorithm": "recursive_insertion_sort",
+  "text": "5,1,4,2,8"
+ },
+ "remove_duplicates_sorted": {
+  "algorithm": "remove_duplicates_sorted",
+  "array": [
+   1,
+   1,
+   2,
+   2,
+   2,
+   3,
+   3
+  ]
+ },
+ "remove_k_digits": {
+  "algorithm": "remove_k_digits",
+  "array": [
+   1,
+   4,
+   3,
+   2,
+   2,
+   1,
+   9
+  ],
+  "target": 3
+ },
+ "remove_nth_from_end": {
+  "algorithm": "remove_nth_from_end",
+  "array": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "target": 2
+ },
+ "remove_outer_parens": {
+  "algorithm": "remove_outer_parens",
+  "text": "(()())(())"
+ },
+ "repeating_missing": {
+  "algorithm": "repeating_missing",
+  "text": "3,1,2,5,3"
+ },
+ "reverse_array": {
+  "algorithm": "reverse_array",
+  "text": "1,2,3,4,5"
+ },
+ "reverse_k_group": {
+  "algorithm": "reverse_k_group",
+  "text": "1,2,3,4,5,6,7,8",
+  "target": 3
+ },
+ "reverse_number": {
+  "algorithm": "reverse_number",
+  "text": "1234"
+ },
+ "reverse_pairs": {
+  "algorithm": "reverse_pairs",
+  "text": "1,3,2,3,1"
+ },
+ "reverse_stack": {
+  "algorithm": "reverse_stack",
+  "text": "1,2,3,4"
+ },
+ "reverse_words": {
+  "algorithm": "reverse_words",
+  "text": "the sky is  blue"
+ },
+ "right_view": {
+  "algorithm": "right_view",
+  "text": "1,2,3,null,5,null,4"
+ },
+ "rod_cutting": {
+  "algorithm": "rod_cutting",
+  "text": "1, 5, 8, 9, 10, 17, 17, 20"
+ },
+ "roman_to_integer": {
+  "algorithm": "roman_to_integer",
+  "text": "MCMXCIV"
+ },
+ "root_to_leaf_paths": {
+  "algorithm": "root_to_leaf_paths",
+  "text": "1,2,3,null,5"
+ },
+ "rotate_array_k": {
+  "algorithm": "rotate_array_k",
+  "array": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "target": 2
+ },
+ "rotate_list": {
+  "algorithm": "rotate_list",
+  "array": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "target": 2
+ },
+ "rotate_matrix": {
+  "algorithm": "rotate_matrix",
+  "text": "1,2,3/4,5,6/7,8,9"
+ },
+ "rotate_string": {
+  "algorithm": "rotate_string",
+  "text": "abcde, cdeab"
+ },
+ "rotten_oranges": {
+  "algorithm": "rotten_oranges",
+  "text": "2,1,1 / 1,1,0 / 0,1,1"
+ },
+ "row_max_ones": {
+  "algorithm": "row_max_ones",
+  "text": "0,0,1,1/0,1,1,1/0,0,0,1"
+ },
+ "safe_states": {
+  "algorithm": "safe_states",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "search_2d_matrix": {
+  "algorithm": "search_2d_matrix",
+  "text": "1,3,5,7/10,11,16,20/23,30,34,60",
+  "target": 16
+ },
+ "search_2d_matrix_ii": {
+  "algorithm": "search_2d_matrix_ii",
+  "text": "1,4,7,11/2,5,8,12/3,6,9,16/10,13,14,17",
+  "target": 5
+ },
+ "search_rotated": {
+  "algorithm": "search_rotated",
+  "array": [
+   4,
+   5,
+   6,
+   7,
+   0,
+   1,
+   2
+  ],
+  "target": 0
+ },
+ "search_rotated_ii": {
+  "algorithm": "search_rotated_ii",
+  "text": "2,5,6,0,0,1,2",
+  "target": 0
+ },
+ "second_largest": {
+  "algorithm": "second_largest",
+  "array": [
+   1,
+   2,
+   4,
+   7,
+   7,
+   5
+  ]
+ },
+ "segment_tree": {
+  "algorithm": "segment_tree",
+  "array": [
+   3,
+   1,
+   4,
+   1,
+   5,
+   9,
+   2,
+   6
+  ]
+ },
+ "selection_sort": {
+  "algorithm": "selection_sort",
+  "array": [
+   7,
+   3,
+   9,
+   1,
+   12,
+   5
+  ]
+ },
+ "serialize_tree": {
+  "algorithm": "serialize_tree",
+  "text": "1,2,3,null,null,4,5"
+ },
+ "set_matrix_zeros": {
+  "algorithm": "set_matrix_zeros",
+  "text": "1,1,1/1,0,1/1,1,1"
+ },
+ "shortest_job_first": {
+  "algorithm": "shortest_job_first",
+  "text": "4,3,7,1,2"
+ },
+ "shortest_path_dag": {
+  "algorithm": "shortest_path_dag",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "shortest_supersequence": {
+  "algorithm": "shortest_supersequence",
+  "text": "brute, groot"
+ },
+ "sieve": {
+  "algorithm": "sieve",
+  "target": 30
+ },
+ "single_element_sorted": {
+  "algorithm": "single_element_sorted",
+  "array": [
+   1,
+   1,
+   2,
+   3,
+   3,
+   4,
+   4,
+   8,
+   8
+  ]
+ },
+ "single_number": {
+  "algorithm": "single_number",
+  "text": "4,1,2,1,2"
+ },
+ "single_number_iii": {
+  "algorithm": "single_number_iii",
+  "text": "1,2,1,3,2,5"
+ },
+ "sliding_window": {
+  "algorithm": "sliding_window",
+  "array": [
+   4,
+   2,
+   9,
+   7,
+   1,
+   8,
+   6
+  ],
+  "target": 3
+ },
+ "sliding_window_maximum": {
+  "algorithm": "sliding_window_maximum",
+  "array": [
+   1,
+   3,
+   -1,
+   -3,
+   5,
+   3,
+   6,
+   7
+  ],
+  "target": 3
+ },
+ "sort_012_list": {
+  "algorithm": "sort_012_list",
+  "text": "1,0,2,1,0,2,1"
+ },
+ "sort_by_frequency": {
+  "algorithm": "sort_by_frequency",
+  "text": "tree"
+ },
+ "sort_list": {
+  "algorithm": "sort_list",
+  "text": "4,2,1,3,9,-1"
+ },
+ "sort_stack": {
+  "algorithm": "sort_stack",
+  "text": "3,1,4,2"
+ },
+ "sos_dp": {
+  "algorithm": "sos_dp",
+  "text": "1,2,3,4,5,6,7,8"
+ },
+ "sparse_table": {
+  "algorithm": "sparse_table",
+  "text": "5,2,4,7,1,3 | min 1 4, min 0 2, min 3 3"
+ },
+ "spf_sieve": {
+  "algorithm": "spf_sieve",
+  "text": "30",
+  "target": 24
+ },
+ "spiral_order": {
+  "algorithm": "spiral_order",
+  "text": "1,2,3,4/5,6,7,8/9,10,11,12"
+ },
+ "sqrt_decomposition": {
+  "algorithm": "sqrt_decomposition",
+  "text": "1,2,3,4,5,6,7 | sum 1 5, set 3 10, sum 0 6"
+ },
+ "sqrt_search": {
+  "algorithm": "sqrt_search",
+  "array": [
+   28
+  ]
+ },
+ "stack_array": {
+  "algorithm": "stack_array",
+  "text": "push 3, push 5, top, pop, pop, pop, push 7",
+  "target": 3
+ },
+ "stack_linkedlist": {
+  "algorithm": "stack_linkedlist",
+  "text": "push 1, push 2, push 3, top, pop, pop"
+ },
+ "stack_using_queue": {
+  "algorithm": "stack_using_queue",
+  "text": "push 1, push 2, push 3, top, pop, top"
+ },
+ "stock_cooldown": {
+  "algorithm": "stock_cooldown",
+  "text": "1, 2, 3, 0, 2"
+ },
+ "stock_fee": {
+  "algorithm": "stock_fee",
+  "text": "1, 3, 2, 8, 4, 9",
+  "target": 2
+ },
+ "stock_ii": {
+  "algorithm": "stock_ii",
+  "text": "7, 1, 5, 3, 6, 4"
+ },
+ "stock_iii": {
+  "algorithm": "stock_iii",
+  "text": "3, 3, 5, 0, 0, 3, 1, 4"
+ },
+ "stock_iv": {
+  "algorithm": "stock_iv",
+  "text": "3, 2, 6, 5, 0, 3",
+  "target": 2
+ },
+ "stock_span": {
+  "algorithm": "stock_span",
+  "array": [
+   100,
+   80,
+   60,
+   70,
+   60,
+   75,
+   85
+  ]
+ },
+ "string_to_integer": {
+  "algorithm": "string_to_integer",
+  "text": "-042abc"
+ },
+ "subarrays_k_distinct": {
+  "algorithm": "subarrays_k_distinct",
+  "text": "1,2,1,2,3",
+  "target": 2
+ },
+ "subset_sum": {
+  "algorithm": "subset_sum",
+  "array": [
+   3,
+   4,
+   5
+  ],
+  "target": 9
+ },
+ "subsets_ii": {
+  "algorithm": "subsets_ii",
+  "array": [
+   1,
+   2,
+   2
+  ]
+ },
+ "subsets_recursion": {
+  "algorithm": "subsets_recursion",
+  "array": [
+   1,
+   2,
+   3
+  ]
+ },
+ "substring_hash": {
+  "algorithm": "substring_hash",
+  "text": "abcabcab | 0 3 3, 1 4 4, 0 1 2"
+ },
+ "substrings_all_three": {
+  "algorithm": "substrings_all_three",
+  "text": "abcabc"
+ },
+ "successor_predecessor": {
+  "algorithm": "successor_predecessor",
+  "text": "20,8,22,4,12,10,14 | 10"
+ },
+ "sudoku_solver": {
+  "algorithm": "sudoku_solver",
+  "text": "1,0,0,0/0,0,3,0/0,4,0,0/0,0,0,2"
+ },
+ "suffix_array": {
+  "algorithm": "suffix_array",
+  "text": "banana"
+ },
+ "sum_distances_tree": {
+  "algorithm": "sum_distances_tree",
+  "text": "1,2,3,4,5"
+ },
+ "sum_first_n": {
+  "algorithm": "sum_first_n",
+  "text": "10"
+ },
+ "sum_of_beauty": {
+  "algorithm": "sum_of_beauty",
+  "text": "aabcb"
+ },
+ "sum_subarray_mins": {
+  "algorithm": "sum_subarray_mins",
+  "array": [
+   3,
+   1,
+   2,
+   4
+  ]
+ },
+ "sum_subarray_ranges": {
+  "algorithm": "sum_subarray_ranges",
+  "text": "4,-2,-3,4,1"
+ },
+ "surrounded_regions": {
+  "algorithm": "surrounded_regions",
+  "text": "X,X,X,X / X,O,O,X / X,X,O,X / X,O,X,X"
+ },
+ "swap_xor": {
+  "algorithm": "swap_xor",
+  "text": "13, 4"
+ },
+ "swim_rising_water": {
+  "algorithm": "swim_rising_water",
+  "text": "0,1,2,3 / 8,7,6,4 / 9,10,11,5"
+ },
+ "symmetric_tree": {
+  "algorithm": "symmetric_tree",
+  "text": "1,2,2,3,4,4,3"
+ },
+ "target_sum": {
+  "algorithm": "target_sum",
+  "text": "1,1,1,1,1",
+  "target": 3
+ },
+ "tarjan_scc": {
+  "algorithm": "tarjan_scc",
+  "text": "A>B, B>C, C>A, B>D, D>E, E>F, F>D, G>F, G>H, H>G"
+ },
+ "task_scheduler": {
+  "algorithm": "task_scheduler",
+  "text": "A,A,A,B,B,B",
+  "target": 2
+ },
+ "ternary_search": {
+  "algorithm": "ternary_search",
+  "text": "1,3,8,12,9,4,2"
+ },
+ "three_sum": {
+  "algorithm": "three_sum",
+  "text": "-1,0,1,2,-1,-4"
+ },
+ "top_k_frequent": {
+  "algorithm": "top_k_frequent",
+  "text": "1,1,1,2,2,3",
+  "target": 2
+ },
+ "top_view": {
+  "algorithm": "top_view",
+  "text": "1,2,3,4,5,6,7"
+ },
+ "topological_sort": {
+  "algorithm": "topological_sort",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ },
+ "trapping_rainwater": {
+  "algorithm": "trapping_rainwater",
+  "array": [
+   0,
+   1,
+   0,
+   2,
+   1,
+   0,
+   1,
+   3,
+   2,
+   1,
+   2,
+   1
+  ]
+ },
+ "tree_diameter": {
+  "algorithm": "tree_diameter",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ]
+ },
+ "tree_max_depth": {
+  "algorithm": "tree_max_depth",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ]
+ },
+ "tree_robber": {
+  "algorithm": "tree_robber",
+  "text": "3,4,5,1,3,null,1"
+ },
+ "tree_traversal": {
+  "algorithm": "tree_traversal",
+  "array": [
+   8,
+   3,
+   10,
+   1,
+   6,
+   14,
+   4
+  ]
+ },
+ "triangle_path": {
+  "algorithm": "triangle_path",
+  "text": "2 / 3,4 / 6,5,7 / 4,1,8,3"
+ },
+ "trie_advanced": {
+  "algorithm": "trie_advanced",
+  "text": "insert apple, insert apple, insert app, countwords apple, countprefix app, erase apple, countwords apple"
+ },
+ "trie_insert": {
+  "algorithm": "trie_insert",
+  "text": "CAT,CAR,DOG"
+ },
+ "tsp_bitmask": {
+  "algorithm": "tsp_bitmask",
+  "text": "0,10,15,20/10,0,35,25/15,35,0,30/20,25,30,0"
+ },
+ "two_sat": {
+  "algorithm": "two_sat",
+  "text": "a|b, !a|c, !b|!c, a|!c"
+ },
+ "two_sum_bst": {
+  "algorithm": "two_sum_bst",
+  "text": "5,3,6,2,4,7 | 9"
+ },
+ "two_sum_sorted": {
+  "algorithm": "two_sum_sorted",
+  "array": [
+   1,
+   3,
+   5,
+   7,
+   9,
+   12
+  ],
+  "target": 16
+ },
+ "unbounded_knapsack": {
+  "algorithm": "unbounded_knapsack",
+  "text": "2:5, 4:11, 6:13",
+  "target": 10
+ },
+ "union_sorted": {
+  "algorithm": "union_sorted",
+  "text": "1,2,3,4,5 | 2,3,4,4,5,6"
+ },
+ "unique_paths": {
+  "algorithm": "unique_paths",
+  "target": 4
+ },
+ "upper_bound": {
+  "algorithm": "upper_bound",
+  "array": [
+   1,
+   2,
+   2,
+   3,
+   5
+  ],
+  "target": 2
+ },
+ "valid_paren_star": {
+  "algorithm": "valid_paren_star",
+  "text": "(*))"
+ },
+ "validate_bst": {
+  "algorithm": "validate_bst",
+  "text": "5,1,4,null,null,3,6"
+ },
+ "vertical_order": {
+  "algorithm": "vertical_order",
+  "text": "3,9,20,null,null,15,7"
+ },
+ "ways_to_arrive": {
+  "algorithm": "ways_to_arrive",
+  "text": "0-6:7,0-1:2,1-2:3,1-3:3,6-3:3,3-5:1,6-5:1,2-5:1,0-4:5,4-6:2 | 0 6"
+ },
+ "wildcard_match": {
+  "algorithm": "wildcard_match",
+  "text": "abdefcd, ab*cd"
+ },
+ "word_break": {
+  "algorithm": "word_break",
+  "text": "leetcode | leet,code"
+ },
+ "word_ladder": {
+  "algorithm": "word_ladder",
+  "text": "hit, cog | hot,dot,dog,lot,log,cog"
+ },
+ "word_ladder_ii": {
+  "algorithm": "word_ladder_ii",
+  "text": "hit, cog | hot,dot,dog,lot,log,cog"
+ },
+ "word_search": {
+  "algorithm": "word_search",
+  "text": "ABCE/SFCS/ADEE,ABCCED"
+ },
+ "xor_range": {
+  "algorithm": "xor_range",
+  "text": "3, 9"
+ },
+ "y_intersection": {
+  "algorithm": "y_intersection",
+  "text": "1,2 | 9,8,7 | 4,5"
+ },
+ "z_function": {
+  "algorithm": "z_function",
+  "text": "AABXAAB"
+ },
+ "zero_one_bfs": {
+  "algorithm": "zero_one_bfs",
+  "text": "0,1,1/0,0,1/1,0,0"
+ },
+ "zigzag_traversal": {
+  "algorithm": "zigzag_traversal",
+  "text": "3,9,20,null,null,15,7"
+ },
+ "count_odd_digits": {
+  "algorithm": "count_odd_digits",
+  "text": "13579"
+ },
+ "largest_digit": {
+  "algorithm": "largest_digit",
+  "text": "3947"
+ },
+ "perfect_number": {
+  "algorithm": "perfect_number",
+  "text": "28"
+ },
+ "lcm": {
+  "algorithm": "lcm",
+  "text": "12,18"
+ },
+ "array_sum": {
+  "algorithm": "array_sum",
+  "text": "3,1,4,1,5"
+ },
+ "count_odd_array": {
+  "algorithm": "count_odd_array",
+  "text": "3,8,5,2,7,6"
+ },
+ "second_highest_freq": {
+  "algorithm": "second_highest_freq",
+  "text": "1,2,2,3,3,3,4"
+ },
+ "sum_high_low_freq": {
+  "algorithm": "sum_high_low_freq",
+  "text": "1,2,2,3,3,3"
+ },
+ "reverse_string": {
+  "algorithm": "reverse_string",
+  "text": "hello"
+ },
+ "set_rightmost_unset_bit": {
+  "algorithm": "set_rightmost_unset_bit",
+  "text": "13"
+ },
+ "sum_array_rec": {
+  "algorithm": "sum_array_rec",
+  "text": "1,2,3,4"
+ },
+ "sum_digits_rec": {
+  "algorithm": "sum_digits_rec",
+  "text": "1234"
+ },
+ "factorial_rec": {
+  "algorithm": "factorial_rec",
+  "text": "5"
+ },
+ "prime_rec": {
+  "algorithm": "prime_rec",
+  "text": "29"
+ },
+ "sorted_rec": {
+  "algorithm": "sorted_rec",
+  "text": "1,2,4,4,7"
+ },
+ "reverse_array_rec": {
+  "algorithm": "reverse_array_rec",
+  "text": "1,2,3,4,5"
+ },
+ "reverse_string_rec": {
+  "algorithm": "reverse_string_rec",
+  "text": "recursion"
+ },
+ "palindrome_rec": {
+  "algorithm": "palindrome_rec",
+  "text": "racecar"
+ },
+ "pascal_element": {
+  "algorithm": "pascal_element",
+  "text": "5,3"
+ },
+ "pascal_row": {
+  "algorithm": "pascal_row",
+  "text": "6"
+ },
+ "ll_traverse": {
+  "algorithm": "ll_traverse",
+  "text": "4,5,6,7"
+ },
+ "ll_delete_tail": {
+  "algorithm": "ll_delete_tail",
+  "text": "1,2,3,4"
+ },
+ "dll_from_array": {
+  "algorithm": "dll_from_array",
+  "text": "3,1,4,1,5"
+ },
+ "dll_delete_tail": {
+  "algorithm": "dll_delete_tail",
+  "text": "1,2,3,4"
+ },
+ "heapify": {
+  "algorithm": "heapify",
+  "text": "4,10,3,5,1 | 0"
+ },
+ "build_heap": {
+  "algorithm": "build_heap",
+  "text": "4,10,3,5,1,8,7"
+ },
+ "sort_k_sorted": {
+  "algorithm": "sort_k_sorted",
+  "text": "6,5,3,2,8,10,9 | 3"
+ },
+ "bst_min_max": {
+  "algorithm": "bst_min_max",
+  "text": "8,3,10,1,6,14,4,7,13"
+ },
+ "bst_iterator": {
+  "algorithm": "bst_iterator",
+  "text": "8,3,10,1,6,14,4,7"
+ },
+ "single_number_ii": {
+  "algorithm": "single_number_ii",
+  "text": "2,2,3,2"
+ },
+ "distinct_islands": {
+  "algorithm": "distinct_islands",
+  "text": "1,1,0,1,1/1,0,0,0,1/0,0,0,0,0/1,1,0,1,1"
+ },
+ "shortest_palindrome": {
+  "algorithm": "shortest_palindrome",
+  "text": "aacecaaa"
+ },
+ "ll_delete_kth": {
+  "algorithm": "ll_delete_kth",
+  "text": "1,2,3,4,5",
+  "target": 3
+ },
+ "ll_delete_value": {
+  "algorithm": "ll_delete_value",
+  "text": "1,2,3,4,5",
+  "target": 4
+ },
+ "ll_insert_tail": {
+  "algorithm": "ll_insert_tail",
+  "text": "1,2,3",
+  "target": 9
+ },
+ "ll_insert_kth": {
+  "algorithm": "ll_insert_kth",
+  "text": "1,2,4,5 | 3",
+  "target": 3
+ },
+ "ll_insert_before_value": {
+  "algorithm": "ll_insert_before_value",
+  "text": "1,2,4,5 | 3",
+  "target": 4
+ },
+ "dll_delete_kth": {
+  "algorithm": "dll_delete_kth",
+  "text": "1,2,3,4,5",
+  "target": 3
+ },
+ "dll_remove_node": {
+  "algorithm": "dll_remove_node",
+  "text": "1,2,3,4,5",
+  "target": 3
+ },
+ "dll_insert_before_tail": {
+  "algorithm": "dll_insert_before_tail",
+  "text": "1,2,3",
+  "target": 9
+ },
+ "dll_insert_before_kth": {
+  "algorithm": "dll_insert_before_kth",
+  "text": "1,2,4,5 | 3",
+  "target": 3
+ },
+ "dll_insert_before_node": {
+  "algorithm": "dll_insert_before_node",
+  "text": "1,2,4,5 | 3",
+  "target": 4
+ },
+ "print_shortest_path": {
+  "algorithm": "print_shortest_path",
+  "start": "A",
+  "graph": {
+   "nodes": [
+    {
+     "id": "A",
+     "x": 100,
+     "y": 150,
+     "label": "Home"
+    },
+    {
+     "id": "B",
+     "x": 250,
+     "y": 80,
+     "label": "Uptown"
+    },
+    {
+     "id": "C",
+     "x": 250,
+     "y": 220,
+     "label": "Downtown"
+    },
+    {
+     "id": "D",
+     "x": 420,
+     "y": 80,
+     "label": "Airport"
+    },
+    {
+     "id": "E",
+     "x": 420,
+     "y": 220,
+     "label": "Mall"
+    },
+    {
+     "id": "F",
+     "x": 560,
+     "y": 150,
+     "label": "Station"
+    },
+    {
+     "id": "G",
+     "x": 680,
+     "y": 150,
+     "label": "Office"
+    }
+   ],
+   "edges": [
+    [
+     "A",
+     "B",
+     4
+    ],
+    [
+     "A",
+     "C",
+     2
+    ],
+    [
+     "B",
+     "D",
+     5
+    ],
+    [
+     "B",
+     "E",
+     10
+    ],
+    [
+     "C",
+     "E",
+     3
+    ],
+    [
+     "D",
+     "F",
+     2
+    ],
+    [
+     "E",
+     "F",
+     4
+    ],
+    [
+     "F",
+     "G",
+     1
+    ]
+   ]
+  }
+ }
 }

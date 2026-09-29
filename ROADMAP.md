@@ -13,11 +13,85 @@ Each phase below is a self-contained prompt. Execute one phase per session/turn,
 verify its acceptance criteria, then stop so the phase can be committed before
 the next begins.
 
-**Status (2026-09-27): Phases 0–5 DONE. 431 algorithms live, 1650 backend
-tests passing. A2Z complete (411 rows traced; only the 6 theory rows are
-unlinked). Tier B complete: Floyd–Warshall (batch 49), A* (70), max-flow
-(71), LCA / binary lifting (72) and bitmask DP (73) have all shipped, on
-existing views rather than the new renderers once planned.**
+**Status (2026-09-29): Phases 0–5 DONE. 474 algorithms live. A2Z is the
+OFFICIAL 20-module / 495-item sheet (see below): every practice row has a
+real tracer; only the 47 lecture rows and the 22 printing patterns show a
+concept card. Tier B complete.**
+
+**A2Z REBUILT against the official sheet (2026-09-29).** takeuforward.org
+replaced the 18-step sheet with a 20-module "prep-hub" sheet (495 items:
+Beginner Problems, Sorting, Arrays, Hashing, Binary Search, Strings,
+Recursion, Linked-List, Bit Manipulation, Greedy, Sliding Window / 2
+Pointer, Stack / Queues, Binary Trees, BST, Heaps, Graphs, DP, Tries,
+Strings (Advanced), Maths). The old 18-step URL now redirects to it.
+  - `a2z-source.json` is the decoded syllabus of that page (modules →
+    sections → items with title, slug, kind, basic/core/pro tier, links).
+    Refresh it by re-running the extraction against the page's React Flight
+    payload (`sheet_syllabus` rows; index 0 of each row is its field-schema).
+  - `build_a2z.py` v2 regenerates `frontend/js/a2z.js` from it — same order,
+    same section names, tier → E/M/H. Ids stay APPEND-ONLY: a row keeps the
+    id it had (matched by title, or by the ALIAS table for the 39 rows the
+    sheet reworded); 81 new rows got fresh ids; 47 old rows that are no
+    longer on the sheet simply vanished (their ids are never reused). The
+    numeric prefix of an id is therefore the module a row FIRST appeared in.
+    The problem viewer shows the sheet position (module.item) instead.
+    Lecture rows carry `learning:true` and `traceable:false`; the viewer
+    checks `A2Z_TRACER` first, so a lecture row can still be linked.
+  - `a2zTracers.js`: 34 dead links pruned, 13 rows linked to existing
+    tracers, and batches 85–90 built the 43 tracers the remaining 38 rows
+    needed (+ recursive factorial/palindrome for the sheet's duplicate
+    titles, and tracers for three lecture rows). Every traceable row is
+    linked — 432 links.
+
+**Batches 85–90 (new tracers for the 2026 sheet) — 43 ids.**
+  - 85 `basics_more.py` (grid): count odd digits, largest digit, perfect
+    number, LCM, array sum, count odd, second-highest frequency, sum of
+    highest+lowest frequency, reverse a string, set rightmost unset bit.
+  - 86 `recursion_basics.py` (grid, call-table rows): recursive array sum,
+    sum of digits, factorial, prime check, sorted check, reverse array /
+    string, palindrome.
+  - 87 `pascal_more.py` (grid): Pascal I (one element by running product)
+    and II (one row).
+  - 88 `ll_basics2.py` (list view, reuses ll_more.L): traverse, delete
+    tail / kth / by value, insert at tail / kth / before a value; DLL from
+    array, delete tail / kth / given node, insert before tail / kth / node.
+    Input "list | v" + target k or x (see NEEDS_K / NEEDS_X / NEEDS_V).
+  - 89 `heaps_build.py` (tree): heapify(i), build-heap; (grid) sort a
+    k-sorted array. `bst_more.py` (tree): min/max, BST iterator.
+  - 90 `misc_a2z.py` (grid): single number II, distinct islands, shortest
+    palindrome; `graph_undirected.print_shortest_path` (graph view, parents
+    + green path to the last node).
+  Tests: `test_batch85_90_tracers.py`. Offline samples rebuilt (474).
+
+**Home keyboard LAYERS (2026-09-30).** The 60% board has 42 algorithm slots;
+the catalog has 474. Instead of a bigger board, the caps now have layers like
+a real 60% keyboard: layer 1 is the curated CLASSICS layout, and the FN caps
+(or the `[` / `]` keys) page through the rest of the catalog in
+`ALGO_CATEGORIES` order, a board-full at a time, each page named for the
+families it holds ("GRAPHS", "STRUCTURES · DP") — 12 layers, every algorithm
+on a keycap. `applyLayer()` in keyboard3d.js re-legends the slot caps (new top
+texture + side colour per family), empty slots on the last page become blank
+caps that ignore the pointer, and the hero's corner shows `LAYER k/12 · NAME`.
+`capLabel()` in data.js gives the ~455 uncurated ids a 4-letter legend
+(one word → first four letters, two → 2+2, more → initials); hover still
+shows the full name. KEYS EXPLORED counts against all 474.
+
+**Offline fallback, round two (2026-09-29).** Two ways the fallback used to
+bite: (1) the API client gave up after 12 s while a sleeping Render backend
+takes 20–30 s to answer, so the live site declared itself offline on the first
+visit; (2) on Run while offline the engine OVERWROTE the student's input with
+the sample so the box matched the sample trace — which read as "the algorithm
+ignores my data". Now `/api/trace` and the reachability probe wait up to 45 s
+(`WAKE_TIMEOUT` in api.js), Run shows `WAKING THE SERVER…` while it waits,
+one probe is shared (`backendProbe`), the pill says which offline mode applies
+(`OFFLINE — IN-BROWSER EMULATOR` vs `OFFLINE — SAMPLE TRACE ONLY`), and the
+student's input is never touched — the hint names the sample input instead.
+Also: the backend now sends `Cache-Control: no-cache, must-revalidate` for the
+frontend files it serves (nginx/Vercel already did), because a buildless
+module app with heuristic caching can run last week's engine.js next to
+today's data.js — seen locally as a Dijkstra trace on a linked-list row.
+`start-dev.sh` now serves the app from the backend on one origin and moves to
+the next free port instead of killing whatever holds 8000.
 
 **Offline fallback FIXED (2026-09-27).** Offline mode (API unreachable —
 e.g. a Render cold start) used to emulate ~21 classic algorithms and silently

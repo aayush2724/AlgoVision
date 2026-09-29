@@ -911,10 +911,114 @@ export const ALGORITHMS = [
   // Batch 16 (Tier B) — shortest paths with negative edges.
   { id: "bellman_ford", name: "Bellman–Ford (Negative Edges)", category: "Graphs", emoji: "🧭", complexity: "O(V·E)", input: "graph",
     hook: "Shortest paths even with negative edges — and it spots impossible loops." },
+  // ── 2026-09-29: tracers for the rows the 20-module A2Z sheet added ──
+  { id: "count_odd_digits", name: "Count Odd Digits in a Number", category: "Math", emoji: "🔢", complexity: "O(log n)", input: "text",
+    hook: "A whole number. Peel each digit with % 10 and test it." },
+  { id: "largest_digit", name: "Largest Digit in a Number", category: "Math", emoji: "🔢", complexity: "O(log n)", input: "text",
+    hook: "A whole number. Keep the biggest digit seen so far." },
+  { id: "perfect_number", name: "Check for a Perfect Number", category: "Math", emoji: "🔢", complexity: "O(n)", input: "text",
+    hook: "A whole number. Sum its proper divisors; equal means perfect." },
+  { id: "lcm", name: "LCM of Two Numbers", category: "Math", emoji: "🔢", complexity: "O(log min(a,b))", input: "text",
+    hook: "Two numbers. Euclid for the gcd, then a·b / gcd." },
+  { id: "array_sum", name: "Sum of Array Elements", category: "Patterns", emoji: "➕", complexity: "O(n)", input: "text",
+    hook: "Up to 12 numbers. One pass, a running total." },
+  { id: "count_odd_array", name: "Count Odd Numbers in an Array", category: "Patterns", emoji: "🔢", complexity: "O(n)", input: "text",
+    hook: "Up to 12 numbers. Test each with % 2." },
+  { id: "second_highest_freq", name: "Second Highest Occurring Element", category: "Patterns", emoji: "🗳️", complexity: "O(n)", input: "text",
+    hook: "Up to 12 numbers. Tally, then read the second-highest count." },
+  { id: "sum_high_low_freq", name: "Sum of Highest and Lowest Frequency", category: "Patterns", emoji: "🗳️", complexity: "O(n)", input: "text",
+    hook: "Up to 12 numbers. Tally; add the top and bottom counts." },
+  { id: "reverse_string", name: "Reverse a String (Two Pointers)", category: "Patterns", emoji: "🔁", complexity: "O(n)", input: "text",
+    hook: "A word. Swap the ends and walk inward." },
+  { id: "set_rightmost_unset_bit", name: "Set the Rightmost Unset Bit", category: "Math", emoji: "💡", complexity: "O(1)", input: "text",
+    hook: "A number 0–254. n | (n + 1) flips the lowest 0 bit." },
+  { id: "sum_array_rec", name: "Sum of Array Elements (Recursive)", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "Up to 10 numbers. sum(i) = a[i] + sum(i + 1)." },
+  { id: "sum_digits_rec", name: "Sum of Digits (Recursive)", category: "Math", emoji: "🪞", complexity: "O(log n)", input: "text",
+    hook: "A whole number. f(n) = n % 10 + f(n // 10)." },
+  { id: "factorial_rec", name: "Factorial (Recursive)", category: "Math", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "0–10. f(n) = n · f(n − 1)." },
+  { id: "prime_rec", name: "Check for a Prime Number (Recursive)", category: "Math", emoji: "🪞", complexity: "O(√n)", input: "text",
+    hook: "2–9999. Try each divisor d while d·d ≤ n." },
+  { id: "sorted_rec", name: "Check if an Array is Sorted (Recursive)", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "Up to 10 numbers. a[i] ≤ a[i + 1] and sorted(i + 1)." },
+  { id: "reverse_array_rec", name: "Reverse an Array (Recursive)", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "Up to 10 numbers. Swap the ends, recurse inward." },
+  { id: "reverse_string_rec", name: "Reverse a String (Recursive)", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "A word. Swap the ends, recurse inward." },
+  { id: "palindrome_rec", name: "Check if a String is a Palindrome (Recursive)", category: "Patterns", emoji: "🪞", complexity: "O(n)", input: "text",
+    hook: "A word. Ends must match, then check the inside." },
+  { id: "pascal_element", name: "Pascal's Triangle I — One Element", category: "Patterns", emoji: "🔺", complexity: "O(c)", input: "text",
+    hook: "row,column (1-based). C(r−1, c−1) by a running product." },
+  { id: "pascal_row", name: "Pascal's Triangle II — One Row", category: "Patterns", emoji: "🔺", complexity: "O(n)", input: "text",
+    hook: "The row number. Each entry from the previous one." },
+  { id: "ll_traverse", name: "Traverse a Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The list. Follow next until null." },
+  { id: "ll_delete_tail", name: "Delete the Tail of a Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The list. Walk to the second-last node and cut." },
+  { id: "ll_delete_kth", name: "Delete the Kth Node of a Linked List", category: "Structures", emoji: "🚃", complexity: "O(k)", input: "text",
+    hook: "The list and k (1-based). Bypass the kth node." },
+  { id: "ll_delete_value", name: "Delete a Node by Value", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The list and the value. Find it, remembering the node before." },
+  { id: "ll_insert_tail", name: "Insert at the Tail of a Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The list and the value. Walk to the end and hang it on." },
+  { id: "ll_insert_kth", name: "Insert at the Kth Position of a Linked List", category: "Structures", emoji: "🚃", complexity: "O(k)", input: "text",
+    hook: "The list | new value, and k (1-based). Insert after node k−1." },
+  { id: "ll_insert_before_value", name: "Insert Before a Value in a Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The list | new value, and the value to insert before." },
+  { id: "dll_from_array", name: "Build a Doubly Linked List From an Array", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The array. One node per value; link next and prev." },
+  { id: "dll_delete_tail", name: "Delete the Tail of a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(1)", input: "text",
+    hook: "The DLL. tail.prev knows the way — no walk." },
+  { id: "dll_delete_kth", name: "Delete the Kth Node of a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(k)", input: "text",
+    hook: "The DLL and k. Fix next AND prev around it." },
+  { id: "dll_remove_node", name: "Remove a Given Node From a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(1)", input: "text",
+    hook: "The DLL and the node's value. Its neighbours link to each other." },
+  { id: "dll_insert_before_tail", name: "Insert Before the Tail of a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(1)", input: "text",
+    hook: "The DLL and the value. Slot it between tail.prev and tail." },
+  { id: "dll_insert_before_kth", name: "Insert Before the Kth Node of a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(k)", input: "text",
+    hook: "The DLL | new value, and k. Four links change." },
+  { id: "dll_insert_before_node", name: "Insert Before a Given Node in a Doubly Linked List", category: "Structures", emoji: "🚃", complexity: "O(n)", input: "text",
+    hook: "The DLL | new value, and the node's value." },
+  { id: "heapify", name: "Heapify (Sift Down)", category: "Structures", emoji: "⛰️", complexity: "O(log n)", input: "text",
+    hook: "Up to 12 numbers | index. Sink that node below its bigger child." },
+  { id: "build_heap", name: "Build a Max-Heap From an Array", category: "Structures", emoji: "⛰️", complexity: "O(n)", input: "text",
+    hook: "Up to 12 numbers. Heapify every parent, last to first." },
+  { id: "sort_k_sorted", name: "Sort a K-Sorted Array", category: "Structures", emoji: "⛰️", complexity: "O(n log k)", input: "text",
+    hook: "Numbers | k. A min-heap of k+1 always holds the next smallest." },
+  { id: "bst_min_max", name: "Minimum and Maximum in a BST", category: "Structures", emoji: "🌲", complexity: "O(h)", input: "text",
+    hook: "Values inserted into a BST. Leftmost is min, rightmost is max." },
+  { id: "bst_iterator", name: "BST Iterator (next / hasNext)", category: "Structures", emoji: "🌲", complexity: "O(1) amortised", input: "text",
+    hook: "Values inserted into a BST. A stack of the left spine drives next()." },
+  { id: "single_number_ii", name: "Single Number II (Every Other Value Thrice)", category: "Math", emoji: "⊕", complexity: "O(32n)", input: "text",
+    hook: "Every value thrice but one. Count 1-bits per position mod 3." },
+  { id: "distinct_islands", name: "Number of Distinct Islands", category: "Graphs", emoji: "🗺️", complexity: "O(R·C)", input: "text",
+    hook: "0/1 grid, rows split by /. Same offset shape = same island." },
+  { id: "shortest_palindrome", name: "Shortest Palindrome (KMP)", category: "Patterns", emoji: "🧬", complexity: "O(n)", input: "text",
+    hook: "A word. lps of s#reverse(s) finds the palindromic prefix." },
+  { id: "print_shortest_path", name: "Print the Shortest Path (Dijkstra + Parents)", category: "Graphs", emoji: "🧭", complexity: "O((V+E) log V)", input: "graph",
+    hook: "Dijkstra with parent pointers; the path to the last node is walked back and drawn green." },
 ];
 
 // Short face label per algorithm. Lives here because both the 3D keycaps
 // and the flat mobile grid render it — keeping one copy stops them drifting.
+// The legend printed on a keycap. Curated labels first (KEYCAP_LABEL); every
+// other algorithm gets a 4-letter abbreviation derived from its id, so all
+// 474 can sit on the board's layers without a hand-written label each:
+//   one word  → its first four letters      (sieve → SIEV, heapify → HEAP)
+//   two words → two letters of each         (heap_sort → HESO, lcm... → LCM)
+//   more      → initials, up to four        (dll_insert_before_kth → DIBK)
+export function capLabel(algo) {
+  const curated = KEYCAP_LABEL[algo.id];
+  if (curated) return curated;
+  const parts = algo.id.split('_').filter(Boolean);
+  let label;
+  if (parts.length === 1) label = parts[0].slice(0, 4);
+  else if (parts.length === 2) label = parts[0].slice(0, 2) + parts[1].slice(0, 2);
+  else label = parts.map(w => w[0]).join('').slice(0, 4);
+  return label.toUpperCase();
+}
+
 export const KEYCAP_LABEL = {
   dijkstra: 'DIJK', bfs: 'BFS', dfs: 'DFS', prims_mst: 'PRIM', kruskals_mst: 'KRSK',
   merge_sort: 'MRG', quick_sort: 'QCK', bubble_sort: 'BUB', insertion_sort: 'INS', selection_sort: 'SEL',
@@ -973,7 +1077,7 @@ export const SAMPLE_GRAPH = {
   ]
 };
 
-// The full Striver A2Z sheet lives in its own module — 18 steps, and long
+// The full Striver A2Z sheet lives in its own module — 20 modules, and long
 // enough that inlining it here buried everything else in this file.
 export { A2Z_STEPS } from './a2z.js';
 

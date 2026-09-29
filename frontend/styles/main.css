@@ -1152,6 +1152,14 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.85rem;
   color: var(--ink);
 }
+/* Which key layer the board is showing — FN pages through them. */
+.kbd-layer {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--c);
+  margin-top: 0.15rem;
+}
 .kbd-tc {
   top: 1.4rem; left: 50%;
   transform: translateX(-50%);

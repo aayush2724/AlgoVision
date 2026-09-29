@@ -44,14 +44,12 @@ export const A2Z_TRACER = {
 
   // ── Step 6 — Linked List ──
   "6-37": "find_middle",             // Middle of a LinkedList (tortoise-hare)
-  "6-38": "linked_list_reverse",     // Reverse a LinkedList [Iterative]
   "6-40": "floyd_cycle",             // Detect a loop in a LinkedList
 
   // ── Step 7 — Recursion / Backtracking ──
   "7-33": "n_queens",                // N Queen
 
   // ── Step 8 — Bit Manipulation / Maths ──
-  "8-30": "prime_factorisation",     // Print Prime Factors of a Number
   "8-33": "prime_factorisation",     // Prime factorisation of a Number
 
   // ── Step 9 — Stacks & Queues ──
@@ -62,7 +60,6 @@ export const A2Z_TRACER = {
   "14-18": "bst_search",             // Search in a Binary Search Tree
 
   // ── Step 15 — Graphs ──
-  "15-60": "topological_sort",       // Topo Sort
   "15-61": "topological_sort",       // Topological sort / Kahn's algorithm
 
   // ── Step 16 — Dynamic Programming ──
@@ -77,11 +74,9 @@ export const A2Z_TRACER = {
 
   // ── Step 3 — Arrays ──
   "3-16":  "two_sum_sorted",         // Two Sum (two-pointer approach)
-  "3-36":  "merge_intervals",        // Merge Overlapping Subintervals
 
   // ── Step 7 / 8 — Maths (fast exponentiation) ──
   "7-2":   "fast_exponentiation",    // Pow(x, n)
-  "8-34":  "fast_exponentiation",    // Pow(x, n)
 
   // ── Step 9 — Stacks & Queues (monotonic deque) ──
   "9-24":  "sliding_window_maximum", // Sliding Window Maximum
@@ -95,7 +90,6 @@ export const A2Z_TRACER = {
   // ── Step 11 — Heaps ──
   "11-19": "min_heap",               // Implement Min Heap
   "11-21": "kth_largest",            // K-th Largest element in an array
-  "11-22": "kth_smallest",           // Kth smallest element (priority queue)
   "11-27": "kth_largest",            // Kth largest element in a stream
 
   // ── Step 12 — Greedy ──
@@ -115,7 +109,6 @@ export const A2Z_TRACER = {
   "13-38": "tree_traversal",         // Inorder Traversal
   "13-5":  "tree_traversal",         // Postorder Traversal
   "13-37": "tree_traversal",         // Pre, Post, Inorder in one traversal
-  "13-43": "tree_traversal",         // Preorder, Inorder, Postorder in one traversal
   // Batch 23 — Binary Tree measures (BFS + recursive height family, LCA).
   "13-6":  "level_order",            // Level Order Traversal
   "13-44": "tree_max_depth",         // Maximum Depth in BT
@@ -125,12 +118,10 @@ export const A2Z_TRACER = {
   // ── Step 15 — Graphs ──
   "15-3":  "connected_components",   // Connected Components
   "15-6":  "connected_components",   // Number of provinces
-  "15-52": "dfs",                    // DFS
   "15-54": "flood_fill",             // Flood fill algorithm
   "15-58": "bipartite_check",        // Bipartite Graph (DFS)
   "15-64": "dijkstra",               // Dijkstra's Algorithm
   "15-69": "bellman_ford",           // Bellman Ford Algorithm
-  "15-37": "prims_mst",              // Prim's Algorithm
   "15-73": "dsu",                    // Disjoint Set
 
   // ── Step 16 — Dynamic Programming ──
@@ -141,9 +132,7 @@ export const A2Z_TRACER = {
   "16-62": "subset_sum",             // Subset sum equal to target
   "16-64": "coin_change",            // Minimum Coins
   "16-41": "lis",                    // Longest Increasing Subsequence
-  "16-75": "lis",                    // Longest Increasing Subsequence (DP-43)
   "16-47": "matrix_chain",           // Matrix chain multiplication
-  "16-76": "matrix_chain",           // Matrix Chain Multiplication (Bottom-Up)
 
   // ── Step 17 — Tries ──
   "17-8":  "trie_insert",            // Trie Implementation and Operations
@@ -290,15 +279,10 @@ export const A2Z_TRACER = {
   "3-5":   "rotate_array_k",         // Left Rotate Array by One (K = 1)
   "3-6":   "rotate_array_k",         // Left Rotate Array by K Places
   "3-7":   "move_zeros",             // Move Zeros to End
-  "3-14":  "longest_subarray_sum_k", // Longest Subarray with Sum K (positives)
   "3-24":  "leaders",                // Leaders in an Array
 
   // ══ Batches 40–44 (2026-09-27): level-order binary trees (40 traversals,
   // 41 views, 42 checks) and table DP (43 grid DP, 44 string DP).
-  "13-39":  "iter_preorder",           // Iterative Preorder Traversal
-  "13-40":  "iter_inorder",            // Iterative Inorder Traversal
-  "13-41":  "postorder_two_stacks",    // Post-order using 2 stacks
-  "13-42":  "postorder_one_stack",     // Post-order using 1 stack
   "13-48":  "zigzag_traversal",        // Zig Zag or Spiral Traversal
   "13-51":  "right_view",              // Right/Left View
   "13-49":  "top_view",                // Top View
@@ -322,7 +306,6 @@ export const A2Z_TRACER = {
   "16-17":  "count_subsets_sum_k",     // Count subsets with sum K
   "16-23":  "unbounded_knapsack",      // Unbounded knapsack
   "16-66":  "rod_cutting",             // Rod Cutting Problem
-  "16-67":  "print_lcs",               // Print Longest Common Subsequence
   "16-28":  "longest_palindromic_subseq", // Longest palindromic subsequence
   "16-68":  "min_insert_palindrome",   // Minimum insertions to make string palindrome
   "16-69":  "min_ins_del",             // Minimum insertions or deletions A to B
@@ -334,7 +317,6 @@ export const A2Z_TRACER = {
   // union-find (46), undirected structure (47), directed graphs + Floyd (48),
   // stock state machines + LIS family (49).
   "15-7":   "number_of_islands",       // Number of islands
-  "15-53":  "number_of_islands",       // Connected components in matrix
   "15-9":   "rotten_oranges",          // Rotten Oranges
   "15-57":  "nearest_one_distance",    // Distance of nearest cell having one
   "15-13":  "surrounded_regions",      // Surrounded Regions
@@ -344,12 +326,10 @@ export const A2Z_TRACER = {
   "15-76":  "swim_rising_water",       // Swim in Rising Water
   "15-43":  "largest_island",          // Making a large island
   "15-42":  "islands_ii",              // Number of islands II
-  "15-55":  "cycle_undirected_bfs",    // Cycle Detection in Undirected Graph (bfs)
   "15-56":  "cycle_undirected_dfs",    // Detect a cycle in an undirected graph
   "15-77":  "bridges",                 // Bridges in graph
   "15-78":  "articulation_points",     // Articulation point in graph
   "15-40":  "connect_network_ops",     // Operations to make network connected
-  "15-59":  "cycle_directed",          // Cycle Detection in Directed Graph (DFS)
   "15-62":  "cycle_directed",          // Detect a cycle in a directed graph
   "15-23":  "safe_states",             // Find eventual safe states
   "15-79":  "kosaraju",                // Kosaraju's algorithm
@@ -372,7 +352,6 @@ export const A2Z_TRACER = {
   // ══ Batches 50–54 (2026-09-27): BST ops (50), heaps (51), strings (52),
   // sliding windows (53), text-input graphs + network delay (54).
   "14-19":  "floor_ceil_bst",
-  "14-20":  "floor_ceil_bst",
   "14-22":  "kth_bst",
   "14-23":  "validate_bst",
   "14-24":  "lca_bst",
@@ -390,7 +369,6 @@ export const A2Z_TRACER = {
   "11-10":  "task_scheduler",
   "11-16":  "median_stream",
   "5-1":    "remove_outer_parens",
-  "5-16":   "reverse_words",
   "5-21":   "reverse_words",
   "5-3":    "largest_odd_number",
   "5-4":    "longest_common_prefix",
@@ -427,7 +405,6 @@ export const A2Z_TRACER = {
   "16-63":  "min_subset_diff",
   "16-18":  "count_partitions_diff",
   "16-21":  "target_sum",
-  "16-78":  "max_rectangle_ones",
   "3-1":    "largest_element",
   "3-3":    "check_sorted",
   "3-8":    "linear_search",
@@ -457,13 +434,11 @@ export const A2Z_TRACER = {
   "1-12":   "reverse_number",
   "1-61":   "palindrome_number",
   "1-63":   "armstrong_number",
-  "1-16":   "print_divisors",
   "1-64":   "check_prime",
   "1-67":   "factorial",
   "1-21":   "sum_first_n",
   "1-23":   "reverse_array",
   "1-68":   "palindrome_string",
-  "1-70":   "frequency_count",
   "8-19":   "check_ith_bit",
   "8-20":   "check_odd",
   "8-23":   "swap_xor",
@@ -472,9 +447,6 @@ export const A2Z_TRACER = {
   "8-29":   "single_number_iii",
   "1-71":   "frequency_count",
   "8-31":   "print_divisors",
-  "3-13":   "single_number",
-  "3-20":   "kadanes",
-  "16-80":  "assign_cookies",
 
   // ── Batches 60–64 (2026-09-27): linked lists, hard binary search, recursion/backtracking, greedy & stack ──
   "6-30":   "ll_insert_head",
@@ -497,21 +469,16 @@ export const A2Z_TRACER = {
   "4-44":   "gas_station",
   "4-49":   "peak_element_ii",
   "4-50":   "matrix_median",
-  "1-65":   "print_1_to_n",
-  "1-66":   "print_n_to_1",
   "2-5":    "recursive_bubble_sort",
   "2-6":    "recursive_insertion_sort",
   "7-3":    "count_good_numbers",
-  "7-4":    "sort_stack",
   "7-26":   "reverse_stack",
-  "7-25":   "recursive_atoi",
   "7-21":   "word_break",
   "7-22":   "m_coloring",
   "7-23":   "sudoku_solver",
   "7-24":   "expression_add_operators",
   "12-16":  "valid_paren_star",
   "12-12":  "shortest_job_first",
-  "12-19":  "lru_page_faults",
   "12-13":  "insert_interval",
   "12-15":  "non_overlapping_intervals",
   "9-38":   "greater_to_right",
@@ -527,7 +494,6 @@ export const A2Z_TRACER = {
   "13-63":  "morris_preorder",
   "13-35":  "flatten_tree",
   "13-47":  "identical_trees",
-  "14-27":  "merge_two_bsts",
   "9-29":   "stack_array",
   "9-30":   "queue_array",
   "9-3":    "stack_using_queue",
@@ -552,4 +518,66 @@ export const A2Z_TRACER = {
   "16-61":  "ninja_friends",
   "11-15":  "max_sum_combination",
   "15-41":  "accounts_merge",
+
+  // ── 2026-09-29: the sheet moved to 20 modules / 495 items. Rows that
+  // already had a tracer with the same story are linked here; the rest wait
+  // for their own tracers (see ROADMAP).
+  "1-126": "sieve",   // Count of Prime Numbers till N
+  "20-1": "sieve",   // Print all primes till N
+  "8-37": "ll_delete_head",   // Deletion in Linked List
+  "8-38": "ll_insert_head",   // Insertion in Linked List
+  "8-45": "dll_delete_head",   // Deletion in Doubly LL
+  "8-46": "dll_insert_head",   // Insertion in DLL
+  "8-54": "merge_two_sorted_lists",   // Merge two Sorted Lists
+  "15-85": "heap_insert",   // Implement Max Heap
+  "15-86": "heap_sort",   // Heap Sort
+  "17-13": "knapsack_01",   // 0 and 1 Knapsack
+  "19-2": "z_function",   // Z function
+
+  // ── 2026-09-29, batches 85–90: tracers built for the rows that had none.
+  "1-123": "count_odd_digits",   // Count number of odd digits in a number
+  "1-124": "largest_digit",   // Return the Largest Digit in a Number
+  "1-125": "perfect_number",   // Check for Perfect Number
+  "1-127": "lcm",   // LCM of two numbers
+  "1-128": "array_sum",   // Sum of Array Elements
+  "1-129": "count_odd_array",   // Count of odd numbers in Array
+  "1-130": "second_highest_freq",   // Second Highest Occurring Element
+  "1-131": "sum_high_low_freq",   // Sum of Highest and Lowest Frequency
+  "1-132": "reverse_string",   // Reverse a String II
+  "1-135": "factorial_rec",   // Factorial of a Given Number
+  "1-136": "sum_array_rec",   // Sum of Array Elements II
+  "1-137": "reverse_string_rec",   // Reverse a String I
+  "1-138": "palindrome_rec",   // Check if String is Palindrome or Not
+  "1-139": "prime_rec",   // Check if a Number is Prime or Not
+  "1-140": "reverse_array_rec",   // Reverse an array 2
+  "1-141": "sorted_rec",   // Check if the Array is Sorted II
+  "1-142": "sum_digits_rec",   // Sum of Digits in a Given Number
+  "3-42": "pascal_element",   // Pascal's Triangle I
+  "3-43": "pascal_row",   // Pascal's Triangle II
+  "8-36": "ll_traverse",   // Traversal in Linked List
+  "8-39": "ll_delete_tail",   // Deletion of the tail of Linked List
+  "8-40": "ll_delete_kth",   // Deletion of the Kth element of Linked List
+  "8-41": "ll_delete_value",   // Delete the element with value X
+  "8-42": "ll_insert_tail",   // Insertion at the tail of Linked List
+  "8-43": "ll_insert_kth",   // Insertion at the Kth position of Linked List
+  "8-44": "ll_insert_before_value",   // Insertion before the value X in Linked List
+  "8-47": "dll_from_array",   // Convert Array to Doubly Linked List
+  "8-48": "dll_delete_tail",   // Delete Tail of Doubly Linked List
+  "8-49": "dll_delete_kth",   // Delete Kth Element of Doubly Linked List
+  "8-50": "dll_remove_node",   // Removing given node in Doubly Linked List
+  "8-51": "dll_insert_before_tail",   // Insert node before tail in Doubly Linked List
+  "8-52": "dll_insert_before_kth",   // Insert node before (kth node) in Doubly Linked List
+  "8-53": "dll_insert_before_node",   // Insert before given node in Doubly Linked List
+  "9-41": "set_rightmost_unset_bit",   // Set/Unset the rightmost unset bit
+  "9-42": "single_number_ii",   // Single Number - II
+  "14-32": "bst_min_max",   // Find Min/Max in BST
+  "14-33": "bst_iterator",   // BST iterator
+  "15-83": "heapify",   // Heapify Algorithm
+  "15-84": "build_heap",   // Build heap from a given Array
+  "15-87": "sort_k_sorted",   // Sort K sorted array
+  "16-81": "distinct_islands",   // Number of distinct islands
+  "16-82": "print_shortest_path",   // Print Shortest Path
+  "19-3": "shortest_palindrome",   // Shortest Palindrome
 };
+
+

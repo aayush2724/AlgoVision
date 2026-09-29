@@ -450,6 +450,49 @@ SIGNATURES = {
     "bit_kth": ["bit_kth", "k-th smallest with a fenwick tree"],
     "inversions_bit": ["inversions_bit", "count inversions with a fenwick tree"],
     "prefix_sum_2d": ["prefix_sum_2d", "2-d prefix sums (rectangle queries)"],
+    "count_odd_digits": ["count_odd_digits", "count odd digits", "odd digits in a number"],
+    "largest_digit": ["largest_digit", "largest digit", "biggest digit in a number"],
+    "perfect_number": ["perfect_number", "perfect number"],
+    "lcm": ["lcm", "lcm", "least common multiple", "lowest common multiple"],
+    "array_sum": ["array_sum", "sum of array", "array sum", "sum of array elements"],
+    "count_odd_array": ["count_odd_array", "count odd numbers", "count of odd numbers in array"],
+    "second_highest_freq": ["second_highest_freq", "second highest occurring", "second most frequent"],
+    "sum_high_low_freq": ["sum_high_low_freq", "sum of highest and lowest frequency", "highest and lowest frequency"],
+    "reverse_string": ["reverse_string", "reverse a string", "reverse string two pointers"],
+    "set_rightmost_unset_bit": ["set_rightmost_unset_bit", "rightmost unset bit", "set rightmost unset bit", "n | (n+1)"],
+    "sum_array_rec": ["sum_array_rec", "recursive array sum", "sum of array recursion"],
+    "sum_digits_rec": ["sum_digits_rec", "sum of digits", "sum of digits recursion"],
+    "factorial_rec": ["factorial_rec", "recursive factorial", "factorial recursion"],
+    "prime_rec": ["prime_rec", "recursive prime check", "prime recursion"],
+    "sorted_rec": ["sorted_rec", "recursive sorted check", "array sorted recursion"],
+    "reverse_array_rec": ["reverse_array_rec", "recursive reverse array", "reverse array recursion"],
+    "reverse_string_rec": ["reverse_string_rec", "recursive reverse string", "reverse string recursion"],
+    "palindrome_rec": ["palindrome_rec", "recursive palindrome", "palindrome recursion"],
+    "pascal_element": ["pascal_element", "pascal triangle element", "pascal's triangle i", "ncr element"],
+    "pascal_row": ["pascal_row", "pascal triangle row", "pascal's triangle ii", "nth row of pascal"],
+    "ll_traverse": ["ll_traverse", "traverse linked list", "linked list traversal", "print linked list"],
+    "ll_delete_tail": ["ll_delete_tail", "delete tail of linked list", "delete last node"],
+    "ll_delete_kth": ["ll_delete_kth", "delete kth node", "delete kth element of linked list"],
+    "ll_delete_value": ["ll_delete_value", "delete node by value", "delete element with value x"],
+    "ll_insert_tail": ["ll_insert_tail", "insert at tail", "insertion at the tail of linked list", "append to linked list"],
+    "ll_insert_kth": ["ll_insert_kth", "insert at kth position", "insertion at kth position"],
+    "ll_insert_before_value": ["ll_insert_before_value", "insert before value", "insertion before the value x"],
+    "dll_from_array": ["dll_from_array", "array to doubly linked list", "convert array to dll", "build doubly linked list"],
+    "dll_delete_tail": ["dll_delete_tail", "delete tail of doubly linked list", "delete tail of dll"],
+    "dll_delete_kth": ["dll_delete_kth", "delete kth element of doubly linked list", "delete kth node dll"],
+    "dll_remove_node": ["dll_remove_node", "remove given node doubly linked list", "removing given node in dll"],
+    "dll_insert_before_tail": ["dll_insert_before_tail", "insert before tail doubly linked list", "insert node before tail"],
+    "dll_insert_before_kth": ["dll_insert_before_kth", "insert before kth node doubly linked list", "insert before kth node dll"],
+    "dll_insert_before_node": ["dll_insert_before_node", "insert before given node doubly linked list", "insert before node dll"],
+    "heapify": ["heapify", "heapify", "sift down", "heapify algorithm"],
+    "build_heap": ["build_heap", "build heap", "build heap from array", "build max heap"],
+    "sort_k_sorted": ["sort_k_sorted", "sort k sorted array", "nearly sorted array", "sort nearly sorted"],
+    "bst_min_max": ["bst_min_max", "min and max in bst", "minimum in bst", "maximum in bst", "find min max in bst"],
+    "bst_iterator": ["bst_iterator", "bst iterator", "binary search tree iterator"],
+    "single_number_ii": ["single_number_ii", "single number ii", "single number 2", "appears three times except one"],
+    "distinct_islands": ["distinct_islands", "distinct islands", "number of distinct islands"],
+    "shortest_palindrome": ["shortest_palindrome", "shortest palindrome", "shortest palindrome kmp"],
+    "print_shortest_path": ["print_shortest_path", "print shortest path", "shortest path with parent array", "dijkstra print path"],
 }
 
 REALWORLD_META = {
@@ -4356,6 +4399,350 @@ REALWORLD_META = {
         "scene": "grid_power",
         "title": "2-D Prefix Sums (Rectangle Queries)",
         "hook": "Matrix | 'r1 c1 r2 c2' queries. Four lookups per rectangle.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_odd_digits": {
+        "scene": "vault",
+        "title": "Count Odd Digits in a Number",
+        "hook": "A whole number. Peel each digit with % 10 and test it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "largest_digit": {
+        "scene": "vault",
+        "title": "Largest Digit in a Number",
+        "hook": "A whole number. Keep the biggest digit seen so far.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "perfect_number": {
+        "scene": "vault",
+        "title": "Check for a Perfect Number",
+        "hook": "A whole number. Sum its proper divisors; equal means perfect.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "lcm": {
+        "scene": "vault",
+        "title": "LCM of Two Numbers",
+        "hook": "Two numbers. Euclid for the gcd, then a·b / gcd.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "array_sum": {
+        "scene": "leaderboard",
+        "title": "Sum of Array Elements",
+        "hook": "Up to 12 numbers. One pass, a running total.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "count_odd_array": {
+        "scene": "leaderboard",
+        "title": "Count Odd Numbers in an Array",
+        "hook": "Up to 12 numbers. Test each with % 2.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "second_highest_freq": {
+        "scene": "leaderboard",
+        "title": "Second Highest Occurring Element",
+        "hook": "Up to 12 numbers. Tally, then read the second-highest count.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_high_low_freq": {
+        "scene": "leaderboard",
+        "title": "Sum of Highest and Lowest Frequency",
+        "hook": "Up to 12 numbers. Tally; add the top and bottom counts.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_string": {
+        "scene": "dna",
+        "title": "Reverse a String (Two Pointers)",
+        "hook": "A word. Swap the ends and walk inward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "set_rightmost_unset_bit": {
+        "scene": "vault",
+        "title": "Set the Rightmost Unset Bit",
+        "hook": "A number 0–254. n | (n + 1) flips the lowest 0 bit.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_array_rec": {
+        "scene": "vault",
+        "title": "Sum of Array Elements (Recursive)",
+        "hook": "Up to 10 numbers. sum(i) = a[i] + sum(i + 1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sum_digits_rec": {
+        "scene": "vault",
+        "title": "Sum of Digits (Recursive)",
+        "hook": "A whole number. f(n) = n % 10 + f(n // 10).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "factorial_rec": {
+        "scene": "vault",
+        "title": "Factorial (Recursive)",
+        "hook": "0–10. f(n) = n · f(n − 1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "prime_rec": {
+        "scene": "vault",
+        "title": "Check for a Prime Number (Recursive)",
+        "hook": "2–9999. Try each divisor d while d·d ≤ n.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sorted_rec": {
+        "scene": "vault",
+        "title": "Check if an Array is Sorted (Recursive)",
+        "hook": "Up to 10 numbers. a[i] ≤ a[i + 1] and sorted(i + 1).",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_array_rec": {
+        "scene": "vault",
+        "title": "Reverse an Array (Recursive)",
+        "hook": "Up to 10 numbers. Swap the ends, recurse inward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "reverse_string_rec": {
+        "scene": "dna",
+        "title": "Reverse a String (Recursive)",
+        "hook": "A word. Swap the ends, recurse inward.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "palindrome_rec": {
+        "scene": "dna",
+        "title": "Check if a String is a Palindrome (Recursive)",
+        "hook": "A word. Ends must match, then check the inside.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "pascal_element": {
+        "scene": "grid_power",
+        "title": "Pascal's Triangle I — One Element",
+        "hook": "row,column (1-based). C(r−1, c−1) by a running product.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "pascal_row": {
+        "scene": "grid_power",
+        "title": "Pascal's Triangle II — One Row",
+        "hook": "The row number. Each entry from the previous one.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_traverse": {
+        "scene": "train",
+        "title": "Traverse a Linked List",
+        "hook": "The list. Follow next until null.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_delete_tail": {
+        "scene": "train",
+        "title": "Delete the Tail of a Linked List",
+        "hook": "The list. Walk to the second-last node and cut.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_delete_kth": {
+        "scene": "train",
+        "title": "Delete the Kth Node of a Linked List",
+        "hook": "The list and k (1-based). Bypass the kth node.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_delete_value": {
+        "scene": "train",
+        "title": "Delete a Node by Value",
+        "hook": "The list and the value. Find it, remembering the node before.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_insert_tail": {
+        "scene": "train",
+        "title": "Insert at the Tail of a Linked List",
+        "hook": "The list and the value. Walk to the end and hang it on.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_insert_kth": {
+        "scene": "train",
+        "title": "Insert at the Kth Position of a Linked List",
+        "hook": "The list | new value, and k (1-based). Insert after node k−1.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "ll_insert_before_value": {
+        "scene": "train",
+        "title": "Insert Before a Value in a Linked List",
+        "hook": "The list | new value, and the value to insert before.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_from_array": {
+        "scene": "train",
+        "title": "Build a Doubly Linked List From an Array",
+        "hook": "The array. One node per value; link next and prev.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_delete_tail": {
+        "scene": "train",
+        "title": "Delete the Tail of a Doubly Linked List",
+        "hook": "The DLL. tail.prev knows the way — no walk.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_delete_kth": {
+        "scene": "train",
+        "title": "Delete the Kth Node of a Doubly Linked List",
+        "hook": "The DLL and k. Fix next AND prev around it.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_remove_node": {
+        "scene": "train",
+        "title": "Remove a Given Node From a Doubly Linked List",
+        "hook": "The DLL and the node's value. Its neighbours link to each other.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_insert_before_tail": {
+        "scene": "train",
+        "title": "Insert Before the Tail of a Doubly Linked List",
+        "hook": "The DLL and the value. Slot it between tail.prev and tail.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_insert_before_kth": {
+        "scene": "train",
+        "title": "Insert Before the Kth Node of a Doubly Linked List",
+        "hook": "The DLL | new value, and k. Four links change.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "dll_insert_before_node": {
+        "scene": "train",
+        "title": "Insert Before a Given Node in a Doubly Linked List",
+        "hook": "The DLL | new value, and the node's value.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "heapify": {
+        "scene": "scheduler",
+        "title": "Heapify (Sift Down)",
+        "hook": "Up to 12 numbers | index. Sink that node below its bigger child.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "build_heap": {
+        "scene": "scheduler",
+        "title": "Build a Max-Heap From an Array",
+        "hook": "Up to 12 numbers. Heapify every parent, last to first.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "sort_k_sorted": {
+        "scene": "scheduler",
+        "title": "Sort a K-Sorted Array",
+        "hook": "Numbers | k. A min-heap of k+1 always holds the next smallest.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bst_min_max": {
+        "scene": "files",
+        "title": "Minimum and Maximum in a BST",
+        "hook": "Values inserted into a BST. Leftmost is min, rightmost is max.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "bst_iterator": {
+        "scene": "files",
+        "title": "BST Iterator (next / hasNext)",
+        "hook": "Values inserted into a BST. A stack of the left spine drives next().",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "single_number_ii": {
+        "scene": "vault",
+        "title": "Single Number II (Every Other Value Thrice)",
+        "hook": "Every value thrice but one. Count 1-bits per position mod 3.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "distinct_islands": {
+        "scene": "grid_power",
+        "title": "Number of Distinct Islands",
+        "hook": "0/1 grid, rows split by /. Same offset shape = same island.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "shortest_palindrome": {
+        "scene": "dna",
+        "title": "Shortest Palindrome (KMP)",
+        "hook": "A word. lps of s#reverse(s) finds the palindromic prefix.",
+        "metaphors": {"node": "node", "edge": "link", "weight": "cost",
+                      "visit": "Visiting", "start": "The start",
+                      "done": "The answer."}
+    },
+    "print_shortest_path": {
+        "scene": "gps",
+        "title": "Print the Shortest Path (Dijkstra + Parents)",
+        "hook": "Dijkstra with parent pointers; the path to the last node is walked back and drawn green.",
         "metaphors": {"node": "node", "edge": "link", "weight": "cost",
                       "visit": "Visiting", "start": "The start",
                       "done": "The answer."}

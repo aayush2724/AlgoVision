@@ -13,10 +13,16 @@ const SAFE_ERRORS = {
   503: 'Service temporarily unavailable.',
 };
 
-async function request(path, options = {}) {
+// A sleeping free-tier backend (Render) takes 20–30 s to answer its first
+// request. Tracing and the reachability probe wait that out; everything else
+// (detect, narration, bug finder) keeps the short budget.
+const DEFAULT_TIMEOUT = 12000;
+const WAKE_TIMEOUT = 45000;
+
+async function request(path, options = {}, timeoutMs = DEFAULT_TIMEOUT) {
   const url      = `${BASE_URL}${path}`;
   const controller = new AbortController();
-  const timer    = setTimeout(() => controller.abort(), 12000);
+  const timer    = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, {
@@ -63,7 +69,7 @@ export class ApiError extends Error {
 
 export const api = {
   async getAlgorithms() {
-    return request('/api/trace/algorithms');
+    return request('/api/trace/algorithms', {}, WAKE_TIMEOUT);
   },
 
   // payload: { start, graph } for graph algorithms,
@@ -72,7 +78,7 @@ export const api = {
     return request('/api/trace', {
       method: 'POST',
       body: JSON.stringify({ algorithm, ...payload }),
-    });
+    }, WAKE_TIMEOUT);
   },
 
   async explainStep(algorithm, step, level = 'beginner', realWorldMeta = {}) {

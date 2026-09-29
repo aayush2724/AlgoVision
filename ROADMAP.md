@@ -63,6 +63,21 @@ Strings (Advanced), Maths). The old 18-step URL now redirects to it.
     + green path to the last node).
   Tests: `test_batch85_90_tracers.py`. Offline samples rebuilt (474).
 
+**Phone trace canvas FIXED (2026-09-30).** Below 700px the stage used to
+force the SVG to 560px and scroll it, but every renderer centres its drawing
+in the 760×280 viewBox, so a phone showed a blank left margin and clipped the
+right (a six-value array lost its sixth cell). Now `fitCanvas()` in engine.js
+fits the viewBox to what is actually drawn (corner captions excluded and
+re-pinned): small traces fill the width with cells ~50px instead of 29px,
+wide ones start from their first cell and scroll, and nothing drops below 78%
+of desktop size (`MIN_SCALE`). A MutationObserver on the SVG refits after any
+renderer redraws; `renderStep` also names the step's cell / node so the stage
+auto-scrolls to keep it in view. The graph editor maps taps through
+`getScreenCTM()` so a fitted viewBox doesn't misplace new nodes. Desktop
+(stage ≥ 700px) keeps the stock geometry untouched. The What-If slider rows
+can shrink on 320px phones. Both the Experience page and the A2Z problem
+viewer share the code.
+
 **Home keyboard LAYERS (2026-09-30).** The 60% board has 42 algorithm slots;
 the catalog has 474. Instead of a bigger board, the caps now have layers like
 a real 60% keyboard: layer 1 is the curated CLASSICS layout, and the FN caps

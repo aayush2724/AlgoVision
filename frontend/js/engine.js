@@ -837,6 +837,7 @@ export function mountEngine(view, algo = 'dijkstra') {
 
     // Scene label in corner
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -853,6 +854,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -3750,6 +3752,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -3828,6 +3831,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -4019,6 +4023,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -4182,6 +4187,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -4316,6 +4322,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     currentScene = scene;
 
     const sceneLabel = makeSVG("text");
+    sceneLabel.setAttribute("class", "scene-label");
     sceneLabel.setAttribute("x", "10"); sceneLabel.setAttribute("y", "20");
     sceneLabel.setAttribute("fill", "var(--cDim)");
     sceneLabel.setAttribute("font-family", "var(--font-ui)");
@@ -5173,8 +5180,113 @@ export function mountEngine(view, algo = 'dijkstra') {
     return { steps };
   }
 
+  // ── Phone-width canvas fit ──────────────────────────────
+  // Every renderer draws into a 760×280 space and centres its drawing in it.
+  // On a desktop that space scales into a wide stage and everything is
+  // legible; squeezed into a 356px phone stage a 40-unit cell is 19px wide.
+  // The old rule forced the SVG to 560px and let the stage scroll, which
+  // showed a blank left margin and clipped the right — the drawing sat in
+  // the middle of the 760 units. So on narrow stages the viewBox is fitted
+  // to what is actually drawn: small traces fill the width, wide ones start
+  // from their first cell and scroll, and nothing drops below MIN_SCALE of
+  // its desktop size. Desktop geometry is untouched. Corner captions are
+  // excluded from the fit and pinned to the fitted corners instead.
+  const stage = svg.parentElement;
+  const PHONE_STAGE = 700;          // matches the CSS breakpoint
+  const MIN_SCALE = 0.78;           // a 40-unit cell stays ≥ 31px
+  const FIT_PAD = 14;
+  let fitRaf = 0, fitBox = '', fitFocus = null;
+  const setAttr = (el, k, v) => { if (el.getAttribute(k) !== String(v)) el.setAttribute(k, v); };
+  const isCaption = (el) => el.tagName === 'text' && (el.classList.contains('scene-label')
+    || (parseFloat(el.getAttribute('font-size')) <= 9 && parseFloat(el.getAttribute('y')) < 30));
+
+  function fitCanvas() {
+    fitRaf = 0;
+    if (!svg.isConnected) return;
+    const stageW = stage.clientWidth;
+    if (!stageW || stageW >= PHONE_STAGE) {
+      if (fitBox) {                       // back on a wide stage: stock geometry
+        svg.setAttribute('viewBox', '0 0 760 280');
+        svg.style.width = '';
+        fitBox = '';
+      }
+      return;
+    }
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const captions = [];
+    for (const el of svg.children) {
+      if (el.tagName === 'defs') continue;
+      if (isCaption(el)) { captions.push(el); continue; }
+      let b;
+      try { b = el.getBBox(); } catch { continue; }
+      if (!(b.width || b.height)) continue;
+      x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y);
+      x1 = Math.max(x1, b.x + b.width); y1 = Math.max(y1, b.y + b.height);
+    }
+    if (!Number.isFinite(x0)) return;
+    x0 = Math.max(-40, Math.floor(x0 - FIT_PAD)); y0 = Math.max(-40, Math.floor(y0 - FIT_PAD));
+    x1 = Math.min(820, Math.ceil(x1 + FIT_PAD)); y1 = Math.min(340, Math.ceil(y1 + FIT_PAD));
+    const bw = x1 - x0, bh = y1 - y0;
+    const box = `${x0} ${y0} ${bw} ${bh}`;
+    if (box !== fitBox) { svg.setAttribute('viewBox', box); fitBox = box; }
+    const wPx = `${Math.max(stageW, Math.round(bw * MIN_SCALE))}px`;
+    if (svg.style.width !== wPx) svg.style.width = wPx;
+    for (const c of captions) {
+      const right = c.getAttribute('text-anchor') === 'end' || parseFloat(c.getAttribute('x')) > 380;
+      setAttr(c, 'x', right ? x1 - 6 : x0 + 6);
+      setAttr(c, 'y', y0 + 11);
+    }
+    if (fitFocus) { keepInView(fitFocus); fitFocus = null; }
+  }
+
+  // When the stage scrolls, keep the step's own cell or node in view.
+  function keepInView(el) {
+    if (!el?.isConnected || stage.scrollWidth <= stage.clientWidth + 1) return;
+    const r = el.getBoundingClientRect();
+    const s = stage.getBoundingClientRect();
+    let left = null;
+    if (r.left < s.left + 6) left = stage.scrollLeft + (r.left - s.left) - 28;
+    else if (r.right > s.right - 6) left = stage.scrollLeft + (r.right - s.right) + 28;
+    if (left !== null) stage.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+  }
+
+  function scheduleFit(step) {
+    if (step) {
+      const h = step.highlight || {};
+      fitFocus = (h.index !== null && h.index !== undefined
+                    ? svg.querySelector(`#cellg-${h.index}`) : null)
+        || (h.node ? svg.querySelector(`#node-${CSS.escape(String(h.node))}`) : null)
+        || svg.querySelector('.active, .current');
+    }
+    if (!fitRaf) fitRaf = requestAnimationFrame(fitCanvas);
+  }
+  const onFitResize = () => scheduleFit(null);
+  window.addEventListener('resize', onFitResize);
+  // Renderers rebuild the SVG freely; watch it instead of threading a call
+  // through every one of them. fitCanvas only writes values that changed,
+  // so its own writes never re-trigger it.
+  const fitObserver = new MutationObserver(() => {
+    if (!svg.isConnected) {
+      fitObserver.disconnect();
+      window.removeEventListener('resize', onFitResize);
+      return;
+    }
+    if (!fitRaf) fitRaf = requestAnimationFrame(fitCanvas);
+  });
+  fitObserver.observe(svg, { childList: true, subtree: true, attributes: true,
+    attributeFilter: ['x', 'y', 'cx', 'cy', 'r', 'width', 'height', 'd', 'points',
+                      'transform', 'x1', 'x2', 'y1', 'y2'] });
+  scheduleFit(null);
+
   // ── Graph editor ──
   function svgCoords(e) {
+    // Through the SVG's own transform rather than rect × 760/width, so it
+    // stays right when the phone fit below has narrowed the viewBox.
+    const ctm = svg.getScreenCTM();
+    if (ctm) {
+      const pt = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());
+      return { x: Math.round(pt.x), y: Math.round(pt.y) };
+    }
     const rect = svg.getBoundingClientRect();
     return {
       x: Math.round((e.clientX - rect.left) * 760 / rect.width),
@@ -5353,9 +5465,10 @@ export function mountEngine(view, algo = 'dijkstra') {
     whatIfContainer.innerHTML = '';
     userGraph.links.forEach((link, idx) => {
       const row = document.createElement('div');
+      row.className = 'whatif-row';
       row.style.cssText = 'display:flex; align-items:center; gap:1rem; font-family:var(--font-mono); font-size:0.9rem; color:var(--cDim);';
       row.innerHTML = `
-        <span style="min-width:120px;">${link.source}→${link.target}</span>
+        <span style="min-width:4.5em;">${link.source}→${link.target}</span>
         <input type="range" min="1" max="${Math.max(30, link.weight)}" value="${link.weight}"
           style="flex:1; accent-color:var(--c);"
           id="whatif-${idx}">
@@ -6118,6 +6231,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     else if (traceView === 'tree') renderTreeStep(step);
     else if (traceView === 'grid') renderGridStep(step);
     else renderGraphStep(step, currentStepIdx);
+    scheduleFit(step);
 
     let narration = step.note || "Processing...";
     if (currentScene && currentMeta) {

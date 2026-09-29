@@ -773,6 +773,10 @@ footer.footer p { font-size: 0.85rem; color: var(--inkDim); max-width: none; }
 }
 #engine-panel::before, #compare-panel::before { content: none; }
 
+/* What-If sliders: a range input has a ~130px intrinsic minimum, which on a
+   320px phone pushed the value label past the edge. Let it shrink. */
+.whatif-row input[type="range"] { min-width: 0; }
+
 /* Range inputs */
 input[type="range"] {
   -webkit-appearance: none; appearance: none;
@@ -1704,15 +1708,17 @@ input[type="range"]::-moz-range-thumb {
 .stat-tile-target { font-size: 0.72rem; color: var(--cDim); margin-top: 0.35rem; }
 
 /* ── NARROW SCREENS ─────────────────────────────────────────
-   Two things break below ~700px: a 760-wide trace scaled into a
-   phone makes the node labels unreadable, and the category control
-   wraps into a ragged second row. Both scroll sideways instead. */
+   Below ~700px the engine fits the trace's viewBox to what is drawn
+   (fitCanvas in engine.js) and widens the SVG only when the drawing
+   would otherwise shrink below ~78% of its desktop size — so the
+   stage scrolls sideways from the first cell, never from a blank
+   margin. The category control still scrolls sideways. */
 @media (max-width: 700px) {
   #engine-view, #viz-inner {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
-  #engine-svg { min-width: 560px; }
 
   .segmented {
     flex-wrap: nowrap;

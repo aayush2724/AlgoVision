@@ -1,0 +1,8 @@
+# AlgoVision — https://algo-vision-vert.vercel.app
+User-agent: *
+Allow: /
+# Machine-only resources: the JSON API proxy and the offline sample traces.
+Disallow: /api/
+Disallow: /offline/
+
+Sitemap: https://algo-vision-vert.vercel.app/sitemap.xml

@@ -1,6 +1,7 @@
 import * as DATA from './data.js';
 import * as P from './progress.js';
 import { A2Z_TRACER } from './a2zTracers.js';
+import { SITE, operatorName, contactHref, contactLabel } from './site.js';
 
 function clientDetect(text) {
   const t = text.toLowerCase();
@@ -49,12 +50,31 @@ function renderWorldCard(world) {
   `;
 }
 
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function algoFromParams(params) {
+  const id = (params.get('algo') || 'dijkstra').replace(/[^a-zA-Z0-9_-]/g, '');
+  return DATA.ALGORITHMS.find(a => a.id === id) || null;
+}
+function problemFromParams(params) {
+  const id = params.get('prob');
+  for (const step of DATA.A2Z_STEPS) {
+    const p = (step.problems || []).find(q => q.id === id);
+    if (p) return { step, prob: p };
+  }
+  return null;
+}
+
 export const PAGES = {
   "#/": {
     title: "AlgoVision · See the algorithm before the code",
+    description: SITE.description,
     html: () => `
-      <section class="hero hero-kbd">
-        <div id="kbd-stage" class="kbd-stage"></div>
+      <section class="hero hero-kbd" aria-labelledby="home-h1">
+        <h1 id="home-h1" class="visually-hidden">AlgoVision — see the algorithm before the code</h1>
+        <div id="kbd-stage" class="kbd-stage" role="img"
+             aria-label="Interactive 3D keyboard: each key is an algorithm. Click a key to trace it, or use the algorithm index."></div>
         <div class="kbd-corner kbd-tl">
           <span class="kbd-tiny-label">KEYS EXPLORED</span>
           <span id="kbd-count" class="kbd-count">0 / ${DATA.ALGORITHMS.length}</span>
@@ -140,8 +160,11 @@ export const PAGES = {
           </div>
           <div class="paste-detect-panel paste-editor">
             <div id="paste-detect-status" style="display:none;"></div>
-            <textarea id="hero-paste-area" spellcheck="false"
+            <label for="hero-paste-area" class="visually-hidden">Paste DSA code to detect the algorithm</label>
+            <textarea id="hero-paste-area" spellcheck="false" autocomplete="off"
+              aria-describedby="hero-paste-error"
               placeholder="def dijkstra(graph, start): ..."></textarea>
+            <p id="hero-paste-error" class="form-error" role="alert"></p>
             <div class="paste-actions">
               <button id="hero-visualize-btn" class="btn btn-primary"><span>Visualize it →</span></button>
               <button id="hero-clear-btn" class="btn">Clear</button>
@@ -150,7 +173,7 @@ export const PAGES = {
         </div>
       </section>
 
-      <section class="home-last">
+      <section class="home-last" aria-label="Start here">
         <div class="group-head">
           <span class="eyebrow">Start here</span>
           <a href="#/explore" class="group-head-link">All ${DATA.ALGORITHMS.length} →</a>
@@ -250,12 +273,13 @@ export const PAGES = {
           try {
             const { api } = await import('./api.js');
             const res  = await api.detect(text);
-            detectedAlgo = res.algorithm;
+            if (!res) throw new Error('too long for the server');
+            detectedAlgo = String(res.algorithm || '').replace(/[^a-zA-Z0-9_-]/g, '') || clientDetect(text);
             const conf  = Math.round((res.confidence || 0) * 100);
-            const title = res.realworld?.title || '';
+            const title = esc(res.realworld?.title || '');
             statusEl.style.display = 'block';
             statusEl.innerHTML =
-              `DETECTED <strong class="detect-name">${res.algorithm.toUpperCase().replace(/_/g,' ')}</strong>` +
+              `DETECTED <strong class="detect-name">${detectedAlgo.toUpperCase().replace(/_/g,' ')}</strong>` +
               (title ? ` — <em class="detect-world">${title}</em>` : '') +
               `<span class="detect-conf">${conf}%</span>`;
           } catch {
@@ -267,9 +291,21 @@ export const PAGES = {
         }, 600);
       });
 
+      const pasteError = view.querySelector('#hero-paste-error');
+      pasteArea.addEventListener('input', () => {
+        if (pasteError) pasteError.textContent = '';
+        pasteArea.removeAttribute('aria-invalid');
+      });
       visualizeBtn.addEventListener('click', async () => {
         const text = pasteArea.value.trim();
-        if (!text) return;
+        if (text.length < 20) {
+          if (pasteError) pasteError.textContent = text
+            ? 'That is too short to recognise — paste a whole function (20+ characters).'
+            : 'Paste some code first.';
+          pasteArea.setAttribute('aria-invalid', 'true');
+          pasteArea.focus();
+          return;
+        }
         const btnLabel = visualizeBtn.querySelector('span');
         visualizeBtn.disabled = true;
         if (btnLabel) btnLabel.textContent = 'DETECTING...';
@@ -277,13 +313,14 @@ export const PAGES = {
           if (detectedAlgo) { window.location.hash = `#/experience?algo=${detectedAlgo}`; return; }
           const { api } = await import('./api.js');
           const res = await api.detect(text);
-          window.location.hash = `#/experience?algo=${res.algorithm}`;
+          const id = String(res?.algorithm || '').replace(/[^a-zA-Z0-9_-]/g, '') || clientDetect(text);
+          window.location.hash = `#/experience?algo=${id}`;
         } catch {
           const fallback = clientDetect(text);
           window.location.hash = `#/experience?algo=${fallback}`;
         } finally {
           visualizeBtn.disabled = false;
-          if (btnLabel) btnLabel.textContent = 'DETECT & VISUALIZE →';
+          if (btnLabel) btnLabel.textContent = 'Visualize it →';
         }
       });
 
@@ -296,7 +333,8 @@ export const PAGES = {
   },
 
   "#/explore": {
-    title: "AlgoVision · Explore Algorithms",
+    title: () => `All ${DATA.ALGORITHMS.length} algorithms, traced live · AlgoVision`,
+    description: () => `Browse ${DATA.ALGORITHMS.length} data-structure and algorithm visualisations — graphs, sorting, searching, DP, greedy and more — each traced step by step on your own input.`,
     html: () => `
       <section>
         <div class="page-head">
@@ -393,13 +431,17 @@ export const PAGES = {
   },
 
   "#/experience": {
-    title: "AlgoVision · Live Engine",
+    title: (params) => { const a = algoFromParams(params); return a ? `${a.name} · live trace · AlgoVision` : "Live trace engine · AlgoVision"; },
+    description: (params) => { const a = algoFromParams(params); return a ? `Step through ${a.name} (${a.complexity}) on your own input: ${a.hook}` : "Run any algorithm on your own input and step through it forwards and backwards, with live operation counters."; },
     html: (params) => {
       // Whitelist chars — this comes from the URL and lands in innerHTML.
       const algo = (params.get('algo') || 'dijkstra').replace(/[^a-zA-Z0-9_-]/g, '') || 'dijkstra';
       // Prefer the catalog's real name ("Breadth-First Search") over a
       // title-cased slug ("Bfs"), which reads wrong beside the switcher.
       const entry = DATA.ALGORITHMS.find(a => a.id === algo);
+      // Render the matching input panel up front: the engine only ever
+      // un-hides it, and showing it late pushed the stage down ~230px (CLS).
+      const isGraph = !entry || entry.input === 'graph';
       const displayName = entry
         ? entry.name
         : algo.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -424,10 +466,10 @@ export const PAGES = {
                 </optgroup>`).join('')}
             </select>
           </label>
-          <div id="engine-status" class="engine-status-pill">Idle</div>
+          <div id="engine-status" class="engine-status-pill" role="status" aria-live="polite">LOADING ENGINE…</div>
           <div class="toolbar-spacer"></div>
           <div class="toolbar-actions">
-            <button id="run-btn" class="btn btn-primary">▶ Run</button>
+            <button id="run-btn" class="btn btn-primary" disabled>▶ Run</button>
             <button id="reset-btn" class="btn">↺ Reset</button>
             <button id="challenge-btn" class="btn">🎮 Challenge</button>
             <span id="combo-chip" class="combo-chip is-hidden">COMBO ×0</span>
@@ -439,28 +481,30 @@ export const PAGES = {
         <div class="workbench">
         <div class="workbench-main">
 
-        <div id="array-controls" class="panel is-hidden" style="margin-bottom:1.5rem;">
+        <div id="array-controls" class="panel${isGraph ? ' is-hidden' : ''}" style="margin-bottom:1.5rem;">
           <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR DATA</span>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-            <input id="array-input" type="text" spellcheck="false"
+            <label for="array-input" class="visually-hidden">Your input values</label>
+            <input id="array-input" type="text" spellcheck="false" autocomplete="off"
+              aria-describedby="array-hint"
               placeholder="e.g. 7, 3, 9, 1"
               style="flex:1; min-width:220px; background:rgba(2,4,6,0.9); color:var(--c);
               font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
               border:1px solid var(--panel-border); outline:none; border-radius:0;">
             <span id="target-wrap" style="display:none; align-items:center; gap:0.5rem;
               font-family:var(--font-ui); font-size:0.72rem; color:var(--cDim);">
-              <span id="target-label">TARGET</span>
-              <input id="target-input" type="text" inputmode="numeric"
+              <label id="target-label" for="target-input">TARGET</label>
+              <input id="target-input" type="text" inputmode="numeric" autocomplete="off"
                 style="width:80px; background:rgba(2,4,6,0.9); color:var(--c);
                 font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
                 border:1px solid var(--panel-border); outline:none; border-radius:0;">
             </span>
           </div>
-          <div id="array-hint" style="margin-top:0.6rem; font-size:0.8rem;
+          <div id="array-hint" aria-live="polite" style="margin-top:0.6rem; font-size:0.8rem;
             color:var(--inkDim); font-family:var(--font-body);"></div>
         </div>
 
-        <div id="graph-controls" class="panel is-hidden" style="margin-bottom:1.5rem;">
+        <div id="graph-controls" class="panel${isGraph ? '' : ' is-hidden'}" style="margin-bottom:1.5rem;">
           <span class="eyebrow" style="margin-bottom:0.75rem;">YOUR GRAPH</span>
           <div style="display:flex; gap:1.25rem; flex-wrap:wrap; align-items:center;">
             <label style="display:flex; align-items:center; gap:0.5rem;
@@ -489,7 +533,7 @@ export const PAGES = {
             Click empty space to add a node &middot; click two nodes to connect them &middot;
             click a weight to edit it &middot; right-click (or long-press) a node or edge to delete
           </div>
-          <div id="graph-error" style="display:none; margin-top:0.5rem; font-size:0.8rem;
+          <div id="graph-error" role="alert" style="display:none; margin-top:0.5rem; font-size:0.8rem;
             color:#ff5f5f; font-family:var(--font-mono);"></div>
         </div>
 
@@ -645,7 +689,8 @@ export const PAGES = {
   },
 
   "#/a2z": {
-    title: "AlgoVision · A2Z Journey",
+    title: "A2Z DSA roadmap, visualised · AlgoVision",
+    description: () => `Work through the A2Z DSA roadmap in order — ${DATA.A2Z_STEPS.length} steps, each problem opening a visual you can step through. Progress is saved in your browser.`,
     html: () => `
       ${(() => {
         const totalProblems = DATA.A2Z_STEPS.reduce((s, st) => s + (st.problems || []).length, 0);
@@ -767,7 +812,8 @@ export const PAGES = {
   },
 
   "#/a2z-problem": {
-    title: "AlgoVision · Problem Visualizer",
+    title: (params) => { const r = problemFromParams(params); return r ? `${r.prob.title} · A2Z · AlgoVision` : "A2Z problem · AlgoVision"; },
+    description: (params) => { const r = problemFromParams(params); return r ? `${r.prob.title} (${r.step.title}) — ${r.prob.hook || "step through it visually."}` : "Step through an A2Z roadmap problem visually."; },
     html: (params) => `
       <section class="experience-section">
         <!-- Breadcrumb carries the identity, so the scene starts immediately below. -->
@@ -789,7 +835,7 @@ export const PAGES = {
         </nav>
 
         <div class="prob-layout" id="prob-layout">
-          <aside class="panel prob-sidebar">
+          <aside class="panel prob-sidebar" aria-label="Problems in this step">
             <div class="prob-sidebar-head">
               <span class="eyebrow">This step</span>
             </div>
@@ -883,11 +929,11 @@ export const PAGES = {
                 ? `<div class="prob-section">${p.section}</div>` : '';
               lastSection = p.section || lastSection;
               return header + `
-              <div class="prob-item" data-pi="${pi}" role="button" tabindex="0">
+              <button type="button" class="prob-item" data-pi="${pi}">
                 ${statusMark(p.id)}
                 <span class="prob-item-name">${p.title}</span>
                 <span class="chip chip-${(p.difficulty || 'E').toLowerCase()}">${p.difficulty}</span>
-              </div>`;
+              </button>`;
             }).join('');
 
             probListEl.querySelectorAll('.prob-item').forEach(el => {
@@ -896,9 +942,6 @@ export const PAGES = {
                 renderProblem(currentStepIdx, currentProbIdx);
               };
               el.addEventListener('click', open);
-              el.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-              });
             });
           }
 
@@ -908,8 +951,10 @@ export const PAGES = {
             if (!prob) return;
 
             // Highlight active problem in sidebar
-            view.querySelectorAll('.prob-item').forEach((el, i) => {
+            view.querySelectorAll('#prob-list .prob-item').forEach((el, i) => {
               el.classList.toggle('current', i === pi);
+              if (i === pi) el.setAttribute('aria-current', 'true');
+              else el.removeAttribute('aria-current');
             });
 
             // Update metadata
@@ -956,6 +1001,7 @@ export const PAGES = {
             }
 
             history.replaceState(null,'',`#/a2z-problem?step=${si+1}&prob=${prob.id}`);
+            document.title = `${prob.title} · A2Z · AlgoVision`;
 
             // ── Mount 3D Scene ──────────────────────────────────────
             const vizInner = view.querySelector('#viz-inner');
@@ -1109,7 +1155,8 @@ export const PAGES = {
   },
 
   "#/practice": {
-    title: "AlgoVision · AI Bug Finder",
+    title: "Practice & debug DSA code · AlgoVision",
+    description: "Paste DSA code in Python, C++, Java or JavaScript. AlgoVision names the algorithm and suggests where bugs and edge cases may hide.",
     html: () => `
       <section>
         <div class="page-head">
@@ -1131,10 +1178,14 @@ export const PAGES = {
                 </select>
               </label>
             </div>
-            <textarea id="code-area" spellcheck="false"></textarea>
+            <label for="code-area" class="visually-hidden">Code to scan for bugs</label>
+            <textarea id="code-area" spellcheck="false" autocomplete="off" aria-describedby="bug-result"></textarea>
             <div id="detect-result" style="display:none;"></div>
-            <button id="find-bug-btn" class="btn btn-primary">Scan for bugs</button>
-            <div id="bug-result" style="display:none;"></div>
+            <button id="find-bug-btn" class="btn btn-primary" disabled>Scan for bugs</button>
+            <div id="bug-result" role="status" aria-live="polite" style="display:none;"></div>
+            <p class="practice-note">Your code is sent to the AlgoVision server for analysis and, when AI
+              hints are enabled, to our AI provider. Don't paste secrets.
+              <a href="#/privacy">Privacy</a></p>
           </div>
 
           <aside class="panel">
@@ -1162,7 +1213,8 @@ export const PAGES = {
   },
 
   "#/family": {
-    title: "AlgoVision · Algorithm Family Tree",
+    title: "Algorithm family tree · AlgoVision",
+    description: "See how searching, graph traversal, sorting, dynamic programming, greedy and backtracking algorithms descend from and improve on each other.",
     html: () => `
       <section>
         <div class="page-head">
@@ -1172,11 +1224,11 @@ export const PAGES = {
         </div>
         <div class="panel" style="padding:0;">
           <div id="family-svg-wrapper" style="overflow:auto;">
-            <svg id="family-svg" viewBox="0 0 900 580"
+            <svg id="family-svg" viewBox="0 0 900 580" role="group" aria-label="Algorithm family tree. Each node is a button that shows details below."
               style="width:100%; min-width:900px; display:block;"></svg>
           </div>
         </div>
-        <div id="family-info" class="panel" style="margin-top:1.5rem; display:none;">
+        <div id="family-info" class="panel" aria-live="polite" style="margin-top:1.5rem; display:none;">
           <h3 id="family-info-title" style="color:var(--cAccentBright); margin-bottom:0.4rem;"></h3>
           <p id="family-info-desc" style="font-size:0.875rem; margin-bottom:1rem; max-width:none;"></p>
           <a id="family-info-link" href="#/" class="btn btn-ghost">Visualize this →</a>
@@ -1235,6 +1287,8 @@ export const PAGES = {
 
       NODES.forEach(n => {
         const g=mkSVG("g"); g.style.cursor='pointer';
+        g.setAttribute('tabindex','0'); g.setAttribute('role','button');
+        g.setAttribute('aria-label', `${n.label}: ${n.desc}`);
         const circle=mkSVG("circle");
         circle.setAttribute("cx",n.x); circle.setAttribute("cy",n.y);
         circle.setAttribute("r","22"); circle.setAttribute("fill","var(--cDeep)");
@@ -1249,11 +1303,15 @@ export const PAGES = {
         label.setAttribute("text-anchor","middle"); label.setAttribute("font-size","10");
         label.setAttribute("fill","var(--inkDim)"); label.setAttribute("font-family","var(--font-body)");
         label.textContent=n.label; g.appendChild(label);
-        g.addEventListener('click', () => {
+        const show = () => {
           infoPanel.style.display='block';
           infoTitle.textContent=n.label;
           infoDesc.textContent=n.desc;
           infoLink.href=n.algo?`#/experience?algo=${n.algo}`:'#/explore';
+        };
+        g.addEventListener('click', show);
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); infoPanel.scrollIntoView({ block: 'nearest' }); }
         });
         svg.appendChild(g);
       });
@@ -1261,7 +1319,8 @@ export const PAGES = {
   },
 
   "#/today": {
-    title: "AlgoVision · Daily Insights",
+    title: "60-second algorithm insights · AlgoVision",
+    description: "Short insights into why algorithms work the way they do, each linked to a live trace you can step through.",
     html: () => `
       <section>
         <div class="page-head">
@@ -1271,15 +1330,15 @@ export const PAGES = {
         </div>
         <div class="grid-3">
           ${DATA.CLIPS.map((clip, i) => `
-            <div class="panel panel-glow clip-card">
+            <a class="panel panel-glow clip-card" href="#/experience?algo=${clip.algo}">
               <div class="clip-card-top">
                 <span class="chip chip-cx">${clip.tag}</span>
                 <span class="clip-card-num">${(i+1).toString().padStart(2,'0')}</span>
               </div>
               <span class="eyebrow">${clip.topic}</span>
               <h3>${clip.title}</h3>
-              <span class="clip-card-cta">Read more →</span>
-            </div>
+              <span class="clip-card-cta">Trace it →</span>
+            </a>
           `).join('')}
         </div>
       </section>
@@ -1287,7 +1346,9 @@ export const PAGES = {
   },
 
   "#/journey": {
-    title: "AlgoVision · My Journey",
+    title: "My journey · AlgoVision",
+    description: "Your AlgoVision progress, XP, quests and achievements — stored only in this browser.",
+    noindex: true,
     html: () => `
       <section>
         <div class="page-head">
@@ -1303,10 +1364,10 @@ export const PAGES = {
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
             <button id="export-progress" class="btn btn-ghost" style="font-size:0.85rem;">⬇ EXPORT JSON</button>
             <button id="import-progress" class="btn btn-ghost" style="font-size:0.85rem;">⬆ IMPORT JSON</button>
-            <input type="file" id="import-file" accept=".json,application/json" style="display:none;">
+            <input type="file" id="import-file" accept=".json,application/json" style="display:none;" aria-label="Progress file to import">
             <button id="reset-progress" class="btn" style="font-size:0.85rem; margin-left:auto;">RESET PROGRESS</button>
           </div>
-          <div id="journey-tools-msg" style="display:none; margin-top:0.75rem; font-family:var(--font-mono);
+          <div id="journey-tools-msg" role="status" aria-live="polite" style="display:none; margin-top:0.75rem; font-family:var(--font-mono);
             font-size:0.85rem; color:var(--c);"></div>
         </div>
       </section>
@@ -1443,6 +1504,12 @@ export const PAGES = {
       fileInput?.addEventListener('change', () => {
         const f = fileInput.files?.[0];
         if (!f) return;
+        // A real export is a few KB. Refuse anything large before reading it.
+        if (f.size > 1024 * 1024) {
+          say('That file is too large to be an AlgoVision export (max 1 MB).', true);
+          fileInput.value = '';
+          return;
+        }
         const reader = new FileReader();
         reader.onload = () => {
           const res = P.importJSON(String(reader.result));
@@ -1480,7 +1547,8 @@ export const PAGES = {
   },
 
   "#/realworld": {
-    title: "AlgoVision · Real World",
+    title: "Algorithms in the real world · AlgoVision",
+    description: "Where classic algorithms show up in everyday software: routing, sequence alignment, hashing, social graphs, file systems and schedulers.",
     html: () => `
       <section>
         <div class="page-head">
@@ -1503,14 +1571,154 @@ export const PAGES = {
   },
 
   "#/404": {
-    title: "AlgoVision · 404",
+    title: "Page not found · AlgoVision",
+    description: "That page doesn't exist on AlgoVision.",
+    noindex: true,
     html: () => `
       <section class="page-404">
-        <span class="page-404-num">404</span>
+        <span class="page-404-num" aria-hidden="true">404</span>
         <span class="eyebrow">Node not found</span>
         <h1 class="page-title">Off the graph</h1>
-        <p class="page-lede">You've wandered into untraced territory.</p>
-        <a href="#/" class="btn btn-primary">Return to root →</a>
+        <p class="page-lede">There's no page at this address — the link may be old, or a letter got lost on the way.
+          Every algorithm is still one click away.</p>
+        <div class="page-404-links">
+          <a href="#/explore" class="btn btn-primary">Browse all ${DATA.ALGORITHMS.length} algorithms →</a>
+          <a href="#/a2z" class="btn">A2Z roadmap</a>
+          <a href="#/" class="btn btn-ghost">Home</a>
+        </div>
+      </section>
+    `
+  },
+
+  // ── Legal ────────────────────────────────────────────────────────────
+  // Written from what the code actually does (see DEPLOY.md and the
+  // "Data & privacy" section of README.md). If the app starts collecting
+  // something new — accounts, analytics, a database — this page must change
+  // in the same commit. Not legal advice; have it reviewed before relying on it.
+  "#/privacy": {
+    title: "Privacy policy · AlgoVision",
+    description: "What AlgoVision stores, what it sends to its servers and third parties, and how to remove it. No accounts, no cookies, no analytics.",
+    html: () => `
+      <section class="legal">
+        <span class="eyebrow">Legal</span>
+        <h1 class="page-title">Privacy policy</h1>
+        <p class="legal-meta">Last updated ${esc(SITE.legalUpdated)} · Operated by ${esc(operatorName())}</p>
+
+        <p>AlgoVision is a free tool for learning data structures and algorithms. It has no accounts, sets no
+          cookies, and runs no analytics or advertising trackers. This page lists everything that does happen to
+          data while you use it.</p>
+
+        <h2>1. Stored in your browser</h2>
+        <p>Your progress is saved in your browser's <code>localStorage</code> on this device. It never leaves the
+          device unless you export it yourself.</p>
+        <div class="legal-table-wrap"><table>
+          <thead><tr><th>Key</th><th>What it holds</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><code>algovision.progress.v1</code></td><td>Which roadmap problems you've opened or marked understood, how many traces you've run per algorithm, and the dates you were active.</td><td>Progress, streaks and the Journey page.</td></tr>
+            <tr><td><code>algovision.game.v1</code></td><td>XP, level, achievements, daily quests and challenge scores.</td><td>The game layer.</td></tr>
+          </tbody>
+        </table></div>
+        <p>To remove it, use <strong>Reset progress</strong> on the <a href="#/journey">Journey page</a>, or clear this
+          site's data in your browser settings. Export and import let you move it between devices as a JSON file.</p>
+        <p>This storage is strictly for features you use, contains nothing that identifies you, and is not shared, so
+          no cookie banner is shown. AlgoVision uses no cookies at all.</p>
+
+        <h2>2. Sent to the AlgoVision server</h2>
+        <p>Some features send what you type to the AlgoVision API so it can compute a result:</p>
+        <ul>
+          <li><strong>Running a trace</strong> sends the input you entered (numbers, a graph, a string) and the algorithm name.</li>
+          <li><strong>Code detection</strong> on the home and Practice pages sends the code you paste.</li>
+          <li><strong>Explain this step</strong> sends the algorithm name, the current step of the trace and the narration level.</li>
+          <li><strong>Scan for bugs</strong> sends the code you paste and the language you chose.</li>
+        </ul>
+        <p>The server processes the request and returns the result. The application does not store request contents
+          and has no database. Its logs record request paths and errors, not what you submitted. Your IP address is
+          held in memory briefly to apply rate limits.</p>
+        <p>If the server is unreachable, AlgoVision falls back to in-browser tracing and built-in sample traces, and
+          nothing is sent.</p>
+
+        <h2>3. Third parties</h2>
+        <div class="legal-table-wrap"><table>
+          <thead><tr><th>Service</th><th>Role</th><th>What it receives</th></tr></thead>
+          <tbody>
+            <tr><td>Vercel</td><td>Hosts the website and forwards API requests.</td><td>Standard request data (IP address, browser user agent, page requested) and the API requests above.</td></tr>
+            <tr><td>Render</td><td>Runs the API and AI services.</td><td>The API requests above and standard request data.</td></tr>
+            <tr><td>Groq</td><td>AI model behind “Explain this step” and “Scan for bugs”, when enabled.</td><td>For explanations: the algorithm name, the step description and live counters. For bug scans: the code you pasted and its language. Not your IP address.</td></tr>
+            <tr><td>cdnjs (Cloudflare)</td><td>Delivers the GSAP animation library on every page.</td><td>Standard request data. Only the site's origin is sent as referrer.</td></tr>
+            <tr><td>jsDelivr</td><td>Delivers the three.js 3D library, only on the desktop home page and the A2Z problem pages.</td><td>Standard request data. Only the site's origin is sent as referrer.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Each provider handles that data under its own privacy policy. Fonts are served from this site, so no font
+          provider is contacted. Don't paste passwords, keys or personal information into the code boxes.</p>
+
+        <h2>4. What AlgoVision does not do</h2>
+        <ul>
+          <li>No accounts, sign-in, email collection or payment.</li>
+          <li>No cookies, analytics, advertising, fingerprinting or session recording.</li>
+          <li>No selling or sharing of data beyond the services listed above.</li>
+        </ul>
+
+        <h2>5. Your choices and contact</h2>
+        <p>You can use AlgoVision without the server at all — the in-browser fallbacks keep working — and you can
+          delete your local progress at any time. For questions about this policy or your data,
+          <a href="${esc(contactHref())}" rel="noopener">${esc(contactLabel())}</a>.</p>
+
+        <h2>6. Changes</h2>
+        <p>If what AlgoVision collects changes, this page changes with it and the date above is updated.</p>
+      </section>
+    `
+  },
+
+  "#/terms": {
+    title: "Terms of use · AlgoVision",
+    description: "The terms for using AlgoVision, a free educational tool for learning algorithms.",
+    html: () => `
+      <section class="legal">
+        <span class="eyebrow">Legal</span>
+        <h1 class="page-title">Terms of use</h1>
+        <p class="legal-meta">Last updated ${esc(SITE.legalUpdated)} · Operated by ${esc(operatorName())}</p>
+
+        <p>By using AlgoVision you agree to these terms. If you don't agree, please don't use the site.</p>
+
+        <h2>1. What AlgoVision is</h2>
+        <p>AlgoVision is a free educational tool that visualises data structures and algorithms. There is no account,
+          no subscription and nothing to buy.</p>
+
+        <h2>2. Educational use, no warranty</h2>
+        <p>Visualisations, explanations, complexity notes and AI-generated hints are provided to help you learn. They
+          may contain mistakes, and AI output in particular can be wrong. AlgoVision is provided “as is” and
+          “as available”, without warranties of any kind, to the extent the law allows. Check important results
+          yourself before relying on them in coursework, interviews or production code.</p>
+
+        <h2>3. Availability</h2>
+        <p>The server runs on a free hosting tier and may be slow to wake, unavailable, changed or discontinued at any
+          time. The site falls back to in-browser tracing where it can. Your progress lives in your browser, so
+          export it if you want a copy.</p>
+
+        <h2>4. Acceptable use</h2>
+        <ul>
+          <li>Don't try to disrupt the service, get around its rate limits, or access the AI service directly.</li>
+          <li>Don't submit content you have no right to share, or personal or secret information.</li>
+          <li>Don't use automated tools to send large volumes of requests.</li>
+        </ul>
+
+        <h2>5. Your content</h2>
+        <p>Code and inputs you submit remain yours. You allow AlgoVision to process them only to return the result you
+          asked for, as described in the <a href="#/privacy">privacy policy</a>.</p>
+
+        <h2>6. Third-party names</h2>
+        <p>The A2Z roadmap follows the structure of takeuforward's A2Z DSA sheet. AlgoVision is not affiliated with
+          or endorsed by takeuforward. Product and company names mentioned as real-world examples belong to their
+          owners and are used only for illustration.</p>
+
+        <h2>7. Liability</h2>
+        <p>To the extent the law allows, the operators of AlgoVision are not liable for any loss arising from use of the
+          site, including lost progress or reliance on its explanations. Nothing in these terms limits rights you have
+          under laws that cannot be excluded.</p>
+
+        <h2>8. Changes and contact</h2>
+        <p>These terms may be updated; the date above shows the latest version. Questions:
+          <a href="${esc(contactHref())}" rel="noopener">${esc(contactLabel())}</a>.</p>
       </section>
     `
   }

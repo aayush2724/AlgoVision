@@ -1,6 +1,7 @@
 import { NAV } from './data.js';
 import { playLoader } from './animations.js';
 import { initRouter } from './router.js';
+import { SITE } from './site.js';
 
 function buildNav() {
   const navLinks = document.getElementById('nav-links');
@@ -14,6 +15,9 @@ function buildNav() {
 function initVizzy() {
   const container = document.createElement('div');
   container.className = 'vizzy-container';
+  // Decorative tips; the route announcer already tells screen readers
+  // where they are, so this stays out of the accessibility tree.
+  container.setAttribute('aria-hidden', 'true');
   container.innerHTML = `<div id="vizzy-bubble" class="vizzy-bubble"></div>`;
   document.body.appendChild(container);
 
@@ -73,11 +77,47 @@ function initMobileMenu() {
   });
 }
 
+// The footer's contact link is the GitHub issue tracker until a monitored
+// address is configured in site.js — never a made-up one.
+function wireFooter() {
+  const contact = document.getElementById('footer-contact');
+  if (contact && SITE.contactEmail) {
+    contact.href = `mailto:${SITE.contactEmail}`;
+    contact.removeAttribute('rel');
+  }
+}
+
+// Production errors stay observable in the console (the only log sink this
+// site has — nothing is sent anywhere) without ever reaching the page as a
+// stack trace.
+function initErrorReporting() {
+  window.addEventListener('error', (e) => {
+    console.error('Uncaught error:', e.error || e.message);
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    console.error('Unhandled rejection:', e.reason);
+  });
+}
+
+// The hash is the router's, so a plain #app anchor would navigate to a
+// non-existent route (the 404 page). Move focus to the content instead.
+function initSkipLink() {
+  document.querySelector('.skip-link')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const app = document.getElementById('app');
+    app?.focus();
+    app?.scrollIntoView();
+  });
+}
+
 async function start() {
   try {
+    initErrorReporting();
+    initSkipLink();
     buildNav();
     initMobileMenu();
     initVizzy();
+    wireFooter();
 
     // Background stays intentionally calm — the 3D lives in the home
     // keyboard, not behind every page.
@@ -92,7 +132,7 @@ async function start() {
   } catch (err) {
     console.error("Boot Error:", err);
     const phases = document.getElementById('loader-phases');
-    if (phases) { phases.textContent = "BOOT ERROR"; phases.style.color = "#ff5f5f"; }
+    if (phases) { phases.textContent = "COULD NOT START — RELOAD TO TRY AGAIN"; phases.style.color = "#fb7185"; }
   }
 }
 

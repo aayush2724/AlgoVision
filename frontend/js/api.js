@@ -19,27 +19,44 @@ const SAFE_ERRORS = {
 const DEFAULT_TIMEOUT = 12000;
 const WAKE_TIMEOUT = 45000;
 
+// The backend's own 400s are hand-written for students ("Max 16 numbers —
+// the trace is unreadable beyond that"). Those are worth showing verbatim;
+// anything longer, markup-like or non-400 stays behind the generic message.
+function displayableDetail(status, detail) {
+  if (status !== 400 || typeof detail !== 'string') return null;
+  const text = detail.trim();
+  if (!text || text.length > 200 || /[<>]/.test(text)) return null;
+  return text;
+}
+
 async function request(path, options = {}, timeoutMs = DEFAULT_TIMEOUT) {
   const url      = `${BASE_URL}${path}`;
   const controller = new AbortController();
   const timer    = setTimeout(() => controller.abort(), timeoutMs);
+  // Callers can hand in their own signal (e.g. to drop a stale detect when
+  // the user keeps typing); either side aborting cancels the fetch.
+  const { signal: outer, ...rest } = options;
+  if (outer) {
+    if (outer.aborted) controller.abort();
+    else outer.addEventListener('abort', () => controller.abort(), { once: true });
+  }
 
   try {
     const response = await fetch(url, {
-      ...options,
+      ...rest,
       signal: controller.signal,
-      headers: { 'Content-Type': 'application/json', ...options.headers },
+      headers: { 'Content-Type': 'application/json', ...rest.headers },
     });
     clearTimeout(timer);
 
     if (!response.ok) {
-      // Use safe message — never expose response.json() detail to UI
-      const safeMsg = SAFE_ERRORS[response.status]
+      let detail = null;
+      try { detail = (await response.json())?.detail; } catch { /* no body */ }
+      // Full detail goes to the console only; the UI gets a safe message.
+      console.warn(`API ${path} error:`, detail ?? response.status);
+      const safeMsg = displayableDetail(response.status, detail)
+        || SAFE_ERRORS[response.status]
         || `Request failed (${response.status}).`;
-      // Log full detail to console only (not shown to user)
-      response.json()
-        .then(d => console.warn(`API ${path} error:`, d.detail || d))
-        .catch(() => {});
       throw new ApiError(safeMsg, response.status);
     }
 
@@ -49,6 +66,7 @@ async function request(path, options = {}, timeoutMs = DEFAULT_TIMEOUT) {
     clearTimeout(timer);
     if (err instanceof ApiError) throw err;
     if (err.name === 'AbortError') {
+      if (outer?.aborted) throw new ApiError('Request cancelled.', 0, true);
       throw new ApiError('Request timed out. Check your connection.', 0);
     }
     // Network error — safe message only
@@ -60,10 +78,11 @@ async function request(path, options = {}, timeoutMs = DEFAULT_TIMEOUT) {
 // Custom error class so callers can distinguish API errors from
 // programming errors without exposing server detail strings
 export class ApiError extends Error {
-  constructor(message, status) {
+  constructor(message, status, cancelled = false) {
     super(message);
     this.name   = 'ApiError';
     this.status = status;
+    this.cancelled = cancelled;
   }
 }
 
@@ -104,7 +123,7 @@ export const api = {
     });
   },
 
-  async detect(code, problem = '') {
+  async detect(code, problem = '', { signal } = {}) {
     if (code.length > 7500) {
       // Fall back to client-side detection silently — don't show error
       return null;
@@ -112,6 +131,7 @@ export const api = {
     return request('/api/detect', {
       method: 'POST',
       body: JSON.stringify({ code, problem }),
+      signal,
     });
   },
 };

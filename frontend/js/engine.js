@@ -201,6 +201,12 @@ function makeSVG(tag) {
 }
 
 // Escape text that gets interpolated into innerHTML (AI output is untrusted).
+// Algorithm ids that came back from the API or arrived in a URL are reduced
+// to the catalog's own alphabet before they touch innerHTML or a hash.
+function safeAlgoId(s) {
+  return String(s ?? '').replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
 function escapeHTML(str) {
   const div = document.createElement('div');
   div.textContent = String(str);
@@ -360,7 +366,7 @@ function resolveAlgoId(raw) {
     ['dp', 'fibonacci_dp'],
   ];
   for (const [k, v] of MAP) if (key.includes(k)) return v;
-  return 'dijkstra';
+  return null;   // caller decides the fallback and can say so
 }
 
 const fmt = (v) => String(Number(v));
@@ -434,6 +440,11 @@ export function mountEngine(view, algo = 'dijkstra') {
   const explainBtn = view.querySelector('#explain-btn');
   const explanationBox = view.querySelector('#explanation-box');
 
+  // The template ships Run disabled so a click before this module arrives
+  // can't do anything confusing; from here on the engine owns the button.
+  if (runBtn) runBtn.disabled = false;
+  if (status && /LOADING/i.test(status.textContent)) status.textContent = 'STATUS: IDLE';
+
   // ── Pseudocode panel: the line whose `when` pattern matches the step's
   // note is lit. Only algorithms listed in data/pseudocode.json get a panel.
   const pseudoCard = view.querySelector('#pseudo-card');
@@ -487,8 +498,24 @@ export function mountEngine(view, algo = 'dijkstra') {
   const comparePanel  = view.querySelector('#compare-panel');
   const compareSlider = view.querySelector('#compare-slider');
 
-  const algoId = resolveAlgoId(algo);
+  const resolved = resolveAlgoId(algo);
+  const algoId = resolved || 'dijkstra';
   const traceView = VIEW_FOR[algoId] || 'graph';
+  if (!resolved) {
+    const fallback = DATA.ALGORITHMS.find(a => a.id === algoId);
+    const name = fallback ? fallback.name : algoId;
+    const titleEl = view.querySelector('#experience-title');
+    if (titleEl) titleEl.textContent = name;
+    document.title = `${name} · live trace · AlgoVision`;
+    const sw = view.querySelector('#algo-switch');
+    if (sw) sw.value = algoId;
+    view.querySelector('.toolbar')?.insertAdjacentHTML('afterend', `
+      <div class="page-notice" role="status">
+        <strong>No algorithm called “${escapeHTML(String(algo))}”.</strong>
+        <span>Showing ${escapeHTML(name)} instead.</span>
+        <a href="#/explore">Browse all algorithms →</a>
+      </div>`);
+  }
 
   let currentSteps = [];
   let currentStepIdx = -1;
@@ -5981,6 +6008,14 @@ export function mountEngine(view, algo = 'dijkstra') {
       status.innerHTML = isOffline
         ? 'STATUS: <span style="color:#ff5f5f">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
         : 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
+      // The backend's own validation messages ("Max 16 numbers…") are
+      // written for students — surface them next to the input they're about.
+      const why = (e && e.name === 'ApiError' && e.status === 400) ? e.message : '';
+      if (why) {
+        const graphError = view.querySelector('#graph-error');
+        if (traceView !== 'graph' && arrayHint) arrayHint.textContent = why;
+        else if (graphError) { graphError.textContent = why; graphError.style.display = 'block'; }
+      }
       runBtn.disabled = false;
       checkBackend();
     }
@@ -6760,37 +6795,55 @@ export function mountBugFinder(view) {
     return -1`;
 
   codeArea.value = DEFAULT_CODE;
+  if (btn) btn.disabled = false;
 
-  // Live detection as user types
+  // Live detection as user types. Each keystroke supersedes the detect in
+  // flight, so a slow early answer can never overwrite a newer one.
   let detectTimer = null;
+  let detectCtl = null;
   codeArea.addEventListener('input', () => {
     clearTimeout(detectTimer);
+    result.classList.remove('is-error');
     detectTimer = setTimeout(async () => {
       if (codeArea.value.length < 20) return;
+      detectCtl?.abort();
+      const ctl = new AbortController();
+      detectCtl = ctl;
       try {
-        const res = await api.detect(codeArea.value);
-        if (detectResult) {
-          detectResult.style.display = 'block';
-          const conf = Math.round(res.confidence * 100);
-          detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${res.algorithm.toUpperCase().replace('_',' ')}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${res.realworld?.title || ''}</span>  <a href="#/experience?algo=${res.algorithm}" style="color:var(--c);font-family:var(--font-ui);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
-        }
-      } catch { /* silent */ }
+        const res = await api.detect(codeArea.value, '', { signal: ctl.signal });
+        if (ctl !== detectCtl || !res || !detectResult) return;
+        const id = safeAlgoId(res.algorithm);
+        const conf = Math.round((res.confidence || 0) * 100);
+        detectResult.style.display = 'block';
+        detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${escapeHTML(id.toUpperCase().replace(/_/g, ' '))}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${escapeHTML(res.realworld?.title || '')}</span>  <a href="#/experience?algo=${id}" style="color:var(--c);font-family:var(--font-ui);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
+      } catch { /* offline or cancelled — the scan button still works */ }
     }, 600);
   });
 
   btn.addEventListener('click', async () => {
-    btn.disabled = true;
+    const code = codeArea.value.trim();
     result.style.display = 'block';
+    if (!code) {
+      result.classList.add('is-error');
+      result.textContent = 'Paste some code first — the scanner needs something to read.';
+      codeArea.focus();
+      return;
+    }
+    result.classList.remove('is-error');
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
     result.textContent = "SCANNING CODE...";
 
     try {
-      const res = await api.bugFind(langSelect.value, codeArea.value);
+      const res = await api.bugFind(langSelect.value, code);
       const hints = res.hints || ["No obvious bug found."];
-      result.innerHTML = `<strong style="color:var(--cBright)">AI BUG SCAN:</strong><br><br>${hints.map(h => `<span style="color:var(--cDim)">▸</span> ${escapeHTML(h)}`).join('<br><br>')}${res.fallback ? '<br><br><small style="opacity:0.5">(OFFLINE FALLBACK)</small>' : ''}`;
-    } catch {
-      result.innerHTML = `<strong>ANALYSIS:</strong> Check loop boundaries and off-by-one errors.<br><small>(LOCAL FALLBACK)</small>`;
+      result.innerHTML = `<strong style="color:var(--cBright)">AI BUG SCAN:</strong><br><br>${hints.map(h => `<span style="color:var(--cDim)">▸</span> ${escapeHTML(h)}`).join('<br><br>')}${res.fallback || res.live === false ? '<br><br><small style="opacity:0.6">(OFFLINE FALLBACK — template hints, no AI involved)</small>' : ''}`;
+    } catch (e) {
+      const why = (e && e.name === 'ApiError') ? e.message : '';
+      result.innerHTML = `<strong>ANALYSIS:</strong> Check loop boundaries and off-by-one errors.<br><small>(LOCAL FALLBACK${why ? ' — ' + escapeHTML(why) : ''})</small>`;
     } finally {
       btn.disabled = false;
+      btn.removeAttribute('aria-busy');
     }
   });
 }

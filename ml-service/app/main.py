@@ -1,7 +1,7 @@
+import hmac
 import ipaddress
 import logging
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from app import llm
@@ -26,16 +26,30 @@ def _is_internal(host: str) -> bool:
   except ValueError:
     return host == "localhost"
 
+def _token_matches(request: Request) -> bool:
+  given = request.headers.get("x-internal-token", "")
+  return bool(given) and hmac.compare_digest(given, settings.INTERNAL_TOKEN)
+
+def is_authorised(request: Request) -> bool:
+  """Two deployments, two boundaries — never both at once.
+
+  With INTERNAL_TOKEN set (Render, or any split-host setup) the token is the
+  only thing that counts. Behind a hosting proxy the peer address uvicorn
+  sees is the proxy's, which is often a private-range address — so the IP
+  allowlist would wave through anyone who found the service's public URL.
+
+  Without a token (Docker compose, start-dev.sh) the service is not
+  published and the loopback/private check is the boundary.
+  """
+  if settings.INTERNAL_TOKEN:
+    return _token_matches(request)
+  client_host = request.client.host if request.client else ""
+  return _is_internal(client_host)
+
 @app.middleware("http")
 async def internal_only(request: Request, call_next):
-  client_host = request.client.host if request.client else ""
-  # Two ways in. A private-range caller is the Docker/local case. A matching
-  # shared secret is the split-host case (Render), where the backend reaches
-  # this service over the public internet and its source IP proves nothing.
-  token = settings.INTERNAL_TOKEN
-  authorised = _is_internal(client_host) or (
-    bool(token) and request.headers.get("x-internal-token") == token)
-  if request.url.path != "/health" and not authorised:
+  if request.url.path != "/health" and not is_authorised(request):
+    client_host = request.client.host if request.client else ""
     log.warning("Blocked external request to ML service from %s", client_host)
     return JSONResponse(status_code=403, content={"detail": "Forbidden."})
   return await call_next(request)

@@ -2,13 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>AlgoVision · See the algorithm before the code</title>
-  <meta name="description" content="AlgoVision reveals the real-world meaning of algorithms — cinematic visuals, live traces, and AI-powered explanations." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta name="description" content="Learn data structures and algorithms through real-world metaphors and live, step-by-step traces of your own input. Free, no sign-up, built for colleges and self-learners." />
+  <!-- The router rewrites these per page. The static values describe the home page. -->
+  <link rel="canonical" href="https://algo-vision-vert.vercel.app/" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#1a1713" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="application-name" content="AlgoVision" />
+  <meta name="apple-mobile-web-app-title" content="AlgoVision" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AlgoVision" />
+  <meta property="og:title" content="AlgoVision · See the algorithm before the code" />
+  <meta property="og:description" content="Learn data structures and algorithms through real-world metaphors and live, step-by-step traces of your own input. Free, no sign-up." />
+  <meta property="og:url" content="https://algo-vision-vert.vercel.app/" />
+  <meta property="og:image" content="https://algo-vision-vert.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="AlgoVision — see the algorithm before the code" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AlgoVision · See the algorithm before the code" />
+  <meta name="twitter:description" content="Learn data structures and algorithms through real-world metaphors and live, step-by-step traces of your own input. Free, no sign-up." />
+  <meta name="twitter:image" content="https://algo-vision-vert.vercel.app/og-image.png" />
+
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Fonts are self-hosted (see fonts/LICENSE.txt) so no font request leaves
+       this origin. The latin face is preloaded because every page uses it. -->
+  <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="/styles/main.css" />
   <script type="importmap">
   { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -18,35 +47,72 @@
 </head>
 <body>
 
-  <div id="loader" class="loader">
-    <div class="loader-progress">
+  <div id="loader" class="loader" role="status" aria-label="Loading AlgoVision">
+    <div class="loader-progress" aria-hidden="true">
       <div id="loader-phases" class="loader-phases">CALIBRATING GRID</div>
       <span id="loader-count" class="loader-count">000</span>
       <div class="loader-bar-bg"><div id="loader-bar" class="loader-bar"></div></div>
     </div>
-    <div class="loader-brand">Algo<span>Vision</span></div>
+    <div class="loader-brand" aria-hidden="true">Algo<span>Vision</span></div>
+    <noscript>
+      <p class="loader-noscript">AlgoVision is an interactive app: the visualisations need JavaScript.
+        Please enable JavaScript and reload this page.</p>
+    </noscript>
   </div>
 
   <a href="#app" class="skip-link">Skip to content</a>
 
   <header class="nav">
-    <a href="#/" class="brand">Algo<span>Vision</span></a>
-    <nav id="nav-links"></nav>
+    <a href="#/" class="brand" aria-label="AlgoVision home">Algo<span>Vision</span></a>
+    <nav id="nav-links" aria-label="Primary"></nav>
+    <!-- On phones the links live in the drawer; keep the main action visible. -->
+    <a href="#/experience" class="btn btn-primary nav-cta-mobile">▶ Play</a>
+    <div id="game-hud"></div>
     <button id="nav-toggle" class="nav-toggle" aria-label="Menu"
             aria-expanded="false" aria-controls="nav-links">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <main id="app" tabindex="-1"></main>
+  <main id="app" tabindex="-1">
+    <!-- Crawlable summary for clients that don't run JavaScript.
+         The router replaces this with the requested page on boot. -->
+    <section class="boot-static">
+      <span class="eyebrow">Learn algorithms visually</span>
+      <h1>See the algorithm before the code</h1>
+      <p>AlgoVision teaches data structures and algorithms through real-world
+        metaphors and live, step-by-step traces of your own input. It is free,
+        needs no account, and is built for colleges and self-learners.</p>
+      <nav aria-label="Sections">
+        <ul>
+          <li><a href="/explore">Explore every algorithm</a></li>
+          <li><a href="/a2z">Follow the A2Z roadmap</a></li>
+          <li><a href="/experience">Run the live trace engine</a></li>
+          <li><a href="/practice">Practice and debug your code</a></li>
+        </ul>
+      </nav>
+    </section>
+  </main>
+
+  <div id="route-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 
   <footer class="footer">
-    <a href="#/" class="brand footer-brand">Algo<span>Vision</span></a>
-    <p>Built with FastAPI, Three.js &amp; GSAP. Inspired by takeuforward's A2Z sheet.</p>
+    <div class="footer-top">
+      <a href="#/" class="brand footer-brand" aria-label="AlgoVision home">Algo<span>Vision</span></a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#/explore">Explore</a>
+        <a href="#/a2z">A2Z</a>
+        <a href="#/practice">Practice</a>
+        <a href="#/privacy">Privacy</a>
+        <a href="#/terms">Terms</a>
+        <a href="https://github.com/aayush2724/AlgoVision" rel="noopener">Source on GitHub</a>
+        <a id="footer-contact" href="https://github.com/aayush2724/AlgoVision/issues" rel="noopener">Contact</a>
+      </nav>
+    </div>
+    <p>Built with FastAPI, Three.js &amp; GSAP. Inspired by takeuforward's A2Z sheet — not affiliated.
+      Free to use; your progress stays in your browser.</p>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
     // Same origin by default — both the Docker nginx and the Vercel rewrite
     // proxy /api to the backend, so no absolute URL (and no CORS) is needed.
@@ -55,6 +121,11 @@
     window.ALGOVISION_API =
       location.port === "5500" ? "http://localhost:8000" : "";
   </script>
-  <script type="module" src="js/main.js"></script>
+  <!-- If you bump the GSAP version, recompute the integrity hash:
+       curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+          integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt"
+          crossorigin="anonymous"></script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>

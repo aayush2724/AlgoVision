@@ -11,7 +11,12 @@ services:
     healthCheckPath: /health-root
     # Render injects $PORT and expects the process to bind it; the Dockerfile's
     # hardcoded 8000 is only right for compose.
-    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # --proxy-headers / --forwarded-allow-ips: traffic arrives through Render's
+    # proxy (and, for the browser, Vercel's rewrite before that), so without
+    # trusting X-Forwarded-For every visitor shares the proxy's address and
+    # the per-IP rate limits become one global bucket. The container is only
+    # reachable through Render's proxy, so trusting the header is safe here.
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*"
     envVars:
       - key: ENV
         value: prod
@@ -34,11 +39,11 @@ services:
     dockerContext: ./ml-service
     plan: free
     healthCheckPath: /health
-    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*"
     envVars:
-      # Must match algovision-api's value — this is what authorises the
-      # backend now that the two are on different hosts and the ML service's
-      # private-IP allowlist can no longer recognise it.
+      # Must match algovision-api's value — with a token configured it is the
+      # ONLY thing that authorises a caller (the private-IP allowlist is off),
+      # because the address the service sees is Render's proxy, not the peer.
       - key: INTERNAL_TOKEN
         fromService:
           type: web

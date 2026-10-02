@@ -4,6 +4,11 @@
 // elapsed time instead.
 if (typeof gsap !== 'undefined') gsap.ticker.lagSmoothing(0);
 
+// Honour the OS-level "reduce motion" setting: no intro countdown, no page
+// veil, no magnetic buttons or tilting cards. Content simply appears.
+const REDUCED_MOTION = typeof matchMedia === 'function'
+  && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export function playLoader(callback) {
   const bar = document.getElementById('loader-bar');
   const count = document.getElementById('loader-count');
@@ -50,7 +55,8 @@ export function playLoader(callback) {
   // Safety net: requestAnimationFrame is throttled in background tabs and on
   // slow machines, and GSAP's lag smoothing stalls the tween when frames run
   // long. Never let the intro trap a student behind the loader.
-  const safety = setTimeout(finish, 2600);
+  const safety = setTimeout(finish, REDUCED_MOTION ? 0 : 2600);
+  if (REDUCED_MOTION || typeof gsap === 'undefined') { finish(); return; }
 
   gsap.to({ val: 0 }, {
     val: 100,
@@ -93,6 +99,11 @@ export function revealView(el) {
 }
 
 export async function pageTransition(render) {
+  if (REDUCED_MOTION || typeof gsap === 'undefined') {
+    render();
+    window.scrollTo(0, 0);
+    return;
+  }
   const veil = document.createElement('div');
   veil.style.position = 'fixed';
   veil.style.inset = '0';
@@ -113,6 +124,7 @@ export async function pageTransition(render) {
 }
 
 export function magnetize() {
+  if (REDUCED_MOTION) return;
   document.querySelectorAll('.btn, .nav-link').forEach(el => {
     el.addEventListener('mousemove', (e) => {
       const { left, top, width, height } = el.getBoundingClientRect();
@@ -127,6 +139,7 @@ export function magnetize() {
 }
 
 export function tiltCards() {
+  if (REDUCED_MOTION) return;
   document.querySelectorAll('.panel-glow').forEach(el => {
     el.addEventListener('mousemove', (e) => {
       const { left, top, width, height } = el.getBoundingClientRect();

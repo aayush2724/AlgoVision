@@ -1530,20 +1530,23 @@ export const COMPLEXITY = {
   },
 };
 
+// Each insight opens the live trace of the algorithm it is about — there is
+// no separate article behind these cards, so the card never promises one.
 export const CLIPS = [
-  { tag: "TODAY", topic: "Graphs",   title: "Why GPS uses Dijkstra's, not BFS" },
-  { tag: "TODAY", topic: "Arrays",   title: "Kadane's Algorithm: The Hidden Pattern" },
-  { tag: "TODAY", topic: "Trees",    title: "Why BSTs beat Hash Maps for ranges" },
-  { tag: "TODAY", topic: "DP",       title: "Memoization vs Tabulation — when each wins" },
-  { tag: "TODAY", topic: "Sorting",  title: "Tim Sort: Python's secret weapon" },
-  { tag: "TODAY", topic: "Strings",  title: "KMP: Pattern matching without backtracking" },
+  { tag: "TODAY", topic: "Graphs",   title: "Why GPS uses Dijkstra's, not BFS",            algo: "dijkstra" },
+  { tag: "TODAY", topic: "Arrays",   title: "Kadane's Algorithm: The Hidden Pattern",       algo: "kadanes" },
+  { tag: "TODAY", topic: "Trees",    title: "Why BSTs beat Hash Maps for ranges",           algo: "bst_search" },
+  { tag: "TODAY", topic: "DP",       title: "Memoization vs Tabulation — when each wins",   algo: "fibonacci_dp" },
+  { tag: "TODAY", topic: "Sorting",  title: "Merge Sort: why divide and conquer wins",      algo: "merge_sort" },
+  { tag: "TODAY", topic: "Strings",  title: "KMP: Pattern matching without backtracking",   algo: "kmp_search" },
 ];
 
+// Illustrative, not claims about any named company's internals.
 export const REALWORLD = [
-  { icon: "🗺️", metaphor: "Graphs",  title: "Google Maps",      desc: "Dijkstra's algorithm finds the shortest driving route in real time." },
-  { icon: "🔗", metaphor: "DP",      title: "DNA Sequencing",   desc: "Edit distance (Levenshtein) powers genome alignment in bioinformatics." },
-  { icon: "🛒", metaphor: "Hashing", title: "E-Commerce Cart",  desc: "Hash maps power O(1) product lookup for millions of SKUs." },
-  { icon: "📱", metaphor: "BFS",     title: "Social Networks",  desc: "Facebook's friend-of-a-friend discovery uses breadth-first search." },
-  { icon: "🧬", metaphor: "Trees",   title: "File Systems",     desc: "Every OS filesystem is a tree — directories are just nodes." },
+  { icon: "🗺️", metaphor: "Graphs",  title: "Navigation apps",  desc: "Shortest-path algorithms in Dijkstra's family are the backbone of turn-by-turn routing." },
+  { icon: "🔗", metaphor: "DP",      title: "DNA Sequencing",   desc: "Edit distance (Levenshtein) underpins sequence alignment in bioinformatics." },
+  { icon: "🛒", metaphor: "Hashing", title: "E-Commerce Cart",  desc: "Hash maps give O(1) product lookup across catalogues of millions of items." },
+  { icon: "📱", metaphor: "BFS",     title: "Social Networks",  desc: "Friend-of-a-friend suggestions are a breadth-first search over the social graph." },
+  { icon: "🧬", metaphor: "Trees",   title: "File Systems",     desc: "A filesystem is a tree — directories are inner nodes, files are leaves." },
   { icon: "⚙️", metaphor: "Heaps",  title: "OS Schedulers",    desc: "Priority queues decide which process gets CPU time next." },
 ];

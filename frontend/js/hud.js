@@ -56,9 +56,12 @@ function confetti() {
 
 export function initHUD() {
   // Nav widget, injected before the burger toggle
+  // index.html reserves #game-hud in the header so filling it later doesn't
+  // shove the other header controls sideways (layout shift).
   const nav = document.querySelector('.nav');
-  if (nav && !document.getElementById('game-hud')) {
-    const hud = el('div', '', '');
+  const slot = document.getElementById('game-hud');
+  if (nav && (!slot || !slot.firstElementChild)) {
+    const hud = slot || el('div', '', '');
     hud.id = 'game-hud';
     hud.innerHTML = `
       <a href="#/journey" class="hud-inner" title="Open your profile">
@@ -66,8 +69,7 @@ export function initHUD() {
         <span class="hud-bar"><span id="hud-fill" class="hud-fill"></span></span>
         <span id="hud-xp" class="hud-xp"></span>
       </a>`;
-    const toggle = nav.querySelector('.nav-toggle');
-    nav.insertBefore(hud, toggle);
+    if (!slot) nav.insertBefore(hud, nav.querySelector('.nav-toggle'));
     levelBadge = hud.querySelector('#hud-level');
     xpFill = hud.querySelector('#hud-fill');
     xpLabel = hud.querySelector('#hud-xp');

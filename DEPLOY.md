@@ -31,15 +31,32 @@ browser ──► Vercel (static frontend)
    from step 1.4 if it differs from `algovision-api.onrender.com`.
 3. Deploy.
 
+## URLs, SEO and headers
+
+- The production origin `https://algo-vision-vert.vercel.app` is written into
+  `frontend/js/site.js`, `frontend/index.html` (canonical and Open Graph tags),
+  `frontend/robots.txt` and `frontend/sitemap.xml`. On a custom domain, change
+  all four.
+- Path-style URLs (`/explore`, `/a2z`) are real entry points. Vercel's catch-all
+  rewrite, nginx's `try_files` and the FastAPI static mount all serve the
+  shell for them; the router turns them into the matching page.
+- Security headers (CSP, frame denial, nosniff, referrer and permissions
+  policy) are set in `vercel.json`. Adding a new third-party script means
+  adding its origin to the CSP in all three copies (see README).
+
 ## Things that will bite you
 
 - **Render free tier sleeps.** After ~15 minutes idle the first request takes
   ~30s while the container wakes. The UI has offline fallbacks, so traces keep
   working; AI narration will be slow on the first call.
-- **The ML service is not open to the world.** It rejects any caller that is
-  neither on a private IP range nor carrying a matching `X-Internal-Token`.
-  That is why `INTERNAL_TOKEN` has to match across the two services — locally
-  the private-network check covers it and the token stays empty.
+- **The ML service is not open to the world.** When `INTERNAL_TOKEN` is set
+  (Render), the token is the only accepted credential — the private-IP
+  allowlist is switched off, because behind Render's proxy the caller's
+  address is not trustworthy. Locally the token stays empty and the
+  private-network check is the boundary.
+- **Rate limits need the real client IP.** Both services start uvicorn with
+  `--proxy-headers --forwarded-allow-ips="*"` in `render.yaml`; without it
+  every visitor shares one rate-limit bucket.
 - **Rate limiting is per instance.** `slowapi` keeps its counters in memory,
   which is correct on a single Render container. If you ever scale to more
   than one instance the limits become per-instance; move to Redis storage then.

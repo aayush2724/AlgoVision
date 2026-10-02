@@ -1,16 +1,28 @@
+import logging
 import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
-from app.routes import ai, health, trace, detect
+from app.routes import ai, detect, health, trace
+from app.security import SECURITY_HEADERS
+
+# Uvicorn configures its own loggers but leaves the root logger bare, so the
+# app's log.info/log.warning calls (ML fallbacks, blocked requests) would be
+# lost. One handler on the root makes them show up in Render's log stream.
+logging.basicConfig(
+  level=logging.INFO,
+  format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+log = logging.getLogger(__name__)
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -48,8 +60,7 @@ async def limit_body_size(request: Request, call_next):
 # Global exception handler — never leak stack traces
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
-  import logging
-  logging.getLogger(__name__).exception("Unhandled error on %s", request.url.path)
+  log.exception("Unhandled error on %s", request.url.path)
   return JSONResponse(
     status_code=500,
     content={"detail": "An internal error occurred."}
@@ -69,14 +80,45 @@ def root():
 # last week's engine.js next to today's data.js. StaticFiles already sends an
 # ETag, which makes an unchanged file a cheap 304. (nginx.conf and vercel.json
 # set the same header for their deployments.)
+#
+# The security headers go on every response, API included, so a page served
+# by start-dev.sh behaves exactly like the Vercel deployment — a CSP problem
+# shows up on a developer's machine, not in production.
 @app.middleware("http")
-async def revalidate_static(request: Request, call_next):
+async def response_headers(request: Request, call_next):
   response = await call_next(request)
-  if not request.url.path.startswith(settings.API_PREFIX):
+  for name, value in SECURITY_HEADERS.items():
+    response.headers.setdefault(name, value)
+  if request.url.path.startswith(settings.API_PREFIX):
+    response.headers.setdefault("Cache-Control", "no-store")
+  elif request.url.path.startswith("/fonts/"):
+    response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+  else:
     response.headers.setdefault("Cache-Control", "no-cache, must-revalidate")
   return response
 
 
+class SPAStaticFiles(StaticFiles):
+  """Static files with a single-page-app fallback.
+
+  Path-style deep links (/explore, /a2z-problem?prob=x) are real URLs now —
+  the sitemap lists them and people share them — but there is no file at that
+  path. Serve the shell and let the client router open the page, the same
+  way nginx's try_files and Vercel's rewrite do. A missing *file* (anything
+  with an extension, like js/missing.js) stays a 404 so broken asset paths
+  are never masked by an HTML page.
+  """
+
+  async def get_response(self, path: str, scope):
+    try:
+      return await super().get_response(path, scope)
+    except StarletteHTTPException as exc:
+      last = path.rsplit("/", 1)[-1]
+      if exc.status_code == 404 and "." not in last:
+        return await super().get_response("index.html", scope)
+      raise
+
+
 FRONTEND_DIR = Path(__file__).parent.parent.parent / "frontend"
 if FRONTEND_DIR.exists():
-  app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+  app.mount("/", SPAStaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

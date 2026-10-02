@@ -9,14 +9,12 @@ students **run it on their own input, step by step, and analyse the cost**.
 
 ## What it actually does
 
-- **22 live algorithm tracers** — Dijkstra, BFS, DFS, Prim's & Kruskal's
-  minimum spanning trees (with union-find), Binary Search, Merge /
-  Quick / Bubble / Insertion / Selection Sort, Linked-List Reversal, Balanced
-  Brackets (stack), BST build & search, Max-Heap build, Two Sum (two
-  pointers), Sliding Window, Kadane's Max Subarray, memoized Fibonacci,
-  0/1 Knapsack, and Longest Common Subsequence (full DP grids with
-  traceback) — every step computed by the backend from *your* input, never
-  a canned animation.
+- **474 live algorithm tracers** — graphs (Dijkstra, BFS, DFS, MSTs,
+  Bellman-Ford, SCCs…), sorting, searching, sliding windows, stacks and
+  queues, trees and heaps, strings, greedy, dynamic programming and number
+  theory — every step computed by the backend from *your* input, never a
+  canned animation. The A2Z roadmap links each sheet row to one of them
+  where a trace exists.
 - **Bring your own data** — build a graph by clicking (add/delete nodes and
   edges, edit weights, pick the start node, teaching presets including a
   disconnected graph), paste your own numbers for the array algorithms, pick
@@ -46,7 +44,7 @@ students **run it on their own input, step by step, and analyse the cost**.
 ```
 algovision/
 ├─ frontend/      # Buildless ES modules: Three.js + GSAP + SVG tracers
-├─ backend/       # FastAPI: trace engine (7 algorithms), detect, AI proxy
+├─ backend/       # FastAPI: trace engine, code detection, AI proxy
 ├─ ml-service/    # FastAPI AI microservice (explain a step, find a bug)
 ├─ docker-compose.yml
 ├─ start-dev.sh   # Run all three services locally
@@ -103,11 +101,40 @@ stays in the box for when the server is back. A sleeping free-tier server
 
 ```bash
 cd backend && python3 -m pytest tests/
+cd ml-service && python3 -m pytest tests/
 ```
+
+## Data & privacy
+
+The privacy policy shown at `/privacy` (defined in `frontend/js/pages.js`) is
+written from this list. Change both together.
+
+- **Browser storage:** `algovision.progress.v1` and `algovision.game.v1` in
+  localStorage. No cookies, no analytics, no accounts.
+- **Sent to the API:** trace inputs, pasted code (detect / bug scan), and the
+  current trace step (explain). Not stored; logs hold paths and errors only.
+- **Sent to Groq** (only when `GROQ_API_KEY` is set): the step description for
+  explanations, and pasted code for bug scans.
+- **Third-party scripts:** GSAP from cdnjs on every page; three.js from
+  jsDelivr on the desktop home page and the A2Z problem pages. Fonts are
+  self-hosted under `frontend/fonts/` (SIL OFL, licence alongside).
+
+Owner-supplied values (contact email, operator name) live in
+`frontend/js/site.js`. Until they are set the site points people to GitHub
+issues and says "the AlgoVision maintainers".
+
+## Security headers
+
+The CSP and other headers are defined once in `backend/app/security.py` and
+copied into `vercel.json` and `frontend/nginx-headers.inc`;
+`backend/tests/test_security.py` fails if the copies drift. If you edit an
+inline `<script>` in `index.html`, run `python3 tools/csp_hashes.py` and
+update the two hashes in all three places.
 
 ## Environment
 
-Copy the example files and adjust as needed:
+Copy the example files and adjust as needed (every variable is documented
+inside them; `.env` files are git-ignored):
 ```bash
 cp backend/.env.example backend/.env
 cp ml-service/.env.example ml-service/.env

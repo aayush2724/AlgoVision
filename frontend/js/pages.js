@@ -16,9 +16,10 @@ function clientDetect(text) {
                                                              return 'binary_search';
   if (t.includes('dp[') || t.includes('memo') ||
       t.includes('lru_cache'))                               return 'dynamic_programming';
-  if (t.includes('merge') || t.includes('pivot') ||
-      t.includes('sort'))                                    return 'sorting';
-  return 'dijkstra';
+  if (t.includes('merge'))                                  return 'merge_sort';
+  if (t.includes('pivot') || t.includes('partition'))       return 'quick_sort';
+  if (t.includes('sort'))                                    return 'bubble_sort';
+  return null;   // nothing recognisable — the caller says so instead of guessing
 }
 
 export const ROUTE_THEME = {
@@ -274,10 +275,14 @@ export const PAGES = {
             const { api } = await import('./api.js');
             const res  = await api.detect(text);
             if (!res) throw new Error('too long for the server');
-            detectedAlgo = String(res.algorithm || '').replace(/[^a-zA-Z0-9_-]/g, '') || clientDetect(text);
+            detectedAlgo = String(res.algorithm || '').replace(/[^a-zA-Z0-9_-]/g, '') || null;
+            statusEl.style.display = 'block';
+            if (!detectedAlgo) {
+              statusEl.innerHTML = `NOTHING RECOGNISED YET — paste a fuller function, or name the algorithm in a comment.`;
+              return;
+            }
             const conf  = Math.round((res.confidence || 0) * 100);
             const title = esc(res.realworld?.title || '');
-            statusEl.style.display = 'block';
             statusEl.innerHTML =
               `DETECTED <strong class="detect-name">${detectedAlgo.toUpperCase().replace(/_/g,' ')}</strong>` +
               (title ? ` — <em class="detect-world">${title}</em>` : '') +
@@ -285,8 +290,9 @@ export const PAGES = {
           } catch {
             detectedAlgo = clientDetect(text);
             statusEl.style.display = 'block';
-            statusEl.innerHTML =
-              `DETECTED (OFFLINE) <strong class="detect-name">${detectedAlgo.toUpperCase().replace(/_/g,' ')}</strong>`;
+            statusEl.innerHTML = detectedAlgo
+              ? `DETECTED (OFFLINE) <strong class="detect-name">${detectedAlgo.toUpperCase().replace(/_/g,' ')}</strong>`
+              : `NOTHING RECOGNISED (OFFLINE) — name the algorithm in a comment and try again.`;
           }
         }, 600);
       });
@@ -309,15 +315,20 @@ export const PAGES = {
         const btnLabel = visualizeBtn.querySelector('span');
         visualizeBtn.disabled = true;
         if (btnLabel) btnLabel.textContent = 'DETECTING...';
+        const notRecognised = () => {
+          if (pasteError) pasteError.textContent =
+            'No algorithm recognised in that code — add its name in a comment (e.g. # merge sort) and try again.';
+          pasteArea.setAttribute('aria-invalid', 'true');
+        };
         try {
           if (detectedAlgo) { window.location.hash = `#/experience?algo=${detectedAlgo}`; return; }
           const { api } = await import('./api.js');
           const res = await api.detect(text);
           const id = String(res?.algorithm || '').replace(/[^a-zA-Z0-9_-]/g, '') || clientDetect(text);
-          window.location.hash = `#/experience?algo=${id}`;
+          if (id) window.location.hash = `#/experience?algo=${id}`; else notRecognised();
         } catch {
           const fallback = clientDetect(text);
-          window.location.hash = `#/experience?algo=${fallback}`;
+          if (fallback) window.location.hash = `#/experience?algo=${fallback}`; else notRecognised();
         } finally {
           visualizeBtn.disabled = false;
           if (btnLabel) btnLabel.textContent = 'Visualize it →';
@@ -598,7 +609,7 @@ export const PAGES = {
         <div id="compare-panel" class="panel is-hidden" style="margin-bottom:1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center;
             margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
-            <span class="eyebrow" style="margin:0;">SAME GRAPH · TWO ALGORITHMS</span>
+            <span id="compare-eyebrow" class="eyebrow" style="margin:0;">SAME GRAPH · TWO ALGORITHMS</span>
             <div style="display:flex; gap:0.5rem; align-items:center;">
               <button id="compare-prev" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">←</button>
               <button id="compare-play" class="btn btn-ghost" style="font-size:0.8rem; padding:0.35rem 0.7rem;">▶</button>
@@ -684,7 +695,9 @@ export const PAGES = {
       switcher?.addEventListener('change', () => {
         window.location.hash = `#/experience?algo=${switcher.value}`;
       });
-      import('./engine.js').then(m => m.mountEngine(view, params.get('algo') || 'dijkstra'));
+      // The import can resolve after the student has already navigated away;
+      // mounting into a detached view would only throw.
+      import('./engine.js').then(m => { if (view.isConnected) m.mountEngine(view, params.get('algo') || 'dijkstra'); });
     }
   },
 
@@ -1208,7 +1221,7 @@ export const PAGES = {
       </section>
     `,
     mount: (view) => {
-      import('./engine.js').then(m => m.mountBugFinder(view));
+      import('./engine.js').then(m => { if (view.isConnected) m.mountBugFinder(view); });
     }
   },
 
@@ -1378,6 +1391,7 @@ export const PAGES = {
 
       // ── Player card + quests + achievement wall ──
       import('./game.js').then((Game) => {
+        if (!view.isConnected || !content?.isConnected) return;   // navigated away mid-load
         const host = document.createElement('div');
         view.querySelector('section')?.insertBefore(host, content);
 

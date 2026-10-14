@@ -91,10 +91,17 @@ def explain_step(algorithm: str, step: dict, level: str, realworld_meta: dict = 
         except Exception:
             log.warning("Groq explain call failed — using offline fallback", exc_info=True)
 
-    # Offline fallback — still uses real-world language from metaphors
-    node_term = metaphors.get("node", "node")
-    visit_msg = metaphors.get("visit", "Processing")
-    text = f"{visit_msg} {step.get('node', '')} ({node_term}). {note}"
+    # Offline fallback — still uses real-world language from metaphors.
+    # Only name the element when the step actually has one; a bare note is
+    # better than "Visiting  (node)." with a hole in it.
+    highlight = step.get("highlight") if isinstance(step.get("highlight"), dict) else {}
+    node = step.get("node") or highlight.get("node") or ""
+    if node:
+        node_term = metaphors.get("node", "node")
+        visit_msg = metaphors.get("visit", "Processing")
+        text = f"{visit_msg} {node} ({node_term}) — {note}"
+    else:
+        text = note
     return {"text": text, "live": False, "level": level, "scene": scene_title}
 
 

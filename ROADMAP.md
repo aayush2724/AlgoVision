@@ -63,6 +63,31 @@ Strings (Advanced), Maths). The old 18-step URL now redirects to it.
     + green path to the last node).
   Tests: `test_batch85_90_tracers.py`. Offline samples rebuilt (474).
 
+**Content coverage pass (2026-10-14).** A full QA sweep found the engine
+sound but the teaching layer thin, so this pass filled it in:
+  - Complexity cards for all 474 algorithms. The 62 hand-written cards in
+    `data.js` stay; the rest are built at load from `complexitySpecs.js`
+    (`id: [time, space, why, ...extraRows]`) by `cardFromSpec()`, whose
+    reading lists the tracer's live counters and the bound's value for the
+    current input. New algorithms need a spec there.
+  - Pseudocode for all 474 (`frontend/data/pseudocode.json`, 2,324 lines).
+    `tests/test_pseudocode.py` still replays every offline sample, so a
+    tracer whose notes change will fail until its `when` patterns follow.
+  - Real scenes for the 304 algorithms whose `REALWORLD_META` was generated
+    with placeholder vocabulary or an input-format hook: `app/metaphors.py`
+    (KITS of shared vocabulary + STORIES of title/hook/kit) is applied to
+    `REALWORLD_META` at import, and the same hook is written into the
+    Explore card in `data.js`. `tests/test_metaphors.py` guards both.
+  - `/api/detect` returns `algorithm: null` when nothing matches instead of
+    Dijkstra at 0 %; both paste boxes say so. The classic sorts, Kadane,
+    N-Queens and binary search now also match on code idioms, not just names.
+  - The ML offline narration no longer prints "Visiting  (node)." for steps
+    without an element (`ml-service/tests/test_fallback.py`).
+  - Compare mode races any two comparison sorts (`SORT_ALGORITHMS`) on the
+    same numbers, with a miniature array renderer, alongside the graph race.
+  - First automated frontend tests: `node --no-warnings --test frontend/tests/`.
+  - Still owner-only: `contactEmail` and `operator` in `frontend/js/site.js`.
+
 **Phone trace canvas FIXED (2026-09-30).** Below 700px the stage used to
 force the SVG to 560px and scroll it, but every renderer centres its drawing
 in the 760×280 viewBox, so a phone showed a blank left margin and clipped the

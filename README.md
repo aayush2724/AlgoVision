@@ -22,9 +22,11 @@ students **run it on their own input, step by step, and analyse the cost**.
 - **Step scrubber** — play/pause with speed control, step forward *and
   backward*, drag to any step. Every frame renders from real trace data.
 - **Analysis layer** — live operation counters (relaxations, heap pushes,
-  comparisons, swaps, cache hits…), a compare mode that runs BFS vs Dijkstra
-  side-by-side on the same graph with synced scrubbing, and per-algorithm
-  complexity cards that read *your* numbers back in plain language.
+  comparisons, swaps, cache hits…), a compare mode that races any two graph
+  algorithms on the same graph — or any two comparison sorts on the same
+  numbers — with synced scrubbing, and a complexity card for every one of the
+  474 algorithms that reads *your* counters back in plain language. A
+  pseudocode panel lights the line each step is executing.
 - **Metaphor narration** — every algorithm runs inside a real-world scene
   (GPS routing, friend discovery, maze robot, library catalog, leaderboard,
   memo vault), with an optional AI narrator (beginner / intermediate /
@@ -91,8 +93,8 @@ stays in the box for when the server is back. A sleeping free-tier server
 - **Teach reachability**: the graph editor ships a "Disconnected" preset;
   unreachable nodes show `—` and the trace names them.
 - **Teach complexity honestly**: the counters are real operation counts from
-  the actual run, and compare mode shows BFS vs Dijkstra doing measurably
-  different work on the same graph.
+  the actual run, and compare mode shows BFS vs Dijkstra — or bubble sort vs
+  quick sort — doing measurably different work on the same input.
 - **Level the narration**: the AI narrator has beginner / intermediate /
   advanced tones (requires a `GROQ_API_KEY` in `ml-service/.env`; without it,
   clean template narration is used).
@@ -100,8 +102,9 @@ stays in the box for when the server is back. A sleeping free-tier server
 ## Tests
 
 ```bash
-cd backend && python3 -m pytest tests/
-cd ml-service && python3 -m pytest tests/
+cd backend && python3 -m pytest tests/        # tracers, API, security headers, pseudocode, scenes
+cd ml-service && python3 -m pytest tests/     # auth + offline narration
+node --no-warnings --test frontend/tests/     # catalog integrity, progress store, game layer (no deps)
 ```
 
 ## Data & privacy

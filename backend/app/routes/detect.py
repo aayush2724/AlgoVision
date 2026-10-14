@@ -21,12 +21,12 @@ SIGNATURES = {
     "dijkstra": ["heapq", "heappush", "heappop", "dist[", "shortest", "dijkstra", "priority queue", "pq"],
     "bfs": ["deque", "queue", "bfs", "level order", "breadth", "visited", "neighbors"],
     "dfs": ["dfs", "depth first", "recursive", "backtrack", "stack", "visited"],
-    "binary_search": ["binary search", "binary_search", "low", "high", "mid", "bisect", "log n", "sorted array"],
+    "binary_search": ["binary search", "binary_search", "low", "high", "mid", "bisect", "log n", "sorted array", "(lo + hi) // 2", "(lo+hi)//2", "(low + high) // 2", "(low+high)//2", "lo = mid + 1", "lo=mid+1", "low = mid + 1", "hi = mid - 1", "hi=mid-1", "high = mid - 1", "left + (right - left)"],
     "merge_sort": ["merge sort", "merge_sort", "mergesort", "merge(", "divide", "conquer", "mid = len"],
     "quick_sort": ["quicksort", "quick sort", "quick_sort", "pivot", "partition"],
-    "bubble_sort": ["bubble sort", "bubble_sort", "bubblesort", "adjacent swap"],
-    "insertion_sort": ["insertion sort", "insertion_sort", "insertionsort", "key = arr"],
-    "selection_sort": ["selection sort", "selection_sort", "selectionsort", "min_idx", "find minimum"],
+    "bubble_sort": ["bubble sort", "bubble_sort", "bubblesort", "adjacent swap", "a[j] > a[j+1]", "a[j] > a[j + 1]", "arr[j] > arr[j+1]", "arr[j] > arr[j + 1]", "swapped", "n-i-1", "n - i - 1"],
+    "insertion_sort": ["insertion sort", "insertion_sort", "insertionsort", "key = arr", "key = a[", "while j >= 0", "a[j+1] = a[j]", "a[j + 1] = a[j]", "arr[j+1] = arr[j]", "arr[j + 1] = arr[j]"],
+    "selection_sort": ["selection sort", "selection_sort", "selectionsort", "min_idx", "find minimum", "min_index", "minidx", "min_i ", "smallest index"],
     "linked_list_reverse": ["linked list", "linked_list", "linked_list_reverse", "listnode", ".next", "->next", "reverse list"],
     "balanced_brackets": ["balanced_brackets", "balanced bracket", "valid parenthes", "matching bracket", "isvalid(s"],
     "bst_insert": ["bst_insert", "bst", "binary search tree", "binarysearchtree", "node.left", "node.right", "root.left", "root.right"],
@@ -35,7 +35,7 @@ SIGNATURES = {
     "dynamic_programming": ["dp[", "memo", "memoization", "tabulation", "subproblem", "lru_cache", "functools", "dynamic_programming", "fibonacci", "fibonacci_dp", "fib("],
     "two_sum_sorted": ["two_sum_sorted", "two sum", "two_sum", "twosum", "two pointer", "while left < right", "pair with sum"],
     "sliding_window": ["sliding_window", "sliding window", "window sum", "window size", "subarray of size"],
-    "kadanes": ["kadane", "kadanes", "max subarray", "maximum subarray", "max_ending_here", "best sum"],
+    "kadanes": ["kadane", "kadanes", "max subarray", "maximum subarray", "max_ending_here", "best sum", "max_so_far", "max_ending", "cur = max(", "cur=max(", "best = max(best", "best=max(best", "current_sum", "curr_sum", "max_current"],
     "prims_mst": ["prims_mst", "prim", "prims", "minimum spanning", "spanning tree", "mst"],
     "kruskals_mst": ["kruskals_mst", "kruskal", "kruskals", "union find", "union_find", "disjoint set", "dsu"],
     "knapsack_01": ["knapsack", "knapsack_01", "0/1 knapsack", "capacity", "weights[", "values["],
@@ -70,7 +70,7 @@ SIGNATURES = {
     "assign_cookies": ["assign_cookies", "assign cookies", "greed factor", "content children", "cookie size"],
     "min_platforms": ["min_platforms", "minimum platforms", "railway platforms", "arrival departure", "train platform", "overlapping trains"],
     "job_sequencing": ["job_sequencing", "job sequencing", "deadline", "job scheduling", "maximize profit", "sequence jobs", "profit deadline"],
-    "n_queens": ["n_queens", "n-queens", "queens", "backtracking", "chessboard", "is_safe", "place queen"],
+    "n_queens": ["n_queens", "n-queens", "queens", "backtracking", "chessboard", "is_safe", "place queen", "queen", "cols", "diag", "board[row]", "r - c", "r + c"],
     "unique_paths": ["unique_paths", "unique paths", "grid path", "robot grid", "count paths", "obstacle grid"],
     "sieve": ["sieve", "eratosthenes", "primes", "is_prime", "prime sieve", "composite"],
     "kmp_search": ["kmp", "kmp_search", "knuth", "morris", "pratt", "failure function", "lps", "substring search", "pattern match"],
@@ -4749,6 +4749,10 @@ REALWORLD_META = {
     }
 }
 
+# Placeholder scenes get their real vocabulary from app/metaphors.py.
+from app.metaphors import apply as _apply_stories  # noqa: E402
+_apply_stories(REALWORLD_META)
+
 # 60 detections per minute — fast, lightweight endpoint
 @router.post("")
 @limiter.limit("60/minute")
@@ -4773,7 +4777,9 @@ def detect(request: Request, req: DetectRequest):
         scores[algo] = sum(1 for kw in keywords if kw in text)
     best = max(scores, key=scores.get)
     if scores[best] == 0:
-        best = "dijkstra"
+        # Nothing recognisable. Say so — a confident-looking "DIJKSTRA (0%)"
+        # sent students into the wrong world for any code we did not know.
+        return {"algorithm": None, "confidence": 0.0, "realworld": None}
     meta = REALWORLD_META.get(best, REALWORLD_META["dijkstra"])
     return {
         "algorithm": best,

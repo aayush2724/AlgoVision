@@ -237,6 +237,7 @@ const DP_STRINGS = ['print_lcs', 'longest_palindromic_subseq', 'min_insert_palin
 const LIST_TEXT = ['ll_traverse', 'll_delete_tail', 'll_delete_kth', 'll_delete_value', 'll_insert_tail', 'll_insert_kth', 'll_insert_before_value', 'dll_from_array', 'dll_delete_tail', 'dll_delete_kth', 'dll_remove_node', 'dll_insert_before_tail', 'dll_insert_before_kth', 'dll_insert_before_node', 'stack_linkedlist', 'queue_linkedlist', 'clone_random_list', 'flatten_list', 'merge_k_lists', 'll_insert_head', 'll_delete_head', 'll_length', 'll_search', 'dll_insert_head', 'dll_delete_head', 'dll_pairs_sum', 'dll_remove_duplicates', 'll_reverse_recursive', 'loop_length', 'sort_012_list', 'sort_list', 'y_intersection', 'reverse_k_group'];
 const TEXT_GRID = ['count_odd_digits', 'largest_digit', 'perfect_number', 'lcm', 'array_sum', 'count_odd_array', 'second_highest_freq', 'sum_high_low_freq', 'reverse_string', 'set_rightmost_unset_bit', 'sum_array_rec', 'sum_digits_rec', 'factorial_rec', 'prime_rec', 'sorted_rec', 'reverse_array_rec', 'reverse_string_rec', 'palindrome_rec', 'pascal_element', 'pascal_row', 'sort_k_sorted', 'single_number_ii', 'distinct_islands', 'shortest_palindrome', 'substring_hash', 'tarjan_scc', 'two_sat', 'lexicographic_topo', 'convex_hull', 'polygon_area', 'closest_pair', 'digit_dp', 'sos_dp', 'bit_kth', 'inversions_bit', 'prefix_sum_2d'].concat(['a_star_grid', 'best_first_grid', 'zero_one_bfs', 'max_flow', 'min_cut', 'bipartite_matching', 'tsp_bitmask', 'assignment_bitmask', 'sparse_table', 'sqrt_decomposition', 'lazy_segment_tree', 'extended_gcd', 'mod_inverse', 'ncr_mod', 'euler_totient', 'spf_sieve', 'crt', 'suffix_array', 'lcp_kasai', 'longest_repeated_substring', 'euler_path', 'longest_path_dag', 'count_paths_dag', 'matrix_exponentiation', 'ternary_search', 'meet_in_middle', 'nim', 'grundy_numbers', 'optimal_game'].concat(['stack_array', 'queue_array', 'stack_using_queue', 'queue_using_stacks', 'min_stack', 'lru_cache', 'lfu_cache', 'design_twitter', 'bracket_reversals', 'count_and_say', 'longest_happy_prefix', 'count_palindromic_subseq', 'distinct_substrings', 'max_xor_pair', 'max_xor_queries', 'ninja_friends', 'max_sum_combination', 'accounts_merge'].concat(['search_rotated_ii', 'median_two_sorted', 'kth_two_sorted', 'gas_station', 'peak_element_ii', 'matrix_median', 'print_1_to_n', 'print_n_to_1', 'recursive_bubble_sort', 'recursive_insertion_sort', 'count_good_numbers', 'sort_stack', 'reverse_stack', 'recursive_atoi', 'word_break', 'm_coloring', 'sudoku_solver', 'expression_add_operators', 'valid_paren_star', 'shortest_job_first', 'lru_page_faults', 'insert_interval', 'non_overlapping_intervals', 'greater_to_right', 'sum_subarray_ranges', 'celebrity'].concat(['cut_stick', 'burst_balloons', 'boolean_evaluation', 'palindrome_partition_ii', 'partition_array_max_sum', 'min_subset_diff', 'count_partitions_diff', 'target_sum', 'max_rectangle_ones', 'largest_element', 'check_sorted', 'linear_search', 'union_sorted', 'intersection_sorted', 'missing_number', 'max_consecutive_ones', 'rearrange_by_sign', 'max_product_subarray', 'longest_sum_k_any', 'count_sum_k', 'largest_zero_sum', 'count_xor_k', 'longest_consecutive', 'majority_n3', 'repeating_missing', 'three_sum', 'four_sum', 'set_matrix_zeros', 'rotate_matrix', 'spiral_order', 'pascal_triangle', 'merge_no_space', 'count_inversions', 'reverse_pairs', 'count_digits', 'reverse_number', 'palindrome_number', 'armstrong_number', 'print_divisors', 'check_prime', 'factorial', 'sum_first_n', 'reverse_array', 'palindrome_string', 'frequency_count', 'check_ith_bit', 'check_odd', 'swap_xor', 'divide_bits', 'xor_range', 'single_number_iii'].concat(['rank_replace', 'top_k_frequent', 'hand_of_straights', 'task_scheduler', 'median_stream', 'remove_outer_parens', 'reverse_words', 'largest_odd_number', 'longest_common_prefix', 'isomorphic_strings', 'rotate_string', 'sort_by_frequency', 'max_nesting_depth', 'roman_to_integer', 'string_to_integer', 'sum_of_beauty', 'char_replacement', 'binary_subarray_sum', 'nice_subarrays', 'substrings_all_three', 'max_card_points', 'subarrays_k_distinct', 'min_window_substring', 'min_window_subsequence', 'alien_dictionary', 'cheapest_flight_k', 'ways_to_arrive', 'min_multiplications', 'most_stones'].concat(['number_of_islands', 'rotten_oranges', 'nearest_one_distance', 'surrounded_regions', 'number_of_enclaves', 'binary_maze_path', 'min_effort_path', 'swim_rising_water', 'largest_island', 'islands_ii', 'floyd_warshall', 'city_fewest_neighbours', 'stock_ii', 'stock_iii', 'stock_iv', 'stock_cooldown', 'stock_fee', 'print_lis', 'largest_divisible_subset', 'longest_string_chain', 'longest_bitonic', 'number_of_lis']))))));
 // Edges of these algorithms are read a → b, so the graph draws arrowheads.
+const COMPARE_SORTS = new Set(DATA.SORT_ALGORITHMS.map(a => a.id));
 const DIRECTED_ALGOS = ['network_delay', 'topological_sort', 'bellman_ford', 'cycle_directed', 'safe_states', 'kosaraju', 'shortest_path_dag'];
 
 const VIEW_FOR = {
@@ -6327,7 +6328,9 @@ export function mountEngine(view, algo = 'dijkstra') {
     const liveEl = view.querySelector('#complexity-live');
     if (!card || !liveEl || !currentSteps.length) return;
     const counts = currentSteps[currentSteps.length - 1]?.structures?.counts;
-    if (!counts) return;
+    // Hand-written readings quote specific counters; a generated one can
+    // still say what the bound means when the tracer reports none.
+    if (!counts && !card.generated) return;
     const sizes = traceView === 'graph'
       ? { V: userGraph.nodes.length, E: userGraph.links.length, n: userGraph.nodes.length }
       : traceView === 'table'
@@ -6337,7 +6340,7 @@ export function mountEngine(view, algo = 'dijkstra') {
           : traceView === 'stack'
             ? { n: currentStackText.length, V: 0, E: 0 }
             : { n: currentArrayValues.length, V: 0, E: 0 };
-    liveEl.textContent = card.reading(counts, sizes);
+    liveEl.textContent = card.reading(counts || {}, sizes);
     liveEl.style.display = 'block';
   }
 
@@ -6400,6 +6403,57 @@ export function mountEngine(view, algo = 'dijkstra') {
     });
   }
 
+  // Compare-mode miniature of the array view: same cells, same colours as
+  // renderArrayStep's sorting branch, drawn fresh for any step index.
+  function renderMiniArray(svgEl, steps, idx) {
+    if (!svgEl) return;
+    svgEl.innerHTML = '';
+    const i2 = Math.min(idx, steps.length - 1);
+    const s = steps[i2]?.structures || {};
+    const values = Array.isArray(s.array) ? s.array : currentArrayValues;
+    const n = values.length;
+    if (!n) return;
+    const w = Math.min(56, 700 / n), x0 = (760 - w * n) / 2, y = 110, h = 52;
+    const sorted = s.sorted_ranges || [];
+    const comparing = new Set(Array.isArray(s.comparing) ? s.comparing : []);
+    values.forEach((v, k) => {
+      const inSorted = sorted.some(r => k >= r[0] && k <= r[1]);
+      const inMerge = s.merging && k >= s.merging[0] && k <= s.merging[1];
+      const active = k === s.placed || comparing.has(k);
+      const rect = makeSVG('rect');
+      rect.setAttribute('x', x0 + k * w + 2); rect.setAttribute('y', y);
+      rect.setAttribute('width', Math.max(w - 4, 6)); rect.setAttribute('height', h);
+      rect.setAttribute('fill', k === s.placed ? 'rgba(212, 96, 44,0.18)'
+        : comparing.has(k) ? 'rgba(212, 96, 44,0.12)' : 'rgba(212, 96, 44,0.05)');
+      rect.setAttribute('stroke', inSorted ? '#4ade80' : (active || inMerge) ? 'var(--c)' : 'var(--cDim)');
+      rect.setAttribute('stroke-width', active ? '2' : '1');
+      svgEl.appendChild(rect);
+      const t = makeSVG('text');
+      t.setAttribute('x', x0 + k * w + w / 2); t.setAttribute('y', y + h / 2 + 5);
+      t.setAttribute('text-anchor', 'middle'); t.setAttribute('fill', 'var(--cBright)');
+      t.setAttribute('font-family', 'var(--font-mono)'); t.setAttribute('font-size', w < 34 ? '11' : '14');
+      t.textContent = fmtCell(v);
+      svgEl.appendChild(t);
+    });
+  }
+
+  // The two pickers list graph algorithms on a graph page and the comparison
+  // sorts on a sorting page; the eyebrow says which race this is.
+  function populateComparePicks(kind) {
+    const list = kind === 'array' ? DATA.SORT_ALGORITHMS : DATA.GRAPH_ALGORITHMS;
+    const defaults = kind === 'array'
+      ? [algoId, algoId === 'quick_sort' ? 'merge_sort' : 'quick_sort']
+      : ['bfs', 'dijkstra'];
+    ['a', 'b'].forEach((side, i) => {
+      const sel = view.querySelector(`#compare-pick-${side}`);
+      if (!sel) return;
+      sel.innerHTML = list.map(a =>
+        `<option value="${a.id}"${a.id === defaults[i] ? ' selected' : ''}>${a.emoji} ${escapeHTML(a.name)}</option>`).join('');
+    });
+    const eyebrow = view.querySelector('#compare-eyebrow');
+    if (eyebrow) eyebrow.textContent = kind === 'array' ? 'SAME VALUES · TWO SORTS' : 'SAME GRAPH · TWO ALGORITHMS';
+  }
+
   function renderCompareStep(i) {
     if (!compareData) return;
     const maxIdx = Math.max(compareData.a.steps.length, compareData.b.steps.length) - 1;
@@ -6407,7 +6461,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     ['a', 'b'].forEach(side => {
       const steps = compareData[side].steps;
       const i2 = Math.min(compareIdx, steps.length - 1);
-      renderMiniGraph(view.querySelector(`#compare-svg-${side}`), steps, compareIdx);
+      if (traceView === 'array') renderMiniArray(view.querySelector(`#compare-svg-${side}`), steps, compareIdx);
+      else renderMiniGraph(view.querySelector(`#compare-svg-${side}`), steps, compareIdx);
       const noteEl = view.querySelector(`#compare-note-${side}`);
       if (noteEl) {
         const done = compareIdx > steps.length - 1;
@@ -6456,8 +6511,12 @@ export function mountEngine(view, algo = 'dijkstra') {
       closeCompare();
       return;
     }
-    if (!userGraph.nodes.length) {
+    if (traceView === 'graph' && !userGraph.nodes.length) {
       showGraphError('Add some nodes first — the comparison needs a graph.');
+      return;
+    }
+    if (traceView === 'array' && currentArrayValues.length < 2) {
+      if (arrayHint) arrayHint.textContent = 'Enter at least two numbers to race two sorts on them.';
       return;
     }
     compareBtn.disabled = true;
@@ -6484,6 +6543,15 @@ export function mountEngine(view, algo = 'dijkstra') {
     const idB = pickB?.value || 'dijkstra';
 
     const get = async (alg) => {
+      if (traceView === 'array') {
+        // Same numbers through both sorts. Offline, only the mounted sort's
+        // own emulator exists, so the other one needs the server.
+        if (isOffline) {
+          if (alg === algoId && canEmulate(alg)) return localArrayTrace({ array: currentArrayValues.slice() }).steps;
+          throw new Error(`Comparing ${alg} needs the server.`);
+        }
+        return (await api.postTrace(alg, { array: currentArrayValues.slice() })).steps;
+      }
       if (isOffline) {
         if (!canEmulate(alg)) throw new Error(`Comparing ${alg} needs the server.`);
         return localTrace(alg, startNodeId).steps;
@@ -6515,8 +6583,15 @@ export function mountEngine(view, algo = 'dijkstra') {
     };
     const verdict = view.querySelector('#compare-verdict');
     if (verdict) {
-      let text = `Same graph, same start (${startNodeId}). ` +
+      let text = (traceView === 'array'
+        ? `Same ${currentArrayValues.length} values through both. `
+        : `Same graph, same start (${startNodeId}). `) +
         `${summarise(idA, sa, ca)}. ${summarise(idB, sb, cb)}.`;
+      if (traceView === 'array' && ca.comparisons != null && cb.comparisons != null && ca.comparisons !== cb.comparisons) {
+        const [fewer, more] = ca.comparisons < cb.comparisons ? [idA, idB] : [idB, idA];
+        text += ` ${nameOf(fewer)} needed fewer comparisons on this input than ${nameOf(more)} — ` +
+          `try a sorted or reversed input and watch the gap change.`;
+      }
       const mstA = sa[sa.length - 1]?.structures?.total_weight;
       const mstB = sb[sb.length - 1]?.structures?.total_weight;
       if (mstA !== undefined && mstB !== undefined && mstA !== null && mstB !== null) {
@@ -6580,7 +6655,7 @@ export function mountEngine(view, algo = 'dijkstra') {
     }
   });
   explainBtn.addEventListener('click', explain);
-  if (traceView === 'graph') {
+  if (traceView === 'graph' || COMPARE_SORTS.has(algoId)) {
     compareBtn?.addEventListener('click', toggleCompare);
     view.querySelector('#compare-prev')?.addEventListener('click', () => { stopComparePlay(); renderCompareStep(compareIdx - 1); });
     view.querySelector('#compare-next')?.addEventListener('click', () => { stopComparePlay(); renderCompareStep(compareIdx + 1); });
@@ -6756,11 +6831,16 @@ export function mountEngine(view, algo = 'dijkstra') {
       else renderArrayView(parsed.array || []);
       checkBackend();
       initComplexityCard();
+      if (compareBtn) {
+        const racing = traceView === 'array' && COMPARE_SORTS.has(algoId);
+        compareBtn.classList.toggle('is-hidden', !racing);
+        if (racing) populateComparePicks('array');
+      }
       return;
     }
 
     if (graphControls) graphControls.classList.remove('is-hidden');
-    if (compareBtn) compareBtn.classList.remove('is-hidden');
+    if (compareBtn) { compareBtn.classList.remove('is-hidden'); populateComparePicks('graph'); }
     updateGraphMeta();
     attachGraphEditor();
     renderGraph(currentMeta);
@@ -6812,9 +6892,14 @@ export function mountBugFinder(view) {
       try {
         const res = await api.detect(codeArea.value, '', { signal: ctl.signal });
         if (ctl !== detectCtl || !res || !detectResult) return;
+        detectResult.style.display = 'block';
+        if (!res.algorithm) {
+          // The server found nothing it knows — say so rather than guess.
+          detectResult.innerHTML = `<span style="color:var(--cDim)">NO ALGORITHM RECOGNISED — paste a fuller function, or name the algorithm in a comment (e.g. <code># bubble sort</code>).</span>`;
+          return;
+        }
         const id = safeAlgoId(res.algorithm);
         const conf = Math.round((res.confidence || 0) * 100);
-        detectResult.style.display = 'block';
         detectResult.innerHTML = `DETECTED: <span style="color:var(--cBright)">${escapeHTML(id.toUpperCase().replace(/_/g, ' '))}</span> (${conf}% confidence) — <span style="color:var(--cDim)">${escapeHTML(res.realworld?.title || '')}</span>  <a href="#/experience?algo=${id}" style="color:var(--c);font-family:var(--font-ui);font-size:0.75rem;margin-left:1rem;">VISUALIZE →</a>`;
       } catch { /* offline or cancelled — the scan button still works */ }
     }, 600);

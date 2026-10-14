@@ -52,6 +52,30 @@ class TestDetectEndpoint:
         assert body["algorithm"] == "dijkstra"
         assert "realworld" in body
 
+    def test_unrecognised_code_is_not_called_dijkstra(self):
+        for text in ["hello this is not code at all just a sentence about my day",
+                     "x = 1\ny = 2\nprint(x + y)"]:
+            body = client.post("/api/detect", json={"code": text}).json()
+            assert body["algorithm"] is None
+            assert body["confidence"] == 0.0
+            assert body["realworld"] is None
+
+    def test_classic_code_is_recognised_without_its_name(self):
+        samples = {
+            "bubble_sort": "def f(a):\n  n=len(a)\n  for i in range(n):\n    swapped=False\n    for j in range(n-i-1):\n      if a[j] > a[j+1]: a[j],a[j+1]=a[j+1],a[j]; swapped=True\n  return a",
+            "kadanes": "def f(a):\n  best=cur=a[0]\n  for x in a[1:]:\n    cur=max(x,cur+x); best=max(best,cur)\n  return best",
+            "n_queens": "def solve(n):\n  cols=set();d1=set();d2=set()\n  def bt(r,board):\n    for c in range(n):\n      if c in cols or r-c in d1 or r+c in d2: continue",
+            "binary_search": "def f(a,t):\n  lo,hi=0,len(a)-1\n  while lo<=hi:\n    mid=(lo+hi)//2\n    if a[mid]<t: lo=mid+1\n    else: hi=mid-1",
+        }
+        for expected, code in samples.items():
+            body = client.post("/api/detect", json={"code": code}).json()
+            assert body["algorithm"] == expected, (expected, body)
+            assert body["confidence"] > 0
+
+    def test_exact_id_as_problem_still_wins(self):
+        body = client.post("/api/detect", json={"code": "", "problem": "bst_delete"}).json()
+        assert body["algorithm"] == "bst_delete" and body["confidence"] == 1.0
+
 
 class TestAIEndpoint:
     def test_code_with_prose_phrases_is_accepted(self):

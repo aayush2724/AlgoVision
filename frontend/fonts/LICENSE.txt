@@ -1,4 +1,8 @@
-Copyright (c) 2023 Vercel, in collaboration with basement.studio
+Geist / Geist Mono: Copyright (c) 2023 Vercel, in collaboration with basement.studio
+Caveat (caveat-latin.woff2): Copyright 2014 The Caveat Project Authors
+(https://github.com/googlefonts/caveat)
+
+Both are licensed under the SIL Open Font License, Version 1.1, reproduced below.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

@@ -18,7 +18,7 @@ CSP = (
   "form-action 'self'; "
   # GSAP comes from cdnjs, three.js from jsDelivr; the two hashes cover the
   # import map and the tiny API-origin script inlined in index.html.
-  "script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net "
+  "script-src 'self' 'wasm-unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net "
   "'sha256-V99skbXtDVAxWZSHXS2i4WXvtMsWc/EBx2i6b00xLDo=' "
   "'sha256-YSGIfJf//vwC94PYVxEcfZ75M4ZB+ZUTjl9J3hLZp5w='; "
   # The templates use style="" attributes throughout; GSAP writes styles
@@ -27,8 +27,12 @@ CSP = (
   # The paper-grain background is an inline SVG data URI.
   "img-src 'self' data:; "
   "font-src 'self'; "
-  "connect-src 'self'; "
-  "worker-src 'none'; "
+  # The Practice page's dry run runs the student's Python in a same-origin
+  # worker (js/dryrun.worker.js) on Pyodide, fetched from jsDelivr and compiled
+  # as WebAssembly: hence the jsDelivr connect, worker-src 'self' and
+  # 'wasm-unsafe-eval' above (WebAssembly only; JS eval stays blocked).
+  "connect-src 'self' https://cdn.jsdelivr.net; "
+  "worker-src 'self'; "
   "manifest-src 'self'"
 )
 

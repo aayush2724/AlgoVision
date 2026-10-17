@@ -41,7 +41,7 @@ function toast(icon, title, sub, cls = '') {
 function confetti() {
   const host = el('div', 'confetti-host');
   document.body.appendChild(host);
-  const colors = ['#d4602c', '#e7ddc4', '#cfdee5', '#c94f22'];
+  const colors = ['#ff7a1a', '#f2f2f2', '#9a9a9a', '#4ade80'];
   for (let i = 0; i < 36; i++) {
     const p = el('span', 'confetti-bit');
     p.style.left = `${8 + Math.random() * 84}vw`;

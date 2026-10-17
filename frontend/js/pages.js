@@ -32,9 +32,9 @@ export const ROUTE_THEME = {
 // Mirrors capStyle() in keyboard3d.js so the flat mobile caps carry the same
 // colourway as the 3D board. If one changes, change both.
 function capClass(algo) {
-  if (algo.id === 'dijkstra' || algo.id === 'lcs') return 'cap-orange';
-  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return 'cap-cream';
-  if (algo.category === 'Structures') return 'cap-tan';
+  if (algo.id === 'dijkstra' || algo.id === 'lcs') return 'cap-accent';
+  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return 'cap-light';
+  if (algo.category === 'Structures') return 'cap-mid';
   return '';
 }
 
@@ -50,6 +50,27 @@ function renderWorldCard(world) {
     </a>
   `;
 }
+
+// Home "three acts" strip: one worked example (Dijkstra) carried through all
+// three, drawn as pencil sketches — the metaphor, the trace, the code.
+const ACT_SKETCHES = [
+  `<svg viewBox="0 0 160 70"><path class="sk-road" d="M8 58 C40 58 40 20 78 22 S120 52 152 14"/>
+    <circle class="sk-pin" cx="8" cy="58" r="4"/><circle class="sk-pin sk-hi" cx="152" cy="14" r="4"/>
+    <text class="sk-label" x="14" y="68">home</text><text class="sk-label" x="118" y="9">office</text></svg>`,
+  `<svg viewBox="0 0 160 70"><path class="sk-edge" d="M20 35 L70 14 L130 22 M20 35 L70 56 L130 48 M70 14 L70 56 M130 22 L130 48"/>
+    <path class="sk-edge sk-hi" d="M20 35 L70 56 L130 48"/>
+    <circle class="sk-node sk-done" cx="20" cy="35" r="7"/><circle class="sk-node sk-done" cx="70" cy="56" r="7"/>
+    <circle class="sk-node sk-cur" cx="130" cy="48" r="7"/><circle class="sk-node" cx="70" cy="14" r="7"/><circle class="sk-node" cx="130" cy="22" r="7"/></svg>`,
+  `<svg viewBox="0 0 160 70"><rect class="sk-mark" x="4" y="27" width="152" height="14" rx="2"/>
+    <text class="sk-code" x="8" y="18">while pq:</text>
+    <text class="sk-code" x="20" y="38">u = pq.pop_min()</text>
+    <text class="sk-code" x="20" y="58">relax(u, v, w)</text></svg>`,
+];
+const ACT_EXAMPLES = [
+  'e.g. you are Google Maps…',
+  '…watch the closest stop lock in',
+  '…then see the line that did it',
+];
 
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
@@ -83,7 +104,7 @@ export const PAGES = {
         </div>
         <div class="kbd-corner kbd-tc">
           <span class="kbd-tc-brand">AlgoVision</span>
-          <span class="kbd-tc-sub">A Display of Algorithms</span>
+          <span class="kbd-tc-sub hand-note">see the algorithm before the code</span>
         </div>
         <div class="kbd-corner kbd-ml">
           <span class="kbd-tiny-label">NAVIGATION</span>
@@ -104,6 +125,7 @@ export const PAGES = {
         <div class="kbd-flat">
           <div class="kbd-flat-head">
             <span class="kbd-tc-brand">AlgoVision</span>
+            <span class="hand-note kbd-flat-tagline">see the algorithm before the code</span>
             <span class="kbd-tc-sub">${DATA.ALGORITHMS.length} algorithms · tap one to trace it</span>
           </div>
           ${DATA.ALGO_CATEGORIES.filter(c => c !== 'All').map(cat => {
@@ -135,15 +157,17 @@ export const PAGES = {
           <h2 class="home-h2">Three acts, one insight</h2>
           <p class="page-lede">Every algorithm here is taught the same way — a metaphor you already understand, then the mechanics underneath it, then a trace on your own input.</p>
         </div>
-        <div class="grid-3">
+        <ol class="grid-3 act-strip">
           ${DATA.ACTS.map((act, i) => `
-            <div class="act-card">
-              <span class="act-step-num">${String(i+1).padStart(2,'0')}</span>
+            <li class="act-card">
+              <div class="act-sketch" aria-hidden="true">${ACT_SKETCHES[i] || ''}</div>
+              <span class="act-step-num">Act ${i+1}</span>
               <h3 class="act-title">${act.title}</h3>
               <p>${act.desc}</p>
-            </div>
+              <span class="hand-note">${ACT_EXAMPLES[i] || ''}</span>
+            </li>
           `).join('')}
-        </div>
+        </ol>
       </section>
 
       <!-- Paste-detect promoted: it's the strongest single thing the product
@@ -153,7 +177,7 @@ export const PAGES = {
         <div class="panel paste-split">
           <div class="paste-pitch">
             <h2 class="home-h2">Paste any DSA code</h2>
-            <p class="page-lede">AlgoVision reads it, names the algorithm, and opens the matching trace on your own input — no sign-up, no configuration.</p>
+            <p class="page-lede">AlgoVision reads it, names the algorithm, and opens the matching trace on your own input. Pasted Python? Dry run it — your code, line by line, every variable on show.</p>
             <div class="paste-recognises">
               <span class="transport-count">Recognises</span>
               <span class="chip chip-cx">${DATA.ALGORITHMS.length} algorithms</span>
@@ -168,6 +192,7 @@ export const PAGES = {
             <p id="hero-paste-error" class="form-error" role="alert"></p>
             <div class="paste-actions">
               <button id="hero-visualize-btn" class="btn btn-primary"><span>Visualize it →</span></button>
+              <button id="hero-dryrun-btn" class="btn" title="Run your own Python line by line">▶ Dry run it</button>
               <button id="hero-clear-btn" class="btn">Clear</button>
             </div>
           </div>
@@ -340,6 +365,19 @@ export const PAGES = {
         statusEl.style.display = 'none';
         detectedAlgo = null;
       });
+
+      // Hand the pasted code to the Practice page's dry run (sessionStorage,
+      // not the URL: code is too long for a hash and shouldn't sit in history).
+      view.querySelector('#hero-dryrun-btn')?.addEventListener('click', () => {
+        const text = pasteArea.value.trim();
+        if (!text) {
+          if (pasteError) pasteError.textContent = 'Paste some Python first — the dry run needs code to run.';
+          pasteArea.focus();
+          return;
+        }
+        try { sessionStorage.setItem('av-dryrun-code', text); } catch { /* falls back to the sample */ }
+        window.location.hash = '#/practice?dry=1';
+      });
     }
   },
 
@@ -499,14 +537,14 @@ export const PAGES = {
             <input id="array-input" type="text" spellcheck="false" autocomplete="off"
               aria-describedby="array-hint"
               placeholder="e.g. 7, 3, 9, 1"
-              style="flex:1; min-width:220px; background:rgba(2,4,6,0.9); color:var(--c);
+              style="flex:1; min-width:220px; background:var(--stage-solid); color:var(--c);
               font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
               border:1px solid var(--panel-border); outline:none; border-radius:0;">
             <span id="target-wrap" style="display:none; align-items:center; gap:0.5rem;
               font-family:var(--font-ui); font-size:0.72rem; color:var(--cDim);">
               <label id="target-label" for="target-input">TARGET</label>
               <input id="target-input" type="text" inputmode="numeric" autocomplete="off"
-                style="width:80px; background:rgba(2,4,6,0.9); color:var(--c);
+                style="width:80px; background:var(--stage-solid); color:var(--c);
                 font-family:var(--font-mono); font-size:1rem; padding:0.6rem 0.9rem;
                 border:1px solid var(--panel-border); outline:none; border-radius:0;">
             </span>
@@ -545,10 +583,11 @@ export const PAGES = {
             click a weight to edit it &middot; right-click (or long-press) a node or edge to delete
           </div>
           <div id="graph-error" role="alert" style="display:none; margin-top:0.5rem; font-size:0.8rem;
-            color:#ff5f5f; font-family:var(--font-mono);"></div>
+            color:var(--bad); font-family:var(--font-mono);"></div>
         </div>
 
         <div id="engine-panel">
+          <span class="act-tag"><b>2</b>The Reveal <em>— watch it run on your input</em></span>
           <div id="engine-view" class="stage">
             <svg id="engine-svg" viewBox="0 0 760 280"></svg>
           </div>
@@ -600,8 +639,8 @@ export const PAGES = {
              algorithms that have no pseudocode yet. -->
         <div id="pseudo-card" class="rail-panel pseudo-panel is-hidden">
           <div class="rail-panel-head">
-            <span class="eyebrow">Pseudocode</span>
-            <span class="eyebrow rail-panel-aside">Where are we?</span>
+            <span class="act-tag"><b>3</b>The Mechanics <em>— the line doing the work</em></span>
+            <span class="eyebrow rail-panel-aside">Pseudocode</span>
           </div>
           <ol id="pseudo-lines" class="pseudo-lines" aria-label="Pseudocode, current line highlighted"></ol>
         </div>
@@ -634,7 +673,7 @@ export const PAGES = {
                 <span id="compare-total-${side}" style="font-family:var(--font-ui); font-size:0.72rem; color:var(--cDim);"></span>
               </div>
               <svg id="compare-svg-${side}" viewBox="0 0 760 280"
-                style="width:100%; background:rgba(2,4,6,0.6); border:1px solid var(--panel-border);"></svg>
+                style="width:100%; background:var(--stage-bg); border:1px solid var(--panel-border);"></svg>
               <div id="compare-note-${side}" style="font-family:var(--font-mono); font-size:0.85rem;
                 color:var(--c); margin-top:0.5rem; min-height:2.2em;"></div>
               <div id="compare-counts-${side}" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem;"></div>
@@ -761,7 +800,7 @@ export const PAGES = {
                         <a class="prob-item${isNext ? ' current' : ''}"
                            href="#/a2z-problem?step=${idx+1}&prob=${p.id}">
                           ${isDone
-                            ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399"
+                            ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ok)"
                                    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                  <path d="M20 6L9 17l-5-5"></path></svg>`
                             : `<span class="prob-dot${isNext ? ' next' : ''}"></span>`}
@@ -1084,7 +1123,7 @@ export const PAGES = {
             } catch (e) {
               console.error('Scene mount failed:', e);
               vizInner.innerHTML = '<div style="height:300px;display:flex;align-items:center;' +
-                'justify-content:center;color:#2a7f8c;font-family:monospace;font-size:12px;">' +
+                'justify-content:center;color:var(--cDim);font-family:monospace;font-size:12px;">' +
                 'Scene loading...</div>';
             }
 
@@ -1169,13 +1208,13 @@ export const PAGES = {
 
   "#/practice": {
     title: "Practice & debug DSA code · AlgoVision",
-    description: "Paste DSA code in Python, C++, Java or JavaScript. AlgoVision names the algorithm and suggests where bugs and edge cases may hide.",
+    description: "Dry run your own Python line by line — every variable, the call stack and the output — or paste C++, Java or JavaScript to name the algorithm and scan for bugs.",
     html: () => `
       <section>
         <div class="page-head">
-          <span class="eyebrow">AI debugger</span>
+          <span class="eyebrow">Dry run &amp; debug</span>
           <h1 class="page-title">Practice &amp; debug</h1>
-          <p class="page-lede">Paste any DSA code. AlgoVision detects the algorithm and the AI scans for bugs.</p>
+          <p class="page-lede">Paste your code and dry run it line by line — watch every variable change — or let the AI scan it for bugs.</p>
         </div>
         <div id="practice-grid" class="practice-grid">
           <div class="panel practice-editor">
@@ -1191,13 +1230,24 @@ export const PAGES = {
                 </select>
               </label>
             </div>
-            <label for="code-area" class="visually-hidden">Code to scan for bugs</label>
+            <label for="code-area" class="visually-hidden">Your code</label>
             <textarea id="code-area" spellcheck="false" autocomplete="off" aria-describedby="bug-result"></textarea>
             <div id="detect-result" style="display:none;"></div>
-            <button id="find-bug-btn" class="btn btn-primary" disabled>Scan for bugs</button>
+            <label class="dry-call-row">
+              <span class="dry-call-label">Then run</span>
+              <input id="dry-call" type="text" spellcheck="false" autocomplete="off"
+                value="binary_search([1, 3, 5, 7, 9], 10)"
+                aria-describedby="dry-call-hint">
+            </label>
+            <span id="dry-call-hint" class="hand-note dry-call-hint">the call to dry run, with your own values</span>
+            <div class="practice-actions">
+              <button id="dry-run-btn" class="btn btn-primary">▶ Dry run</button>
+              <button id="find-bug-btn" class="btn" disabled>Scan for bugs</button>
+            </div>
             <div id="bug-result" role="status" aria-live="polite" style="display:none;"></div>
-            <p class="practice-note">Your code is sent to the AlgoVision server for analysis and, when AI
-              hints are enabled, to our AI provider. Don't paste secrets.
+            <p class="practice-note"><b>Dry run</b> executes your Python inside this browser — nothing is sent
+              anywhere. <b>Scan for bugs</b> sends your code to the AlgoVision server and, when AI hints are
+              enabled, to our AI provider. Don't paste secrets.
               <a href="#/privacy">Privacy</a></p>
           </div>
 
@@ -1218,10 +1268,73 @@ export const PAGES = {
             </div>
           </aside>
         </div>
+
+        <!-- The dry run: the student's own code, replayed line by line. -->
+        <div id="dry-panel" class="panel dry-panel is-hidden" tabindex="-1" aria-labelledby="dry-title">
+          <div class="dry-head">
+            <span id="dry-title" class="act-tag"><b>▶</b>Dry run <em>— your code, line by line</em></span>
+            <div id="dry-status" class="engine-status-pill" role="status" aria-live="polite"></div>
+          </div>
+          <div class="dry-grid">
+            <div class="dry-left">
+              <ol id="dry-code" class="pseudo-lines dry-code" aria-label="Your code, the line about to run highlighted"></ol>
+              <div class="transport">
+                <div class="transport-btns">
+                  <button id="dry-prev" class="transport-btn" aria-label="Previous step" disabled>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M15 18l-6-6 6-6"></path></svg>
+                  </button>
+                  <button id="dry-play" class="transport-btn primary" aria-label="Play" disabled>
+                    <svg class="icon-play" width="11" height="11" viewBox="0 0 24 24"
+                         fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                    <svg class="icon-pause" width="11" height="11" viewBox="0 0 24 24"
+                         fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg>
+                  </button>
+                  <button id="dry-next" class="transport-btn" aria-label="Next step" disabled>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M9 18l6-6-6-6"></path></svg>
+                  </button>
+                </div>
+                <div class="transport-scrub">
+                  <input type="range" id="dry-slider" min="0" max="0" value="0" aria-label="Step" disabled>
+                </div>
+                <div id="dry-count" class="transport-count"></div>
+                <select id="dry-speed" class="transport-speed" aria-label="Playback speed">
+                  <option value="0.5">0.5×</option>
+                  <option value="1" selected>1×</option>
+                  <option value="2">2×</option>
+                  <option value="4">4×</option>
+                </select>
+              </div>
+              <div class="narration"><p id="dry-note" aria-live="polite"></p></div>
+            </div>
+            <div class="dry-right">
+              <div class="rail-panel">
+                <div class="rail-panel-head">
+                  <span class="eyebrow">Variables</span>
+                  <span class="eyebrow rail-panel-aside">orange = just changed</span>
+                </div>
+                <div id="dry-frames"></div>
+              </div>
+              <div class="rail-panel">
+                <span class="eyebrow" style="display:block; margin-bottom:0.6rem;">Output</span>
+                <pre id="dry-output" class="dry-output"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     `,
-    mount: (view) => {
-      import('./engine.js').then(m => { if (view.isConnected) m.mountBugFinder(view); });
+    mount: (view, params) => {
+      // Bug finder first: it fills the editor with the sample the dry run's
+      // default "Then run" call is written for.
+      import('./engine.js')
+        .then(m => { if (view.isConnected) m.mountBugFinder(view); })
+        .then(() => import('./dryRun.js'))
+        .then(m => { if (view.isConnected) m.mountDryRun(view, params); })
+        .catch(e => console.error('Practice tools failed to load:', e));
     }
   },
 
@@ -1289,7 +1402,7 @@ export const PAGES = {
         const line=mkSVG("line");
         line.setAttribute("x1",a.x); line.setAttribute("y1",a.y);
         line.setAttribute("x2",b.x); line.setAttribute("y2",b.y);
-        line.setAttribute("stroke","rgba(0,150,184,0.2)"); line.setAttribute("stroke-width","1.5");
+        line.setAttribute("stroke","rgba(255,255,255,0.18)"); line.setAttribute("stroke-width","1.5");
         svg.appendChild(line);
         const tx=mkSVG("text");
         tx.setAttribute("x",(a.x+b.x)/2); tx.setAttribute("y",(a.y+b.y)/2-5);
@@ -1457,7 +1570,7 @@ export const PAGES = {
       const say = (text, isError = false) => {
         if (!msg) return;
         msg.textContent = text;
-        msg.style.color = isError ? '#ff5f5f' : 'var(--c)';
+        msg.style.color = isError ? 'var(--bad)' : 'var(--c)';
         msg.style.display = 'block';
       };
 
@@ -1542,7 +1655,7 @@ export const PAGES = {
         if (!armed) {
           armed = true;
           resetBtn.textContent = 'CLICK AGAIN TO CONFIRM';
-          resetBtn.style.color = '#ff5f5f';
+          resetBtn.style.color = 'var(--bad)';
           setTimeout(() => {
             armed = false;
             resetBtn.textContent = 'RESET PROGRESS';
@@ -1645,6 +1758,8 @@ export const PAGES = {
           <li><strong>Explain this step</strong> sends the algorithm name, the current step of the trace and the narration level.</li>
           <li><strong>Scan for bugs</strong> sends the code you paste and the language you chose.</li>
         </ul>
+        <p><strong>Dry run</strong> on the Practice page is different: your Python runs inside your own browser and
+          is not sent to AlgoVision or anyone else.</p>
         <p>The server processes the request and returns the result. The application does not store request contents
           and has no database. Its logs record request paths and errors, not what you submitted. Your IP address is
           held in memory briefly to apply rate limits.</p>
@@ -1659,7 +1774,7 @@ export const PAGES = {
             <tr><td>Render</td><td>Runs the API and AI services.</td><td>The API requests above and standard request data.</td></tr>
             <tr><td>Groq</td><td>AI model behind “Explain this step” and “Scan for bugs”, when enabled.</td><td>For explanations: the algorithm name, the step description and live counters. For bug scans: the code you pasted and its language. Not your IP address.</td></tr>
             <tr><td>cdnjs (Cloudflare)</td><td>Delivers the GSAP animation library on every page.</td><td>Standard request data. Only the site's origin is sent as referrer.</td></tr>
-            <tr><td>jsDelivr</td><td>Delivers the three.js 3D library, only on the desktop home page and the A2Z problem pages.</td><td>Standard request data. Only the site's origin is sent as referrer.</td></tr>
+            <tr><td>jsDelivr</td><td>Delivers the three.js 3D library on the desktop home page and the A2Z problem pages, and the Pyodide Python runtime the first time you use Dry run.</td><td>Standard request data. Only the site's origin is sent as referrer. Never the code you dry run.</td></tr>
           </tbody>
         </table></div>
         <p>Each provider handles that data under its own privacy policy. Fonts are served from this site, so no font

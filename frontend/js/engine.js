@@ -431,7 +431,10 @@ const loadPseudocode = () => (pseudoData ??= fetch('/data/pseudocode.json')
   .then(r => (r.ok ? r.json() : {}))
   .catch(() => ({})));
 
-export function mountEngine(view, algo = 'dijkstra') {
+// `autoplay`: start playing as soon as a run's trace arrives. The desk screen
+// wants this — it is a display, and a Run that only rewinds to step 1 reads as
+// a dead button. The Experience page leaves it off so students step manually.
+export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) {
   const svg = view.querySelector('#engine-svg');
   const status = view.querySelector('#engine-status');
   const note = view.querySelector('#engine-note');
@@ -906,7 +909,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(212, 96, 44,0.05)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.05)");
       rect.setAttribute("stroke", "var(--cDim)");
       rect.setAttribute("stroke-width", "1");
       g.appendChild(rect);
@@ -949,7 +952,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       const cell = svg.querySelector(`#cell-${idx}`);
       const g = svg.querySelector(`#cellg-${idx}`);
       if (!cell) continue;
-      cell.setAttribute("fill", "rgba(212, 96, 44,0.05)");
+      cell.setAttribute("fill", "rgba(255, 255, 255,0.05)");
       cell.setAttribute("stroke", "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (g) g.setAttribute("opacity", "1");
@@ -959,9 +962,9 @@ export function mountEngine(view, algo = 'dijkstra') {
           || BS_VARIANTS.includes(algoId)) {
         const inRange = s.low != null && idx >= s.low && idx <= s.high;
         if (!inRange && g) g.setAttribute("opacity", "0.22");
-        if (inRange) cell.setAttribute("stroke", "var(--c)");
+        if (inRange) cell.setAttribute("stroke", "var(--cMag)");
         if (idx === s.mid) {
-          cell.setAttribute("fill", "rgba(212, 96, 44,0.18)");
+          cell.setAttribute("fill", "rgba(255, 122, 26,0.18)");
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -976,7 +979,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         if (!inRange && g) g.setAttribute("opacity", "0.22");
         if (idx === s.left || idx === s.right) {
           cell.setAttribute("fill", s.found
-            ? "rgba(74,222,128,0.2)" : "rgba(212, 96, 44,0.18)");
+            ? "rgba(74,222,128,0.2)" : "rgba(255, 122, 26,0.18)");
           cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -990,7 +993,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
         if (inBest) cell.setAttribute("stroke", "#4ade80");
         if (inWindow) {
-          cell.setAttribute("fill", "rgba(212, 96, 44,0.14)");
+          cell.setAttribute("fill", "rgba(255, 122, 26,0.14)");
           if (!inBest) cell.setAttribute("stroke", "var(--c)");
           cell.setAttribute("stroke-width", inBest ? "2.5" : "1.5");
         }
@@ -998,10 +1001,10 @@ export function mountEngine(view, algo = 'dijkstra') {
         const inSorted = (s.sorted_ranges || []).some(r => idx >= r[0] && idx <= r[1]);
         if (inSorted) cell.setAttribute("stroke", "#4ade80");
         if (s.merging && idx >= s.merging[0] && idx <= s.merging[1] && !inSorted) {
-          cell.setAttribute("stroke", "var(--c)");
+          cell.setAttribute("stroke", "var(--cMag)");
         }
         if (idx === s.placed) {
-          cell.setAttribute("fill", "rgba(212, 96, 44,0.18)");
+          cell.setAttribute("fill", "rgba(255, 122, 26,0.18)");
           cell.setAttribute("stroke", "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
@@ -3800,7 +3803,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(212, 96, 44,0.03)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.03)");
       rect.setAttribute("stroke", "var(--cDim)");
       rect.setAttribute("stroke-width", "1");
       svg.appendChild(rect);
@@ -3837,11 +3840,11 @@ export function mountEngine(view, algo = 'dijkstra') {
       const v = table[String(idx)];
       const filled = v !== null && v !== undefined;
       val.textContent = filled ? fmt(v) : '';
-      cell.setAttribute("fill", filled ? "rgba(212, 96, 44,0.10)" : "rgba(212, 96, 44,0.03)");
+      cell.setAttribute("fill", filled ? "rgba(255, 255, 255,0.10)" : "rgba(255, 255, 255,0.03)");
       cell.setAttribute("stroke", filled ? "var(--c)" : "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (idx === s.computing) {
-        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(212, 96, 44,0.18)");
+        cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(255, 122, 26,0.18)");
         cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--c)");
         cell.setAttribute("stroke-width", "2");
       }
@@ -3881,7 +3884,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute("width", w - 12);
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(212, 96, 44,0.05)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.05)");
       rect.setAttribute("stroke", "var(--cDim)");
       svg.appendChild(rect);
 
@@ -4083,7 +4086,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('width', w - 4);
       rect.setAttribute('height', h);
       rect.setAttribute('id', `schar-${idx}`);
-      rect.setAttribute('fill', 'rgba(212, 96, 44,0.05)');
+      rect.setAttribute('fill', 'rgba(255, 255, 255,0.05)');
       rect.setAttribute('stroke', 'var(--cDim)');
       svg.appendChild(rect);
       const t = makeSVG('text');
@@ -4121,16 +4124,16 @@ export function mountEngine(view, algo = 'dijkstra') {
         cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--c)');
         cell.setAttribute('stroke-width', '2');
         cell.setAttribute('fill', s.action === 'mismatch'
-          ? 'rgba(248,113,113,0.15)' : 'rgba(212, 96, 44,0.15)');
+          ? 'rgba(248,113,113,0.15)' : 'rgba(255, 122, 26,0.15)');
       } else if (s.pos !== null && s.pos !== undefined
                  && (s.rtl ? idx > s.pos : idx < s.pos)) {
         cell.setAttribute('stroke', 'var(--c)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(212, 96, 44,0.03)');
+        cell.setAttribute('fill', 'rgba(255, 255, 255,0.03)');
       } else {
         cell.setAttribute('stroke', 'var(--cDim)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(212, 96, 44,0.05)');
+        cell.setAttribute('fill', 'rgba(255, 255, 255,0.05)');
       }
     });
 
@@ -4169,7 +4172,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       rect.setAttribute('width', bw);
       rect.setAttribute('height', bh);
       const isTop = k === s.stack.length - 1;
-      rect.setAttribute('fill', isTop ? 'rgba(212, 96, 44,0.12)' : 'rgba(212, 96, 44,0.06)');
+      rect.setAttribute('fill', isTop ? 'rgba(255, 122, 26,0.12)' : 'rgba(255, 255, 255,0.06)');
       rect.setAttribute('stroke', isTop ? 'var(--c)' : 'var(--c)');
       rect.setAttribute('stroke-width', isTop ? '2' : '1');
       g.appendChild(rect);
@@ -4302,7 +4305,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         circle.setAttribute('r', '15');
       }
       circle.setAttribute('fill', isCurrent
-        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(212, 96, 44,0.2)')
+        ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(255, 122, 26,0.2)')
         : (isMarked ? 'rgba(74,222,128,0.12)' : 'var(--cDeep)'));
       circle.setAttribute('stroke', isCurrent
         ? (s.found === true ? '#4ade80' : 'var(--c)')
@@ -4422,9 +4425,9 @@ export function mountEngine(view, algo = 'dijkstra') {
         rect.setAttribute('width', cw - 2);
         rect.setAttribute('height', ch - 2);
         rect.setAttribute('fill', onPath ? 'rgba(74,222,128,0.22)'
-          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(212, 96, 44,0.18)')
-          : isDep ? 'rgba(212, 96, 44,0.14)'
-          : filled ? 'rgba(212, 96, 44,0.05)' : 'rgba(0,0,0,0.15)');
+          : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(255, 122, 26,0.18)')
+          : isDep ? 'rgba(255, 122, 26,0.14)'
+          : filled ? 'rgba(255, 255, 255,0.05)' : 'rgba(0,0,0,0.15)');
         rect.setAttribute('stroke', onPath ? '#4ade80'
           : isCurrent ? (s.match ? '#4ade80' : 'var(--c)')
           : isDep ? 'var(--c)' : 'var(--cDim)');
@@ -5527,8 +5530,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         isOffline = false;
       } catch {
         status.innerHTML = canEmulate()
-          ? 'STATUS: <span style="color:#ff5f5f">OFFLINE — IN-BROWSER EMULATOR</span>'
-          : 'STATUS: <span style="color:#ff5f5f">OFFLINE — SAMPLE TRACE ONLY</span>';
+          ? 'STATUS: <span style="color:#f87171">OFFLINE — IN-BROWSER EMULATOR</span>'
+          : 'STATUS: <span style="color:#f87171">OFFLINE — SAMPLE TRACE ONLY</span>';
         isOffline = true;
       } finally {
         backendProbe = null;
@@ -5759,7 +5762,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       if (traceView !== 'graph') {
         const parsed = parseArrayInput();
         if (parsed.error) {
-          status.innerHTML = `STATUS: <span style="color:#ff5f5f">${escapeHTML(parsed.error).toUpperCase()}</span>`;
+          status.innerHTML = `STATUS: <span style="color:#f87171">${escapeHTML(parsed.error).toUpperCase()}</span>`;
           status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
@@ -5970,7 +5973,7 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
       } else {
         if (!userGraph.nodes.length) {
-          status.innerHTML = 'STATUS: <span style="color:#ff5f5f">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
+          status.innerHTML = 'STATUS: <span style="color:#f87171">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
           status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
@@ -5996,6 +5999,8 @@ export function mountEngine(view, algo = 'dijkstra') {
         }
       }
       loadTrace(res.steps, res.meta);
+      // Challenge mode drives the steps itself (predict, then reveal).
+      if (autoplay && !challenge.on) startPlay();
       if (offlineSampleShown) {
         status.innerHTML = 'STATUS: <span style="color:#ffb454">OFFLINE — SAMPLE TRACE</span>';
         if (arrayHint) {
@@ -6007,8 +6012,8 @@ export function mountEngine(view, algo = 'dijkstra') {
     } catch (e) {
       console.error(e);
       status.innerHTML = isOffline
-        ? 'STATUS: <span style="color:#ff5f5f">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
-        : 'STATUS: <span style="color:#ff5f5f">TRACE FAILED</span>';
+        ? 'STATUS: <span style="color:#f87171">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
+        : 'STATUS: <span style="color:#f87171">TRACE FAILED</span>';
       // The backend's own validation messages ("Max 16 numbers…") are
       // written for students — surface them next to the input they're about.
       const why = (e && e.name === 'ApiError' && e.status === 400) ? e.message : '';
@@ -6370,7 +6375,7 @@ export function mountEngine(view, algo = 'dijkstra') {
       line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
       const k = edgeKey(l.source, l.target);
       line.setAttribute('stroke', k === activeKey
-        ? 'var(--c)' : traversed.has(k) ? 'rgba(212, 96, 44,0.35)' : 'rgba(0,150,184,0.2)');
+        ? 'var(--c)' : traversed.has(k) ? 'rgba(255, 122, 26,0.35)' : 'rgba(0,150,184,0.2)');
       line.setAttribute('stroke-width', k === activeKey ? '2.5' : '1.5');
       svgEl.appendChild(line);
     });
@@ -6423,8 +6428,8 @@ export function mountEngine(view, algo = 'dijkstra') {
       const rect = makeSVG('rect');
       rect.setAttribute('x', x0 + k * w + 2); rect.setAttribute('y', y);
       rect.setAttribute('width', Math.max(w - 4, 6)); rect.setAttribute('height', h);
-      rect.setAttribute('fill', k === s.placed ? 'rgba(212, 96, 44,0.18)'
-        : comparing.has(k) ? 'rgba(212, 96, 44,0.12)' : 'rgba(212, 96, 44,0.05)');
+      rect.setAttribute('fill', k === s.placed ? 'rgba(255, 122, 26,0.18)'
+        : comparing.has(k) ? 'rgba(255, 122, 26,0.12)' : 'rgba(255, 255, 255,0.05)');
       rect.setAttribute('stroke', inSorted ? '#4ade80' : (active || inMerge) ? 'var(--c)' : 'var(--cDim)');
       rect.setAttribute('stroke-width', active ? '2' : '1');
       svgEl.appendChild(rect);

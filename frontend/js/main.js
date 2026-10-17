@@ -132,7 +132,7 @@ async function start() {
   } catch (err) {
     console.error("Boot Error:", err);
     const phases = document.getElementById('loader-phases');
-    if (phases) { phases.textContent = "COULD NOT START — RELOAD TO TRY AGAIN"; phases.style.color = "#fb7185"; }
+    if (phases) { phases.textContent = "COULD NOT START — RELOAD TO TRY AGAIN"; phases.style.color = "var(--bad)"; }
   }
 }
 

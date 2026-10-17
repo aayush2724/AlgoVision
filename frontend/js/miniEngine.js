@@ -114,7 +114,7 @@ export function mountMiniEngine(host, algo, onClose) {
 
   import('./engine.js').then(m => {
     if (disposed || !document.body.contains(host)) return;
-    m.mountEngine(host, entry.id);
+    m.mountEngine(host, entry.id, { autoplay: true });
     // A screen sitting there saying "Idle" reads as broken. Start the trace on
     // arrival — this is a display, not a form to fill in.
     autorun = setTimeout(() => {

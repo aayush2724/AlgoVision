@@ -17,45 +17,47 @@ import { ALGORITHMS, ALGO_CATEGORIES, capLabel } from './data.js';
    algorithms in data.js sits on a keycap somewhere.
 ══════════════════════════════════════════════════════════════ */
 
-// Colourway of the reference board: warm greys, cream, tan, burnt orange.
-const PLATE  = '#221d16';
-const GREY   = '#514c43';   // standard cap
-const CREAM  = '#e7ddc4';   // modifier cap
-const TAN    = '#a8895f';   // novelty cap
-const ORANGE = '#c94f22';   // corner accents
+// Graphite colourway: dark grey caps on a near-black plate, light-grey
+// modifiers, mid-grey novelty caps and orange accents — the same palette
+// the rest of the site uses (see :root in main.css).
+const PLATE  = '#1b1b1b';
+const DARK   = '#343434';   // standard cap
+const LIGHT  = '#e2e2e2';   // modifier cap
+const MID    = '#8a8a8a';   // novelty cap
+const ACCENT = '#ff7a1a';   // orange accents
 
 const CAP_COLORS = {
-  grey:   { cap: GREY,   legend: '#eae3d3', sub: 'rgba(234,227,211,0.66)' },
-  cream:  { cap: CREAM,  legend: '#3a352c', sub: 'rgba(58,53,44,0.72)' },
-  tan:    { cap: TAN,    legend: '#2e2820', sub: 'rgba(46,40,32,0.72)' },
-  orange: { cap: ORANGE, legend: '#f7ede2', sub: 'rgba(247,237,226,0.8)' },
+  dark:   { cap: DARK,   legend: '#f2f2f2', sub: 'rgba(242,242,242,0.62)' },
+  light:  { cap: LIGHT,  legend: '#1c1c1c', sub: 'rgba(28,28,28,0.7)' },
+  mid:    { cap: MID,    legend: '#101010', sub: 'rgba(16,16,16,0.72)' },
+  accent: { cap: ACCENT, legend: '#141414', sub: 'rgba(20,20,20,0.75)' },
 };
 
 function capStyle(algo) {
-  if (algo.id === 'dijkstra' || algo.id === 'lcs') return CAP_COLORS.orange;
-  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return CAP_COLORS.cream;
-  if (algo.category === 'Structures') return CAP_COLORS.tan;
-  return CAP_COLORS.grey;
+  if (algo.id === 'dijkstra' || algo.id === 'lcs') return CAP_COLORS.accent;
+  if (algo.category === 'DP' || algo.category === 'Searching' || algo.category === 'Greedy') return CAP_COLORS.light;
+  if (algo.category === 'Structures') return CAP_COLORS.mid;
+  return CAP_COLORS.dark;
 }
 
 
 // Layout entries: a = algorithm key, g = glyph novelty, m = modifier.
 // `w` is width in key units; every row sums to 15u like a real 60% board.
 const A = (id)              => ({ t: 'a', id, w: 1 });
-const G = (glyph, c = 'grey', w = 1) => ({ t: 'g', glyph, c, w });
-const M = (label, w, c = 'cream')    => ({ t: 'm', label, c, w });
+const G = (glyph, c = 'dark', w = 1) => ({ t: 'g', glyph, c, w });
+const M = (label, w, c = 'light')    => ({ t: 'm', label, c, w });
 
 const LAYOUT = [
-  [ M('FN', 1, 'grey'), A('tree_traversal'), A('trie_insert'), G('F3'), A('n_queens'),
+  [ M('FN', 1, 'dark'), A('tree_traversal'), A('trie_insert'), G('F3'), A('n_queens'),
     G('F5'), A('unique_paths'), A('hash_table'), A('sieve'), A('kmp_search'), G('F10'),
-    A('segment_tree'), A('fenwick_tree'), M('DEL', 2, 'orange') ],
-  [ M('ESC', 1, 'orange'), A('edit_distance'), G('2'), A('fibonacci_dp'),
+    A('segment_tree'), A('fenwick_tree'), M('DEL', 2, 'accent') ],
+  [ M('ESC', 1, 'accent'), A('edit_distance'), G('2'), A('fibonacci_dp'),
     A('coin_change'), G('5'),
-    A('knapsack_01'), G('7'), A('merge_intervals'), G('9', 'tan'), A('lcs'),
+    A('knapsack_01'), G('7'), A('merge_intervals'), G('9', 'mid'), A('lcs'),
     G('-'), G('='), M('⌫', 2) ],
   [ M('TAB', 1.5), A('dijkstra'), G('λ'), A('bfs'), G('Σ'), A('dfs'),
-    A('topological_sort'), G('∞', 'tan'), A('prims_mst'), A('dsu'),
-    A('kruskals_mst'), G('√'), A('balanced_brackets'), G('∴', 'grey', 1.5) ],
+    A('topological_sort'), G('∞', 'mid'), A('prims_mst'), A('dsu'),
+    A('kruskals_mst'), G('√'), A('balanced_brackets'), G('∴', 'dark', 1.5) ],
   [ M('CAPS', 1.75), A('merge_sort'), A('counting_sort'), A('quick_sort'), G('Δ'),
     A('bubble_sort'), A('heap_extract'), A('insertion_sort'), G('μ'),
     A('selection_sort'),
@@ -64,8 +66,8 @@ const LAYOUT = [
     A('two_sum_sorted'), A('next_greater_element'), A('sliding_window'),
     A('bst_insert'), A('floyd_cycle'), A('kadanes'),
     A('heap_insert'), M('SHIFT', 2.75) ],
-  [ M('CTRL', 1.25, 'grey'), M('FN', 1.25, 'grey'), M('ALT', 1.25, 'grey'),
-    M('ALGOVISION', 6.25), M('ALT', 1.25, 'grey'), M('⌘', 1.25, 'grey'), M('CTRL', 2.5, 'grey') ],
+  [ M('CTRL', 1.25, 'dark'), M('FN', 1.25, 'dark'), M('ALT', 1.25, 'dark'),
+    M('ALGOVISION', 6.25), M('ALT', 1.25, 'dark'), M('⌘', 1.25, 'dark'), M('CTRL', 2.5, 'dark') ],
 ];
 
 const U = 1.0;          // key unit
@@ -104,7 +106,7 @@ function capTexture(entry, algo) {
   const c = document.createElement('canvas');
   c.width = wPx; c.height = 256;
   const x = c.getContext('2d');
-  const st = entry.t === 'a' ? capStyle(algo) : CAP_COLORS[entry.c || 'grey'];
+  const st = entry.t === 'a' ? capStyle(algo) : CAP_COLORS[entry.c || 'dark'];
   x.fillStyle = st.cap;
   x.fillRect(0, 0, wPx, 256);
   const g = x.createLinearGradient(0, 0, 0, 256);
@@ -158,18 +160,18 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
   camera.position.set(0, 10.5, 9.0);
 
-  scene.add(new THREE.AmbientLight(0xffe6c4, 0.5));
-  const lamp = new THREE.PointLight(0xffb46b, 90, 30, 1.8);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const lamp = new THREE.PointLight(0xfff4ea, 70, 30, 1.8);
   lamp.position.set(2.5, 7, -1.5);
   scene.add(lamp);
-  const key = new THREE.DirectionalLight(0xffe0b8, 1.05);
+  const key = new THREE.DirectionalLight(0xffffff, 1.05);
   key.position.set(-6, 11, 6);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -11; key.shadow.camera.right = 11;
   key.shadow.camera.top = 11; key.shadow.camera.bottom = -11;
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0x9fb4d0, 0.35);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3);
   fill.position.set(7, 5, -5);
   scene.add(fill);
 
@@ -193,7 +195,7 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   const SCREEN_W = MON_W - 0.72, SCREEN_H = MON_H - 0.72;
 
   const caseMat = new THREE.MeshStandardMaterial({
-    color: 0x1c1814, roughness: 0.62, metalness: 0.3,
+    color: 0x1a1a1a, roughness: 0.62, metalness: 0.3,
   });
   const monitor = new THREE.Group();
   const bezel = new THREE.Mesh(
@@ -201,7 +203,7 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   bezel.castShadow = true;
   const screen = new THREE.Mesh(
     new THREE.PlaneGeometry(SCREEN_W, SCREEN_H),
-    new THREE.MeshBasicMaterial({ color: 0x0c0a08 }));
+    new THREE.MeshBasicMaterial({ color: 0x0a0a0a }));
   screen.position.z = 0.2;
   const neck = new THREE.Mesh(
     new RoundedBoxGeometry(0.8, 2.3, 0.55, 3, 0.1), caseMat);
@@ -282,7 +284,7 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
       const capW = entry.w * U + (entry.w - 1) * GAP;
       const algo = entry.t === 'a' ? byAlgo[entry.id] : null;
       if (entry.t === 'a' && !algo) { cursor += capW + GAP; return; }
-      const st = entry.t === 'a' ? capStyle(algo) : CAP_COLORS[entry.c || 'grey'];
+      const st = entry.t === 'a' ? capStyle(algo) : CAP_COLORS[entry.c || 'dark'];
       const topMat = new THREE.MeshStandardMaterial({
         map: capTexture(entry, algo), roughness: 0.55, metalness: 0.05,
       });
@@ -318,8 +320,8 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
       const old = cap.material[2];
       old.map?.dispose();
       old.dispose();
-      const entry = algo ? { t: 'a', w: 1 } : { t: 'g', glyph: '·', c: 'grey', w: 1 };
-      const st = algo ? capStyle(algo) : CAP_COLORS.grey;
+      const entry = algo ? { t: 'a', w: 1 } : { t: 'g', glyph: '·', c: 'dark', w: 1 };
+      const st = algo ? capStyle(algo) : CAP_COLORS.dark;
       const topMat = new THREE.MeshStandardMaterial({
         map: capTexture(entry, algo), roughness: 0.55, metalness: 0.05,
       });

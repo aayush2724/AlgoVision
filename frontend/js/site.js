@@ -23,7 +23,7 @@ export const SITE = {
   // terms ("operated by …"). Empty → "the AlgoVision maintainers".
   operator: '',                  // TODO(owner): legal name of the person or organisation
   // Date the legal pages were last reviewed (ISO). Bump when you edit them.
-  legalUpdated: '2026-10-02',
+  legalUpdated: '2026-10-17',
 };
 
 export function operatorName() {

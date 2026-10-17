@@ -4753,12 +4753,144 @@ REALWORLD_META = {
 from app.metaphors import apply as _apply_stories  # noqa: E402
 _apply_stories(REALWORLD_META)
 
+# ── Language-neutral matching ────────────────────────────────────────────
+# Students paste C, C++, Java, JavaScript/TypeScript and Python. The keyword
+# lists above were written in Python style with spaces around operators, so
+# both the code and every keyword are put through the same normaliser:
+# lowercase, no whitespace next to operators/punctuation, and the common
+# per-language spellings folded to one form (Math.max / std::max -> max,
+# cur->next -> cur.next, this./self. dropped). `arr[j]>arr[j+1]` and
+# `arr[j] > arr[j + 1]` then read identically.
+_OP_SPACE = re.compile(r"\s*([^\w\s])\s*")
+_WS = re.compile(r"\s+")
+_FOLDS = [
+    (re.compile(r"->"), "."),
+    (re.compile(r"\b(?:this|self)\."), ""),
+    (re.compile(r"\bstd::"), ""),
+    (re.compile(r"\bmath\.(max|min|floor|abs)\("), r"\1("),
+]
+
+
+def _normalise(text):
+    text = _WS.sub(" ", text.lower())
+    text = _OP_SPACE.sub(r"\1", text)
+    for rx, repl in _FOLDS:
+        text = rx.sub(repl, text)
+    return text
+
+
+def _keyword_matcher(kw):
+    """A plain substring test, except that short single-word keywords
+    ('lis', 'mid', 'low', 'trie', 'hare', 'memo', 'prim') must stand alone, so
+    'list', 'pyramid', 'follow', 'retrieve', 'share', 'memory' and 'prime'
+    stop scoring points for unrelated algorithms."""
+    norm = _normalise(kw)
+    if norm.isalpha() and len(norm) <= 5:
+        rx = re.compile(r"(?<![a-z0-9])" + re.escape(norm) + r"(?![a-z])")
+        return norm, rx.search
+    return norm, (lambda text, _n=norm: _n in text)
+
+
+# Normalised keyword -> matcher, de-duplicated per algorithm so spelling
+# variants of one idiom ('n-i-1' / 'n - i - 1') count once.
+_COMPILED = {
+    algo: list({n: m for n, m in map(_keyword_matcher, kws) if n}.values())
+    for algo, kws in SIGNATURES.items()
+}
+
+# Structural idioms that identify a classic regardless of language or naming.
+# Matched against normalised text; each hit adds its weight to the keyword
+# score. Weights of 2 mark idioms that are close to unique to the algorithm.
+_L = r"(?:l|lo|low|left|start|beg|begin)"
+_R = r"(?:r|hi|high|right|end|h)"
+_M = r"(?:m|mid|middle)"
+_ARR = r"\w+(?:\[\w+\])?"
+STRUCTURAL = {
+    "binary_search": [
+        (rf"\b{_M}=\(?{_L}\+{_R}\)?(?://2|/2|>>>?1)", 1),
+        (rf"\b{_M}={_L}\+\({_R}-{_L}\)(?://|/)2", 1),
+        (rf"\bwhile\(?{_L}<={_R}\b", 1),
+        (rf"\b{_L}={_M}\+1\b", 1),
+        (rf"\b{_R}={_M}-1\b", 1),
+    ],
+    "kadanes": [
+        # cur = max(x, cur + x)  /  cur = max(cur + x, x)
+        (rf"\b(\w+)=max\({_ARR},\1\+{_ARR}\)", 2),
+        (rf"\b(\w+)=max\(\1\+{_ARR},{_ARR}\)", 2),
+        # sum += x; ... if (sum < 0) sum = 0
+        (r"\bif\(?(\w+)<0\)?:?\{?\1=0\b", 2),
+        (r"\b(\w+)=max\(\1,\w+\)", 1),
+    ],
+    "bubble_sort": [
+        (r"\b(\w+)\[(\w+)\]>\1\[\2\+1\]", 2),
+        (r"-i-1\b|-1-i\b|\+1<\w+(?:\.\w+\(\))?-i\b", 1),
+    ],
+    "insertion_sort": [
+        (r"\b(\w+)\[(\w+)\+1\]=\1\[\2\]", 2),
+        (r"\bwhile\(?(\w+)>=0(?:&&|\band\b)", 1),
+        (r"\bkey=\w+\[i\]", 1),
+    ],
+    "selection_sort": [
+        (r"\bif\(?(\w+)\[j\]<\1\[(min\w*|mn|m|small\w*)\]", 2),
+        (r"\b(?:min\w*|mn|small\w*)=j\b", 1),
+    ],
+    "merge_sort": [
+        (r"\bmerge\w*\(\w+,\w+,\w+,\w+\)", 1),
+        (r"\w+\[[ijk]\+\+\]", 1),
+        (rf"\b(\w+)\(\w+,{_L},{_M}\).*\b\1\(\w+,{_M}\+1,{_R}\)", 2),
+    ],
+    "quick_sort": [
+        (rf"\b(\w+)\(\w+,{_L},(\w+)-1\).*\b\1\(\w+,\2\+1,{_R}\)", 2),
+    ],
+    "bfs": [
+        (r"\bqueue<|\barraydeque\b|\bcollections\.deque\b", 1),
+        (r"\.popleft\(\)|\.poll\(\)|\.front\(\)|\.shift\(\)", 1),
+    ],
+    "dfs": [
+        # f(u, ...) { ... for v in adj[u] ... f(v, ...) }: recursion over neighbours
+        (r"\b(\w+)\((?:int )?(\w+)[,)].*\badj\[\2\].*\b\1\(\w+[,)]", 2),
+    ],
+    "dijkstra": [
+        (r"\bpriority_?queue<", 1),
+        (r"\bdist\[(\w+)\]\+(\w+(?:\[\d\])?)<dist\[", 2),
+    ],
+    "two_sum_sorted": [
+        (rf"\bwhile\(?(?:{_L}|i)<(?!=)(?:{_R}|j)\b", 1),
+        (rf"\b(\w+)\[({_L}|i)\]\+\1\[({_R}|j)\]", 2),
+    ],
+    "sliding_window": [
+        (r"[-+]=\w+\[\w+-k\]|-\w+\[\w+-k\]", 2),
+        (r"\bi-k\+1\b|\bi>=k-1\b", 1),
+    ],
+    "dynamic_programming": [
+        (r"\b(\w+)\(n-1\)\+\1\(n-2\)", 2),
+        (r"\bdp\[i\]=dp\[i-1\]", 1),
+    ],
+    "linked_list_reverse": [
+        (r"\b(\w+)\.next=(prev\w*|p)\b", 2),
+        (r"\bprev\w*=(cur\w*|head|node|p)\b", 1),
+    ],
+}
+_STRUCTURAL = {
+    algo: [(re.compile(rx, re.DOTALL), w) for rx, w in pats]
+    for algo, pats in STRUCTURAL.items()
+}
+
+
+def _score(raw):
+    text = _normalise(raw)
+    scores = {}
+    for algo, matchers in _COMPILED.items():
+        scores[algo] = sum(1 for m in matchers if m(text))
+    for algo, pats in _STRUCTURAL.items():
+        scores[algo] += sum(w for rx, w in pats if rx.search(text))
+    return scores
+
+
 # 60 detections per minute — fast, lightweight endpoint
 @router.post("")
 @limiter.limit("60/minute")
 def detect(request: Request, req: DetectRequest):
-    text = (req.code + " " + req.problem).lower()
-
     # An exact algorithm id always wins. Callers are documented to pass an id
     # as `problem` to fetch its real-world meta, and fuzzy scoring got that
     # wrong whenever a newer algorithm tied with an older one: ties fall back
@@ -4772,9 +4904,7 @@ def detect(request: Request, req: DetectRequest):
             "realworld": REALWORLD_META.get(probe, REALWORLD_META["dijkstra"]),
         }
 
-    scores = {}
-    for algo, keywords in SIGNATURES.items():
-        scores[algo] = sum(1 for kw in keywords if kw in text)
+    scores = _score(req.code + " " + req.problem)
     best = max(scores, key=scores.get)
     if scores[best] == 0:
         # Nothing recognisable. Say so — a confident-looking "DIJKSTRA (0%)"

@@ -330,6 +330,7 @@ export function mountDryRun(view, params) {
   }
 
   runBtn.addEventListener('click', run);
+  runBtn.disabled = false;     // rendered disabled so an early click isn't lost
   callInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); run(); } });
   prevBtn.addEventListener('click', () => { stopPlay(); show(idx - 1); });
   nextBtn.addEventListener('click', () => { stopPlay(); show(idx + 1); });

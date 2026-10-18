@@ -3061,7 +3061,6 @@ body {
 
 /* The primary action stays a highlighter on hover — just a fresher one. */
 .btn-primary:hover { background: #ff9447; border-color: #ff9447; color: var(--on-accent); }
-.kbd-flat-tagline { display: block; margin: 0.1rem 0 0.45rem; font-size: 1.3rem; }
 
 /* ══════════════════════════════════════════════════════════
    DRY RUN — the student's own code, replayed line by line
@@ -3247,3 +3246,138 @@ body {
   white-space: pre-wrap;
 }
 .dry-output:empty::before { content: "nothing printed yet"; color: var(--cDim); }
+
+/* ══════════════════════════════════════════════════════════
+   PHONE HERO — a landing page, not the whole keyboard
+══════════════════════════════════════════════════════════ */
+.kbd-flat-head { margin-bottom: 2rem; }
+.kbd-flat-head .eyebrow { margin-bottom: 0.9rem; color: var(--cMag); letter-spacing: 0.14em; }
+.kbd-flat-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 10.5vw, 2.8rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  max-width: none;
+}
+.kbd-flat-title span {
+  display: block;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  letter-spacing: 0;
+  font-size: 1.15em;
+  color: var(--c);
+  transform: rotate(-1.5deg);
+  transform-origin: left;
+}
+.kbd-flat-lede { font-size: 0.95rem; line-height: 1.6; margin: 0 0 1.4rem; }
+.kbd-flat-cta { display: flex; gap: 0.6rem; }
+.kbd-flat-cta .btn { flex: 1 1 0; justify-content: center; min-height: 48px; }
+
+.kbd-flat-group { margin-bottom: 1.75rem; }
+.kbd-flat-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+.kbd-flat-label .eyebrow { margin: 0; }
+.kbd-flat-label .hand-note { font-size: 1.1rem; }
+.kbd-flat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; }
+.kbd-flat .kbd-cap { min-height: 72px; gap: 0.3rem; padding: 0.55rem 0.4rem; }
+.kbd-flat .kbd-cap-label { font-size: 0.95rem; }
+.kbd-cap-name {
+  font-size: 0.64rem;
+  line-height: 1.25;
+  text-align: center;
+  color: rgba(242, 242, 242, 0.72);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.kbd-flat-grid .kbd-cap.cap-light .kbd-cap-name { color: rgba(28, 28, 28, 0.75); }
+.kbd-flat-grid .kbd-cap.cap-mid .kbd-cap-name { color: rgba(16, 16, 16, 0.78); }
+.kbd-flat-grid .kbd-cap.cap-accent .kbd-cap-name { color: rgba(20, 20, 20, 0.8); }
+
+/* Families: one swipeable row, so eight of them cost one line, not a page. */
+.kbd-fam-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  margin: 0 -1rem;
+  padding: 0.1rem 1rem 0.4rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.kbd-fam-row::-webkit-scrollbar { display: none; }
+.kbd-fam {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 0.95rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 99px;
+  background: var(--panel-bg);
+  color: var(--ink);
+  font-size: 0.85rem;
+  text-decoration: none;
+  scroll-snap-align: start;
+}
+.kbd-fam b { font-family: var(--font-mono); font-weight: 400; font-size: 0.72rem; color: var(--c); }
+.kbd-fam:active { border-color: var(--c); }
+.kbd-flat-foot { margin-top: 0.5rem; }
+.kbd-flat-foot .btn { min-height: 48px; }
+
+/* ── HOME BELOW THE HERO, ON A PHONE ── */
+@media (max-width: 640px) {
+  .hero-kbd { padding-bottom: 1rem; }
+  .home-section-head { gap: 0.6rem; margin-bottom: 1rem; }
+
+  /* The three acts are a sequence: swipe through them, one card at a
+     time with the next peeking in, instead of three screens of scrolling. */
+  .act-strip {
+    display: flex !important;
+    gap: 0.75rem;
+    overflow-x: auto;
+    margin: 0 -1rem;
+    padding: 0 1rem 0.5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .act-strip::-webkit-scrollbar { display: none; }
+  .act-strip .act-card {
+    flex: 0 0 84%;
+    scroll-snap-align: center;
+    padding: 1.1rem;
+  }
+  .act-sketch { height: 70px; }
+  .act-card p { font-size: 0.82rem; }
+
+  /* The hero's twelve classics already are the "start here". */
+  .home-last { display: none; }
+
+  .paste-pitch { padding: 1.25rem; }
+  .paste-editor { padding: 1rem; }
+  .paste-actions { flex-wrap: wrap; }
+  .paste-actions .btn { min-height: 46px; }
+}
+
+/* Narrow phones (360px Androids): brand, Play, level and menu overran the
+   bar and pushed the menu button off-screen. Keep the level, drop its bar. */
+@media (max-width: 420px) {
+  .nav { gap: 0.5rem; padding-left: 0.85rem; padding-right: 0.85rem; }
+  #game-hud { min-width: 0; }
+  .hud-bar { display: none; }
+  .hud-inner { padding: 0.35rem 0.55rem; }
+  .nav-cta-mobile { padding: 0.45rem 0.75rem !important; }
+}
+/* The phone menu drawer is solid: the hero headline read through it. */
+@media (max-width: 860px) { #nav-links { background: var(--bg1); } }

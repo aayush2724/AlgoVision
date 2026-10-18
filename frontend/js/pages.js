@@ -38,6 +38,11 @@ function capClass(algo) {
   return '';
 }
 
+// The phone hero's keycaps: one or two classics from each family a first-year
+// course meets first. Everything else is a tap away in Explore.
+const MOBILE_CLASSICS = ['dijkstra', 'bfs', 'dfs', 'binary_search', 'bubble_sort', 'merge_sort',
+  'quick_sort', 'kadanes', 'knapsack_01', 'lcs', 'n_queens', 'topological_sort'];
+
 function renderWorldCard(world) {
   return `
     <a href="#/experience?algo=${world.algo || 'dijkstra'}" class="world-card">
@@ -118,34 +123,50 @@ export const PAGES = {
           <a href="#/a2z">A2Z ROADMAP →</a>
         </div>
 
-        <!-- Phones get this instead of the board. 42 caps on a 390px screen
-             are legible but fiddly to hit, and the 3D costs a three.js
-             download on the worst connections — so on mobile the caps go flat
-             and tappable, and keyboard3d is never imported at all. -->
+        <!-- Phones get this instead of the board: a landing page, not the
+             whole keyboard. Twelve classics as keycaps (with their real names,
+             since a phone has no hover to explain "DIJK"), the families as a
+             swipeable row, and one link to the full index. The 3D board costs
+             a three.js download, so keyboard3d is never imported here. -->
         <div class="kbd-flat">
           <div class="kbd-flat-head">
-            <span class="kbd-tc-brand">AlgoVision</span>
-            <span class="hand-note kbd-flat-tagline">see the algorithm before the code</span>
-            <span class="kbd-tc-sub">${DATA.ALGORITHMS.length} algorithms · tap one to trace it</span>
+            <span class="eyebrow">Learn DSA visually · free, no sign-up</span>
+            <p class="kbd-flat-title" aria-hidden="true">See the algorithm <span>before the code</span></p>
+            <p class="kbd-flat-lede">Every algorithm starts as a real-world story, then runs step by step on
+              your own input — ${DATA.ALGORITHMS.length} of them, from bubble sort to segment trees.</p>
+            <div class="kbd-flat-cta">
+              <a class="btn btn-primary" href="#/experience?algo=dijkstra">▶ Watch one run</a>
+              <a class="btn" href="#/practice">Dry run your code</a>
+            </div>
           </div>
-          ${DATA.ALGO_CATEGORIES.filter(c => c !== 'All').map(cat => {
-            const items = DATA.ALGORITHMS.filter(a => a.category === cat);
-            if (!items.length) return '';
-            return `
-              <div class="kbd-flat-group">
-                <span class="eyebrow">${cat}</span>
-                <div class="kbd-flat-grid">
-                  ${items.map(a => `
-                    <a class="kbd-cap ${capClass(a)}" href="#/experience?algo=${a.id}">
-                      <span class="kbd-cap-label">${DATA.KEYCAP_LABEL[a.id] || a.id.slice(0,4).toUpperCase()}</span>
-                      <span class="kbd-cap-cx">${a.complexity}</span>
-                      <span class="visually-hidden">${a.name}</span>
-                    </a>`).join('')}
-                </div>
-              </div>`;
-          }).join('')}
+
+          <div class="kbd-flat-group">
+            <div class="kbd-flat-label">
+              <span class="eyebrow">Start with a classic</span>
+              <span class="hand-note">tap a key</span>
+            </div>
+            <div class="kbd-flat-grid">
+              ${MOBILE_CLASSICS.map(id => DATA.ALGORITHMS.find(a => a.id === id)).filter(Boolean).map(a => `
+                <a class="kbd-cap ${capClass(a)}" href="#/experience?algo=${a.id}">
+                  <span class="kbd-cap-label" aria-hidden="true">${esc(DATA.capLabel(a))}</span>
+                  <span class="kbd-cap-name">${esc(a.name)}</span>
+                </a>`).join('')}
+            </div>
+          </div>
+
+          <div class="kbd-flat-group">
+            <span class="eyebrow">Or browse a family</span>
+            <div class="kbd-fam-row">
+              ${DATA.ALGO_CATEGORIES.filter(c => c !== 'All').map(cat => {
+                const n = DATA.ALGORITHMS.filter(a => a.category === cat).length;
+                return n ? `<a class="kbd-fam" href="#/explore?cat=${encodeURIComponent(cat)}">
+                  <span>${esc(cat)}</span><b>${n}</b></a>` : '';
+              }).join('')}
+            </div>
+          </div>
+
           <div class="kbd-flat-foot">
-            <a href="#/explore" class="btn">Browse all →</a>
+            <a href="#/explore" class="btn">All ${DATA.ALGORITHMS.length} algorithms →</a>
             <a href="#/a2z" class="btn btn-ghost">A2Z roadmap →</a>
           </div>
         </div>
@@ -416,13 +437,15 @@ export const PAGES = {
         <p id="algo-empty" class="is-hidden page-lede">No algorithm matches that search.</p>
       </section>
     `,
-    mount: (view) => {
+    mount: (view, params) => {
       const groupsEl = view.querySelector('#algo-groups');
       const search   = view.querySelector('#algo-search');
       const countEl  = view.querySelector('#algo-count');
       const emptyEl  = view.querySelector('#algo-empty');
       const btns     = view.querySelectorAll('.segmented [data-cat]');
-      let cat = 'All';
+      // ?cat=Graphs opens on that family (the phone home page links here).
+      const wanted = params?.get('cat');
+      let cat = DATA.ALGO_CATEGORIES.includes(wanted) ? wanted : 'All';
 
       const card = (a) => `
         <a href="#/experience?algo=${a.id}" class="world-card algo-card">
@@ -463,8 +486,12 @@ export const PAGES = {
         import('./animations.js').then(m => m.revealView(groupsEl));
       }
 
-      const allBtn = view.querySelector('.segmented [data-cat="All"]');
-      if (allBtn) { allBtn.classList.add('active'); allBtn.setAttribute('aria-selected', 'true'); }
+      const startBtn = view.querySelector(`.segmented [data-cat="${cat}"]`);
+      if (startBtn) {
+        startBtn.classList.add('active');
+        startBtn.setAttribute('aria-selected', 'true');
+        if (cat !== 'All') startBtn.scrollIntoView({ block: 'nearest', inline: 'center' });
+      }
       btns.forEach(btn => {
         btn.addEventListener('click', () => {
           btns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
@@ -1241,7 +1268,7 @@ export const PAGES = {
             </label>
             <span id="dry-call-hint" class="hand-note dry-call-hint">the call to dry run, with your own values</span>
             <div class="practice-actions">
-              <button id="dry-run-btn" class="btn btn-primary">▶ Dry run</button>
+              <button id="dry-run-btn" class="btn btn-primary" disabled>▶ Dry run</button>
               <button id="find-bug-btn" class="btn" disabled>Scan for bugs</button>
             </div>
             <div id="bug-result" role="status" aria-live="polite" style="display:none;"></div>

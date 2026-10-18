@@ -124,8 +124,12 @@ async function start() {
     const scene = null;
     document.getElementById('bg-canvas')?.remove();
 
+    // Render the real page now, underneath the (opaque) loader, so the
+    // loader's fade reveals it. Routing after the fade showed index.html's
+    // no-JavaScript fallback text through the fading loader for a moment.
+    initRouter({ scene });
+
     playLoader(() => {
-      initRouter({ scene });
       import('./hud.js').then(m => m.initHUD()).catch(e => console.warn('HUD failed:', e));
     });
 

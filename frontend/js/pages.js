@@ -447,11 +447,16 @@ export const PAGES = {
       const wanted = params?.get('cat');
       let cat = DATA.ALGO_CATEGORIES.includes(wanted) ? wanted : 'All';
 
+      // Rough cost tier behind the exact bound, so a scan of the grid shows
+      // where the expensive algorithms are before you read a single O(...).
+      const tier = (cx) =>
+        /[\u00b2\u00b3\u2074^!]|2\s*\u207f|2\^/.test(cx) ? 'high'
+        : /log|\u00b7|\*/.test(cx) ? 'mid' : 'low';
       const card = (a) => `
-        <a href="#/experience?algo=${a.id}" class="world-card algo-card">
+        <a href="#/experience?algo=${a.id}" class="world-card algo-card" data-cat="${a.category}">
           <div class="algo-card-top">
             <span class="algo-card-emoji">${a.emoji}</span>
-            <span class="chip chip-cx">${a.complexity}</span>
+            <span class="chip chip-cx chip-cx-${tier(a.complexity)}">${a.complexity}</span>
           </div>
           <h3>${a.name}</h3>
           <p>${a.hook}</p>
@@ -474,7 +479,7 @@ export const PAGES = {
           const items = list.filter(a => a.category === fam);
           if (!items.length) return '';
           return `
-            <div class="group-head">
+            <div class="group-head" data-cat="${fam}">
               <span class="eyebrow">${fam}</span>
               <span class="transport-count">${items.length}</span>
             </div>

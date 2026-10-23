@@ -876,7 +876,7 @@
     },
     {
       "code": "    if not swapped: stop early",
-      "when": "no swaps in that pass"
+      "when": "no swaps in that pass|only one value left"
     }
   ],
   "build_heap": [

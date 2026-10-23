@@ -9,8 +9,8 @@ import * as Game from './game.js';
 const SCENES = {
   gps: {
     label: "GPS NAVIGATION",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {
       // Draw road grid background lines (faint)
       for (let i = 0; i < 5; i++) {
@@ -18,7 +18,7 @@ const SCENES = {
         Object.assign(line, {});
         line.setAttribute("x1", 0); line.setAttribute("y1", 60 + i * 50);
         line.setAttribute("x2", 800); line.setAttribute("y2", 60 + i * 50);
-        line.setAttribute("stroke", "rgba(95,214,230,0.04)");
+        line.setAttribute("stroke", "rgba(255,122,26,0.06)");
         line.setAttribute("stroke-width", "1");
         svg.appendChild(line);
       }
@@ -35,8 +35,8 @@ const SCENES = {
   },
   social: {
     label: "SOCIAL NETWORK",
-    color: "#a9f0fa",
-    accentColor: "#5fd6e6",
+    color: "#ff7a1a",
+    accentColor: "#ffb27a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `👤 ${id}`,
     edgeLabel: (w) => `friend`,
@@ -50,8 +50,8 @@ const SCENES = {
   },
   library: {
     label: "LIBRARY CATALOG",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `📚 ${id}`,
     edgeLabel: (w) => `section`,
@@ -69,8 +69,8 @@ const SCENES = {
   },
   maze: {
     label: "MAZE EXPLORER",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🚪 ${id}`,
     edgeLabel: (w) => `corridor`,
@@ -86,8 +86,8 @@ const SCENES = {
   },
   leaderboard: {
     label: "LEADERBOARD SORT",
-    color: "#a9f0fa",
-    accentColor: "#5fd6e6",
+    color: "#ff7a1a",
+    accentColor: "#ffb27a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🏆 ${id}`,
     edgeLabel: (w) => `vs`,
@@ -97,8 +97,8 @@ const SCENES = {
   },
   vault: {
     label: "DECISION VAULT",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `💾 ${id}`,
     edgeLabel: (w) => `depends on`,
@@ -108,8 +108,8 @@ const SCENES = {
   },
   train: {
     label: "TRAIN YARD",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🚃 ${id}`,
     edgeLabel: (w) => `coupling`,
@@ -119,8 +119,8 @@ const SCENES = {
   },
   plates: {
     label: "PLATE STACK",
-    color: "#a9f0fa",
-    accentColor: "#5fd6e6",
+    color: "#ff7a1a",
+    accentColor: "#ffb27a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🍽 ${id}`,
     edgeLabel: (w) => `match`,
@@ -130,8 +130,8 @@ const SCENES = {
   },
   files: {
     label: "FILE SYSTEM",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `📁 ${id}`,
     edgeLabel: (w) => `subfolder`,
@@ -141,8 +141,8 @@ const SCENES = {
   },
   scheduler: {
     label: "TRIAGE QUEUE",
-    color: "#a9f0fa",
-    accentColor: "#5fd6e6",
+    color: "#ff7a1a",
+    accentColor: "#ffb27a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🏥 ${id}`,
     edgeLabel: (w) => `priority`,
@@ -152,8 +152,8 @@ const SCENES = {
   },
   market: {
     label: "SUPERMARKET",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🛒 ${id}`,
     edgeLabel: (w) => `pairing`,
@@ -163,8 +163,8 @@ const SCENES = {
   },
   stocks: {
     label: "MARKET CHART",
-    color: "#a9f0fa",
-    accentColor: "#5fd6e6",
+    color: "#ff7a1a",
+    accentColor: "#ffb27a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `📈 ${id}`,
     edgeLabel: (w) => `streak`,
@@ -174,8 +174,8 @@ const SCENES = {
   },
   grid_power: {
     label: "POWER GRID",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `⚡ ${id}`,
     edgeLabel: (w) => `${w} cost`,
@@ -185,8 +185,8 @@ const SCENES = {
   },
   dna: {
     label: "GENE LAB",
-    color: "#5fd6e6",
-    accentColor: "#a9f0fa",
+    color: "#ffb27a",
+    accentColor: "#ff7a1a",
     renderBase(svg, graph, meta) {},
     nodeLabel: (id) => `🧬 ${id}`,
     edgeLabel: (w) => `alignment`,
@@ -895,9 +895,9 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
 
     const n = values.length;
     if (!n) return;
-    const w = Math.min(56, 700 / n);
+    const w = Math.min(72, 700 / n);
     const x0 = (760 - w * n) / 2;
-    const y = 110, h = 52;
+    const y = 104, h = 64;
 
     values.forEach((v, idx) => {
       const g = makeSVG("g");
@@ -909,9 +909,9 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(255, 255, 255,0.05)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.09)");
       rect.setAttribute("stroke", "var(--cDim)");
-      rect.setAttribute("stroke-width", "1");
+      rect.setAttribute("stroke-width", "1.25");
       g.appendChild(rect);
 
       const val = makeSVG("text");
@@ -920,7 +920,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       val.setAttribute("text-anchor", "middle");
       val.setAttribute("fill", "var(--cBright)");
       val.setAttribute("font-family", "var(--font-mono)");
-      val.setAttribute("font-size", w < 34 ? "11" : "14");
+      val.setAttribute("font-size", w < 34 ? "12" : "18");
       val.setAttribute("id", `cellval-${idx}`);
       val.textContent = fmtCell(v);
       g.appendChild(val);
@@ -931,7 +931,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
       pos.setAttribute("font-family", "var(--font-ui)");
-      pos.setAttribute("font-size", "6");
+      pos.setAttribute("font-size", "8");
       pos.textContent = idx;
       g.appendChild(pos);
 
@@ -948,13 +948,24 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         if (el) el.textContent = fmtCell(v);
       });
     }
+    // Tracers record the pair under comparison as two values, not indices.
+    // Find the placed cell's partner — a neighbour when possible — so a
+    // compare or swap lights both sides, not just the one that moved.
+    let partner = null;
+    if (Array.isArray(s.comparing) && s.comparing.length === 2
+        && s.placed != null && Array.isArray(s.array)) {
+      const other = s.comparing[0] === s.array[s.placed] ? s.comparing[1] : s.comparing[0];
+      const cands = [s.placed - 1, s.placed + 1, ...s.array.keys()];
+      partner = cands.find(k => k >= 0 && k < s.array.length && k !== s.placed
+                                && s.array[k] === other) ?? null;
+    }
     for (let idx = 0; idx < currentArrayValues.length; idx++) {
       const cell = svg.querySelector(`#cell-${idx}`);
       const g = svg.querySelector(`#cellg-${idx}`);
       if (!cell) continue;
-      cell.setAttribute("fill", "rgba(255, 255, 255,0.05)");
+      cell.setAttribute("fill", "rgba(255, 255, 255,0.09)");
       cell.setAttribute("stroke", "var(--cDim)");
-      cell.setAttribute("stroke-width", "1");
+      cell.setAttribute("stroke-width", "1.25");
       if (g) g.setAttribute("opacity", "1");
 
       if (algoId === 'binary_search' || algoId === 'search_rotated'
@@ -965,13 +976,13 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         if (inRange) cell.setAttribute("stroke", "var(--cMag)");
         if (idx === s.mid) {
           cell.setAttribute("fill", "rgba(255, 122, 26,0.18)");
-          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
+          cell.setAttribute("stroke", s.found ? "var(--ok)" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
         // Boundary searches record a best-so-far answer and keep going.
         if (idx === s.ans && idx !== s.mid) {
           if (g) g.setAttribute("opacity", "1");
-          cell.setAttribute("stroke", "#4ade80");
+          cell.setAttribute("stroke", "var(--ok)");
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'two_sum_sorted') {
@@ -980,7 +991,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         if (idx === s.left || idx === s.right) {
           cell.setAttribute("fill", s.found
             ? "rgba(74,222,128,0.2)" : "rgba(255, 122, 26,0.18)");
-          cell.setAttribute("stroke", s.found ? "#4ade80" : "var(--c)");
+          cell.setAttribute("stroke", s.found ? "var(--ok)" : "var(--c)");
           cell.setAttribute("stroke-width", "2");
         }
       } else if (algoId === 'sliding_window' || algoId === 'kadanes'
@@ -991,7 +1002,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
                  || algoId === 'longest_subarray_sum_k') {
         const inBest = s.best_window && idx >= s.best_window[0] && idx <= s.best_window[1];
         const inWindow = s.window && idx >= s.window[0] && idx <= s.window[1];
-        if (inBest) cell.setAttribute("stroke", "#4ade80");
+        if (inBest) cell.setAttribute("stroke", "var(--ok)");
         if (inWindow) {
           cell.setAttribute("fill", "rgba(255, 122, 26,0.14)");
           if (!inBest) cell.setAttribute("stroke", "var(--c)");
@@ -999,9 +1010,14 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         }
       } else {
         const inSorted = (s.sorted_ranges || []).some(r => idx >= r[0] && idx <= r[1]);
-        if (inSorted) cell.setAttribute("stroke", "#4ade80");
+        if (inSorted) cell.setAttribute("stroke", "var(--ok)");
         if (s.merging && idx >= s.merging[0] && idx <= s.merging[1] && !inSorted) {
           cell.setAttribute("stroke", "var(--cMag)");
+        }
+        if (idx === partner) {
+          cell.setAttribute("fill", "rgba(255, 178, 122,0.12)");
+          cell.setAttribute("stroke", "var(--cAccentBright)");
+          cell.setAttribute("stroke-width", "2");
         }
         if (idx === s.placed) {
           cell.setAttribute("fill", "rgba(255, 122, 26,0.18)");
@@ -1054,9 +1070,9 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
     if (a.best !== null && a.best !== undefined) {
       const c = makeSVG('circle');
       c.setAttribute('cx', xOf(a.best)); c.setAttribute('cy', Y);
-      c.setAttribute('r', 4); c.setAttribute('fill', '#4ade80');
+      c.setAttribute('r', 4); c.setAttribute('fill', 'var(--ok)');
       g.appendChild(c);
-      text(xOf(a.best), Y + 26, `best ${a.best}`, '#4ade80', '7');
+      text(xOf(a.best), Y + 26, `best ${a.best}`, 'var(--ok)', '7');
     }
     if (a.mid !== null && a.mid !== undefined) {
       const x = xOf(a.mid);
@@ -3803,7 +3819,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       rect.setAttribute("width", Math.max(w - 4, 6));
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(255, 255, 255,0.03)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.06)");
       rect.setAttribute("stroke", "var(--cDim)");
       rect.setAttribute("stroke-width", "1");
       svg.appendChild(rect);
@@ -3824,7 +3840,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
       pos.setAttribute("font-family", "var(--font-ui)");
-      pos.setAttribute("font-size", "6");
+      pos.setAttribute("font-size", "8");
       pos.textContent = `f(${idx})`;
       svg.appendChild(pos);
     }
@@ -3840,12 +3856,12 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const v = table[String(idx)];
       const filled = v !== null && v !== undefined;
       val.textContent = filled ? fmt(v) : '';
-      cell.setAttribute("fill", filled ? "rgba(255, 255, 255,0.10)" : "rgba(255, 255, 255,0.03)");
+      cell.setAttribute("fill", filled ? "rgba(255, 255, 255,0.10)" : "rgba(255, 255, 255,0.06)");
       cell.setAttribute("stroke", filled ? "var(--c)" : "var(--cDim)");
       cell.setAttribute("stroke-width", "1");
       if (idx === s.computing) {
         cell.setAttribute("fill", s.cache_hit ? "rgba(74,222,128,0.18)" : "rgba(255, 122, 26,0.18)");
-        cell.setAttribute("stroke", s.cache_hit ? "#4ade80" : "var(--c)");
+        cell.setAttribute("stroke", s.cache_hit ? "var(--ok)" : "var(--c)");
         cell.setAttribute("stroke-width", "2");
       }
     }
@@ -3884,7 +3900,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       rect.setAttribute("width", w - 12);
       rect.setAttribute("height", h);
       rect.setAttribute("id", `cell-${idx}`);
-      rect.setAttribute("fill", "rgba(255, 255, 255,0.05)");
+      rect.setAttribute("fill", "rgba(255, 255, 255,0.09)");
       rect.setAttribute("stroke", "var(--cDim)");
       svg.appendChild(rect);
 
@@ -3904,7 +3920,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       pos.setAttribute("text-anchor", "middle");
       pos.setAttribute("fill", "var(--cDim)");
       pos.setAttribute("font-family", "var(--font-ui)");
-      pos.setAttribute("font-size", "6");
+      pos.setAttribute("font-size", "8");
       pos.textContent = idx;
       svg.appendChild(pos);
     });
@@ -4000,7 +4016,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const strike = makeSVG('line');
       strike.setAttribute('x1', x0 + idx * w + 8); strike.setAttribute('y1', y + h - 4);
       strike.setAttribute('x2', x0 + (idx + 1) * w - 8); strike.setAttribute('y2', y + 4);
-      strike.setAttribute('stroke', '#f87171');
+      strike.setAttribute('stroke', 'var(--bad)');
       strike.setAttribute('stroke-width', '1.5');
       g.appendChild(strike);
     });
@@ -4086,7 +4102,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       rect.setAttribute('width', w - 4);
       rect.setAttribute('height', h);
       rect.setAttribute('id', `schar-${idx}`);
-      rect.setAttribute('fill', 'rgba(255, 255, 255,0.05)');
+      rect.setAttribute('fill', 'rgba(255, 255, 255,0.09)');
       rect.setAttribute('stroke', 'var(--cDim)');
       svg.appendChild(rect);
       const t = makeSVG('text');
@@ -4121,7 +4137,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const cell = svg.querySelector(`#schar-${idx}`);
       if (!cell) return;
       if (idx === s.pos) {
-        cell.setAttribute('stroke', s.action === 'mismatch' ? '#f87171' : 'var(--c)');
+        cell.setAttribute('stroke', s.action === 'mismatch' ? 'var(--bad)' : 'var(--c)');
         cell.setAttribute('stroke-width', '2');
         cell.setAttribute('fill', s.action === 'mismatch'
           ? 'rgba(248,113,113,0.15)' : 'rgba(255, 122, 26,0.15)');
@@ -4129,11 +4145,11 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
                  && (s.rtl ? idx > s.pos : idx < s.pos)) {
         cell.setAttribute('stroke', 'var(--c)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(255, 255, 255,0.03)');
+        cell.setAttribute('fill', 'rgba(255, 255, 255,0.06)');
       } else {
         cell.setAttribute('stroke', 'var(--cDim)');
         cell.setAttribute('stroke-width', '1');
-        cell.setAttribute('fill', 'rgba(255, 255, 255,0.05)');
+        cell.setAttribute('fill', 'rgba(255, 255, 255,0.09)');
       }
     });
 
@@ -4152,7 +4168,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       g.appendChild(lab);
       const out = makeSVG('text');
       out.setAttribute('x', '80'); out.setAttribute('y', '166');
-      out.setAttribute('fill', '#4ade80');
+      out.setAttribute('fill', 'var(--ok)');
       out.setAttribute('font-family', 'var(--font-mono)');
       out.setAttribute('font-size', '18');
       out.textContent = s.output || '…';
@@ -4201,7 +4217,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const t = makeSVG('text');
       t.setAttribute('x', '680'); t.setAttribute('y', '235');
       t.setAttribute('text-anchor', 'middle');
-      t.setAttribute('fill', s.balanced ? '#4ade80' : '#f87171');
+      t.setAttribute('fill', s.balanced ? 'var(--ok)' : 'var(--bad)');
       t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '9');
       t.textContent = s.balanced ? 'BALANCED' : 'UNBALANCED';
@@ -4264,7 +4280,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         const line = makeSVG('line');
         line.setAttribute('x1', px(n)); line.setAttribute('y1', py(n));
         line.setAttribute('x2', px(c)); line.setAttribute('y2', py(c));
-        line.setAttribute('stroke', 'rgba(0,150,184,0.35)');
+        line.setAttribute('stroke', 'rgba(255,122,26,0.35)');
         line.setAttribute('stroke-width', '1.5');
         g.appendChild(line);
       });
@@ -4308,7 +4324,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         ? (s.found === true ? 'rgba(74,222,128,0.25)' : 'rgba(255, 122, 26,0.2)')
         : (isMarked ? 'rgba(74,222,128,0.12)' : 'var(--cDeep)'));
       circle.setAttribute('stroke', isCurrent
-        ? (s.found === true ? '#4ade80' : 'var(--c)')
+        ? (s.found === true ? 'var(--ok)' : 'var(--c)')
         : (isMarked ? 'rgba(74,222,128,0.6)' : 'var(--cDim)'));
       circle.setAttribute('stroke-width', isCurrent ? '2' : (isMarked ? '1.5' : '1'));
       g.appendChild(circle);
@@ -4336,7 +4352,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const t = makeSVG('text');
       t.setAttribute('x', '700'); t.setAttribute('y', '270');
       t.setAttribute('text-anchor', 'end');
-      t.setAttribute('fill', s.found ? '#4ade80' : '#f87171');
+      t.setAttribute('fill', s.found ? 'var(--ok)' : 'var(--bad)');
       t.setAttribute('font-family', 'var(--font-ui)');
       t.setAttribute('font-size', '9');
       t.textContent = s.found ? 'FOUND' : 'NOT FOUND';
@@ -4427,9 +4443,9 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         rect.setAttribute('fill', onPath ? 'rgba(74,222,128,0.22)'
           : isCurrent ? (s.match ? 'rgba(74,222,128,0.18)' : 'rgba(255, 122, 26,0.18)')
           : isDep ? 'rgba(255, 122, 26,0.14)'
-          : filled ? 'rgba(255, 255, 255,0.05)' : 'rgba(0,0,0,0.15)');
-        rect.setAttribute('stroke', onPath ? '#4ade80'
-          : isCurrent ? (s.match ? '#4ade80' : 'var(--c)')
+          : filled ? 'rgba(255, 255, 255,0.09)' : 'rgba(0,0,0,0.15)');
+        rect.setAttribute('stroke', onPath ? 'var(--ok)'
+          : isCurrent ? (s.match ? 'var(--ok)' : 'var(--c)')
           : isDep ? 'var(--c)' : 'var(--cDim)');
         rect.setAttribute('stroke-width', isCurrent || onPath ? '2' : '0.75');
         g.appendChild(rect);
@@ -4724,7 +4740,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       };
       add(`Pack a capacity-${W} bag from ${n} items.`);
       for (let c = 0; c <= W; c++) grid[0][c] = 0;
-      add('Row 0: with no items, every capacity holds value 0.', 0);
+      add('Row 0 is the base case — with no items, every capacity holds value 0.', 0);
       for (let i = 1; i <= n; i++) {
         const [w, v] = items[i - 1];
         for (let c = 0; c <= W; c++) {
@@ -4739,7 +4755,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
             const takeV = grid[i - 1][c - w] + v;
             grid[i][c] = Math.max(skipV, takeV);
             if (takeV > skipV) counts.takes++; else counts.skips++;
-            add(`Capacity ${c}: ${takeV > skipV ? 'take' : 'skip'} item ${i} — ` +
+            add(`Capacity ${c}: ${takeV > skipV ? 'take' : 'skipping'} item ${i} — ` +
               `max(${skipV}, ${takeV}) = ${grid[i][c]}.`,
               i, c, [[i - 1, c], [i - 1, c - w]], takeV > skipV ? 'take' : 'skip');
           }
@@ -4767,18 +4783,18 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       add(`Find the longest subsequence common to '${a}' and '${b}'.`);
       for (let c = 0; c <= m; c++) grid[0][c] = 0;
       for (let r = 0; r <= n; r++) grid[r][0] = 0;
-      add('Row 0 and column 0: against an empty string, the LCS is empty.', 0);
+      add('Row 0 and column 0 are base cases — against an empty string, the LCS is empty.', 0);
       for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
           counts.cells++;
           if (a[i - 1] === b[j - 1]) {
             grid[i][j] = grid[i - 1][j - 1] + 1;
             counts.matches++;
-            add(`'${a[i - 1]}' matches — diagonal + 1 = ${grid[i][j]}.`,
+            add(`'${a[i - 1]}' matches '${b[j - 1]}' — extend the diagonal: ${grid[i][j]}.`,
               i, j, [[i - 1, j - 1]], true);
           } else {
             grid[i][j] = Math.max(grid[i - 1][j], grid[i][j - 1]);
-            add(`No match — carry max(${grid[i - 1][j]}, ${grid[i][j - 1]}) = ${grid[i][j]}.`,
+            add(`'${a[i - 1]}' vs '${b[j - 1]}' — no match. Carry max(${grid[i - 1][j]}, ${grid[i][j - 1]}) = ${grid[i][j]}.`,
               i, j, [[i - 1, j], [i, j - 1]], false);
           }
         }
@@ -4798,7 +4814,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           j--; add('Follow the larger neighbour leftward.', i, j);
         }
       }
-      add(`The longest common subsequence is '${chars.reverse().join('')}'.`);
+      add(`Traceback done — the longest common subsequence is '${chars.reverse().join('')}'.`);
       return { steps, meta };
     }
 
@@ -4873,7 +4889,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           highlight: { index: window ? window[1] : null }, note: note2,
         });
       if (!arr.length) { add('An empty array has no subarray to maximize.'); return { steps }; }
-      add('Extend the current run, or cut losses and restart — one pass.');
+      add("Find the contiguous run with the biggest sum. Kadane's rule at each value: extend the current run, or cut losses and restart.");
       let cur = arr[0], start = 0, best = arr[0], bw = [0, 0];
       counts.steps++;
       add(`Start the run at ${fmt(arr[0])}.`, [0, 0], cur, best, bw.slice());
@@ -4883,7 +4899,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         let note2;
         if (cur + v < v) {
           cur = v; start = i; counts.restarts++;
-          note2 = `The old run would drag ${fmt(v)} down — restart here.`;
+          note2 = `The old run would drag ${fmt(v)} down — cut losses and restart here. Run sum: ${fmt(cur)}.`;
         } else {
           cur += v; counts.extensions++;
           note2 = `Extend the run with ${fmt(v)} — run sum ${fmt(cur)}.`;
@@ -4892,7 +4908,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         if (cur > best) { best = cur; bw = w.slice(); note2 += ' New best!'; }
         add(note2, w, cur, best, bw.slice());
       }
-      add(`Best run [${bw[0]}..${bw[1]}] with sum ${fmt(best)}.`, null, cur, best, bw.slice());
+      add(`Done — the best run is [${bw[0]}..${bw[1]}] with sum ${fmt(best)}.`, null, cur, best, bw.slice());
       return { steps };
     }
 
@@ -4915,7 +4931,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       });
       if (n2 <= 1) {
         if (n2) sortedRanges = [[0, 0]];
-        add('Nothing to sort — already in order.');
+        add('Nothing to sort — a single value (or none) is already in order.');
         return { steps };
       }
       add(`Start with ${n2} unsorted values.`);
@@ -4929,18 +4945,18 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
             if (arr[j] > arr[j + 1]) {
               [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
               counts.swaps++; swapped = true;
-              add(`${fmt(arr[j + 1])} > ${fmt(arr[j])} — swap; the heavier one bubbles right.`,
+              add(`${fmt(arr[j + 1])} > ${fmt(arr[j])} — swap them; the heavier one bubbles right.`,
                 { comparing: [arr[j], arr[j + 1]], placed: j + 1 });
             } else {
-              add(`${fmt(arr[j])} <= ${fmt(arr[j + 1])} — in order, move on.`,
+              add(`${fmt(arr[j])} <= ${fmt(arr[j + 1])} — already in order, move on.`,
                 { comparing: [arr[j], arr[j + 1]], placed: j });
             }
           }
           sortedRanges = [[end, n2 - 1]];
           add(`Pass ${counts.passes} done — position ${end} locked.`, { placed: end });
-          if (!swapped) { sortedRanges = [[0, n2 - 1]]; add('No swaps — already sorted. Early exit!'); done = true; }
+          if (!swapped) { sortedRanges = [[0, n2 - 1]]; add('No swaps in that pass — the array is already sorted. Early exit!'); done = true; }
         }
-        if (!done) { sortedRanges = [[0, n2 - 1]]; add('Only one value left unlocked — sorted.'); }
+        if (!done) { sortedRanges = [[0, n2 - 1]]; add('Only one value left unlocked — it must be in place. Sorted.'); }
       } else if (algoId === 'insertion_sort') {
         sortedRanges = [[0, 0]];
         for (let i = 1; i < n2; i++) {
@@ -4961,7 +4977,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           sortedRanges = [[0, i]];
           add(`${fmt(key)} settles at position ${j}.`, { placed: j });
         }
-        add('Every card placed — sorted.');
+        add('Every card picked up and placed — the hand is fully sorted.');
       } else {
         for (let i = 0; i < n2 - 1; i++) {
           let minIdx = i;
@@ -4980,7 +4996,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           }
           if (minIdx !== i) { [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]]; counts.swaps++; }
           sortedRanges = [[0, i]];
-          add(`Champion ${fmt(arr[i])} locked at position ${i}.`, { placed: i });
+          add(`Champion ${fmt(arr[i])} moves to position ${i} — locked.`, { placed: i });
         }
         sortedRanges = [[0, n2 - 1]];
         add('Last value must be the biggest — sorted.');
@@ -5039,7 +5055,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           add(`'${ch}' opens — push it. Depth ${stack.length}.`, idx, 'push');
         } else if (stack.length && stack[stack.length - 1] === PAIRS[ch]) {
           const op = stack.pop(); counts.pops++;
-          add(`'${ch}' closes '${op}' — pop. Depth ${stack.length}.`, idx, 'pop');
+          add(`'${ch}' closes the most recent opener '${op}' — pop. Depth ${stack.length}.`, idx, 'pop');
         } else {
           balanced = false; mismatched = true;
           add(`'${ch}' has nothing to close — mismatch! Unbalanced.`, idx, 'mismatch');
@@ -5079,11 +5095,11 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         } else if (arr[mid] < target) {
           low = mid + 1;
           push({ low, high, mid, found: null }, mid,
-            `${fmt(arr[mid])} is smaller — search the right half.`);
+            `${fmt(arr[mid])} is smaller than ${fmt(target)} — discard the left half. Range narrows to ${low}..${high}.`);
         } else {
           high = mid - 1;
           push({ low, high, mid, found: null }, mid,
-            `${fmt(arr[mid])} is larger — search the left half.`);
+            `${fmt(arr[mid])} is larger than ${fmt(target)} — discard the right half. Range narrows to ${low}..${high}.`);
         }
       }
       if (!found) {
@@ -5107,7 +5123,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       });
       if (arr.length <= 1) {
         if (arr.length) sortedRanges.push([0, 0]);
-        add('Nothing to sort — already in order.');
+        add('Nothing to sort — a single value (or none) is already in order.');
         return { steps };
       }
       add(`Start with ${arr.length} unsorted values.`);
@@ -5119,7 +5135,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
           return;
         }
         const pivot = arr[hi];
-        add(`Partition ${lo}..${hi}: pivot is ${fmt(pivot)} (position ${hi}).`,
+        add(`Partition positions ${lo}..${hi}: pivot is ${fmt(pivot)} (position ${hi}).`,
           { merging: [lo, hi], placed: hi });
         let i = lo - 1;
         for (let j = lo; j < hi; j++) {
@@ -5387,7 +5403,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
     input.style.cssText = `position:absolute; width:72px; z-index:5;
       left:${Math.round(aRect.left - hostRect.left - 12)}px;
       top:${Math.round(aRect.top - hostRect.top - 10)}px;
-      background:rgba(2,4,6,0.95); color:var(--c); border:1px solid var(--c);
+      background:rgba(18,17,16,0.96); color:var(--c); border:1px solid var(--c);
       font-family:var(--font-mono); font-size:0.9rem; padding:2px 6px; outline:none;`;
 
     const commit = () => {
@@ -5530,8 +5546,8 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         isOffline = false;
       } catch {
         status.innerHTML = canEmulate()
-          ? 'STATUS: <span style="color:#f87171">OFFLINE — IN-BROWSER EMULATOR</span>'
-          : 'STATUS: <span style="color:#f87171">OFFLINE — SAMPLE TRACE ONLY</span>';
+          ? 'STATUS: <span style="color:var(--bad)">OFFLINE — IN-BROWSER EMULATOR</span>'
+          : 'STATUS: <span style="color:var(--bad)">OFFLINE — SAMPLE TRACE ONLY</span>';
         isOffline = true;
       } finally {
         backendProbe = null;
@@ -5762,7 +5778,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       if (traceView !== 'graph') {
         const parsed = parseArrayInput();
         if (parsed.error) {
-          status.innerHTML = `STATUS: <span style="color:#f87171">${escapeHTML(parsed.error).toUpperCase()}</span>`;
+          status.innerHTML = `STATUS: <span style="color:var(--bad)">${escapeHTML(parsed.error).toUpperCase()}</span>`;
           status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
@@ -5973,7 +5989,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
         }
       } else {
         if (!userGraph.nodes.length) {
-          status.innerHTML = 'STATUS: <span style="color:#f87171">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
+          status.innerHTML = 'STATUS: <span style="color:var(--bad)">ADD SOME NODES FIRST — CLICK THE CANVAS.</span>';
           status.className = 'engine-status-pill';
           runBtn.disabled = false;
           return;
@@ -6012,8 +6028,8 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
     } catch (e) {
       console.error(e);
       status.innerHTML = isOffline
-        ? 'STATUS: <span style="color:#f87171">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
-        : 'STATUS: <span style="color:#f87171">TRACE FAILED</span>';
+        ? 'STATUS: <span style="color:var(--bad)">OFFLINE — NO SAMPLE FOR THIS ONE</span>'
+        : 'STATUS: <span style="color:var(--bad)">TRACE FAILED</span>';
       // The backend's own validation messages ("Max 16 numbers…") are
       // written for students — surface them next to the input they're about.
       const why = (e && e.name === 'ApiError' && e.status === 400) ? e.message : '';
@@ -6218,7 +6234,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       el.style.strokeWidth = '';
       const k = edgeKey(l.source, l.target);
       if (mstKeys.has(k)) {
-        el.style.stroke = '#4ade80';
+        el.style.stroke = 'var(--ok)';
         el.style.strokeWidth = '3';
       } else if (k === activeEdgeKey) {
         el.classList.add('active');
@@ -6234,7 +6250,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       t.setAttribute('x', '750'); t.setAttribute('y', '270');
       t.setAttribute('text-anchor', 'end');
       t.setAttribute('id', 'mst-total');
-      t.setAttribute('fill', '#4ade80');
+      t.setAttribute('fill', 'var(--ok)');
       t.setAttribute('font-family', 'var(--font-mono)');
       t.setAttribute('font-size', '13');
       t.textContent = `TREE COST: ${fmt(s.total_weight)}`;
@@ -6375,7 +6391,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
       const k = edgeKey(l.source, l.target);
       line.setAttribute('stroke', k === activeKey
-        ? 'var(--c)' : traversed.has(k) ? 'rgba(255, 122, 26,0.35)' : 'rgba(0,150,184,0.2)');
+        ? 'var(--c)' : traversed.has(k) ? 'rgba(255, 122, 26,0.35)' : 'rgba(255,255,255,0.22)');
       line.setAttribute('stroke-width', k === activeKey ? '2.5' : '1.5');
       svgEl.appendChild(line);
     });
@@ -6383,7 +6399,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       const c = makeSVG('circle');
       c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', '18');
       c.setAttribute('fill', n.id === activeNode
-        ? 'var(--c)' : visited.has(n.id) ? 'rgba(0,80,100,0.5)' : 'var(--cDeep)');
+        ? 'var(--c)' : visited.has(n.id) ? 'rgba(78,229,138,0.35)' : 'var(--cDeep)');
       c.setAttribute('stroke', n.id === activeNode ? 'var(--cBright)' : 'var(--cDim)');
       svgEl.appendChild(c);
       const t = makeSVG('text');
@@ -6429,8 +6445,8 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
       rect.setAttribute('x', x0 + k * w + 2); rect.setAttribute('y', y);
       rect.setAttribute('width', Math.max(w - 4, 6)); rect.setAttribute('height', h);
       rect.setAttribute('fill', k === s.placed ? 'rgba(255, 122, 26,0.18)'
-        : comparing.has(k) ? 'rgba(255, 122, 26,0.12)' : 'rgba(255, 255, 255,0.05)');
-      rect.setAttribute('stroke', inSorted ? '#4ade80' : (active || inMerge) ? 'var(--c)' : 'var(--cDim)');
+        : comparing.has(k) ? 'rgba(255, 122, 26,0.12)' : 'rgba(255, 255, 255,0.09)');
+      rect.setAttribute('stroke', inSorted ? 'var(--ok)' : (active || inMerge) ? 'var(--c)' : 'var(--cDim)');
       rect.setAttribute('stroke-width', active ? '2' : '1');
       svgEl.appendChild(rect);
       const t = makeSVG('text');
@@ -6686,7 +6702,7 @@ export function mountEngine(view, algo = 'dijkstra', { autoplay = false } = {}) 
     // once the backend was warm. Render first, then enrich the hook.
     currentMeta = {
       scene: resolveScene(algoId),
-      metaphors: { node: 'node', visit: 'Visiting', done: 'Complete.' }
+      metaphors: { node: 'node', visit: 'Visiting', relax: 'Shorter route via', start: 'The start node', done: 'Complete.' }
     };
     setupAndRender();
 

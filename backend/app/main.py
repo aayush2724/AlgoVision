@@ -13,7 +13,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import settings
 from app.routes import ai, detect, health, trace
-from app.security import SECURITY_HEADERS
+from app.security import DOCS_CSP, SECURITY_HEADERS
 
 # Uvicorn configures its own loggers but leaves the root logger bare, so the
 # app's log.info/log.warning calls (ML fallbacks, blocked requests) would be
@@ -87,6 +87,10 @@ def root():
 @app.middleware("http")
 async def response_headers(request: Request, call_next):
   response = await call_next(request)
+  path = request.url.path
+  if app.docs_url and (path == app.docs_url or path.startswith(app.docs_url + "/")):
+    # Swagger UI boots from an inline script the site CSP forbids; see DOCS_CSP.
+    response.headers.setdefault("Content-Security-Policy", DOCS_CSP)
   for name, value in SECURITY_HEADERS.items():
     response.headers.setdefault(name, value)
   if request.url.path.startswith(settings.API_PREFIX):

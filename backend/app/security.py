@@ -47,3 +47,25 @@ SECURITY_HEADERS = {
   "Cross-Origin-Opener-Policy": "same-origin",
   "Content-Security-Policy": CSP,
 }
+
+# FastAPI's /docs page (dev only; main.py switches it off outside ENV=dev) is
+# Swagger UI: swagger-ui-bundle.js and swagger-ui.css from jsDelivr plus an
+# inline bootstrap script that FastAPI generates, so it cannot be hash-pinned
+# the way index.html's two scripts are. The site CSP above blocks that inline
+# script and the stylesheet, which left /docs a blank white page. This policy
+# is sent on /docs and /docs/oauth2-redirect only; the app and the API keep
+# the strict one.
+DOCS_CSP = (
+  "default-src 'self'; "
+  "base-uri 'self'; "
+  "object-src 'none'; "
+  "frame-ancestors 'none'; "
+  "form-action 'self'; "
+  "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+  "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+  # Swagger UI's icons are data URIs; the favicon is FastAPI's own.
+  "img-src 'self' data: https://fastapi.tiangolo.com; "
+  "font-src 'self'; "
+  # /openapi.json and "Try it out" calls are same-origin.
+  "connect-src 'self'"
+)

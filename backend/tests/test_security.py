@@ -7,12 +7,14 @@ the dev server behaves like production.
 import json
 import re
 import sys
+
+import pytest
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.security import CSP, SECURITY_HEADERS
+from app.security import CSP, DOCS_CSP, SECURITY_HEADERS
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -35,6 +37,32 @@ def test_shell_carries_security_headers_and_revalidates():
   assert r.headers["Content-Security-Policy"] == CSP
   assert r.headers["X-Frame-Options"] == "DENY"
   assert r.headers["Cache-Control"] == "no-cache, must-revalidate"
+
+
+def test_docs_page_gets_the_swagger_csp():
+  # Swagger UI boots from an inline script and loads its stylesheet from
+  # jsDelivr; under the site CSP both are blocked and /docs renders blank.
+  if app.docs_url is None:
+    pytest.skip("docs are disabled outside ENV=dev")
+  r = client.get("/docs")
+  assert r.status_code == 200
+  assert "SwaggerUIBundle" in r.text
+  assert r.headers["Content-Security-Policy"] == DOCS_CSP
+  script_src = DOCS_CSP.split("script-src ")[1].split(";")[0]
+  style_src = DOCS_CSP.split("style-src ")[1].split(";")[0]
+  assert "'unsafe-inline'" in script_src
+  assert "https://cdn.jsdelivr.net" in script_src
+  assert "https://cdn.jsdelivr.net" in style_src
+  # Every other header stays as strict as the app's.
+  for name, value in SECURITY_HEADERS.items():
+    if name != "Content-Security-Policy":
+      assert r.headers.get(name) == value, name
+  r = client.get("/docs/oauth2-redirect")
+  assert r.status_code == 200
+  assert r.headers["Content-Security-Policy"] == DOCS_CSP
+  # The looser policy is for the docs pages only.
+  assert client.get("/openapi.json").headers["Content-Security-Policy"] == CSP
+  assert client.get("/docs-not-a-page").headers["Content-Security-Policy"] == CSP
 
 
 def test_fonts_are_immutable():

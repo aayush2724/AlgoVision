@@ -65,8 +65,10 @@ function mountFailed(app, err) {
 
 export function initRouter({ scene }) {
   const app = document.getElementById('app');
+  let routeVersion = 0;
 
   async function handleRoute(isInitial = false) {
+    const version = ++routeVersion;
     let raw = window.location.hash;
 
     if (isInitial) {
@@ -94,6 +96,7 @@ export function initRouter({ scene }) {
     const page = PAGES[routeKey];
 
     const render = () => {
+      if (version !== routeVersion) return;
       // Dispose any mounted 3D viz scene before wiping the DOM,
       // otherwise its WebGL context and animation loop leak.
       const viz = app.querySelector('#viz-inner');

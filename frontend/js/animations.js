@@ -124,8 +124,10 @@ export async function pageTransition(render) {
 }
 
 export function magnetize() {
-  if (REDUCED_MOTION) return;
+  if (REDUCED_MOTION || typeof gsap === 'undefined') return;
   document.querySelectorAll('.btn, .nav-link').forEach(el => {
+    if (el.dataset.magneticBound) return;
+    el.dataset.magneticBound = 'true';
     el.addEventListener('mousemove', (e) => {
       const { left, top, width, height } = el.getBoundingClientRect();
       const x = (e.clientX - (left + width / 2)) * 0.3;
@@ -139,8 +141,10 @@ export function magnetize() {
 }
 
 export function tiltCards() {
-  if (REDUCED_MOTION) return;
+  if (REDUCED_MOTION || typeof gsap === 'undefined') return;
   document.querySelectorAll('.panel-glow').forEach(el => {
+    if (el.dataset.tiltBound) return;
+    el.dataset.tiltBound = 'true';
     el.addEventListener('mousemove', (e) => {
       const { left, top, width, height } = el.getBoundingClientRect();
       const x = (e.clientX - (left + width / 2)) / (width / 2);

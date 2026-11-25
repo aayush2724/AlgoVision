@@ -1263,7 +1263,7 @@ export const PAGES = {
               </label>
             </div>
             <label for="code-area" class="visually-hidden">Your code</label>
-            <textarea id="code-area" spellcheck="false" autocomplete="off" aria-describedby="bug-result"></textarea>
+            <textarea id="code-area" spellcheck="false" autocomplete="off" wrap="off" aria-describedby="bug-result"></textarea>
             <div id="detect-result" style="display:none;"></div>
             <label class="dry-call-row">
               <span class="dry-call-label">Then run</span>

@@ -800,6 +800,9 @@ footer.footer p { font-size: 0.85rem; color: var(--inkDim); max-width: none; }
   transition: opacity 0.3s, transform 0.3s;
 }
 .vizzy-bubble.show { opacity: 1; transform: translateY(0); }
+@media (max-width: 640px) {
+  .vizzy-container { display: none; }
+}
 
 /* ── SVG GRAPH ── */
 .node {
@@ -886,6 +889,12 @@ input[type="range"]::-moz-range-thumb {
 }
 @media (prefers-reduced-motion: reduce) {
   .av-reveal { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Panel visibility toggle. Must be a class, not an inline style: GSAP's
@@ -1718,6 +1727,9 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid var(--panel-border);
   outline: none;
   resize: vertical;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 4;
 }
 #detect-result {
   padding: 0.45rem 0.7rem;
@@ -2299,7 +2311,7 @@ input[type="range"]::-moz-range-thumb {
 .step-dot.current { background: rgba(255, 122, 26, 0.18); border-color: var(--c); color: var(--cAccentBright); }
 .step-dot.done { background: var(--c); border-color: var(--c); color: var(--bg1); font-weight: 500; }
 .step-body { flex: 1; min-width: 0; padding-top: 0.2rem; }
-.step-row.locked { opacity: 0.55; }
+.step-row.locked { opacity: 0.85; }
 
 .step-head {
   display: flex;

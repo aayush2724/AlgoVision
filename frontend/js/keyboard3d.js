@@ -444,9 +444,13 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   // Distance at which the whole board spans the viewport width, so the
   // board is the hero at any window size instead of overflowing it.
   const ELEV = 0.86;   // radians above the desk
-  const corners = [];
+  const boardCorners = [];
   for (const sx of [-1, 1]) for (const sy of [-0.7, 0.25]) for (const sz of [-1, 1]) {
-    corners.push(new THREE.Vector3(sx * plateW / 2, sy, sz * plateD / 2));
+    boardCorners.push(new THREE.Vector3(sx * plateW / 2, sy, sz * plateD / 2));
+  }
+  const monitorCorners = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+    monitorCorners.push(monitor.localToWorld(new THREE.Vector3(sx * MON_W / 2, sy * MON_H / 2, 0.2)));
   }
   const probe = new THREE.Vector3();
 
@@ -459,8 +463,7 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
   }
   // Perspective foreshortening makes the near corners the widest points on
   // screen, so fit by projecting the actual corners rather than by trig.
-  function fitDistance() {
-    let d = 8;
+  function fitDistance(corners, d = 8) {
     for (let i = 0; i < 60; i++) {
       placeCamera(d);
       const fits = corners.every(c =>
@@ -481,8 +484,12 @@ export function initKeyboard(container, { onCount, onFocus, onBlur, onScreenRect
     camera.updateProjectionMatrix();
 
     const home = camera.position.clone();
-    const d = fitDistance();
-    controls.maxDistance = Math.max(17, d * 1.15);
+    const boardDistance = fitDistance(boardCorners);
+    // Keep the close view on load, then let the wheel pull back far enough
+    // to reveal the entire monitor before it starts scrolling the page.
+    const deskDistance = fitDistance(monitorCorners, boardDistance);
+    controls.maxDistance = Math.max(17, boardDistance * 1.15, deskDistance * 1.05);
+    placeCamera(boardDistance);
     if (userMoved) camera.position.copy(home);
     if (focused && !flying) {
       // Re-fit: a resize changes the aspect, and with it the right distance.
